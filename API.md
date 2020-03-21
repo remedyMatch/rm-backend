@@ -2,105 +2,209 @@
 
 # Artikel
 
-## Artikel Suche
+## Artikel-Kategorie Suche
 
-Suche nach Artikeln.
+Suche nach Artikel-Kategorien.
 
-* *Request:*
+* **Request:**
 
-  `GET /artikel/suche`
+  `GET /artikelkategorie/suche`
 
-    curl -i -H 'Accept: application/json' http://localhost:7000/artikel/
+*  **URL Params**
 
+   **Optional:**
+ 
+   `nameLike=[string]`
+
+* **Data Params**
+
+  None
 
 * **Success Response:**
 
   * **Code:** 200 <br />
     **Content:** 
   ```
-     {
-		"key": "atemschutzmaske_FFP1_M3",
-		"kategorieKey": "atemschutzmaske",
-		"ean": "4046719303120", 
-		"name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-		"beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
-		"hersteller": "3M"
-	}
+  [
+    {
+      "key": "atemschutzmasken",
+      "name": "Atemschutzmasken"
+    },
+    {
+      "key": "overalls,
+      "name": "Overalls"
+    },
+    
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/artikelkategorie/suche?nameLike="maske"
   ```
 
-* Response
+## Artikel Suche
 
-    HTTP/1.1 200 OK
-    Date: Thu, 24 Feb 2011 12:36:30 GMT
-    Status: 200 OK
-    Connection: close
-    Content-Type: application/json
-    Content-Length: 2
+Suche nach Artikeln.
 
+* **Request:**
+
+  `GET /artikel/suche`
+
+*  **URL Params**
+
+   **Optional:**
+ 
+   `nameLike=[string]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
     {
-		"key": "atemschutzmaske_FFP1_M3",
-		"kategorieKey": "atemschutzmaske",
-		"ean": "4046719303120", 
-		"name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-		"beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
-		"hersteller": "3M"
-	}
+      "key": "atemschutzmaske_FFP1_M3",
+      "kategorieKey": "atemschutzmasken",
+      "ean": "4046719303120", 
+      "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
+      "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+      "hersteller": "3M"
+    },
+    {
+      "key": "atemschutzmaske_FFP2_M3",
+      "kategorieKey": "atemschutzmasken",
+      "ean": "4046719382583", 
+      "name":	"Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
+      "beschreibung": "Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+      "hersteller": "3M"
+    },
+     
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/artikel/suche?nameLike="maske"
+  ```
 
 ## Artikel lesen
 
 Ein Artikel lesen.
 
-### Request 
+* **Request:**
 
   `GET /artikel/{artikelKey}`
 
-    curl -i -H 'Accept: application/json' http://localhost:7000/artikel/atemschutzmaske_FFP1_M3
+*  **Path Params**
 
-### Response
+   **Required:**
+ 
+   `artikelKey=[string]`
 
-    HTTP/1.1 200 OK
-    Date: Thu, 24 Feb 2011 12:36:30 GMT
-    Status: 200 OK
-    Connection: close
-    Content-Type: application/json
-    Content-Length: 2
+* **Data Params**
 
-    {
-		"key": "atemschutzmaske_FFP1_M3",
-		"kategorieKey": "atemschutzmaske",
-		"ean": "4046719303120", 
-		"name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-		"beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
-		"hersteller": "3M"
-	}
+  None
 
-	
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "key": "atemschutzmaske_FFP1_M3",
+    "kategorieKey": "atemschutzmasken",
+    "ean": "4046719303120", 
+    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
+    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+    "hersteller": "3M"
+   }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Artikeln doesn't exist." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/artikel/atemschutzmaske_FFP1_M3
+  ```
+
 ## Artikel hinzufügen
 
 Ein Artikel hinzufügen.
 
-### Request 
+* **Request:**
 
-  `GET /artikel/{artikelKey}`
+  `POST /artikel/{artikelKey}`
 
-    curl -i -H 'Accept: application/json' http://localhost:7000/artikel/atemschutzmaske_FFP1_M3
+*  **Path Params**
 
-### Response
+   **Required:**
+ 
+   `artikelKey=[string]`
+
+* **Data Params**
 
   ```
-    HTTP/1.1 200 OK
-    Date: Thu, 24 Feb 2011 12:36:30 GMT
-    Status: 200 OK
-    Connection: close
-    Content-Type: application/json
-    Content-Length: 2
-
-    {
-		"key": "atemschutzmaske_FFP1_M3",
-		"kategorieKey": "atemschutzmaske",
-		"ean": "4046719303120", 
-		"name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-		"beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
-		"hersteller": "3M"
-	}
+  {
+    "key": "atemschutzmaske_FFP1_M3",
+    "kategorieKey": "atemschutzmasken",
+    "ean": "4046719303120", 
+    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
+    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+    "hersteller": "3M"
+   }
   ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "key": "atemschutzmaske_FFP1_M3",
+    "kategorieKey": "atemschutzmasken",
+    "ean": "4046719303120", 
+    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
+    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+    "hersteller": "3M"
+   }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**

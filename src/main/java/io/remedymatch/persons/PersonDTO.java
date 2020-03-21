@@ -9,6 +9,7 @@ import java.util.UUID;
 @Builder
 public class PersonDTO {
     private UUID id;
+    private String userName;
     private String firstName;
     private String lastName;
     private String telephoneNumber;

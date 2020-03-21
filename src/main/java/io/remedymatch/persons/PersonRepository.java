@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface PersonRepository extends CrudRepository<PersonEntity, UUID> {
+
+    PersonEntity findByUserName(String userName);
 }

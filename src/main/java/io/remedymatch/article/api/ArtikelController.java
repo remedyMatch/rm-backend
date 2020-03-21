@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.remedymatch.article.domain.Article;
-import io.remedymatch.article.domain.ArticleRepository;
+import io.remedymatch.article.domain.Artikel;
+import io.remedymatch.article.domain.ArtikleRepository;
 
 /**
  * Artikel REST API
@@ -28,26 +28,26 @@ import io.remedymatch.article.domain.ArticleRepository;
 @RestController
 @RequestMapping("/artikel")
 @Validated
-public class ArticleController {
+public class ArtikelController {
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArtikleRepository artikleRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<List<Article>> sucheArtikeln() {
-        return ResponseEntity.ok(articleRepository.search());
+    ResponseEntity<List<Artikel>> sucheArtikeln() {
+        return ResponseEntity.ok(artikleRepository.search());
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/{articleId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<Article> getArtikel(
+    ResponseEntity<Artikel> getArtikel(
             @NotBlank @PathVariable("articleId") UUID articleId) {
-        return ResponseEntity.ok(articleRepository.get(articleId));
+        return ResponseEntity.ok(artikleRepository.get(articleId));
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<Article> addArtikel(@Valid @RequestBody Article article) {
-        return ResponseEntity.ok(articleRepository.add(article));
+    ResponseEntity<Artikel> addArtikel(@Valid @RequestBody Artikel artikel) {
+        return ResponseEntity.ok(artikleRepository.add(artikel));
     }
 }

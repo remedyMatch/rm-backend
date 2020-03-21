@@ -10,22 +10,22 @@ import org.springframework.stereotype.Repository;
 import io.remedymatch.article.infrastructure.ArticleJpaRepository;
 
 @Repository
-public class ArticleRepository {
+public class ArtikleRepository {
     @Autowired
     private ArticleJpaRepository jpaRepository;
 
-    public List<Article> search() {
-        return jpaRepository.findAll().stream().map(ArticleMapper::getArticle).collect(Collectors.toList());
+    public List<Artikel> search() {
+        return jpaRepository.findAll().stream().map(ArtikelMapper::getArticle).collect(Collectors.toList());
     }
 
-    public Article get(UUID articleId) {
-        return ArticleMapper.getArticle(jpaRepository.findById(articleId).orElseThrow());
+    public Artikel get(UUID articleId) {
+        return ArtikelMapper.getArticle(jpaRepository.findById(articleId).orElseThrow());
     }
 
-    public Article add(Article article) {
-        return ArticleMapper.getArticle(
+    public Artikel add(Artikel artikel) {
+        return ArtikelMapper.getArticle(
                 jpaRepository.save(
-                        ArticleMapper.getArticleEntity(article)
+                        ArtikelMapper.getArticleEntity(artikel)
                 )
         );
     }

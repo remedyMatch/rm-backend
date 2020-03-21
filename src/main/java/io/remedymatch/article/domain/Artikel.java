@@ -17,7 +17,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class Article {
+public class Artikel {
 
 	private UUID id;
 
@@ -25,7 +25,7 @@ public class Article {
 
 	private String name;
 
-	private String description;
+	private String beschreibung;
 
-	private String manufacturer;
+	private String hersteller;
 }

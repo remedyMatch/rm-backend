@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("test")
 @Tag("InMemory")
 @Tag("SpringBoot")
-public class ArticleJpaRepositoryInMemoryTestShould {
+public class ArtikelJpaRepositoryInMemoryTestShould {
     @Autowired
     private ArticleJpaRepository jpaRepository;
 
@@ -42,8 +42,8 @@ public class ArticleJpaRepositoryInMemoryTestShould {
         return ArticleEntity.builder()
                 .name(name)
                 .ean("SAMPLE_EAN")
-                .description("Sample Beschreibung")
-                .manufacturer("Egal")
+                .beschreibung("Sample Beschreibung")
+                .hersteller("Egal")
                 .build();
     }
 }

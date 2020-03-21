@@ -39,8 +39,8 @@ public class ArticleEntity {
 	private String name;
 
 	@Column(name = "description", nullable = false, updatable = true)
-	private String description;
+	private String beschreibung;
 
 	@Column(name = "manufacturer", nullable = false, updatable = true)
-	private String manufacturer;
+	private String hersteller;
 }

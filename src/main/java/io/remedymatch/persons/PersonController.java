@@ -1,11 +1,10 @@
 package io.remedymatch.persons;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/persons")
 public class PersonController {
 
     private PersonRepository personRepository;
@@ -13,12 +12,14 @@ public class PersonController {
     public PersonController( PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
-    @GetMapping("/persons")
+    @GetMapping
+    @Secured("ROLE_admin")
     public Iterable<PersonEntity> getAll() {
         return personRepository.findAll();
     }
 
-    @PostMapping("/persons")
+    @PostMapping
+    @Secured("ROLE_admin")
     public PersonDTO create(@RequestBody PersonDTO person) {
         PersonEntity personEntity = new PersonEntity();
         personEntity.setFirstName(person.getFirstName());
@@ -32,5 +33,11 @@ public class PersonController {
                 .telephoneNumber(saved.getTelephoneNumber())
                 .id(saved.getId())
                 .build();
+    }
+
+
+    @GetMapping("/ping")
+    String ping() {
+        return "pong";
     }
 }

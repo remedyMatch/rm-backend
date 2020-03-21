@@ -1,13 +1,6 @@
 package io.remedymatch.artikel.api;
 
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.UUID;
+import io.remedymatch.artikel.domain.ArtikelEntity;
 
 public class ArtikelMapper {
     public static ArtikelEntity getArticleEntity(ArtikelDTO artikel) {
@@ -28,34 +21,5 @@ public class ArtikelMapper {
                 .hersteller(article.getHersteller())
                 .name(article.getName())
                 .build();
-    }
-
-    @Entity
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    @ToString
-    @EqualsAndHashCode
-    @Builder
-    public static class ArtikelEntity {
-
-        @Id
-        @GeneratedValue(generator = "uuid2")
-        @GenericGenerator(name = "uuid2", strategy = "uuid2")
-        @Column(name = "id", nullable = false, updatable = false)
-        private UUID id;
-
-        @Column(name = "EAN", nullable = false, updatable = false)
-        private String ean;
-
-        @Column(name = "NAME", nullable = false, updatable = true)
-        private String name;
-
-        @Column(name = "description", nullable = false, updatable = true)
-        private String beschreibung;
-
-        @Column(name = "manufacturer", nullable = false, updatable = true)
-        private String hersteller;
     }
 }

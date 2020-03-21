@@ -162,10 +162,14 @@ Eine Artikel-Kategorie hinzufügen.
 
 * **Request:**
 
-  `POST /artikelkategorie/`
+  `POST /artikelkategorie/{kategorieId}`
 
 * **Path Params**
 
+   **Required:**
+ 
+   `kategorieId=[UUID]`
+   
 * **Data Params**
 
   ```
@@ -198,6 +202,52 @@ Eine Artikel-Kategorie hinzufügen.
 
 * **Sample Call:**
 
+## Artikel-Kategorie aktualisieren
+
+Eine Artikel-Kategorie aktualisieren.
+
+* **Request:**
+
+  `POST /artikelkategorie/{}`
+
+* **Path Params**
+
+* **Data Params**
+
+  ```
+  {
+    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "name": "Atemschutzmasken"
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "name": "Atemschutzmasken"
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Artikel-Kategorie nicht gefunden." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
 
 ## Artikel Suche
 
@@ -280,8 +330,8 @@ Ein Artikel lesen.
     **Content:** 
   ```
   {
-    "key": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
-    "kategorieKey": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
     "ean": "4046719303120", 
     "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
     "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
@@ -292,7 +342,7 @@ Ein Artikel lesen.
 * **Error Response:**
 
   * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "Artikel nivht gefunden." }`
+    **Content:** `{ error : "Artikel nicht gefunden." }`
 
   OR
 
@@ -319,8 +369,7 @@ Ein Artikel hinzufügen.
 
   ```
   {
-    "key": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
-    "kategorieKey": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
     "ean": "4046719303120", 
     "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
     "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
@@ -334,8 +383,57 @@ Ein Artikel hinzufügen.
     **Content:** 
   ```
   {
-    "key": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
-    "kategorieKey": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "ean": "4046719303120", 
+    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
+    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+    "hersteller": "3M"
+   }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+## Artikel aktualisieren
+
+Ein Artikel hinzufügen.
+
+* **Request:**
+
+  `PUT /artikel/{artikelId}`
+
+* **Path Params**
+
+   **Required:**
+ 
+   `artikelId=[UUID]`
+
+* **Data Params**
+
+  ```
+  {
+    "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "ean": "4046719303120", 
+    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
+    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+    "hersteller": "3M"
+   }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
     "ean": "4046719303120", 
     "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
     "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
@@ -347,6 +445,219 @@ Ein Artikel hinzufügen.
 
   * **Code:** 400 BAD REQUEST <br />
     **Content:** `{ error : "..." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Artikel nicht gefunden." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+# Institution
+
+## Institutionen Suche
+
+Suche nach Institutionen.
+
+* **Request:**
+
+  `GET /institution/suche`
+
+*  **URL Params**
+
+   **Optional:**
+ 
+   `nameLike=[string]`
+   
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+      "key": "isar_klinikum",
+      "name":	"ISAR Klinikum®",
+      "typ": "krankenhaus"
+    },
+    {
+      "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+      "key": "arzt_praxis_xyz",
+      "name":	"Arzt Praxis XYZ®",
+      "typ": "doktor"
+    },
+     
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/institution/suche?nameLike="xyz"
+  ```
+
+## Institution lesen
+
+Eine Institution lesen.
+
+* **Request:**
+
+  `GET /institution/{institutionKey}`
+
+*  **Path Params**
+
+   **Required:**
+ 
+   `institutionKey=[string]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+    "key": "isar_klinikum",
+    "name":	"ISAR Klinikum®",
+    "typ": "krankenhaus"
+   }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Institution nicht gefunden." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/institution/krankenhaus_xy
+  ```
+
+## Institution hinzufugen 
+
+Eine Institution hinzufügen.
+
+* **Request:**
+
+  `POST /institution/`
+
+* **Path Params**
+
+* **Data Params**
+
+  ```
+  {
+    "key": "isar_klinikum",
+    "name":	"ISAR Klinikum®",
+    "typ": "krankenhaus"
+   }
+  ```
+
+** ** Typ **
+  `krankenhaus` / `doktor`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+    "key": "isar_klinikum",
+    "name":	"ISAR Klinikum®",
+    "typ": "krankenhaus"
+   }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+
+## Institution aktualisieren 
+
+Eine Institution aktualisieren.
+
+* **Request:**
+
+  `POST /institution/{institutionKey}`
+
+* **Path Params**
+
+   **Required:**
+ 
+   `institutionKey=[string]`
+
+* **Data Params**
+
+  ```
+  {
+    "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+    "key": "isar_klinikum",
+    "name":	"ISAR Klinikum®",
+    "typ": "krankenhaus"
+  }
+  ```
+
+** ** Typ **
+  `krankenhaus` / `doktor`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+    "key": "isar_klinikum",
+    "name":	"ISAR Klinikum®",
+    "typ": "krankenhaus"
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Institution nicht gefunden." }`
 
   OR
 

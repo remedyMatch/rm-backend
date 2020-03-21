@@ -4,3 +4,5 @@
 
 #Build
 target
+build/
+.gradle

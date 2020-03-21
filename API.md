@@ -10,7 +10,7 @@ Suche nach Artikel-Kategorien.
 
   `GET /artikelkategorie/suche`
 
-*  **URL Params**
+* **URL Params**
 
    **Optional:**
  
@@ -27,11 +27,11 @@ Suche nach Artikel-Kategorien.
   ```
   [
     {
-      "key": "atemschutzmasken",
+      "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
       "name": "Atemschutzmasken"
     },
     {
-      "key": "overalls,
+      "key": "cd5c00ec-c328-4c8b-8278-098b4b5ea0dc",
       "name": "Overalls"
     },
     
@@ -50,19 +50,64 @@ Suche nach Artikel-Kategorien.
    curl -i -H 'Accept: application/json' http://localhost:7000/artikelkategorie/suche?nameLike="maske"
   ```
 
-## Artikel Suche
+## Artikel-Kategorie lesen
 
-Suche nach Artikeln.
+Eine Artikel-Kategorie lesen.
 
 * **Request:**
 
-  `GET /artikel/suche`
+  `GET /artikelkategorie/{kategorieId}`
 
-*  **URL Params**
+* **Path Params**
 
-   **Optional:**
+   **Required:**
  
-   `nameLike=[string]`
+   `kategorieId=[UUID]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "name": "Atemschutzmasken"
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Artikel-Kategorie nicht gefunden." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/artikelkategorie/77977887-78e8-4ee3-8a34-ec37fcfc5f8b
+  ```
+
+## Alle Artikel einer Kategorie
+
+Suche nach Artikel einer Kategorien.
+
+* **Request:**
+
+  `GET /artikelkategorie/{kategorieId}/artikel`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `kategorieId=[UUID]`
 
 * **Data Params**
 
@@ -75,16 +120,121 @@ Suche nach Artikeln.
   ```
   [
     {
-      "key": "atemschutzmaske_FFP1_M3",
-      "kategorieKey": "atemschutzmasken",
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+      "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
       "ean": "4046719303120", 
       "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
       "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
       "hersteller": "3M"
     },
     {
-      "key": "atemschutzmaske_FFP2_M3",
-      "kategorieKey": "atemschutzmasken",
+      "id": "atemschutzmaske_FFP2_M3",
+      "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+      "ean": "4046719382583", 
+      "name":	"Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
+      "beschreibung": "Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+      "hersteller": "3M"
+    },
+     
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Artikel-Kategorie nicht gefunden." }`
+
+  OR
+  
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/artikelkategorie/77977887-78e8-4ee3-8a34-ec37fcfc5f8b/artikel"
+  ```
+
+## Artikel-Kategorie hinzufügen
+
+Eine Artikel-Kategorie hinzufügen.
+
+* **Request:**
+
+  `POST /artikelkategorie/`
+
+* **Path Params**
+
+* **Data Params**
+
+  ```
+  {
+    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "name": "Atemschutzmasken"
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "name": "Atemschutzmasken"
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+
+## Artikel Suche
+
+Suche nach Artikeln.
+
+* **Request:**
+
+  `GET /artikel/suche`
+
+*  **URL Params**
+
+   **Optional:**
+ 
+   `kategorieId=[UUID]`
+   `nameLike=[string]`
+   
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+      "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+      "ean": "4046719303120", 
+      "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
+      "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+      "hersteller": "3M"
+    },
+    {
+      "id": "atemschutzmaske_FFP2_M3",
+      "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
       "ean": "4046719382583", 
       "name":	"Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
       "beschreibung": "Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
@@ -112,13 +262,13 @@ Ein Artikel lesen.
 
 * **Request:**
 
-  `GET /artikel/{artikelKey}`
+  `GET /artikel/{artikelId}`
 
 *  **Path Params**
 
    **Required:**
  
-   `artikelKey=[string]`
+   `artikelId=[UUID]`
 
 * **Data Params**
 
@@ -130,8 +280,8 @@ Ein Artikel lesen.
     **Content:** 
   ```
   {
-    "key": "atemschutzmaske_FFP1_M3",
-    "kategorieKey": "atemschutzmasken",
+    "key": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "kategorieKey": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
     "ean": "4046719303120", 
     "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
     "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
@@ -142,7 +292,7 @@ Ein Artikel lesen.
 * **Error Response:**
 
   * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "Artikeln doesn't exist." }`
+    **Content:** `{ error : "Artikel nivht gefunden." }`
 
   OR
 
@@ -152,7 +302,7 @@ Ein Artikel lesen.
 * **Sample Call:**
 
   ```
-   curl -i -H 'Accept: application/json' http://localhost:7000/artikel/atemschutzmaske_FFP1_M3
+   curl -i -H 'Accept: application/json' http://localhost:7000/artikel/bbeac45e-e296-4fad-878d-7e9b6e85a3d8
   ```
 
 ## Artikel hinzufügen
@@ -161,20 +311,16 @@ Ein Artikel hinzufügen.
 
 * **Request:**
 
-  `POST /artikel/{artikelKey}`
+  `POST /artikel/`
 
-*  **Path Params**
-
-   **Required:**
- 
-   `artikelKey=[string]`
+* **Path Params**
 
 * **Data Params**
 
   ```
   {
-    "key": "atemschutzmaske_FFP1_M3",
-    "kategorieKey": "atemschutzmasken",
+    "key": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "kategorieKey": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
     "ean": "4046719303120", 
     "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
     "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
@@ -188,8 +334,8 @@ Ein Artikel hinzufügen.
     **Content:** 
   ```
   {
-    "key": "atemschutzmaske_FFP1_M3",
-    "kategorieKey": "atemschutzmasken",
+    "key": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "kategorieKey": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
     "ean": "4046719303120", 
     "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
     "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."

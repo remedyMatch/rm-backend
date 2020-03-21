@@ -50,6 +50,7 @@ public class InstitutionController {
     public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
         val person = personRepository.findByUserName(userNameProvider.getUserName());
         return ResponseEntity.ok(person.getInstitution().getBedarfe().stream().map(BedarfMapper::mapToDTO).collect(Collectors.toList()));
-
     }
+
+
 }

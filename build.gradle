@@ -7,7 +7,7 @@ plugins {
 
 group = 'io.remedymatch'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
@@ -23,9 +23,12 @@ dependencies {
 	runtime 'org.postgresql:postgresql:42.2.8'
 
 
+	testCompile 'com.h2database:h2:1.4.200'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testImplementation 'org.mockito:mockito-junit-jupiter:3.3.3'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 

@@ -27,5 +27,5 @@ spring:
         show_sql: false
         use_sql_comments: false
         format_sql: false
-
+    generate-ddl: true
 spring.security.oauth2.resourceserver.jwt.issuer-uri: http://localhost:8090/auth/realms/master

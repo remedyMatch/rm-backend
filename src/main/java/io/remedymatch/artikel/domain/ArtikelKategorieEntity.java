@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,26 +15,16 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class ArtikelEntity {
-
+public class ArtikelKategorieEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "EAN", nullable = false, updatable = false)
-    private String ean;
-
-    @Column(name = "NAME", nullable = false, updatable = true)
+    @Column(length = 255)
     private String name;
 
-    @Column(name = "description", nullable = false, updatable = true)
-    private String beschreibung;
-
-    @Column(name = "manufacturer", nullable = false, updatable = true)
-    private String hersteller;
-
-    @ManyToOne
-    private ArtikelKategorieEntity artikelKategorie;
+    @OneToMany(mappedBy = "artikelKategorie")
+    private List<ArtikelEntity> artikel;
 }

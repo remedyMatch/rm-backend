@@ -1,8 +1,6 @@
-package io.remedymatch.artikel.infrastructure;
+package io.remedymatch.artikel.domain;
 
 
-import io.remedymatch.artikel.domain.ArtikelEntity;
-import io.remedymatch.artikel.domain.ArtikelJpaRepository;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,4 +1,4 @@
-package io.remedymatch.article.api;
+package io.remedymatch.artikel.api;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.remedymatch.article.domain.Artikel;
-import io.remedymatch.article.domain.ArtikleRepository;
+import io.remedymatch.artikel.domain.Artikel;
+import io.remedymatch.artikel.domain.ArtikleRepository;
 
 /**
  * Artikel REST API

@@ -1,10 +1,10 @@
-package io.remedymatch.article.domain;
+package io.remedymatch.artikel.domain;
 
-import io.remedymatch.article.infrastructure.ArticleEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 
 public class ArtikelMapper {
-    public static ArticleEntity getArticleEntity(Artikel artikel) {
-        return ArticleEntity.builder()
+    public static ArtikelEntity getArticleEntity(Artikel artikel) {
+        return ArtikelEntity.builder()
                 .id(artikel.getId())
                 .beschreibung(artikel.getBeschreibung())
                 .ean(artikel.getEan())
@@ -13,7 +13,7 @@ public class ArtikelMapper {
                 .build();
     }
 
-    public static Artikel getArticle(ArticleEntity article) {
+    public static Artikel getArticle(ArtikelEntity article) {
         return Artikel.builder()
                 .id(article.getId())
                 .beschreibung(article.getBeschreibung())

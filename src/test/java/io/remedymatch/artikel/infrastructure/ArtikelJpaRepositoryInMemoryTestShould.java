@@ -1,4 +1,4 @@
-package io.remedymatch.article.infrastructure;
+package io.remedymatch.artikel.infrastructure;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Tag("SpringBoot")
 public class ArtikelJpaRepositoryInMemoryTestShould {
     @Autowired
-    private ArticleJpaRepository jpaRepository;
+    private ArtikelJpaRepository jpaRepository;
 
     @Test
     @Transactional
@@ -38,8 +38,8 @@ public class ArtikelJpaRepositoryInMemoryTestShould {
         assertEquals(fetched.getName(), article.getName());
     }
 
-    private ArticleEntity artikel(String name) {
-        return ArticleEntity.builder()
+    private ArtikelEntity artikel(String name) {
+        return ArtikelEntity.builder()
                 .name(name)
                 .ean("SAMPLE_EAN")
                 .beschreibung("Sample Beschreibung")

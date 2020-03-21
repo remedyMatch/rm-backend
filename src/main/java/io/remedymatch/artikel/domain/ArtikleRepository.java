@@ -1,4 +1,4 @@
-package io.remedymatch.article.domain;
+package io.remedymatch.artikel.domain;
 
 import java.util.List;
 import java.util.UUID;
@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import io.remedymatch.article.infrastructure.ArticleJpaRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
 
 @Repository
 public class ArtikleRepository {
     @Autowired
-    private ArticleJpaRepository jpaRepository;
+    private ArtikelJpaRepository jpaRepository;
 
     public List<Artikel> search() {
         return jpaRepository.findAll().stream().map(ArtikelMapper::getArticle).collect(Collectors.toList());

@@ -1,4 +1,4 @@
-package io.remedymatch.article.domain;
+package io.remedymatch.artikel.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

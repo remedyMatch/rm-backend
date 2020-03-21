@@ -1,4 +1,4 @@
-package io.remedymatch.article.infrastructure;
+package io.remedymatch.artikel.infrastructure;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +24,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class ArticleEntity {
+public class ArtikelEntity {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")

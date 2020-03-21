@@ -1,10 +1,10 @@
 package io.remedymatch.web;
 
 
-import io.remedymatch.institutions.InstitutionEntity;
-import io.remedymatch.institutions.InstitutionRepository;
-import io.remedymatch.persons.PersonEntity;
-import io.remedymatch.persons.PersonRepository;
+import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionRepository;
+import io.remedymatch.person.domain.PersonEntity;
+import io.remedymatch.person.domain.PersonRepository;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.core.annotation.Order;
@@ -30,11 +30,11 @@ public class UserCreationFilter implements Filter {
 
         val person = Optional.ofNullable(personRepository.findByUserName(userNameProvider.getUserName()));
 
-        if(person.isEmpty()){
+        if (person.isEmpty()) {
 
-            var institution =  Optional.ofNullable(institutionRepository.findByInstitutionKey(institutionKeyProvider.getInstitutionKey()));
+            var institution = Optional.ofNullable(institutionRepository.findByInstitutionKey(institutionKeyProvider.getInstitutionKey()));
 
-            if(institution.isEmpty()){
+            if (institution.isEmpty()) {
                 val newInstitution = new InstitutionEntity();
                 newInstitution.setInstitutionKey(institutionKeyProvider.getInstitutionKey());
                 institution = Optional.ofNullable(institutionRepository.save(newInstitution));
@@ -42,7 +42,7 @@ public class UserCreationFilter implements Filter {
 
             val newPerson = new PersonEntity();
             newPerson.setInstitution(institution.get());
-            newPerson.setUserName(userNameProvider.getUserName());
+            newPerson.setUsername(userNameProvider.getUserName());
             personRepository.save(newPerson);
         }
 

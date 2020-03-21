@@ -1,4 +1,4 @@
-package io.remedymatch.institutions;
+package io.remedymatch.institution.domain;
 
 
 import org.springframework.data.repository.CrudRepository;

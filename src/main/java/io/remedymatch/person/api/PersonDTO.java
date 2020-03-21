@@ -1,4 +1,4 @@
-package io.remedymatch.persons;
+package io.remedymatch.person.api;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.UUID;
 public class PersonDTO {
     private UUID id;
     private String userName;
-    private String firstName;
-    private String lastName;
-    private String telephoneNumber;
+    private String vorname;
+    private String nachname;
+    private String telefon;
 }

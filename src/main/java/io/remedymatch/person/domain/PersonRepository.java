@@ -1,4 +1,4 @@
-package io.remedymatch.persons;
+package io.remedymatch.person.domain;
 
 
 import org.springframework.data.repository.CrudRepository;

@@ -1,5 +1,6 @@
-package io.remedymatch.institutions;
+package io.remedymatch.institution.api;
 
+import io.remedymatch.institution.domain.InstitutionTyp;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,5 +12,5 @@ public class InstitutionDTO {
     private UUID id;
     private String institutionKey;
     private String name;
-    private InstitutionType type;
+    private InstitutionTyp typ;
 }

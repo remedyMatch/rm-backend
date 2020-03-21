@@ -13,8 +13,6 @@ public class UserNameProvider {
 
     public String getUserName(){
         Jwt jwt  = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         return jwt.getClaims().get("sub").toString();
     }
-
 }

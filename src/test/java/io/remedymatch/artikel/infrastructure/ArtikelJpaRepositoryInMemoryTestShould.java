@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.transaction.Transactional;
 
+import io.remedymatch.artikel.domain.ArtikelJpaRepository;
+import io.remedymatch.artikel.api.ArtikelMapper;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,8 +40,8 @@ public class ArtikelJpaRepositoryInMemoryTestShould {
         assertEquals(fetched.getName(), article.getName());
     }
 
-    private ArtikelEntity artikel(String name) {
-        return ArtikelEntity.builder()
+    private ArtikelMapper.ArtikelEntity artikel(String name) {
+        return ArtikelMapper.ArtikelEntity.builder()
                 .name(name)
                 .ean("SAMPLE_EAN")
                 .beschreibung("Sample Beschreibung")

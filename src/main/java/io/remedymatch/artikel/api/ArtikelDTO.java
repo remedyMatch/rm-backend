@@ -1,4 +1,4 @@
-package io.remedymatch.artikel.domain;
+package io.remedymatch.artikel.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class Artikel {
+public class ArtikelDTO {
 
 	private UUID id;
 

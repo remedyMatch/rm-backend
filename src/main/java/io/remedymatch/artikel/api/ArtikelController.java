@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.remedymatch.artikel.domain.Artikel;
 import io.remedymatch.artikel.domain.ArtikleRepository;
 
 /**
@@ -34,20 +33,20 @@ public class ArtikelController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<List<Artikel>> sucheArtikeln() {
+    ResponseEntity<List<ArtikelDTO>> sucheArtikeln() {
         return ResponseEntity.ok(artikleRepository.search());
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/{articleId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<Artikel> getArtikel(
+    ResponseEntity<ArtikelDTO> getArtikel(
             @NotBlank @PathVariable("articleId") UUID articleId) {
         return ResponseEntity.ok(artikleRepository.get(articleId));
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<Artikel> addArtikel(@Valid @RequestBody Artikel artikel) {
+    ResponseEntity<ArtikelDTO> addArtikel(@Valid @RequestBody ArtikelDTO artikel) {
         return ResponseEntity.ok(artikleRepository.add(artikel));
     }
 }

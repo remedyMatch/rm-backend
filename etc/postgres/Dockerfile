@@ -1,0 +1,10 @@
+FROM postgres:11.5
+
+RUN mkdir /data
+VOLUME /data
+
+ENV POSTGRES_USER=rmbe
+ENV POSTGRES_PASSWORD=rmbe
+ENV POSTGRES_DB=rmdb
+
+EXPOSE 5432/tcp

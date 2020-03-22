@@ -1318,3 +1318,195 @@ Liefert alle Bedarfe der Institution von angemeldeten User.
   ```
    curl -i -H 'Accept: application/json' http://localhost:7000/institution/bedarf
   ```
+
+# Person
+
+## Alle Personen laden
+
+Liefert alle Personen.
+
+* **Request:**
+
+  `GET /person`
+
+*  **URL Params**
+
+  None
+   
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "b4e17bb0-8558-44b1-ad2a-ec97bb012d45",
+      "username": "peterarzt",
+      "vorname": "Peter",
+      "nachname": "Arzt",
+      "telefon": "049..."
+    },
+    {
+      "id": "9c20eeb1-1c9f-433c-8a20-4a01eca30770",
+      "username": "juliahatetwas",
+      "vorname": "Julia",
+      "nachname": "Hat-Etwas",
+      "telefon": "049..."
+    },
+     
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/person
+  ```
+  
+## Person hinzufügen
+
+Person erstellen.
+
+* **Request:**
+
+  `POST /person`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  ```
+  {
+    "username": "peterarzt",
+    "vorname": "Peter",
+    "nachname": "Arzt",
+    "telefon": "049..."
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b4e17bb0-8558-44b1-ad2a-ec97bb012d45",
+    "username": "peterarzt",
+    "vorname": "Peter",
+    "nachname": "Arzt",
+    "telefon": "049..."
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+## Person lesen (noch nicht umgesetzt)
+
+Person lesen.
+
+* **Request:**
+
+  `GET /person/{personId}`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `personId=[UUID]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b4e17bb0-8558-44b1-ad2a-ec97bb012d45",
+    "username": "peterarzt",
+    "vorname": "Peter",
+    "nachname": "Arzt",
+    "telefon": "049..."
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Person nicht gefunden." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/person/b4e17bb0-8558-44b1-ad2a-ec97bb012d45
+  ```
+
+## Meine Person lesen 
+
+Daten der angemeldeter Person lesen.
+
+* **Request:**
+
+  `GET /person/userInfo`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b4e17bb0-8558-44b1-ad2a-ec97bb012d45",
+    "username": "peterarzt",
+    "vorname": "Peter",
+    "nachname": "Arzt",
+    "telefon": "049..."
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/person/userInfo
+  ```

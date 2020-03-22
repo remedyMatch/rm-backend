@@ -62,7 +62,7 @@ public class ArtikelIntegrationTest {
         artikelJpaRepository.deleteAll();
         artikelKategorieRepository.deleteAll();
     }
-    
+
     @Test
     @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
     public void shouldAddArtike() throws Exception {
@@ -97,5 +97,7 @@ public class ArtikelIntegrationTest {
         assertThat(artikelDTO.getHersteller(), is("hersteller-shouldAddArtikel"));
         assertThat(artikelDTO.getBeschreibung(), is("Testartikel-shouldAddArtikel"));
         assertThat(artikelDTO.getArtikelKategorie().getId(), is(artikelKategorie.getId()));
+
+        assertThat( artikelJpaRepository.findById(artikelDTO.getId()), notNullValue());
     }
 }

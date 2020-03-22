@@ -44,12 +44,12 @@ public class ArtikelController {
     @RequestMapping(method = RequestMethod.GET, path = "/{articleId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<ArtikelDTO> getArtikel(
-            @NotBlank @PathVariable("articleId") UUID articleId) {
+            @PathVariable("articleId") UUID articleId) {
         return ResponseEntity.ok(artikelRepository.get(articleId));
     }
 
     @Transactional
-    @RequestMapping(method = RequestMethod.POST, path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public @ResponseBody
     ResponseEntity<ArtikelDTO> addArtikel(@Valid @RequestBody ArtikelDTO artikel) {
         return ResponseEntity.ok(artikelRepository.add(artikel));

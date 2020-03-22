@@ -1,6 +1,8 @@
 package io.remedymatch;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -21,6 +23,10 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
+@ConditionalOnProperty(
+        value="remedy.security.disabled",
+        havingValue = "false",
+        matchIfMissing = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -31,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().authenticated();
         // Allow showing pages within a frame
         http.headers().frameOptions().sameOrigin();
+        http.csrf().disable();
     }
 
     private JwtAuthenticationConverter jwtAuthenticationConverter() {

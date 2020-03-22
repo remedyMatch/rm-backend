@@ -6,6 +6,7 @@ import io.remedymatch.TestApplication;
 import io.remedymatch.WithMockJWT;
 import io.remedymatch.artikel.api.ArtikelDTO;
 import io.remedymatch.artikel.api.ArtikelKategorieDTO;
+import io.remedymatch.artikel.api.ArtikelKategorieMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -78,25 +79,15 @@ public class ArtikelIntegrationTest {
 
     @Test
     @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
-    @Disabled
     public void shouldAddArtike() throws Exception {
 
-        mockMvc.perform(get("/bootstrap")
-        ).andExpect(MockMvcResultMatchers.status().isOk());
+        var artikelKategorie = artikelKategorieRepository.save(
+                ArtikelKategorieEntity.builder()
+                .name("shouldAddArtike")
+                .build()
+        );
 
-        ArtikelKategorieDTO kategorieDTO = ArtikelKategorieDTO.builder()
-                .id(UUID.randomUUID())
-                .name("shouldAddArtikel")
-                .build();
-        MvcResult savedKategorieResult = mockMvc.perform(post("/remedy/artikelkategorie")
-                .contentType("application/json")
-                .accept("application/json")
-                .content(objectMapper.writeValueAsString(kategorieDTO))
-        ).andReturn();
-        assertThat( savedKategorieResult.getResponse().getStatus(), is(200));
-        ArtikelKategorieDTO savedKategorieDTO = objectMapper.readValue(savedKategorieResult.getResponse().getContentAsString(), ArtikelKategorieDTO.class);
-
-        MvcResult postArtikelResult = mockMvc.perform(post("/remedy/")
+        MvcResult postArtikelResult = mockMvc.perform(post("/artikel")
                 .contentType("application/json")
                 .accept("application/json")
                 .content(
@@ -106,7 +97,7 @@ public class ArtikelIntegrationTest {
                                         .ean("ean-shouldAddArtikel")
                                         .hersteller("hersteller-shouldAddArtikel")
                                         .name("shouldAddArtikel")
-                                        .artikelKategorie(savedKategorieDTO)
+                                        .artikelKategorie(ArtikelKategorieMapper.getArtikelKategorieDTO(artikelKategorie))
                                         .build()
                         )
                 )).andReturn();
@@ -119,6 +110,6 @@ public class ArtikelIntegrationTest {
         assertThat(artikelDTO.getEan(), is("ean-shouldAddArtikel"));
         assertThat(artikelDTO.getHersteller(), is("hersteller-shouldAddArtikel"));
         assertThat(artikelDTO.getBeschreibung(), is("Testartikel-shouldAddArtikel"));
-        assertThat(artikelDTO.getArtikelKategorie().getId(), is(savedKategorieDTO.getId()));
+        assertThat(artikelDTO.getArtikelKategorie().getId(), is(artikelKategorie.getId()));
     }
 }

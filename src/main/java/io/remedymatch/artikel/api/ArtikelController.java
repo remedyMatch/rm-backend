@@ -45,7 +45,7 @@ public class ArtikelController {
     }
 
     @Transactional
-    @RequestMapping(method = RequestMethod.POST, path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public @ResponseBody
     ResponseEntity<ArtikelDTO> addArtikel(@Valid @RequestBody ArtikelDTO artikel) {
         return ResponseEntity.ok(artikelRepository.add(artikel));

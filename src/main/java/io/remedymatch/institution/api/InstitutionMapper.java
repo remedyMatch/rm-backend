@@ -9,6 +9,7 @@ public class InstitutionMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .typ(entity.getTyp())
+                .institutionKey(entity.getInstitutionKey())
                 .build();
     }
 
@@ -17,6 +18,7 @@ public class InstitutionMapper {
                 .id(dto.getId())
                 .name(dto.getName())
                 .typ(dto.getTyp())
+                .institutionKey(dto.getInstitutionKey())
                 .build();
     }
 }

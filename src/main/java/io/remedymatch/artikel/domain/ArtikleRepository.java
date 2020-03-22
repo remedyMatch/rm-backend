@@ -2,7 +2,7 @@ package io.remedymatch.artikel.domain;
 
 import io.remedymatch.artikel.api.ArtikelDTO;
 import io.remedymatch.artikel.api.ArtikelMapper;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,11 +10,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Repository
 public class ArtikleRepository {
-    private ArtikelJpaRepository jpaRepository;
-    private ArtikelKategorieRepository artikelKategorieRepository;
+    private final ArtikelJpaRepository jpaRepository;
+    private final ArtikelKategorieRepository artikelKategorieRepository;
 
     public List<ArtikelDTO> search(String nameLike) {
         if (nameLike != null && !nameLike.isBlank()) {

@@ -42,7 +42,8 @@ public class AngebotService {
         oldAngebot.setOriginalverpackt(angebot.isOriginalverpackt());
         oldAngebot.setSteril(angebot.isSteril());
         oldAngebot.setStandort(angebot.getStandort());
-        oldAngebot.setGueltigkeit(angebot.getGueltigkeit());
+        oldAngebot.setHaltbarkeit(angebot.getHaltbarkeit());
+        oldAngebot.setKommentar(angebot.getKommentar());
         angebotRepository.save(oldAngebot);
     }
 }

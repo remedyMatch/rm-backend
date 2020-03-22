@@ -44,7 +44,7 @@ public class ArtikelController {
     @RequestMapping(method = RequestMethod.GET, path = "/{articleId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<ArtikelDTO> getArtikel(
-            @NotBlank @PathVariable("articleId") UUID articleId) {
+            @PathVariable("articleId") UUID articleId) {
         return ResponseEntity.ok(artikelRepository.get(articleId));
     }
 

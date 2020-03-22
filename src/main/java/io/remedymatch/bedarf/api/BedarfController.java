@@ -6,7 +6,6 @@ import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class BedarfController {
     private final PersonRepository personRepository;
 
     @GetMapping()
-    @Secured("ROLE_admin")
     public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
         val institutions = StreamSupport.stream(bedarfService.alleBedarfeLaden().spliterator(), false)
                 .map(BedarfMapper::mapToDTO).collect(Collectors.toList());
@@ -49,6 +47,12 @@ public class BedarfController {
     @PutMapping
     public ResponseEntity<Void> bedarfUpdaten(@RequestBody BedarfDTO bedarfDTO) {
         bedarfService.bedarfUpdaten(BedarfMapper.mapToEntity(bedarfDTO));
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/bedienen")
+    public ResponseEntity<Void> bedarfBedienen(@RequestBody BedarfBedienenRequest request) {
+
         return ResponseEntity.ok().build();
     }
 

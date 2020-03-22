@@ -23,9 +23,6 @@ public class BedarfEntity {
     @Column
     private double anzahl;
 
-    @Enumerated(EnumType.STRING)
-    private MengenTyp mengenTyp;
-
     @ManyToOne(fetch = FetchType.EAGER)
     private ArtikelEntity artikel;
 

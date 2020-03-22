@@ -1,10 +1,10 @@
 package io.remedymatch.angebot.api;
 
-import io.remedymatch.angebot.domain.MengenTyp;
 import io.remedymatch.artikel.api.ArtikelDTO;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -12,7 +12,13 @@ import java.util.UUID;
 public class AngebotDTO {
     private UUID id;
     private ArtikelDTO artikel;
-    private MengenTyp mengenTyp;
     private double anzahl;
+
+    private String kommentar;
+    private String standort;
+    private LocalDateTime haltbarkeit;
+    private boolean steril;
+    private boolean originalverpackt;
+    private boolean medizinisch;
 
 }

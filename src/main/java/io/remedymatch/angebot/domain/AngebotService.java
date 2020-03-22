@@ -38,6 +38,12 @@ public class AngebotService {
         val oldAngebot = angebotRepository.findById(angebot.getId()).get();
         oldAngebot.setAnzahl(angebot.getAnzahl());
         oldAngebot.setArtikel(angebot.getArtikel());
+        oldAngebot.setMedizinisch(angebot.isMedizinisch());
+        oldAngebot.setOriginalverpackt(angebot.isOriginalverpackt());
+        oldAngebot.setSteril(angebot.isSteril());
+        oldAngebot.setStandort(angebot.getStandort());
+        oldAngebot.setHaltbarkeit(angebot.getHaltbarkeit());
+        oldAngebot.setKommentar(angebot.getKommentar());
         angebotRepository.save(oldAngebot);
     }
 }

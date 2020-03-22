@@ -1,20 +1,17 @@
 package io.remedymatch.artikel.api;
 
-import java.util.List;
-import java.util.UUID;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.remedymatch.artikel.domain.ArtikleRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import io.remedymatch.artikel.domain.ArtikleRepository;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Artikel REST API
@@ -24,7 +21,7 @@ import io.remedymatch.artikel.domain.ArtikleRepository;
 @RestController
 @RequestMapping("/artikel")
 @Validated
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ArtikelController {
 
     private final ArtikleRepository artikelRepository;
@@ -32,8 +29,15 @@ public class ArtikelController {
     @Transactional(readOnly = true)
     @RequestMapping(method = RequestMethod.GET, path = "/suche", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<List<ArtikelDTO>> sucheArtikeln(@RequestParam("nameLike") String nameLike) {
+    ResponseEntity<List<ArtikelDTO>> sucheArtikeln(@RequestParam(value = "nameLike", required = false) String nameLike) {
         return ResponseEntity.ok(artikelRepository.search(nameLike));
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping
+    public @ResponseBody
+    ResponseEntity<List<ArtikelDTO>> alleArtikelLaden() {
+        return ResponseEntity.ok(artikelRepository.search(null));
     }
 
     @Transactional(readOnly = true)

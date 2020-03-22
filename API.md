@@ -1,5 +1,223 @@
 # Rest API
 
+# Angebot
+
+## Alle Angebote liefern
+
+Liefert alle aktuelle Angebote.
+
+* **Request:**
+
+  `GET /angebot`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+      "artikel": {
+        "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+      },
+      "anzahl": 10000,
+      "kommentar": "Wir haben 10000 Masken übrig",
+      "standort": "...",
+      "haltbarkeit": "2022-01-25T21:34:55",
+      "steril": false,
+      "originalverpackt": true,
+      "medizinisch": false
+    },
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/angebot
+  ```
+
+## Angebot melden
+
+Angebot melden.
+
+* **Request:**
+
+  `POST /angebot`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  ```
+  {
+    "artikel": {
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+    },
+    "anzahl": 10000,
+    "kommentar": "Wir haben 10000 Masken übrig",
+    "standort": "...",
+    "haltbarkeit": "2022-01-25T21:34:55",
+    "steril": false,
+    "originalverpackt": true,
+    "medizinisch": false
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+    "artikel": {
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+    },
+    "anzahl": 10000,
+    "kommentar": "Wir haben 10000 Masken übrig",
+    "standort": "...",
+    "haltbarkeit": "2022-01-25T21:34:55",
+    "steril": false,
+    "originalverpackt": true,
+    "medizinisch": false
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+## Angebot aktualisieren
+
+Angebot aktualisieren.
+
+* **Request:**
+
+  `PUT /angebot`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  ```
+  {
+    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+    "artikel": {
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+    },
+    "anzahl": 10000,
+    "kommentar": "Wir haben 10000 Masken übrig",
+    "standort": "...",
+    "haltbarkeit": "2022-01-25T21:34:55",
+    "steril": false,
+    "originalverpackt": true,
+    "medizinisch": false
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+    "artikel": {
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+    },
+    "anzahl": 10000,
+    "kommentar": "Wir haben 10000 Masken übrig",
+    "standort": "...",
+    "haltbarkeit": "2022-01-25T21:34:55",
+    "steril": false,
+    "originalverpackt": true,
+    "medizinisch": false
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+## Angebot löschen
+
+Angebot löschen.
+
+* **Request:**
+
+  `DELETE /angebot/{angebotId}`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `angebotId=[UUID]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Angebot nicht gefunden." }`
+
+* **Sample Call:**
+
+  ```
+   curl -X DELETE http://localhost:7000/angebot/5bc4f514-c591-470e-a056-933f3ea00421
+  ```
+
 # Artikel
 
 ## Artikel-Kategorie Suche
@@ -156,9 +374,9 @@ Suche nach Artikel einer Kategorien.
    curl -i -H 'Accept: application/json' http://localhost:7000/artikelkategorie/77977887-78e8-4ee3-8a34-ec37fcfc5f8b/artikel"
   ```
 
-## Artikel-Kategorie hinzufÃ¼gen
+## Artikel-Kategorie hinzufügen
 
-Eine Artikel-Kategorie hinzufï¿½gen.
+Eine Artikel-Kategorie hinzufügen.
 
 * **Request:**
 
@@ -360,9 +578,9 @@ Ein Artikel lesen.
    curl -i -H 'Accept: application/json' http://localhost:7000/artikel/bbeac45e-e296-4fad-878d-7e9b6e85a3d8
   ```
 
-## Artikel hinzufï¿½gen
+## Artikel hinzufügen
 
-Ein Artikel hinzufï¿½gen.
+Ein Artikel hinzufügen.
 
 * **Request:**
 
@@ -462,6 +680,194 @@ Ein Artikel hinzufügen.
     **Content:** `{ error : "You are unauthorized to make this request." }`
 
 * **Sample Call:**
+
+# Bedarf
+
+## Alle Bedarfe liefern
+
+Liefert alle aktuelle Bedarfe.
+
+* **Request:**
+
+  `GET /bedarf`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
+      "artikel": {
+        "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+      },
+      "anzahl": 10000
+    },
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/bedarf
+  ```
+
+## Bedarf melden
+
+Bedarf melden.
+
+* **Request:**
+
+  `POST /bedarf`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  ```
+  {
+    "artikel": {
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+    },
+    "anzahl": 10000
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
+    "artikel": {
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+    },
+    "anzahl": 10000
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+## Bedarf aktualisieren
+
+Bedarf aktualisieren.
+
+* **Request:**
+
+  `PUT /bedarf`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  ```
+  {
+    "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
+    "artikel": {
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+    },
+    "anzahl": 10000
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
+    "artikel": {
+      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+    },
+    "anzahl": 10000
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+## Bedarf löschen
+
+Bedarf löschen.
+
+* **Request:**
+
+  `DELETE /bedarf/{bedarfId}`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `bedarfId=[UUID]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Bedarf nicht gefunden." }`
+
+* **Sample Call:**
+
+  ```
+   curl -X DELETE http://localhost:7000/bedarf/b872561f-dab9-43c2-bec9-d4e3694a7ea1
+  ```
 
 # Institution
 

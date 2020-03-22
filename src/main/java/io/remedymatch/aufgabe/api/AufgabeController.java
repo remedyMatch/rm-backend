@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/angebot")
+@RequestMapping("/aufgabe")
 public class AufgabeController {
 
     private final UserProvider userProvider;

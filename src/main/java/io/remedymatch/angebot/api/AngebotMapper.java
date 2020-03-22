@@ -12,7 +12,11 @@ public class AngebotMapper {
                 .id(entity.getId())
                 .anzahl(entity.getAnzahl())
                 .artikel(getArticleDTO(entity.getArtikel()))
-                .mengenTyp(entity.getMengenTyp())
+                .gueltigkeit(entity.getGueltigkeit())
+                .medizinisch(entity.isMedizinisch())
+                .originalverpackt(entity.isOriginalverpackt())
+                .standort(entity.getStandort())
+                .steril(entity.isSteril())
                 .build();
     }
 
@@ -21,7 +25,11 @@ public class AngebotMapper {
                 .id(dto.getId())
                 .anzahl(dto.getAnzahl())
                 .artikel(getArticleEntity(dto.getArtikel()))
-                .mengenTyp(dto.getMengenTyp())
+                .gueltigkeit(dto.getGueltigkeit())
+                .medizinisch(dto.isMedizinisch())
+                .originalverpackt(dto.isOriginalverpackt())
+                .standort(dto.getStandort())
+                .steril(dto.isSteril())
                 .build();
     }
 }

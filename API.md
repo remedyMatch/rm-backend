@@ -1,8 +1,15 @@
 # Rest API
 
+Beschreibung der Rest-API für:
+* Angebot
+* Artikel und Artikel-Kategorie
+* Bedarf
+* Institution
+* Person
+
 # Angebot
 
-## Alle Angebote liefern
+## Alle Angebote laden
 
 Liefert alle aktuelle Angebote.
 
@@ -683,7 +690,7 @@ Ein Artikel hinzufügen.
 
 # Bedarf
 
-## Alle Bedarfe liefern
+## Alle Bedarfe laden
 
 Liefert alle aktuelle Bedarfe.
 
@@ -871,7 +878,57 @@ Bedarf löschen.
 
 # Institution
 
-## Institutionen Suche
+## Alle Institutionen laden
+
+Liefert alle aktuelle Institutionen.
+
+* **Request:**
+
+  `GET /institution`
+
+*  **URL Params**
+
+  None
+   
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+      "key": "isar_klinikum",
+      "name":	"ISAR Klinikum®",
+      "typ": "krankenhaus"
+    },
+    {
+      "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+      "key": "arzt_praxis_xyz",
+      "name":	"Arzt Praxis XYZ®",
+      "typ": "doktor"
+    },
+     
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/institution
+  ```
+
+## Institutionen Suche (noch nicht umgesetzt)
 
 Suche nach Institutionen.
 
@@ -923,7 +980,7 @@ Suche nach Institutionen.
    curl -i -H 'Accept: application/json' http://localhost:7000/institution/suche?nameLike="xyz"
   ```
 
-## Institution lesen
+## Institution lesen (noch nicht umgesetzt)
 
 Eine Institution lesen.
 
@@ -970,7 +1027,7 @@ Eine Institution lesen.
    curl -i -H 'Accept: application/json' http://localhost:7000/institution/krankenhaus_xy
   ```
 
-## Institution hinzufugen 
+## Institution hinzufugen (noch nicht umgesetzt)
 
 Eine Institution hinzufügen.
 
@@ -1018,8 +1075,7 @@ Eine Institution hinzufügen.
 
 * **Sample Call:**
 
-
-## Institution aktualisieren 
+## Institution aktualisieren (noch nicht umgesetzt)
 
 Eine Institution aktualisieren.
 
@@ -1076,3 +1132,189 @@ Eine Institution aktualisieren.
     **Content:** `{ error : "You are unauthorized to make this request." }`
 
 * **Sample Call:**
+
+## Meine Institution lesen 
+
+Institution des angemeldetes Benutzer lesen.
+
+* **Request:**
+
+  `GET /institution/assigned`
+
+*  **Path Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+    "key": "isar_klinikum",
+    "name":	"ISAR Klinikum®",
+    "typ": "krankenhaus"
+   }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/institution/assigned
+  ```
+
+## Meine Institution aktualisieren
+
+Institution des angemeldetes Benutzer aktualisieren.
+
+* **Request:**
+
+  `PUT /institution/`
+
+* **Path Params**
+
+   **Required:**
+ 
+   `institutionKey=[string]`
+
+* **Data Params**
+
+  ```
+  {
+    "key": "isar_klinikum",
+    "name":	"ISAR Klinikum®",
+    "typ": "krankenhaus"
+  }
+  ```
+
+** ** Typ **
+  `krankenhaus` / `doktor`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
+    "key": "isar_klinikum",
+    "name":	"ISAR Klinikum®",
+    "typ": "krankenhaus"
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+## Alle Angebote einer Institution laden
+
+Liefert alle Angebote der Institution von angemeldeten User. 
+
+* **Request:**
+
+  `GET /institution/angebot`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+      "artikel": {
+        "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+      },
+      "anzahl": 10000,
+      "kommentar": "Wir haben 10000 Masken übrig",
+      "standort": "...",
+      "haltbarkeit": "2022-01-25T21:34:55",
+      "steril": false,
+      "originalverpackt": true,
+      "medizinisch": false
+    },
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/institution/angebot
+  ```
+
+## Alle Bedarfe einer Institution laden
+
+Liefert alle Bedarfe der Institution von angemeldeten User. 
+
+* **Request:**
+
+  `GET /institution/bedarf`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
+      "artikel": {
+        "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
+      },
+      "anzahl": 10000
+    },
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/institution/bedarf
+  ```

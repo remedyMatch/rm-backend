@@ -29,4 +29,19 @@ public class BedarfEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private InstitutionEntity institution;
 
+    @Column(length = 60)
+    private String standort;
+
+    @Column
+    private boolean steril;
+
+    @Column
+    private boolean originalverpackt;
+
+    @Column
+    private boolean medizinisch;
+
+    @Column
+    private String kommentar;
+
 }

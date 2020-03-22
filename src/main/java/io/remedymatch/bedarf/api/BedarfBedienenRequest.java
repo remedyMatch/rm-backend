@@ -10,6 +10,5 @@ import java.util.UUID;
 public class BedarfBedienenRequest {
 
     private UUID bedarfId;
-    private UUID institutionId;
     private String kommentar;
 }

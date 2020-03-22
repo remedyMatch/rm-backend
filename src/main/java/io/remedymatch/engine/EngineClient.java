@@ -2,6 +2,7 @@ package io.remedymatch.engine;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 @AllArgsConstructor
 @Component
@@ -15,5 +16,6 @@ public class EngineClient {
 //    @Qualifier("remote")
 //    public final TaskService taskService;
 
+    private final RestTemplate restTemplate;
 
 }

@@ -35,4 +35,7 @@ public class InstitutionEntity {
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<AngebotEntity> angebote;
+
+    @Column
+    private String standort;
 }

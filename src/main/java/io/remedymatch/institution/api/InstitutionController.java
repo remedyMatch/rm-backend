@@ -45,6 +45,7 @@ public class InstitutionController {
 
         var updateInstitution = institution.get();
         updateInstitution.setName(institutionDTO.getName());
+        updateInstitution.setStandort(institutionDTO.getStandort());
         institutionsRepository.save(updateInstitution);
 
         return ResponseEntity.ok().build();

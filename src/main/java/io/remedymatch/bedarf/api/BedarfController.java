@@ -56,5 +56,4 @@ public class BedarfController {
         bedarfService.starteAnfrage(request.getBedarfId(), user.getInstitution(), request.getKommentar());
         return ResponseEntity.ok().build();
     }
-
 }

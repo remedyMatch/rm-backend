@@ -13,4 +13,5 @@ public class InstitutionDTO {
     private String institutionKey;
     private String name;
     private InstitutionTyp typ;
+    private String standort;
 }

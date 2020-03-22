@@ -1,11 +1,13 @@
 package io.remedymatch.artikel.domain;
 
 
+import io.remedymatch.TestApplication;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
@@ -16,8 +18,7 @@ import javax.transaction.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-//@SpringBootTest(classes = RmBeApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-@DataJpaTest
+@SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
 @ActiveProfiles("test")
 @Tag("InMemory")

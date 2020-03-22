@@ -3,15 +3,15 @@ package io.remedymatch;
 import net.minidev.json.JSONArray;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
 import java.time.Instant;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class WithMockJWTSecurityContextFactory implements WithSecurityContextFactory<WithMockJWT> {
     @Override
@@ -20,13 +20,17 @@ public class WithMockJWTSecurityContextFactory implements WithSecurityContextFac
         if (annotation.subClaim() != null) {
             claims.put("sub", annotation.subClaim());
         }
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         if (annotation.groupsClaim() != null && annotation.groupsClaim().length > 0) {
             var groups = new JSONArray();
             for (String groupName : annotation.groupsClaim()) {
                 groups.appendElement(groupName);
+                grantedAuthorities.add(new SimpleGrantedAuthority(groupName));
             }
             claims.put("groups",groups);
         }
+
         var fakedHeader = new HashMap<String,Object>();
         fakedHeader.put("typ","JWT");
         var jwt = new Jwt(

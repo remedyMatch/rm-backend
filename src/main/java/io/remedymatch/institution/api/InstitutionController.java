@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static io.remedymatch.institution.api.InstitutionMapper.mapToDTO;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/institution")
@@ -60,5 +62,9 @@ public class InstitutionController {
         return ResponseEntity.ok(person.getInstitution().getAngebote().stream().map(AngebotMapper::mapToDTO).collect(Collectors.toList()));
     }
 
-
+    @GetMapping("/assigned")
+    public ResponseEntity<InstitutionDTO> institutionLaden() {
+        val person = personRepository.findByUsername(userProvider.getUserName());
+        return ResponseEntity.ok(mapToDTO(person.getInstitution()));
+    }
 }

@@ -29,3 +29,7 @@ spring:
         format_sql: false
     generate-ddl: true
 spring.security.oauth2.resourceserver.jwt.issuer-uri: http://localhost:8090/auth/realms/master
+
+logging:
+  level:
+    root: debug

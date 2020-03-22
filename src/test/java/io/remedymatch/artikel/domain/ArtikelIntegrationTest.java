@@ -3,6 +3,7 @@ package io.remedymatch.artikel.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.remedymatch.RmBeApplication;
+import io.remedymatch.WithMockJWT;
 import io.remedymatch.artikel.api.ArtikelDTO;
 import io.remedymatch.artikel.api.ArtikelKategorieDTO;
 import org.hamcrest.CoreMatchers;
@@ -14,8 +15,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +27,14 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = RmBeApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @Tag("InMemory")
-@Disabled
+@Tag("SpringBoot")
 public class ArtikelIntegrationTest {
 
     @Autowired
@@ -52,6 +57,7 @@ public class ArtikelIntegrationTest {
     }
 
     @Test
+    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
     public void shouldAddArtike() throws Exception {
 
         ArtikelKategorieDTO kategorieDTO = ArtikelKategorieDTO.builder()

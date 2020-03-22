@@ -51,7 +51,7 @@ public class ArtikelKategorieController {
         );
     }
 
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST,consumes = "application/json",produces = "application/json")
     @Transactional
     ResponseEntity<ArtikelKategorieDTO> addArtikelKategorie(@RequestBody ArtikelKategorieDTO toAdd) {
         if (artikelKategorieRepository.findByName(toAdd.getName()).isPresent()) {

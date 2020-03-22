@@ -31,7 +31,7 @@ public class BedarfController {
         return ResponseEntity.ok(institutions);
     }
 
-    @PostMapping("/melden")
+    @PostMapping
     public ResponseEntity<Void> bedarfMelden(@RequestBody BedarfDTO bedarf) {
         val user = personRepository.findByUsername(userProvider.getUserName());
         bedarfService.bedarfMelden(mapToEntity(bedarf), user.getInstitution());

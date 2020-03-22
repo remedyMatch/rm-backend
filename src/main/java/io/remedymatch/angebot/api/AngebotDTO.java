@@ -1,6 +1,7 @@
 package io.remedymatch.angebot.api;
 
 import io.remedymatch.artikel.api.ArtikelDTO;
+import io.remedymatch.institution.api.InstitutionDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Builder
 public class AngebotDTO {
     private UUID id;
+    private InstitutionDTO institution;
     private ArtikelDTO artikel;
     private double anzahl;
 

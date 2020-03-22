@@ -14,8 +14,9 @@ public class AngebotDTO {
     private ArtikelDTO artikel;
     private double anzahl;
 
+    private String kommentar;
     private String standort;
-    private LocalDateTime gueltigkeit;
+    private LocalDateTime haltbarkeit;
     private boolean steril;
     private boolean originalverpackt;
     private boolean medizinisch;

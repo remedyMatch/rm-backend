@@ -31,11 +31,11 @@ public class AngebotEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private InstitutionEntity institution;
 
-    @Column
+    @Column(length = 60)
     private String standort;
 
     @Column
-    private LocalDateTime gueltigkeit;
+    private LocalDateTime haltbarkeit;
 
     @Column
     private boolean steril;
@@ -45,5 +45,8 @@ public class AngebotEntity {
 
     @Column
     private boolean medizinisch;
+
+    @Column
+    private String kommentar;
 
 }

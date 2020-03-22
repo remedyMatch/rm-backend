@@ -28,9 +28,12 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation 'org.mockito:mockito-junit-jupiter:3.3.3'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'com.jayway.jsonpath:json-path:2.4.0'
+	testCompile 'org.hamcrest:hamcrest:2.2'
 }
 
 test {

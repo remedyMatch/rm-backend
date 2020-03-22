@@ -1,21 +1,27 @@
 package io.remedymatch.artikel.domain;
 
+import io.remedymatch.artikel.api.ArtikelDTO;
+import io.remedymatch.artikel.api.ArtikelMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import io.remedymatch.artikel.api.ArtikelDTO;
-import io.remedymatch.artikel.api.ArtikelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
+@SuppressWarnings("unused")
+@RequiredArgsConstructor
 @Repository
 public class ArtikleRepository {
-    @Autowired
     private ArtikelJpaRepository jpaRepository;
+    private ArtikelKategorieRepository artikelKategorieRepository;
 
-    public List<ArtikelDTO> search() {
-        return jpaRepository.findAll().stream().map(ArtikelMapper::getArticleDTO).collect(Collectors.toList());
+    public List<ArtikelDTO> search(String nameLike) {
+        if (nameLike != null && !nameLike.isBlank()) {
+            return jpaRepository.findByNameLike("%" + nameLike + "%").stream().map(ArtikelMapper::getArticleDTO).collect(Collectors.toList());
+        } else {
+            return jpaRepository.findAll().stream().map(ArtikelMapper::getArticleDTO).collect(Collectors.toList());
+        }
     }
 
     public ArtikelDTO get(UUID articleId) {
@@ -23,10 +29,28 @@ public class ArtikleRepository {
     }
 
     public ArtikelDTO add(ArtikelDTO artikel) {
-        return ArtikelMapper.getArticleDTO(
-                jpaRepository.save(
-                        ArtikelMapper.getArticleEntity(artikel)
-                )
-        );
+        var toSave = ArtikelMapper.getArticleEntity(artikel);
+
+        if (artikel.getArtikelKategorie() != null) {
+            toSave.setArtikelKategorie(artikelKategorieRepository.findById(artikel.getArtikelKategorie().getId()).orElseThrow());
+        }
+        return ArtikelMapper.getArticleDTO(jpaRepository.save(toSave));
+    }
+
+    public ArtikelDTO update(ArtikelDTO artikelDTO) {
+        var entity = jpaRepository.findById(artikelDTO.getId()).orElseThrow();
+
+        ArtikelKategorieEntity artikelKategorieEntity;
+        if (artikelDTO.getArtikelKategorie() != null && artikelDTO.getArtikelKategorie().getId() != null) {
+            artikelKategorieEntity = artikelKategorieRepository.findById(artikelDTO.getArtikelKategorie().getId()).orElseThrow();
+        } else {
+            artikelKategorieEntity = null;
+        }
+        entity.setArtikelKategorie(artikelKategorieEntity);
+        entity.setBeschreibung(artikelDTO.getBeschreibung());
+        entity.setEan(artikelDTO.getEan());
+        entity.setHersteller(artikelDTO.getHersteller());
+        entity.setName(artikelDTO.getName());
+        return ArtikelMapper.getArticleDTO(jpaRepository.save(entity));
     }
 }

@@ -10,16 +10,20 @@ public class ArtikelMapper {
                 .ean(artikel.getEan())
                 .hersteller(artikel.getHersteller())
                 .name(artikel.getName())
+                .artikelKategorie(ArtikelKategorieMapper.getArtikelKategorieEntity(artikel.getArtikelKategorie()))
                 .build();
     }
 
-    public static io.remedymatch.artikel.api.ArtikelDTO getArticleDTO(ArtikelEntity article) {
-        return io.remedymatch.artikel.api.ArtikelDTO.builder()
+    public static ArtikelDTO getArticleDTO(ArtikelEntity article) {
+        return ArtikelDTO.builder()
                 .id(article.getId())
                 .beschreibung(article.getBeschreibung())
                 .ean(article.getEan())
                 .hersteller(article.getHersteller())
                 .name(article.getName())
+                .artikelKategorie(
+                        ArtikelKategorieMapper.getArtikelKategorieDTO(article.getArtikelKategorie())
+                )
                 .build();
     }
 }

@@ -28,4 +28,6 @@ public class ArtikelDTO {
 	private String beschreibung;
 
 	private String hersteller;
+
+	private ArtikelKategorieDTO artikelKategorie;
 }

@@ -123,16 +123,16 @@ Suche nach Artikel einer Kategorien.
       "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
       "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
       "ean": "4046719303120", 
-      "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-      "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+      "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+      "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
       "hersteller": "3M"
     },
     {
       "id": "atemschutzmaske_FFP2_M3",
       "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
       "ean": "4046719382583", 
-      "name":	"Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-      "beschreibung": "Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+      "name":	"Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+      "beschreibung": "Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
       "hersteller": "3M"
     },
      
@@ -156,9 +156,9 @@ Suche nach Artikel einer Kategorien.
    curl -i -H 'Accept: application/json' http://localhost:7000/artikelkategorie/77977887-78e8-4ee3-8a34-ec37fcfc5f8b/artikel"
   ```
 
-## Artikel-Kategorie hinzufügen
+## Artikel-Kategorie hinzufÃ¼gen
 
-Eine Artikel-Kategorie hinzufügen.
+Eine Artikel-Kategorie hinzufï¿½gen.
 
 * **Request:**
 
@@ -199,6 +199,11 @@ Eine Artikel-Kategorie hinzufügen.
 
   * **Code:** 401 UNAUTHORIZED <br />
     **Content:** `{ error : "You are unauthorized to make this request." }`
+
+    OR
+
+  * **Code:** 409 CONFLICT <br />
+    **Content:** `{ error : "Category with name exists already" }`
 
 * **Sample Call:**
 
@@ -278,16 +283,16 @@ Suche nach Artikeln.
       "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
       "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
       "ean": "4046719303120", 
-      "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-      "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+      "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+      "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
       "hersteller": "3M"
     },
     {
       "id": "atemschutzmaske_FFP2_M3",
       "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
       "ean": "4046719382583", 
-      "name":	"Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-      "beschreibung": "Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+      "name":	"Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+      "beschreibung": "Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
       "hersteller": "3M"
     },
      
@@ -333,8 +338,8 @@ Ein Artikel lesen.
     "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
     "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
     "ean": "4046719303120", 
-    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
     "hersteller": "3M"
    }
   ```
@@ -355,9 +360,9 @@ Ein Artikel lesen.
    curl -i -H 'Accept: application/json' http://localhost:7000/artikel/bbeac45e-e296-4fad-878d-7e9b6e85a3d8
   ```
 
-## Artikel hinzufügen
+## Artikel hinzufï¿½gen
 
-Ein Artikel hinzufügen.
+Ein Artikel hinzufï¿½gen.
 
 * **Request:**
 
@@ -420,8 +425,8 @@ Ein Artikel hinzufügen.
     "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
     "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
     "ean": "4046719303120", 
-    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
     "hersteller": "3M"
    }
   ```
@@ -435,8 +440,8 @@ Ein Artikel hinzufügen.
     "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
     "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
     "ean": "4046719303120", 
-    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
+    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
     "hersteller": "3M"
    }
   ```

@@ -4,10 +4,12 @@ package io.remedymatch.artikel.domain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.remedymatch.TestApplication;
 import io.remedymatch.WithMockJWT;
+import io.remedymatch.angebot.domain.AngebotRepository;
 import io.remedymatch.artikel.api.ArtikelDTO;
 import io.remedymatch.artikel.api.ArtikelKategorieDTO;
 import io.remedymatch.artikel.api.ArtikelKategorieMapper;
 import io.remedymatch.artikel.api.ArtikelMapper;
+import io.remedymatch.bedarf.domain.BedarfRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,12 @@ public class ArtikelIntegrationTest {
     @Autowired
     private ArtikelKategorieRepository artikelKategorieRepository;
 
+    @Autowired
+    private BedarfRepository bedarfRepository;
+
+    @Autowired
+    private AngebotRepository angebotRepository;
+
     private MockMvc mockMvc;
 
     @Autowired
@@ -54,6 +62,8 @@ public class ArtikelIntegrationTest {
     @Transactional
     public void beforeEach() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        angebotRepository.deleteAll();
+        bedarfRepository.deleteAll();
         artikelJpaRepository.deleteAll();
         artikelKategorieRepository.deleteAll();
     }

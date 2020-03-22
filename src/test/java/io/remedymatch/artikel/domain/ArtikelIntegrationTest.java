@@ -62,21 +62,7 @@ public class ArtikelIntegrationTest {
         artikelJpaRepository.deleteAll();
         artikelKategorieRepository.deleteAll();
     }
-
-    @Test
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
-    public void shouldReadAlleKategorien() throws Exception {
-        artikelKategorieRepository.save(ArtikelKategorieEntity.builder().name("sample").build());
-        mockMvc.perform(get("/artikelkategorie")
-                .contentType("application/json")
-                .accept("application/json")
-        )
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", is(("sample"))))
-                .andReturn();
-    }
-
+    
     @Test
     @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
     public void shouldAddArtike() throws Exception {

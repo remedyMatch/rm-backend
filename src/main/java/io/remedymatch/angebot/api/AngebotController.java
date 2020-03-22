@@ -32,7 +32,7 @@ public class AngebotController {
         return ResponseEntity.ok(angebote);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> angebotMelden(@RequestBody AngebotDTO angebot) {
         val user = personRepository.findByUsername(userNameProvider.getUserName());
         angebotService.angebotMelden(mapToEntity(angebot), user.getInstitution());

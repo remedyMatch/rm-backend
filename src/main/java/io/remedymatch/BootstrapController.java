@@ -17,8 +17,8 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class BootstrapController {
     Logger logger = Logger.getLogger(BootstrapController.class.getName());
-    private ArtikelJpaRepository artikelJpaRepository;
-    private ArtikelKategorieRepository artikelKategorieRepository;
+    private final ArtikelJpaRepository artikelJpaRepository;
+    private final ArtikelKategorieRepository artikelKategorieRepository;
 
     @GetMapping
     public String ping() {

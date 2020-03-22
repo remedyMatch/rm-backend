@@ -25,6 +25,7 @@ public class WithMockJWTSecurityContextFactory implements WithSecurityContextFac
             for (String groupName : annotation.groupsClaim()) {
                 groups.appendElement(groupName);
             }
+            claims.put("groups",groups);
         }
         var fakedHeader = new HashMap<String,Object>();
         fakedHeader.put("typ","JWT");

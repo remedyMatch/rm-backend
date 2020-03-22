@@ -1,10 +1,11 @@
-server:
-    port: 8081
-    servlet.context-path: /remedy
+#server:
+ #   port: 8081
+  #  servlet.context-path: /remedy
 
-logging:
-  level:
-    root: info
+remedy:
+  security:
+    disabled:
+      true
 
 spring:
   datasource:
@@ -32,4 +33,8 @@ spring:
         use_sql_comments: false
         format_sql: false
     generate-ddl: true
-spring.security.oauth2.resourceserver.jwt.issuer-uri: http://localhost:8090/auth/realms/master
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+logging:
+  level:
+    root: debug

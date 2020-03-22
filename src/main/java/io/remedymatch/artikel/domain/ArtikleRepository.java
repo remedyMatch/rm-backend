@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Repository
 public class ArtikleRepository {
-    private ArtikelJpaRepository jpaRepository;
-    private ArtikelKategorieRepository artikelKategorieRepository;
+    private final ArtikelJpaRepository jpaRepository;
+    private final ArtikelKategorieRepository artikelKategorieRepository;
 
     public List<ArtikelDTO> search(String nameLike) {
         if (nameLike != null && !nameLike.isBlank()) {

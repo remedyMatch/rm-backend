@@ -27,7 +27,7 @@ import io.remedymatch.artikel.domain.ArtikleRepository;
 @RequiredArgsConstructor
 public class ArtikelController {
 
-    private ArtikleRepository artikelRepository;
+    private final ArtikleRepository artikelRepository;
 
     @Transactional(readOnly = true)
     @RequestMapping(method = RequestMethod.GET, path = "/suche", produces = MediaType.APPLICATION_JSON_VALUE)

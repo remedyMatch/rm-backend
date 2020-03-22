@@ -4,7 +4,7 @@ import io.remedymatch.angebot.api.AngebotDTO;
 import io.remedymatch.angebot.api.AngebotMapper;
 import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.person.domain.PersonRepository;
-import io.remedymatch.web.UserNameProvider;
+import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class AufgabeController {
 
     private final AngebotService angebotService;
     private final PersonRepository personRepository;
-    private final UserNameProvider userNameProvider;
+    private final UserProvider userProvider;
 
     @GetMapping
     public ResponseEntity<List<AngebotDTO>> getAll() {
@@ -36,7 +36,7 @@ public class AufgabeController {
 
     @PostMapping()
     public ResponseEntity<Void> angebotMelden(@RequestBody AngebotDTO angebot) {
-        val user = personRepository.findByUserName(userNameProvider.getUserName());
+        val user = personRepository.findByUsername(userProvider.getUserName());
         angebotService.angebotMelden(mapToEntity(angebot), user.getInstitution());
         return ResponseEntity.ok().build();
     }

@@ -2,7 +2,7 @@ package io.remedymatch.bedarf.api;
 
 import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.person.domain.PersonRepository;
-import io.remedymatch.web.UserNameProvider;
+import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import static io.remedymatch.bedarf.api.BedarfMapper.mapToEntity;
 public class BedarfController {
 
     private final BedarfService bedarfService;
-    private final UserNameProvider userNameProvider;
+    private final UserProvider userProvider;
     private final PersonRepository personRepository;
 
     @GetMapping()
@@ -35,7 +35,7 @@ public class BedarfController {
 
     @PostMapping("/melden")
     public ResponseEntity<Void> bedarfMelden(@RequestBody BedarfDTO bedarf) {
-        val user = personRepository.findByUserName(userNameProvider.getUserName());
+        val user = personRepository.findByUsername(userProvider.getUserName());
         bedarfService.bedarfMelden(mapToEntity(bedarf), user.getInstitution());
         return ResponseEntity.ok().build();
     }

@@ -1,18 +1,17 @@
 package io.remedymatch.web;
 
-import lombok.val;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
-import java.util.Optional;
-
+@AllArgsConstructor
 @Component
-public class UserNameProvider {
+public class UserProvider {
 
-    public String getUserName(){
-        Jwt jwt  = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    public String getUserName() {
+        Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return jwt.getClaims().get("sub").toString();
     }
 }

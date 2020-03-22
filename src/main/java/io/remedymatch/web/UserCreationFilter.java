@@ -7,7 +7,6 @@ import io.remedymatch.person.domain.PersonEntity;
 import io.remedymatch.person.domain.PersonRepository;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +22,13 @@ public class UserCreationFilter implements Filter {
     private final PersonRepository personRepository;
     private final InstitutionRepository institutionRepository;
 
-    private final UserNameProvider userNameProvider;
+    private final UserProvider userNameProvider;
     private final InstitutionKeyProvider institutionKeyProvider;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        val person = Optional.ofNullable(personRepository.findByUserName(userNameProvider.getUserName()));
+        val person = Optional.ofNullable(personRepository.findByUsername(userNameProvider.getUserName()));
 
         if (person.isEmpty()) {
 

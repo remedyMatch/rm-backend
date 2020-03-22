@@ -6,7 +6,7 @@ import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
 import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.person.domain.PersonRepository;
-import io.remedymatch.web.UserNameProvider;
+import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class InstitutionController {
     private final InstitutionRepository institutionsRepository;
     private final PersonRepository personRepository;
 
-    private final UserNameProvider userNameProvider;
+    private final UserProvider userProvider;
 
     @GetMapping
     public ResponseEntity<List<InstitutionDTO>> alleLaden() {
@@ -50,13 +50,13 @@ public class InstitutionController {
 
     @GetMapping("/bedarf")
     public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
-        val person = personRepository.findByUserName(userNameProvider.getUserName());
+        val person = personRepository.findByUsername(userProvider.getUserName());
         return ResponseEntity.ok(person.getInstitution().getBedarfe().stream().map(BedarfMapper::mapToDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/angebot")
     public ResponseEntity<List<AngebotDTO>> angebotLaden() {
-        val person = personRepository.findByUserName(userNameProvider.getUserName());
+        val person = personRepository.findByUsername(userProvider.getUserName());
         return ResponseEntity.ok(person.getInstitution().getAngebote().stream().map(AngebotMapper::mapToDTO).collect(Collectors.toList()));
     }
 

@@ -12,7 +12,6 @@ public class BedarfMapper {
                 .id(entity.getId())
                 .anzahl(entity.getAnzahl())
                 .artikel(getArticleDTO(entity.getArtikel()))
-                .mengenTyp(entity.getMengenTyp())
                 .build();
     }
 
@@ -21,7 +20,6 @@ public class BedarfMapper {
                 .id(dto.getId())
                 .anzahl(dto.getAnzahl())
                 .artikel(getArticleEntity(dto.getArtikel()))
-                .mengenTyp(dto.getMengenTyp())
                 .build();
     }
 }

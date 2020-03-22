@@ -1,5 +1,7 @@
 package io.remedymatch.institution.api;
 
+import io.remedymatch.angebot.api.AngebotDTO;
+import io.remedymatch.angebot.api.AngebotMapper;
 import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
 import io.remedymatch.institution.domain.InstitutionRepository;
@@ -50,6 +52,12 @@ public class InstitutionController {
     public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
         val person = personRepository.findByUserName(userNameProvider.getUserName());
         return ResponseEntity.ok(person.getInstitution().getBedarfe().stream().map(BedarfMapper::mapToDTO).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/angebot")
+    public ResponseEntity<List<AngebotDTO>> angebotLaden() {
+        val person = personRepository.findByUserName(userNameProvider.getUserName());
+        return ResponseEntity.ok(person.getInstitution().getAngebote().stream().map(AngebotMapper::mapToDTO).collect(Collectors.toList()));
     }
 
 

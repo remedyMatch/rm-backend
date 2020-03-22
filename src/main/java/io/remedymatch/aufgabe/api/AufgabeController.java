@@ -1,5 +1,7 @@
-package io.remedymatch.angebot.api;
+package io.remedymatch.aufgabe.api;
 
+import io.remedymatch.angebot.api.AngebotDTO;
+import io.remedymatch.angebot.api.AngebotMapper;
 import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.web.UserNameProvider;
@@ -19,7 +21,7 @@ import static io.remedymatch.angebot.api.AngebotMapper.mapToEntity;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/angebot")
-public class AngebotController {
+public class AufgabeController {
 
     private final AngebotService angebotService;
     private final PersonRepository personRepository;

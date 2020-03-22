@@ -46,4 +46,10 @@ public class BedarfController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping
+    public ResponseEntity<Void> bedarfUpdaten(@RequestBody BedarfDTO bedarfDTO) {
+        bedarfService.bedarfUpdaten(BedarfMapper.mapToEntity(bedarfDTO));
+        return ResponseEntity.ok().build();
+    }
+
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -28,4 +29,15 @@ public class AngebotService {
         angebotRepository.delete(angebot.get());
     }
 
+    public Optional<AngebotEntity> angebotLaden(UUID id) {
+        return angebotRepository.findById(id);
+    }
+
+
+    public void angebotUpdaten(AngebotEntity angebot) {
+        val oldAngebot = angebotRepository.findById(angebot.getId()).get();
+        oldAngebot.setAnzahl(angebot.getAnzahl());
+        oldAngebot.setArtikel(angebot.getArtikel());
+        angebotRepository.save(oldAngebot);
+    }
 }

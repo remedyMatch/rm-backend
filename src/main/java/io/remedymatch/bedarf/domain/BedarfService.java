@@ -28,4 +28,10 @@ public class BedarfService {
         bedarfRepository.delete(bedarf.get());
     }
 
+    public void bedarfUpdaten(BedarfEntity bedarf) {
+        val oldBedarf = bedarfRepository.findById(bedarf.getId()).get();
+        oldBedarf.setAnzahl(bedarf.getAnzahl());
+        oldBedarf.setArtikel(bedarf.getArtikel());
+        bedarfRepository.save(oldBedarf);
+    }
 }

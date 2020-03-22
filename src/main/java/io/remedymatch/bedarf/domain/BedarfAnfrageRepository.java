@@ -9,6 +9,8 @@ import java.util.UUID;
 @Repository
 public interface BedarfAnfrageRepository extends CrudRepository<BedarfAnfrageEntity, UUID> {
 
+    BedarfAnfrageEntity findByProzessInstanzId(String prozessInstanzId);
+
 }
 
 

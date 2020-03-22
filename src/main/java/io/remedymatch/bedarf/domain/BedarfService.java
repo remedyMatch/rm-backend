@@ -53,11 +53,13 @@ public class BedarfService {
             throw new IllegalArgumentException("Bedarf ist nicht vorhanden");
         }
 
-        BedarfAnfrageEntity.builder()
+        val anfrage = BedarfAnfrageEntity.builder()
                 .anfrager(anfrager)
                 .kommentar(kommentar)
                 .bedarf(bedarf.get())
                 .build();
+
+        bedarfAnfrageRepository.save(anfrage);
 
 //        val variables = Variables.createVariables();
 //        variables.putValue("objektId", bedarf.get().getId());
@@ -65,21 +67,22 @@ public class BedarfService {
 //
 //        val processInstance = engineClient.runtimeService.startProcessInstanceByKey(PROCESS_KEY, bedarf.get().getId().toString(), variables);
 
-
+        //anfrage.setProzessInstanzId(processInstance.getId());
+        //  bedarfAnfrageRepository.save(anfrage);
     }
 
     @Transactional
-    public void anfrageBeantworten(String taskId) {
+    public void anfrageBeantworten(String taskId, boolean entscheidung) {
 
 //        val task = engineClient.taskService.createTaskQuery().taskId(taskId).singleResult();
 //
 //        if (task == null) {
 //            throw new IllegalArgumentException("Task ist nicht vorhanden");
 //        }
-
-//        val anfrage = bedarfAnfrageRepository.findById(anfrageId);
 //
-//        if (anfrage.isEmpty()) {
+//        val anfrage = bedarfAnfrageRepository.findByProzessInstanzId(task.getProcessInstanceId());
+//
+//        if (anfrage == null) {
 //            throw new IllegalArgumentException("Anfrage ist nicht vorhanden");
 //        }
 

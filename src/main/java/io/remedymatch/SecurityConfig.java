@@ -2,10 +2,7 @@ package io.remedymatch;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,7 +21,7 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 @ConditionalOnProperty(
-        value="remedy.security.disabled",
+        value = "remedy.security.disabled",
         havingValue = "false",
         matchIfMissing = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -70,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     class UsernameSubClaimAdapter implements Converter<Map<String, Object>, Map<String, Object>> {
 
         private final MappedJwtClaimSetConverter delegate = MappedJwtClaimSetConverter.withDefaults(Collections.emptyMap());
+
         @Override
         public Map<String, Object> convert(Map<String, Object> claims) {
             Map<String, Object> convertedClaims = this.delegate.convert(claims);

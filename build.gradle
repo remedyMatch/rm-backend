@@ -15,6 +15,9 @@ repositories {
 }
 
 dependencies {
+
+	compile 'com.github.javafaker:javafaker:1.0.2'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -33,7 +36,7 @@ dependencies {
 	testImplementation 'org.mockito:mockito-junit-jupiter:3.3.3'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'com.jayway.jsonpath:json-path:2.4.0'
-	testCompile 'org.hamcrest:hamcrest:2.2'
+	testCompile 'org.hamcrest:hamcrest:2.2'	
 }
 
 test {

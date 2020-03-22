@@ -4,6 +4,8 @@ public enum InstitutionTyp {
 
     HOSPITAL,
     DOCTOR,
-    SUPPLIER
+    SUPPLIER,
+    PRIVATE,
+    OTHER
 
 }

@@ -56,7 +56,7 @@ public class BedarfController {
     @PostMapping("/bedienen")
     public ResponseEntity<Void> bedarfBedienen(@RequestBody BedarfBedienenRequest request) {
         val user = personRepository.findByUsername(userProvider.getUserName());
-        bedarfService.starteAnfrage(request.getBedarfId(), user.getInstitution(), request.getKommentar());
+        bedarfService.starteAnfrage(request.getBedarfId(), user.getInstitution(), request.getKommentar(), request.getStandort());
         return ResponseEntity.ok().build();
     }
 

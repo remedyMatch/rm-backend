@@ -55,7 +55,7 @@ public class BedarfService {
     }
 
     @Transactional
-    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar) {
+    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar, String standort) {
 
         val bedarf = bedarfRepository.findById(bedarfId);
 
@@ -64,8 +64,11 @@ public class BedarfService {
         }
 
         val anfrage = AnfrageEntity.builder()
-                .anfrager(anfrager)
+                .institutionVon(anfrager)
+                .institutionAn(bedarf.get().getInstitution())
                 .kommentar(kommentar)
+                .standortAn(bedarf.get().getStandort())
+                .standortVon(standort)
                 .bedarf(bedarf.get())
                 .build();
         anfrageRepository.save(anfrage);

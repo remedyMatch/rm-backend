@@ -8,9 +8,13 @@ public class AnfrageMapper {
         return AnfrageDTO.builder()
                 .id(entity.getId())
                 .kommentar(entity.getKommentar())
-                .anfrager(entity.getAnfrager().getId())
+                .institutionAn(entity.getInstitutionAn().getId())
+                .institutionVon(entity.getInstitutionVon().getId())
                 .bedarf(entity.getBedarf().getId())
+                .angebot(entity.getAngebot().getId())
                 .storniert(entity.isStorniert())
+                .standortAn(entity.getStandortAn())
+                .standortVon(entity.getStandortVon())
                 .angenommen(entity.isAngenommen())
                 .build();
     }

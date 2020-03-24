@@ -61,19 +61,23 @@ public class AngebotService {
     }
 
     @Transactional
-    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar) {
+    public void starteAnfrage(UUID angebotId, InstitutionEntity anfrager, String kommentar, String standort) {
 
-        val angebot = angebotRepository.findById(bedarfId);
+        val angebot = angebotRepository.findById(angebotId);
 
         if (angebot.isEmpty()) {
             throw new IllegalArgumentException("Angebot ist nicht vorhanden");
         }
 
         val anfrage = AnfrageEntity.builder()
-                .anfrager(anfrager)
+                .institutionAn(anfrager)
+                .institutionVon(angebot.get().getInstitution())
+                .standortAn(standort)
+                .standortVon(angebot.get().getStandort())
                 .kommentar(kommentar)
                 .angebot(angebot.get())
                 .build();
+
         anfrageRepository.save(anfrage);
 
         val prozessInstanzId = engineClient.prozessStarten(

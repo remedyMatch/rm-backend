@@ -69,7 +69,7 @@ public class BedarfAngebotExternalTaskClient {
 
                     val variables = Variables.createVariables();
                     variables.putValue("lieferant", match.getInstitutionVon().getId());
-                    externalTaskService.complete(externalTask);
+                    externalTaskService.complete(externalTask, variables);
 
                 }).open();
     }

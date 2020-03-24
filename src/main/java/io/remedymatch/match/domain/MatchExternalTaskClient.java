@@ -21,7 +21,7 @@ public class MatchExternalTaskClient {
 
         ExternalTaskClient client = ExternalTaskClient.create()
                 .baseUrl(properties.getEngineUrl() + "/rest")
-                .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 20000))
+                .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000))
                 .build();
 
 

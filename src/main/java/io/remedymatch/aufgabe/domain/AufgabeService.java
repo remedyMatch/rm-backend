@@ -16,12 +16,20 @@ import java.util.Map;
 public class AufgabeService {
 
     private final EngineClient engineClient;
-
+    private Map<String, TaskBeschreibungHandler> beschreibungHandlerMap;
 
     @Transactional
     public List<TaskDTO> aufgabenLaden(PersonEntity person) {
         val aufgaben = engineClient.ladeAlleTask(person.getInstitution().getId().toString());
 
+        aufgaben.forEach(aufgabe -> {
+                    if (beschreibungHandlerMap.containsKey(aufgabe.getTaskKey())) {
+                        aufgabe.setDisplayName(beschreibungHandlerMap.get(aufgabe.getTaskKey()).beschreibung(aufgabe));
+                    } else {
+                        aufgabe.setDisplayName("Keine Beschreibung vorhanden");
+                    }
+                }
+        );
 
         return aufgaben;
     }

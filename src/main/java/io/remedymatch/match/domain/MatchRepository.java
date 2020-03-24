@@ -9,7 +9,6 @@ import java.util.UUID;
 @Repository
 public interface MatchRepository extends CrudRepository<MatchEntity, UUID> {
 
-    MatchEntity findByProzessInstanzId(String prozessInstanzId);
 
 }
 

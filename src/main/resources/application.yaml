@@ -32,4 +32,11 @@ spring:
         use_sql_comments: false
         format_sql: false
     generate-ddl: true
+
+
+io:
+  remedymatch:
+    backend:
+      engine-url: http://localhost:8085
+
 spring.security.oauth2.resourceserver.jwt.issuer-uri: http://localhost:8090/auth/realms/master

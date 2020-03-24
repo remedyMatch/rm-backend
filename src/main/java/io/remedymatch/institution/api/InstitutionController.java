@@ -4,7 +4,10 @@ import io.remedymatch.angebot.api.AngebotDTO;
 import io.remedymatch.angebot.api.AngebotMapper;
 import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
+import io.remedymatch.engine.EngineClient;
+import io.remedymatch.engine.TaskDTO;
 import io.remedymatch.institution.domain.InstitutionRepository;
+import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
@@ -12,6 +15,7 @@ import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -25,8 +29,9 @@ public class InstitutionController {
 
     private final InstitutionRepository institutionsRepository;
     private final PersonRepository personRepository;
-
     private final UserProvider userProvider;
+
+    private final EngineClient engineClient;
 
     @GetMapping
     public ResponseEntity<List<InstitutionDTO>> alleLaden() {
@@ -37,6 +42,12 @@ public class InstitutionController {
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody InstitutionDTO institutionDTO) {
+        val person = personRepository.findByUsername(userProvider.getUserName());
+
+        if (!person.getInstitution().getId().equals(institutionDTO.getId())) {
+            return ResponseEntity.status(403).build();
+        }
+
         var institution = institutionsRepository.findById(institutionDTO.getId());
 
         if (institution.isEmpty()) {
@@ -46,9 +57,21 @@ public class InstitutionController {
         var updateInstitution = institution.get();
         updateInstitution.setName(institutionDTO.getName());
         updateInstitution.setStandort(institutionDTO.getStandort());
+        updateInstitution.setTyp(institutionDTO.getTyp());
         institutionsRepository.save(updateInstitution);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/typ")
+    public ResponseEntity<List<String>> typenLaden() {
+        val typen = Arrays.asList(
+                InstitutionTyp.Krankenhaus,
+                InstitutionTyp.Arzt,
+                InstitutionTyp.Lieferant,
+                InstitutionTyp.Privat,
+                InstitutionTyp.Andere);
+        return ResponseEntity.ok(typen.stream().map(InstitutionTyp::toString).collect(Collectors.toList()));
     }
 
     @GetMapping("/bedarf")
@@ -67,5 +90,12 @@ public class InstitutionController {
     public ResponseEntity<InstitutionDTO> institutionLaden() {
         val person = personRepository.findByUsername(userProvider.getUserName());
         return ResponseEntity.ok(mapToDTO(person.getInstitution()));
+    }
+
+    @GetMapping("/aufgaben")
+    public ResponseEntity<List<TaskDTO>> ladenAufgaben() {
+        val person = personRepository.findByUsername(userProvider.getUserName());
+        val aufgaben = engineClient.ladeAlleTask(person.getInstitution().getId().toString());
+        return ResponseEntity.ok(aufgaben);
     }
 }

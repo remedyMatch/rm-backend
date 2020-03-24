@@ -20,5 +20,4 @@ public class BedarfDTO {
     private boolean steril;
     private boolean originalverpackt;
     private boolean medizinisch;
-
 }

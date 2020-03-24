@@ -1,11 +1,13 @@
 package io.remedymatch.bedarf.domain;
 
+import io.remedymatch.anfrage.domain.AnfrageEntity;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -43,5 +45,8 @@ public class BedarfEntity {
 
     @Column
     private String kommentar;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<AnfrageEntity> anfragen;
 
 }

@@ -1,5 +1,7 @@
 package io.remedymatch.bedarf.domain;
 
+import io.remedymatch.anfrage.domain.AnfrageEntity;
+import io.remedymatch.anfrage.domain.AnfrageRepository;
 import io.remedymatch.engine.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import lombok.AllArgsConstructor;
@@ -7,7 +9,10 @@ import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
+
+import static io.remedymatch.engine.AnfrageProzessConstants.PROZESS_KEY;
 
 @AllArgsConstructor
 @Service
@@ -15,13 +20,18 @@ public class BedarfService {
 
     private final BedarfRepository bedarfRepository;
     private final EngineClient engineClient;
-    private final BedarfAnfrageRepository bedarfAnfrageRepository;
+    private final AnfrageRepository anfrageRepository;
 
     @Transactional
     public void bedarfMelden(BedarfEntity bedarf, InstitutionEntity institutionEntity) {
         //TODO Prozess starten?
         bedarf.setInstitution(institutionEntity);
         bedarfRepository.save(bedarf);
+    }
+
+    @Transactional
+    public Optional<BedarfEntity> bedarfLaden(String bedarfId) {
+        return bedarfRepository.findById(UUID.fromString(bedarfId));
     }
 
     @Transactional
@@ -53,39 +63,21 @@ public class BedarfService {
             throw new IllegalArgumentException("Bedarf ist nicht vorhanden");
         }
 
-        val anfrage = BedarfAnfrageEntity.builder()
+        val anfrage = AnfrageEntity.builder()
                 .anfrager(anfrager)
                 .kommentar(kommentar)
                 .bedarf(bedarf.get())
                 .build();
 
-        bedarfAnfrageRepository.save(anfrage);
-
-//        val variables = Variables.createVariables();
-//        variables.putValue("objektId", bedarf.get().getId());
-//        variables.putValue("institution", anfrager.getId());
-//
-//        val processInstance = engineClient.runtimeService.startProcessInstanceByKey(PROCESS_KEY, bedarf.get().getId().toString(), variables);
-
-        //anfrage.setProzessInstanzId(processInstance.getId());
-        //  bedarfAnfrageRepository.save(anfrage);
+        anfrageRepository.save(anfrage);
+        val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, "BEDARF", anfrage.getId().toString(), bedarf.get().getInstitution().getId().toString());
+        anfrage.setProzessInstanzId(prozessInstanzId);
+        anfrageRepository.save(anfrage);
     }
 
     @Transactional
     public void anfrageBeantworten(String taskId, boolean entscheidung) {
-
-//        val task = engineClient.taskService.createTaskQuery().taskId(taskId).singleResult();
-//
-//        if (task == null) {
-//            throw new IllegalArgumentException("Task ist nicht vorhanden");
-//        }
-//
-//        val anfrage = bedarfAnfrageRepository.findByProzessInstanzId(task.getProcessInstanceId());
-//
-//        if (anfrage == null) {
-//            throw new IllegalArgumentException("Anfrage ist nicht vorhanden");
-//        }
-
-
+        engineClient.taskAbschliessen(taskId, entscheidung);
     }
+
 }

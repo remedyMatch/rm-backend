@@ -22,9 +22,7 @@ public class BedarfMapper {
         if (entity.getInstitution() != null) {
             builder = builder.institution(InstitutionMapper.mapToDTO(entity.getInstitution()));
         }
-
         return builder.build();
-
     }
 
     public static BedarfEntity mapToEntity(BedarfDTO dto) {

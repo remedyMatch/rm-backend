@@ -1,5 +1,7 @@
 package io.remedymatch.bedarf.api;
 
+import io.remedymatch.anfrage.api.AnfrageDTO;
+import io.remedymatch.anfrage.api.AnfrageMapper;
 import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.web.UserProvider;
@@ -13,6 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static io.remedymatch.bedarf.api.BedarfMapper.mapToDTO;
 import static io.remedymatch.bedarf.api.BedarfMapper.mapToEntity;
 
 @RestController
@@ -25,7 +28,7 @@ public class BedarfController {
     private final PersonRepository personRepository;
 
     @GetMapping()
-    public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
+    public ResponseEntity<List<BedarfDTO>> bedarfeLaden() {
         val institutions = StreamSupport.stream(bedarfService.alleBedarfeLaden().spliterator(), false)
                 .map(BedarfMapper::mapToDTO).collect(Collectors.toList());
         return ResponseEntity.ok(institutions);
@@ -55,5 +58,25 @@ public class BedarfController {
         val user = personRepository.findByUsername(userProvider.getUserName());
         bedarfService.starteAnfrage(request.getBedarfId(), user.getInstitution(), request.getKommentar());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/anfragen")
+    public ResponseEntity<List<AnfrageDTO>> anfragenLaden(@PathVariable("id") String bedarfId) {
+        val bedarf = bedarfService.bedarfLaden(bedarfId);
+
+        if (bedarf.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(bedarf.get().getAnfragen().stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BedarfDTO> bedarfLaden(@PathVariable("id") String bedarfId) {
+        val bedarf = bedarfService.bedarfLaden(bedarfId);
+
+        if (bedarf.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(mapToDTO(bedarf.get()));
     }
 }

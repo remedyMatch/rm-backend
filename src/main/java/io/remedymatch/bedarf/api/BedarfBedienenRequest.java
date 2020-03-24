@@ -11,4 +11,5 @@ public class BedarfBedienenRequest {
 
     private UUID bedarfId;
     private String kommentar;
+    private String standort;
 }

@@ -68,7 +68,7 @@ public class BedarfAngebotExternalTaskClient {
                     val match = matchService.matcheErstellen(anfrageRepository.findById(UUID.fromString(anfrageId)).get());
 
                     val variables = Variables.createVariables();
-                    variables.putValue("lieferant", match.getInstitutionVon().getId());
+                    variables.putValue("lieferant", match.getInstitutionVon().getId().toString());
                     externalTaskService.complete(externalTask, variables);
 
                 }).open();

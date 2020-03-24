@@ -28,17 +28,17 @@ public class AnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler
         double anzahl;
 
         if (anfrage.get().getBedarf() != null) {
-            prefix = "Bedarf-Anfrage von ";
+            prefix = "Anfrage zu Bedarf von ";
             artikel = anfrage.get().getBedarf().getArtikel();
             anzahl = anfrage.get().getBedarf().getAnzahl();
         } else {
-            prefix = "Angebot-Anfrage von ";
+            prefix = "Anfrage zu Angebot von ";
             artikel = anfrage.get().getAngebot().getArtikel();
             anzahl = anfrage.get().getAngebot().getAnzahl();
         }
 
-        beschreibung += prefix + anfrage.get().getInstitutionVon().getName();
-        beschreibung += "Artikel: " + artikel.getName() + " Anzahl: " + anzahl;
+        beschreibung += anfrage.get().getInstitutionVon().getName() + ": " + prefix;
+        beschreibung += (int) anzahl + " " + artikel.getName();
 
 
         return beschreibung;

@@ -8,6 +8,7 @@ import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,7 @@ public class BedarfAngebotExternalTaskClient {
 
         ExternalTaskClient client = ExternalTaskClient.create()
                 .baseUrl(properties.getEngineUrl() + "/rest")
+                .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 20000))
                 .build();
 
 

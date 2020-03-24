@@ -32,5 +32,11 @@ public class MatchExternalTaskClient {
                     match.get().setStatus(MatchStatus.Ausgeliefert);
                     externalTaskService.complete(externalTask);
                 }).open();
+
+        client.subscribe("logistikartVerarbeiten")
+                .lockDuration(2000)
+                .handler((externalTask, externalTaskService) -> {
+                    externalTaskService.complete(externalTask);
+                }).open();
     }
 }

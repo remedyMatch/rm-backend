@@ -5,6 +5,7 @@ import io.remedymatch.engine.TaskDTO;
 import io.remedymatch.person.domain.PersonEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,7 @@ import java.util.Map;
 public class AufgabeService {
 
     private final EngineClient engineClient;
-    private Map<String, TaskBeschreibungHandler> beschreibungHandlerMap;
+    @Qualifier("TaskBeschreibungHandlerMap") private Map<String, TaskBeschreibungHandler> beschreibungHandlerMap;
 
     @Transactional
     public List<TaskDTO> aufgabenLaden(PersonEntity person) {

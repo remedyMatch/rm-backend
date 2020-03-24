@@ -14,7 +14,7 @@ public class TaskBeschreibungHandlerProvider {
 
     public final List<TaskBeschreibungHandler> taskBeschreibungHandler;
 
-    @Bean
+    @Bean("TaskBeschreibungHandlerMap")
     public Map<String, TaskBeschreibungHandler> taskBeschreibungHandlerMap() {
         return taskBeschreibungHandler.stream().collect(Collectors.toMap(TaskBeschreibungHandler::taskKey, t -> t));
     }

@@ -4,5 +4,5 @@ public enum MatchStatus {
 
     Offen,
     Lieferung,
-    Geliefert
+    Ausgeliefert
 }

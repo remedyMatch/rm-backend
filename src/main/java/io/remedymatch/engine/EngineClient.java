@@ -68,4 +68,17 @@ public class EngineClient {
 
         return response.getBody();
     }
+
+    public void messageKorrelieren(String task, Map<String, Object> variables) {
+
+        val request = TaskAbschliessenRequest.builder().variables(variables).build();
+
+
+        val restTemplate = new RestTemplate();
+        ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/task/" + task, request, Void.class);
+
+        if (response.getStatusCode().isError()) {
+            throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
+        }
+    }
 }

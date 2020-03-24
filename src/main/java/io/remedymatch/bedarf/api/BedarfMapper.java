@@ -17,7 +17,9 @@ public class BedarfMapper {
                 .originalverpackt(entity.isOriginalverpackt())
                 .standort(entity.getStandort())
                 .steril(entity.isSteril())
-                .kommentar(entity.getKommentar());
+                .kommentar(entity.getKommentar())
+                .bedient(entity.isBedient());
+
 
         if (entity.getInstitution() != null) {
             builder = builder.institution(InstitutionMapper.mapToDTO(entity.getInstitution()));
@@ -34,7 +36,8 @@ public class BedarfMapper {
                 .originalverpackt(dto.isOriginalverpackt())
                 .standort(dto.getStandort())
                 .steril(dto.isSteril())
-                .kommentar(dto.getKommentar());
+                .kommentar(dto.getKommentar())
+                .bedient(dto.isBedient());
 
         if (dto.getInstitution() != null) {
             builder = builder.institution(InstitutionMapper.mapToEntity(dto.getInstitution()));

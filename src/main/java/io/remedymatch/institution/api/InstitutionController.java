@@ -5,7 +5,6 @@ import io.remedymatch.angebot.api.AngebotMapper;
 import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
 import io.remedymatch.engine.EngineClient;
-import io.remedymatch.engine.TaskDTO;
 import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.person.domain.PersonRepository;
@@ -92,10 +91,5 @@ public class InstitutionController {
         return ResponseEntity.ok(mapToDTO(person.getInstitution()));
     }
 
-    @GetMapping("/aufgaben")
-    public ResponseEntity<List<TaskDTO>> ladenAufgaben() {
-        val person = personRepository.findByUsername(userProvider.getUserName());
-        val aufgaben = engineClient.ladeAlleTask(person.getInstitution().getId().toString());
-        return ResponseEntity.ok(aufgaben);
-    }
+
 }

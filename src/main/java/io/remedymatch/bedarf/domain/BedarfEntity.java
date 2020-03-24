@@ -49,4 +49,7 @@ public class BedarfEntity {
     @OneToMany(fetch = FetchType.LAZY)
     private List<AnfrageEntity> anfragen;
 
+    @Column
+    private boolean bedient;
+
 }

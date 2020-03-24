@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Component
@@ -38,9 +39,9 @@ public class EngineClient {
         return Arrays.asList(task);
     }
 
-    public void taskAbschliessen(String task, boolean angenommen) {
+    public void taskAbschliessen(String task, Map<String, Object> variables) {
 
-        val request = TaskAbschliessenRequest.builder().angenommen(angenommen).build();
+        val request = TaskAbschliessenRequest.builder().variables(variables).build();
         val restTemplate = new RestTemplate();
         ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/task/" + task, request, Void.class);
 

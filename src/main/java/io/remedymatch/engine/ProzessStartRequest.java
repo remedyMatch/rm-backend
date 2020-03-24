@@ -13,4 +13,5 @@ public class ProzessStartRequest {
     private String prozessKey;
     private String anfrageId;
     private String institutionId;
+    private String typ;
 }

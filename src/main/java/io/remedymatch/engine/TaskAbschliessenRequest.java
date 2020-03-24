@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class TaskAbschliessenRequest {
 
-    private boolean angenommen;
+    private Map<String, Object> variables;
 
 }

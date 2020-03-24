@@ -2,6 +2,7 @@ package io.remedymatch.bedarf.domain;
 
 import io.remedymatch.anfrage.domain.AnfrageEntity;
 import io.remedymatch.anfrage.domain.AnfrageRepository;
+import io.remedymatch.engine.AnfrageProzessConstants;
 import io.remedymatch.engine.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import lombok.AllArgsConstructor;
@@ -53,7 +54,6 @@ public class BedarfService {
         bedarfRepository.save(oldBedarf);
     }
 
-
     @Transactional
     public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar) {
 
@@ -68,16 +68,41 @@ public class BedarfService {
                 .kommentar(kommentar)
                 .bedarf(bedarf.get())
                 .build();
-
         anfrageRepository.save(anfrage);
-        val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, "BEDARF", anfrage.getId().toString(), bedarf.get().getInstitution().getId().toString());
+
+        val prozessInstanzId = engineClient.prozessStarten(
+                PROZESS_KEY,
+                AnfrageProzessConstants.PROZESS_TYP_BEDARF,
+                anfrage.getId().toString(),
+                bedarf.get().getInstitution().getId().toString());
         anfrage.setProzessInstanzId(prozessInstanzId);
         anfrageRepository.save(anfrage);
     }
 
     @Transactional
-    public void anfrageBeantworten(String taskId, boolean entscheidung) {
-        engineClient.taskAbschliessen(taskId, entscheidung);
+    public void anfrageStornieren(String anfrageId) {
+        val anfrage = anfrageRepository.findById(UUID.fromString(anfrageId));
+        if (anfrage.isEmpty()) {
+            throw new IllegalArgumentException("Anfrage nicht vorhanden");
+        }
+        anfrage.get().setStorniert(true);
+        anfrageRepository.save(anfrage.get());
+    }
+
+    @Transactional
+    public void anfrageAnnehmen(String anfrageId) {
+        val anfrage = anfrageRepository.findById(UUID.fromString(anfrageId));
+        if (anfrage.isEmpty()) {
+            throw new IllegalArgumentException("Anfrage nicht vorhanden");
+        }
+        anfrage.get().setAngenommen(true);
+
+        //Bedarf als bedient markieren
+        val bedarf = anfrage.get().getBedarf();
+        bedarf.setBedient(true);
+        bedarfRepository.save(bedarf);
+
+        anfrageRepository.save(anfrage.get());
     }
 
 }

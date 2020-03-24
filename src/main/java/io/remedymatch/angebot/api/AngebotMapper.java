@@ -18,6 +18,7 @@ public class AngebotMapper {
                 .originalverpackt(entity.isOriginalverpackt())
                 .standort(entity.getStandort())
                 .steril(entity.isSteril())
+                .bedient(entity.isBedient())
                 .kommentar(entity.getKommentar());
 
         if (entity.getInstitution() != null) {
@@ -38,6 +39,7 @@ public class AngebotMapper {
                 .originalverpackt(dto.isOriginalverpackt())
                 .standort(dto.getStandort())
                 .steril(dto.isSteril())
+                .bedient(dto.isBedient())
                 .kommentar(dto.getKommentar());
 
         if (dto.getInstitution() != null) {

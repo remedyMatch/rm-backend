@@ -1,6 +1,7 @@
 package io.remedymatch.engine;
 
-import io.remedymatch.anfrage.domain.AnfrageService;
+import io.remedymatch.angebot.domain.AngebotService;
+import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -13,7 +14,8 @@ import javax.annotation.PostConstruct;
 @Component
 public class BedarfAngebotExternalTaskClient {
     private final RmBackendProperties properties;
-    private final AnfrageService anfrageService;
+    private final BedarfService bedarfService;
+    private final AngebotService angebotService;
 
     @PostConstruct
     public void doSubscribe() {
@@ -28,11 +30,17 @@ public class BedarfAngebotExternalTaskClient {
                 .handler((externalTask, externalTaskService) -> {
 
                     val anfrageId = externalTask.getVariable("anfrageId").toString();
+                    val prozessTyp = externalTask.getVariable("prozessTyp").toString();
 
-                    anfrageService.anfrageStornieren(anfrageId);
-
+                    switch (prozessTyp) {
+                        case AnfrageProzessConstants.PROZESS_TYP_ANGEBOT:
+                            bedarfService.anfrageStornieren(anfrageId);
+                            break;
+                        case AnfrageProzessConstants.PROZESS_TYP_BEDARF:
+                            angebotService.anfrageStornieren(anfrageId);
+                            break;
+                    }
                     externalTaskService.complete(externalTask);
-
                 }).open();
 
         client.subscribe("anfrageBestaetigung")
@@ -40,8 +48,16 @@ public class BedarfAngebotExternalTaskClient {
                 .handler((externalTask, externalTaskService) -> {
 
                     val anfrageId = externalTask.getVariable("anfrageId").toString();
+                    val prozessTyp = externalTask.getVariable("prozessTyp").toString();
 
-                    anfrageService.anfrageAnnehmen(anfrageId);
+                    switch (prozessTyp) {
+                        case AnfrageProzessConstants.PROZESS_TYP_ANGEBOT:
+                            bedarfService.anfrageAnnehmen(anfrageId);
+                            break;
+                        case AnfrageProzessConstants.PROZESS_TYP_BEDARF:
+                            angebotService.anfrageAnnehmen(anfrageId);
+                            break;
+                    }
 
                     externalTaskService.complete(externalTask);
 

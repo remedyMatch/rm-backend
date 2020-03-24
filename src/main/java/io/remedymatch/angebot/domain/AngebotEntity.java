@@ -49,4 +49,7 @@ public class AngebotEntity {
     @Column
     private String kommentar;
 
+    @Column
+    private boolean bedient;
+
 }

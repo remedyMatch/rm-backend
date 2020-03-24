@@ -56,6 +56,7 @@ public class EngineClient {
                 .anfrageId(anfrageId)
                 .institutionId(institutionId)
                 .prozessKey(prozessKey)
+                .typ(typ)
                 .build();
 
         val restTemplate = new RestTemplate();

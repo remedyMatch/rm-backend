@@ -57,10 +57,10 @@ public class BedarfAngebotExternalTaskClient {
                     val prozessTyp = externalTask.getVariable("prozessTyp").toString();
 
                     switch (prozessTyp) {
-                        case AnfrageProzessConstants.PROZESS_TYP_ANGEBOT:
+                        case AnfrageProzessConstants.PROZESS_TYP_BEDARF:
                             bedarfService.anfrageAnnehmen(anfrageId);
                             break;
-                        case AnfrageProzessConstants.PROZESS_TYP_BEDARF:
+                        case AnfrageProzessConstants.PROZESS_TYP_ANGEBOT:
                             angebotService.anfrageAnnehmen(anfrageId);
                             break;
                     }

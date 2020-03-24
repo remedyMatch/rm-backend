@@ -27,7 +27,7 @@ public class AufgabeService {
     }
 
     @Transactional
-    public void aufgabeBeantworten(String taskId, Map<String, Object> variables) {
+    public void aufgabeAbschließen(String taskId, Map<String, Object> variables) {
         engineClient.taskAbschliessen(taskId, variables);
     }
 

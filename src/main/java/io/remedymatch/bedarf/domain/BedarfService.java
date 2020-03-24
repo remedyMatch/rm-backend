@@ -2,6 +2,7 @@ package io.remedymatch.bedarf.domain;
 
 import io.remedymatch.anfrage.domain.AnfrageEntity;
 import io.remedymatch.anfrage.domain.AnfrageRepository;
+import io.remedymatch.anfrage.domain.AnfrageStatus;
 import io.remedymatch.engine.AnfrageProzessConstants;
 import io.remedymatch.engine.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
@@ -70,6 +71,7 @@ public class BedarfService {
                 .standortAn(bedarf.get().getStandort())
                 .standortVon(standort)
                 .bedarf(bedarf.get())
+                .status(AnfrageStatus.Offen)
                 .build();
         anfrageRepository.save(anfrage);
 
@@ -88,7 +90,7 @@ public class BedarfService {
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage nicht vorhanden");
         }
-        anfrage.get().setStorniert(true);
+        anfrage.get().setStatus(AnfrageStatus.Storniert);
         anfrageRepository.save(anfrage.get());
     }
 
@@ -98,7 +100,7 @@ public class BedarfService {
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage nicht vorhanden");
         }
-        anfrage.get().setAngenommen(true);
+        anfrage.get().setStatus(AnfrageStatus.Angenommen);
 
         //Bedarf als bedient markieren
         val bedarf = anfrage.get().getBedarf();

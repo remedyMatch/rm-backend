@@ -12,7 +12,7 @@ public class MatchMapper {
                 .adresseVon(entity.getStandortVon())
                 .anfrageId(entity.getAnfrageId())
                 .lieferant(PersonMapper.mapToDTO(entity.getLieferant()))
-                .bedient(entity.isBedient())
+                .status(entity.getStatus())
                 .institutionVon(InstitutionMapper.mapToDTO(entity.getInstitutionVon()))
                 .institutionAn(InstitutionMapper.mapToDTO(entity.getInstitutionAn()))
                 .build();

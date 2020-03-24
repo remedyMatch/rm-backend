@@ -13,16 +13,20 @@ public class MatchService {
 
     public void matcheErstellen(AnfrageEntity anfrage) {
         val match = new MatchEntity();
-//
-//        if (anfrage.getBedarf() != null) {
-//            match.setInstitutionAn(anfrage.getInstitutionAn());
-//            match.setInstitutionVon(anfrage.getInstitutionVon());
-//            match.set
-//        } else {
-//            match.setInstitutionAn(anfrage.getInstitutionVon());
-//            match.setInstitutionVon(anfrage.getInstitutionAn());
-//        }
 
+        if (anfrage.getBedarf() != null) {
+            match.setInstitutionAn(anfrage.getInstitutionAn());
+            match.setInstitutionVon(anfrage.getInstitutionVon());
+            match.setStandortAn(anfrage.getStandortAn());
+            match.setStandortVon(anfrage.getStandortVon());
+        } else {
+            match.setInstitutionAn(anfrage.getInstitutionVon());
+            match.setInstitutionVon(anfrage.getInstitutionAn());
+            match.setStandortAn(anfrage.getStandortVon());
+            match.setStandortVon(anfrage.getStandortAn());
+        }
+
+        match.setStatus(MatchStatus.Offen);
 
         matchRepository.save(match);
 

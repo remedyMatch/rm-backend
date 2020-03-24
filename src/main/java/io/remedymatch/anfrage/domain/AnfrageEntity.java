@@ -49,9 +49,7 @@ public class AnfrageEntity {
     @Column
     private String prozessInstanzId;
 
-    @Column
-    private boolean storniert;
+    @Enumerated(EnumType.STRING)
+    private AnfrageStatus status;
 
-    @Column
-    private boolean angenommen;
 }

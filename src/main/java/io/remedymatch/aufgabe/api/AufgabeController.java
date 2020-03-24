@@ -21,7 +21,7 @@ public class AufgabeController {
     private final PersonRepository personRepository;
     private final AufgabeService aufgabeService;
 
-    @GetMapping("/aufgaben")
+    @GetMapping()
     public ResponseEntity<List<TaskDTO>> aufgabenLaden() {
         val person = personRepository.findByUsername(userProvider.getUserName());
         val aufgaben = aufgabeService.aufgabenLaden(person);
@@ -36,7 +36,7 @@ public class AufgabeController {
             return ResponseEntity.status(403).build();
         }
 
-        aufgabeService.aufgabeBeantworten(request.getTaskId(), request.getVariables());
+        aufgabeService.aufgabeAbschließen(request.getTaskId(), request.getVariables());
         return ResponseEntity.ok().build();
     }
 

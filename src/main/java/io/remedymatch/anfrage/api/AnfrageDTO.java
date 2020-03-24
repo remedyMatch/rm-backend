@@ -1,5 +1,6 @@
 package io.remedymatch.anfrage.api;
 
+import io.remedymatch.anfrage.domain.AnfrageStatus;
 import io.remedymatch.institution.api.InstitutionDTO;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class AnfrageDTO {
     private UUID angebotId;
     private String standortAn;
     private String standortVon;
-    private boolean storniert;
-    private boolean angenommen;
+    private String prozessInstanzId;
+    private AnfrageStatus status;
 
 }

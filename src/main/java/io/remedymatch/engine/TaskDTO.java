@@ -11,5 +11,6 @@ public class TaskDTO {
     public String processInstanceId;
     public String institution;
     public String objektId;
+    public String taskKey;
 
 }

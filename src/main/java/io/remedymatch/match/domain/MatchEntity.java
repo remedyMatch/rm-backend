@@ -37,13 +37,13 @@ public class MatchEntity {
     private InstitutionEntity institutionAn;
 
     @Column
-    private String adresseAn;
+    private String standortAn;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private PersonEntity lieferant;
 
     @Column
-    private boolean bedient;
+    private MatchStatus status;
 
     @Column
     private UUID anfrageId;

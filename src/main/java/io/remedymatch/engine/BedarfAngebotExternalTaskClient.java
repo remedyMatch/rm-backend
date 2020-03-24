@@ -1,7 +1,9 @@
 package io.remedymatch.engine;
 
+import io.remedymatch.anfrage.domain.AnfrageRepository;
 import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.bedarf.domain.BedarfService;
+import io.remedymatch.match.domain.MatchService;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -9,6 +11,7 @@ import org.camunda.bpm.client.ExternalTaskClient;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -16,6 +19,8 @@ public class BedarfAngebotExternalTaskClient {
     private final RmBackendProperties properties;
     private final BedarfService bedarfService;
     private final AngebotService angebotService;
+    private final AnfrageRepository anfrageRepository;
+    private final MatchService matchService;
 
     @PostConstruct
     public void doSubscribe() {
@@ -58,6 +63,8 @@ public class BedarfAngebotExternalTaskClient {
                             angebotService.anfrageAnnehmen(anfrageId);
                             break;
                     }
+
+                    matchService.matcheErstellen(anfrageRepository.findById(UUID.fromString(anfrageId)).get());
 
                     externalTaskService.complete(externalTask);
 

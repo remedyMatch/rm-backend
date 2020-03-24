@@ -13,10 +13,10 @@ public class AnfrageMapper {
                 .institutionVon(InstitutionMapper.mapToDTO(entity.getInstitutionVon()))
                 .bedarfId(entity.getBedarf() != null ? entity.getBedarf().getId() : null)
                 .angebotId(entity.getAngebot() != null ? entity.getAngebot().getId() : null)
-                .storniert(entity.isStorniert())
                 .standortAn(entity.getStandortAn())
                 .standortVon(entity.getStandortVon())
-                .angenommen(entity.isAngenommen())
+                .status(entity.getStatus())
+                .prozessInstanzId(entity.getProzessInstanzId())
                 .build();
     }
 

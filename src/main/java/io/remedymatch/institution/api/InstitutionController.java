@@ -1,10 +1,12 @@
 package io.remedymatch.institution.api;
 
+import io.remedymatch.anfrage.api.AnfrageDTO;
+import io.remedymatch.anfrage.api.AnfrageMapper;
+import io.remedymatch.anfrage.domain.AnfrageRepository;
 import io.remedymatch.angebot.api.AngebotDTO;
 import io.remedymatch.angebot.api.AngebotMapper;
 import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
-import io.remedymatch.engine.EngineClient;
 import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.person.domain.PersonRepository;
@@ -29,8 +31,7 @@ public class InstitutionController {
     private final InstitutionRepository institutionsRepository;
     private final PersonRepository personRepository;
     private final UserProvider userProvider;
-
-    private final EngineClient engineClient;
+    private final AnfrageRepository anfrageRepository;
 
     @GetMapping
     public ResponseEntity<List<InstitutionDTO>> alleLaden() {
@@ -89,6 +90,20 @@ public class InstitutionController {
     public ResponseEntity<InstitutionDTO> institutionLaden() {
         val person = personRepository.findByUsername(userProvider.getUserName());
         return ResponseEntity.ok(mapToDTO(person.getInstitution()));
+    }
+
+    @GetMapping("anfragen/gestellt")
+    public ResponseEntity<List<AnfrageDTO>> gestellteAnfragen() {
+        val person = personRepository.findByUsername(userProvider.getUserName());
+        val anfragen = anfrageRepository.findAllByInstitutionVon(person.getInstitution());
+        return ResponseEntity.ok(anfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
+    }
+
+    @GetMapping("anfragen/erhalten")
+    public ResponseEntity<List<AnfrageDTO>> erhalteneAnfragen() {
+        val person = personRepository.findByUsername(userProvider.getUserName());
+        val anfragen = anfrageRepository.findAllByInstitutionAn(person.getInstitution());
+        return ResponseEntity.ok(anfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
     }
 
 

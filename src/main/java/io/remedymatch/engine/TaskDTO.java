@@ -10,6 +10,6 @@ public class TaskDTO {
     public String taskId;
     public String processInstanceId;
     public String institution;
-    public String anfrageId;
+    public String objektId;
 
 }

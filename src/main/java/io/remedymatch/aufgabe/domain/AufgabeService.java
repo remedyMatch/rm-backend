@@ -21,6 +21,8 @@ public class AufgabeService {
     @Transactional
     public List<TaskDTO> aufgabenLaden(PersonEntity person) {
         val aufgaben = engineClient.ladeAlleTask(person.getInstitution().getId().toString());
+
+
         return aufgaben;
     }
 

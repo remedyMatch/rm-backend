@@ -1,6 +1,7 @@
 package io.remedymatch.anfrage.api;
 
 import io.remedymatch.anfrage.domain.AnfrageEntity;
+import io.remedymatch.institution.api.InstitutionMapper;
 
 public class AnfrageMapper {
 
@@ -8,10 +9,10 @@ public class AnfrageMapper {
         return AnfrageDTO.builder()
                 .id(entity.getId())
                 .kommentar(entity.getKommentar())
-                .institutionAn(entity.getInstitutionAn().getId())
-                .institutionVon(entity.getInstitutionVon().getId())
-                .bedarf(entity.getBedarf().getId())
-                .angebot(entity.getAngebot().getId())
+                .institutionAn(InstitutionMapper.mapToDTO(entity.getInstitutionAn()))
+                .institutionVon(InstitutionMapper.mapToDTO(entity.getInstitutionVon()))
+                .bedarfId(entity.getBedarf() != null ? entity.getBedarf().getId() : null)
+                .angebotId(entity.getAngebot() != null ? entity.getAngebot().getId() : null)
                 .storniert(entity.isStorniert())
                 .standortAn(entity.getStandortAn())
                 .standortVon(entity.getStandortVon())

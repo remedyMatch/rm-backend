@@ -70,11 +70,11 @@ public class AngebotService {
         }
 
         val anfrage = AnfrageEntity.builder()
-                .institutionAn(anfrager)
-                .institutionVon(angebot.get().getInstitution())
-                .standortAn(standort)
-                .standortVon(angebot.get().getStandort())
+                .institutionVon(anfrager)
+                .institutionAn(angebot.get().getInstitution())
                 .kommentar(kommentar)
+                .standortAn(angebot.get().getStandort())
+                .standortVon(standort)
                 .angebot(angebot.get())
                 .build();
 

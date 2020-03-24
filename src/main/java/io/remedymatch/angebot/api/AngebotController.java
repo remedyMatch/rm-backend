@@ -52,7 +52,7 @@ public class AngebotController {
     }
 
     @PostMapping("/anfragen")
-    public ResponseEntity<Void> bedarfBedienen(@RequestBody AngebotAnfragenRequest request) {
+    public ResponseEntity<Void> angebotAnfragen(@RequestBody AngebotAnfragenRequest request) {
         val user = personRepository.findByUsername(userProvider.getUserName());
         angebotService.starteAnfrage(request.getAngebotId(), user.getInstitution(), request.getKommentar(), request.getStandort());
         return ResponseEntity.ok().build();

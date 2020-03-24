@@ -9,7 +9,7 @@ public class MatchMapper {
     public static MatchDTO mapToDTO(MatchEntity entity) {
         return MatchDTO.builder()
                 .id(entity.getId())
-                .adresseVon(entity.getAdresseVon())
+                .adresseVon(entity.getStandortVon())
                 .anfrageId(entity.getAnfrageId())
                 .lieferant(PersonMapper.mapToDTO(entity.getLieferant()))
                 .bedient(entity.isBedient())

@@ -31,13 +31,13 @@ public class MatchEntity {
     private InstitutionEntity institutionVon;
 
     @Column
-    private String adresseVon;
+    private String standortVon;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private InstitutionEntity institutionAn;
 
     @Column
-    private String adresseZu;
+    private String adresseAn;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private PersonEntity lieferant;

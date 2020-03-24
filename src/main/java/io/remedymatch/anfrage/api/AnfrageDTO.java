@@ -1,5 +1,6 @@
 package io.remedymatch.anfrage.api;
 
+import io.remedymatch.institution.api.InstitutionDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,10 +12,10 @@ public class AnfrageDTO {
 
     private UUID id;
     private String kommentar;
-    private UUID institutionVon;
-    private UUID institutionAn;
-    private UUID bedarf;
-    private UUID angebot;
+    private InstitutionDTO institutionVon;
+    private InstitutionDTO institutionAn;
+    private UUID bedarfId;
+    private UUID angebotId;
     private String standortAn;
     private String standortVon;
     private boolean storniert;

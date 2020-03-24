@@ -12,13 +12,18 @@ public class MatchService {
     private final MatchRepository matchRepository;
 
     public void matcheErstellen(AnfrageEntity anfrage) {
+        val match = new MatchEntity();
+//
+//        if (anfrage.getBedarf() != null) {
+//            match.setInstitutionAn(anfrage.getInstitutionAn());
+//            match.setInstitutionVon(anfrage.getInstitutionVon());
+//            match.set
+//        } else {
+//            match.setInstitutionAn(anfrage.getInstitutionVon());
+//            match.setInstitutionVon(anfrage.getInstitutionAn());
+//        }
 
-        val match = MatchEntity.builder()
-                .adresseVon(anfrage.getInstitutionVon().getStandort())
-                .adresseZu(anfrage.getInstitutionAn().getStandort())
-                .institutionAn(anfrage.getInstitutionAn())
-                .institutionVon(anfrage.getInstitutionVon())
-                .build();
+
         matchRepository.save(match);
 
     }

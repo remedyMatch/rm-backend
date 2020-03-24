@@ -8,6 +8,7 @@ import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -64,8 +65,10 @@ public class BedarfAngebotExternalTaskClient {
                             break;
                     }
 
-                    matchService.matcheErstellen(anfrageRepository.findById(UUID.fromString(anfrageId)).get());
+                    val match = matchService.matcheErstellen(anfrageRepository.findById(UUID.fromString(anfrageId)).get());
 
+                    val variables = Variables.createVariables();
+                    variables.putValue("lieferant", match.getInstitutionVon().getId());
                     externalTaskService.complete(externalTask);
 
                 }).open();

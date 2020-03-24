@@ -40,7 +40,6 @@ public class AnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler
         beschreibung += anfrage.get().getInstitutionVon().getName() + ": " + prefix;
         beschreibung += (int) anzahl + " " + artikel.getName();
 
-
         return beschreibung;
     }
 

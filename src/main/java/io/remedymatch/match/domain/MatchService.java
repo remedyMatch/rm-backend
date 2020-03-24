@@ -11,7 +11,7 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
 
-    public void matcheErstellen(AnfrageEntity anfrage) {
+    public MatchEntity matcheErstellen(AnfrageEntity anfrage) {
         val match = new MatchEntity();
 
         if (anfrage.getBedarf() != null) {
@@ -27,9 +27,7 @@ public class MatchService {
         }
 
         match.setStatus(MatchStatus.Offen);
-
-        matchRepository.save(match);
-
+        return matchRepository.save(match);
     }
 
 }

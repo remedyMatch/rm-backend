@@ -25,6 +25,9 @@ public class BedarfEntity {
     @Column
     private double anzahl;
 
+    @Column
+    private double rest;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private ArtikelEntity artikel;
 

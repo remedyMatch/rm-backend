@@ -12,14 +12,25 @@ import java.util.UUID;
 public class AnfrageDTO {
 
     private UUID id;
+
     private String kommentar;
+
     private InstitutionDTO institutionVon;
+
     private InstitutionDTO institutionAn;
+
     private UUID bedarfId;
+
     private UUID angebotId;
+
     private String standortAn;
+
     private String standortVon;
+
     private String prozessInstanzId;
+
+    private double anzahl;
+
     private AnfrageStatus status;
 
 }

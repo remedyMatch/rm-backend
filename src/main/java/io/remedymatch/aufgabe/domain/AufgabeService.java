@@ -1,8 +1,12 @@
 package io.remedymatch.aufgabe.domain;
 
-import io.remedymatch.engine.EngineClient;
+import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
+import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
 import io.remedymatch.engine.TaskDTO;
+import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.person.domain.PersonEntity;
+import io.remedymatch.person.domain.PersonRepository;
+import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,7 +21,14 @@ import java.util.Map;
 public class AufgabeService {
 
     private final EngineClient engineClient;
-    @Qualifier("TaskBeschreibungHandlerMap") private Map<String, TaskBeschreibungHandler> beschreibungHandlerMap;
+    private final UserProvider userProvider;
+    private final PersonRepository personRepository;
+
+    @Qualifier("TaskBeschreibungHandlerMap")
+    private Map<String, TaskBeschreibungHandler> beschreibungHandlerMap;
+
+    @Qualifier("TaskBeschreibungHandlerMap")
+    private Map<String, TaskCompleteHandler> taskCompleteHandlerMap;
 
     @Transactional
     public List<TaskDTO> aufgabenLaden(PersonEntity person) {
@@ -35,8 +46,14 @@ public class AufgabeService {
         return aufgaben;
     }
 
+
     @Transactional
     public void aufgabeAbschließen(String taskId, Map<String, Object> variables) {
+        val person = personRepository.findByUsername(userProvider.getUserName());
+        val task = engineClient.ladeTask(taskId, person.getInstitution().getId().toString());
+        if (taskCompleteHandlerMap.containsKey(task.getTaskKey())) {
+            taskCompleteHandlerMap.get(task.getTaskKey()).taskPruefen(task, variables);
+        }
         engineClient.taskAbschliessen(taskId, variables);
     }
 

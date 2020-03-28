@@ -4,7 +4,7 @@ import io.remedymatch.anfrage.domain.AnfrageEntity;
 import io.remedymatch.anfrage.domain.AnfrageRepository;
 import io.remedymatch.anfrage.domain.AnfrageStatus;
 import io.remedymatch.engine.AnfrageProzessConstants;
-import io.remedymatch.engine.EngineClient;
+import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -26,8 +26,8 @@ public class BedarfService {
 
     @Transactional
     public void bedarfMelden(BedarfEntity bedarf, InstitutionEntity institutionEntity) {
-        //TODO Prozess starten?
         bedarf.setInstitution(institutionEntity);
+        bedarf.setRest(bedarf.getAnzahl());
         bedarfRepository.save(bedarf);
     }
 
@@ -48,15 +48,7 @@ public class BedarfService {
     }
 
     @Transactional
-    public void bedarfUpdaten(BedarfEntity bedarf) {
-        val oldBedarf = bedarfRepository.findById(bedarf.getId()).get();
-        oldBedarf.setAnzahl(bedarf.getAnzahl());
-        oldBedarf.setArtikel(bedarf.getArtikel());
-        bedarfRepository.save(oldBedarf);
-    }
-
-    @Transactional
-    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar, String standort) {
+    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar, String standort, double anzahl) {
 
         val bedarf = bedarfRepository.findById(bedarfId);
 
@@ -71,6 +63,7 @@ public class BedarfService {
                 .standortAn(bedarf.get().getStandort())
                 .standortVon(standort)
                 .bedarf(bedarf.get())
+                .anzahl(anzahl)
                 .status(AnfrageStatus.Offen)
                 .build();
         anfrageRepository.save(anfrage);
@@ -102,11 +95,22 @@ public class BedarfService {
         }
         anfrage.get().setStatus(AnfrageStatus.Angenommen);
 
+
         //Bedarf als bedient markieren
         val bedarf = anfrage.get().getBedarf();
-        bedarf.setBedient(true);
-        bedarfRepository.save(bedarf);
 
+        if (anfrage.get().getAnzahl() > bedarf.getAnzahl()) {
+            anfrage.get().setAnzahl(bedarf.getAnzahl());
+        } else {
+            if (anfrage.get().getAnzahl() == bedarf.getAnzahl()) {
+                bedarf.setBedient(true);
+                bedarf.setRest(0);
+            } else {
+                bedarf.setRest(bedarf.getRest() - anfrage.get().getAnzahl());
+            }
+        }
+
+        bedarfRepository.save(bedarf);
         anfrageRepository.save(anfrage.get());
     }
 

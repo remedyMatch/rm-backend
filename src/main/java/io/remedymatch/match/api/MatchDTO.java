@@ -2,7 +2,6 @@ package io.remedymatch.match.api;
 
 import io.remedymatch.institution.api.InstitutionDTO;
 import io.remedymatch.match.domain.MatchStatus;
-import io.remedymatch.person.api.PersonDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,7 +16,7 @@ public class MatchDTO {
     private String adresseVon;
     private InstitutionDTO institutionAn;
     private UUID anfrageId;
-    private PersonDTO lieferant;
     private MatchStatus status;
+    private String prozessInstanzId;
 
 }

@@ -16,6 +16,7 @@ public class AnfrageMapper {
                 .standortAn(entity.getStandortAn())
                 .standortVon(entity.getStandortVon())
                 .status(entity.getStatus())
+                .anzahl(entity.getAnzahl())
                 .prozessInstanzId(entity.getProzessInstanzId())
                 .build();
     }

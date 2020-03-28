@@ -1,4 +1,4 @@
-package io.remedymatch.engine;
+package io.remedymatch.engine.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,11 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TaskAbschliessenRequest {
+public class MessageKorrelierenRequest {
+
+    private String prozessInstanzId;
+
+    private String messageKey;
 
     private Map<String, Object> variables;
 

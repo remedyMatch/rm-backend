@@ -1,4 +1,4 @@
-package io.remedymatch.aufgabe.domain;
+package io.remedymatch.aufgabe.domain.handler;
 
 import io.remedymatch.engine.TaskDTO;
 

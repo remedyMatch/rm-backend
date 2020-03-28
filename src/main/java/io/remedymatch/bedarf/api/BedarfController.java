@@ -10,6 +10,7 @@ import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class BedarfController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> bedarfMelden(@RequestBody BedarfDTO bedarf) {
+    public ResponseEntity<Void> bedarfMelden(@RequestBody @Valid BedarfDTO bedarf) {
         val user = personRepository.findByUsername(userProvider.getUserName());
         bedarfService.bedarfMelden(mapToEntity(bedarf), user.getInstitution());
         return ResponseEntity.ok().build();
@@ -43,20 +44,25 @@ public class BedarfController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> bedarfLoeschen(@PathVariable("id") String bedarfId) {
-        bedarfService.bedarfLoeschen(UUID.fromString(bedarfId));
-        return ResponseEntity.ok().build();
-    }
+        val user = personRepository.findByUsername(userProvider.getUserName());
+        val bedarf = bedarfService.bedarfLaden(bedarfId);
 
-    @PutMapping
-    public ResponseEntity<Void> bedarfUpdaten(@RequestBody BedarfDTO bedarfDTO) {
-        bedarfService.bedarfUpdaten(BedarfMapper.mapToEntity(bedarfDTO));
+        if (bedarf.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!bedarf.get().getInstitution().getId().equals(user.getInstitution().getId())) {
+            return ResponseEntity.status(403).build();
+        }
+
+        bedarfService.bedarfLoeschen(UUID.fromString(bedarfId));
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/bedienen")
     public ResponseEntity<Void> bedarfBedienen(@RequestBody BedarfBedienenRequest request) {
         val user = personRepository.findByUsername(userProvider.getUserName());
-        bedarfService.starteAnfrage(request.getBedarfId(), user.getInstitution(), request.getKommentar(), request.getStandort());
+        bedarfService.starteAnfrage(request.getBedarfId(), user.getInstitution(), request.getKommentar(), request.getStandort(), request.getAnzahl());
         return ResponseEntity.ok().build();
     }
 
@@ -67,6 +73,7 @@ public class BedarfController {
         if (bedarf.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(bedarf.get().getAnfragen().stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
     }
 

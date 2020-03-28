@@ -1,4 +1,4 @@
-package io.remedymatch.engine;
+package io.remedymatch.engine.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,7 +1,6 @@
 package io.remedymatch.match.domain;
 
 import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.person.domain.PersonEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -39,11 +38,11 @@ public class MatchEntity {
     @Column
     private String standortAn;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private PersonEntity lieferant;
-
     @Column
     private MatchStatus status;
+
+    @Column
+    private String prozessInstanzId;
 
     @Column
     private UUID anfrageId;

@@ -8,6 +8,7 @@ import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class AngebotController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> angebotMelden(@RequestBody AngebotDTO angebot) {
+    public ResponseEntity<Void> angebotMelden(@RequestBody @Valid AngebotDTO angebot) {
         val user = personRepository.findByUsername(userProvider.getUserName());
         angebotService.angebotMelden(mapToEntity(angebot), user.getInstitution());
         return ResponseEntity.ok().build();
@@ -41,20 +42,25 @@ public class AngebotController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> angebotLoeschen(@PathVariable("id") String angebotId) {
-        angebotService.angebotLoeschen(UUID.fromString(angebotId));
-        return ResponseEntity.ok().build();
-    }
 
-    @PutMapping
-    public ResponseEntity<Void> angebotUpdaten(@RequestBody AngebotDTO angebotDTO) {
-        angebotService.angebotUpdaten(mapToEntity(angebotDTO));
+        val user = personRepository.findByUsername(userProvider.getUserName());
+        val angebot = angebotService.angebotLaden(UUID.fromString(angebotId));
+
+        if (angebot.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!angebot.get().getInstitution().getId().equals(user.getInstitution().getId())) {
+            return ResponseEntity.status(403).build();
+        }
+        angebotService.angebotLoeschen(UUID.fromString(angebotId));
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/anfragen")
     public ResponseEntity<Void> angebotAnfragen(@RequestBody AngebotAnfragenRequest request) {
         val user = personRepository.findByUsername(userProvider.getUserName());
-        angebotService.starteAnfrage(request.getAngebotId(), user.getInstitution(), request.getKommentar(), request.getStandort());
+        angebotService.starteAnfrage(request.getAngebotId(), user.getInstitution(), request.getKommentar(), request.getStandort(), request.getAnzahl());
         return ResponseEntity.ok().build();
     }
 

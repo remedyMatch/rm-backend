@@ -1,5 +1,9 @@
-package io.remedymatch.engine;
+package io.remedymatch.engine.client;
 
+import io.remedymatch.engine.TaskDTO;
+import io.remedymatch.engine.request.MessageKorrelierenRequest;
+import io.remedymatch.engine.request.ProzessStartRequest;
+import io.remedymatch.engine.request.TaskAbschliessenRequest;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -69,16 +73,24 @@ public class EngineClient {
         return response.getBody();
     }
 
-    public void messageKorrelieren(String task, Map<String, Object> variables) {
+    public void messageKorrelieren(String prozessInstanzId, String messageKey, Map<String, Object> variables) {
 
-        val request = TaskAbschliessenRequest.builder().variables(variables).build();
-
+        val request = MessageKorrelierenRequest.builder()
+                .prozessInstanzId(prozessInstanzId)
+                .messageKey(messageKey)
+                .variables(variables)
+                .build();
 
         val restTemplate = new RestTemplate();
-        ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/task/" + task, request, Void.class);
+        ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/message/korrelieren", request, Void.class);
 
         if (response.getStatusCode().isError()) {
             throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
         }
     }
+
+    public void anfrageProzessBeenden(String prozessInstanzId, Map<String, Object> variables) {
+        this.messageKorrelieren(prozessInstanzId, "stornierungErhalten", variables);
+    }
+
 }

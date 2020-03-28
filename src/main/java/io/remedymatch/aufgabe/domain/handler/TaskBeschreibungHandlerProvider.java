@@ -1,4 +1,4 @@
-package io.remedymatch.aufgabe.domain;
+package io.remedymatch.aufgabe.domain.handler;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

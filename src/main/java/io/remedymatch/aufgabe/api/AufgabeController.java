@@ -35,8 +35,6 @@ public class AufgabeController {
         if (!aufgabeService.isBearbeiter(request.getTaskId(), person.getInstitution().getId().toString())) {
             return ResponseEntity.status(403).build();
         }
-
-        aufgabeService.aufgabeAbschließen(request.getTaskId(), request.getVariables());
         return ResponseEntity.ok().build();
     }
 

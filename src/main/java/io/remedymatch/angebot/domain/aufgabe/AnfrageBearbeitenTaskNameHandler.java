@@ -1,8 +1,8 @@
-package io.remedymatch.angebot.domain;
+package io.remedymatch.angebot.domain.aufgabe;
 
 import io.remedymatch.anfrage.domain.AnfrageRepository;
 import io.remedymatch.artikel.domain.ArtikelEntity;
-import io.remedymatch.aufgabe.domain.TaskBeschreibungHandler;
+import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -45,6 +45,6 @@ public class AnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler
 
     @Override
     public String taskKey() {
-        return "anfrage_prozess_beantworten";
+        return AnfrageBearbeitenTaskContstants.TASK_KEY;
     }
 }

@@ -1,8 +1,9 @@
-package io.remedymatch.engine;
+package io.remedymatch.shared.client;
 
 import io.remedymatch.anfrage.domain.AnfrageRepository;
 import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.bedarf.domain.BedarfService;
+import io.remedymatch.engine.AnfrageProzessConstants;
 import io.remedymatch.match.domain.MatchService;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,6 @@ public class BedarfAngebotExternalTaskClient {
                 .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000))
                 .build();
 
-
         client.subscribe("anfrageAblehnung")
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
@@ -48,6 +48,7 @@ public class BedarfAngebotExternalTaskClient {
                             angebotService.anfrageStornieren(anfrageId);
                             break;
                     }
+
                     externalTaskService.complete(externalTask);
                 }).open();
 
@@ -57,14 +58,18 @@ public class BedarfAngebotExternalTaskClient {
 
                     val anfrageId = externalTask.getVariable("anfrageId").toString();
                     val prozessTyp = externalTask.getVariable("prozessTyp").toString();
-
-                    switch (prozessTyp) {
-                        case AnfrageProzessConstants.PROZESS_TYP_BEDARF:
-                            bedarfService.anfrageAnnehmen(anfrageId);
-                            break;
-                        case AnfrageProzessConstants.PROZESS_TYP_ANGEBOT:
-                            angebotService.anfrageAnnehmen(anfrageId);
-                            break;
+                    try {
+                        switch (prozessTyp) {
+                            case AnfrageProzessConstants.PROZESS_TYP_BEDARF:
+                                bedarfService.anfrageAnnehmen(anfrageId);
+                                break;
+                            case AnfrageProzessConstants.PROZESS_TYP_ANGEBOT:
+                                angebotService.anfrageAnnehmen(anfrageId);
+                                break;
+                        }
+                    } catch (IllegalArgumentException exception) {
+                        externalTaskService.handleBpmnError(externalTask, "wareNichtVerfuegbar");
+                        return;
                     }
 
                     val match = matchService.matcheErstellen(anfrageRepository.findById(UUID.fromString(anfrageId)).get());
@@ -77,5 +82,27 @@ public class BedarfAngebotExternalTaskClient {
                     externalTaskService.complete(externalTask, variables);
 
                 }).open();
+
+        client.subscribe("stornierungVerarbeiten")
+                .lockDuration(2000)
+                .handler((externalTask, externalTaskService) -> {
+
+                    System.out.println("Stornierung erhalten");
+
+//                    val anfrageId = externalTask.getVariable("anfrageId").toString();
+//                    val prozessTyp = externalTask.getVariable("prozessTyp").toString();
+//
+//                    switch (prozessTyp) {
+//                        case AnfrageProzessConstants.PROZESS_TYP_ANGEBOT:
+//                            bedarfService.anfrageStornieren(anfrageId);
+//                            break;
+//                        case AnfrageProzessConstants.PROZESS_TYP_BEDARF:
+//                            angebotService.anfrageStornieren(anfrageId);
+//                            break;
+//                    }
+
+                    externalTaskService.complete(externalTask);
+                }).open();
+
     }
 }

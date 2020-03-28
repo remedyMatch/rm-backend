@@ -49,6 +49,9 @@ public class AnfrageEntity {
     @Column
     private String prozessInstanzId;
 
+    @Column
+    private double anzahl;
+
     @Enumerated(EnumType.STRING)
     private AnfrageStatus status;
 

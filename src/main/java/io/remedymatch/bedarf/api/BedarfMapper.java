@@ -1,7 +1,6 @@
 package io.remedymatch.bedarf.api;
 
 import io.remedymatch.bedarf.domain.BedarfEntity;
-import io.remedymatch.institution.api.InstitutionMapper;
 
 import static io.remedymatch.artikel.api.ArtikelMapper.getArticleDTO;
 import static io.remedymatch.artikel.api.ArtikelMapper.getArticleEntity;
@@ -17,13 +16,14 @@ public class BedarfMapper {
                 .originalverpackt(entity.isOriginalverpackt())
                 .standort(entity.getStandort())
                 .steril(entity.isSteril())
+                .rest(entity.getRest())
                 .kommentar(entity.getKommentar())
                 .bedient(entity.isBedient());
 
-
         if (entity.getInstitution() != null) {
-            builder = builder.institution(InstitutionMapper.mapToDTO(entity.getInstitution()));
+            builder = builder.institutionId(entity.getInstitution().getId());
         }
+
         return builder.build();
     }
 
@@ -39,9 +39,6 @@ public class BedarfMapper {
                 .kommentar(dto.getKommentar())
                 .bedient(dto.isBedient());
 
-        if (dto.getInstitution() != null) {
-            builder = builder.institution(InstitutionMapper.mapToEntity(dto.getInstitution()));
-        }
 
         return builder.build();
     }

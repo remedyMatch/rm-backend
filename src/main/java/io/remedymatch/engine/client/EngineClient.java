@@ -82,7 +82,7 @@ public class EngineClient {
                 .build();
 
         val restTemplate = new RestTemplate();
-        ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/message/korrelieren", request, Void.class);
+        ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/message/korrelieren/", request, Void.class);
 
         if (response.getStatusCode().isError()) {
             throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");

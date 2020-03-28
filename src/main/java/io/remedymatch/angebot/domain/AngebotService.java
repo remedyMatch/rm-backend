@@ -2,12 +2,14 @@ package io.remedymatch.angebot.domain;
 
 import io.remedymatch.anfrage.domain.AnfrageEntity;
 import io.remedymatch.anfrage.domain.AnfrageRepository;
+import io.remedymatch.anfrage.domain.AnfrageService;
 import io.remedymatch.anfrage.domain.AnfrageStatus;
 import io.remedymatch.engine.AnfrageProzessConstants;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class AngebotService {
 
     private final AngebotRepository angebotRepository;
     private final AnfrageRepository anfrageRepository;
+    private final AnfrageService anfrageService;
     private final EngineClient engineClient;
 
     @Transactional
@@ -39,6 +42,18 @@ public class AngebotService {
     @Transactional
     public void angebotLoeschen(UUID id) {
         val angebot = angebotRepository.findById(id);
+
+        if (angebot.isEmpty()) {
+            throw new IllegalIdentifierException("Angebot ist nicht vorhanden");
+        }
+
+
+        if (angebot.get().getAnfragen() != null) {
+            angebot.get().getAnfragen().stream().filter(anfrage -> anfrage.getStatus().equals(AnfrageStatus.Offen)).forEach(anfrage ->
+                    anfrageService.anfrageStornieren(anfrage.getId().toString()));
+        }
+
+
         angebotRepository.delete(angebot.get());
     }
 

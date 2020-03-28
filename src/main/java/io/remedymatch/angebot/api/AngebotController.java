@@ -29,7 +29,7 @@ public class AngebotController {
     @GetMapping
     public ResponseEntity<List<AngebotDTO>> getAll() {
         val angebote = StreamSupport.stream(angebotService.alleAngeboteLaden().spliterator(), false)
-                .map(AngebotMapper::mapToDTO).collect(Collectors.toList());
+                .filter(angebot -> !angebot.isBedient()).map(AngebotMapper::mapToDTO).collect(Collectors.toList());
         return ResponseEntity.ok(angebote);
     }
 

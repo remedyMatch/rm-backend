@@ -31,7 +31,7 @@ public class BedarfController {
     @GetMapping()
     public ResponseEntity<List<BedarfDTO>> bedarfeLaden() {
         val institutions = StreamSupport.stream(bedarfService.alleBedarfeLaden().spliterator(), false)
-                .map(BedarfMapper::mapToDTO).collect(Collectors.toList());
+                .filter(bedarf -> !bedarf.isBedient()).map(BedarfMapper::mapToDTO).collect(Collectors.toList());
         return ResponseEntity.ok(institutions);
     }
 

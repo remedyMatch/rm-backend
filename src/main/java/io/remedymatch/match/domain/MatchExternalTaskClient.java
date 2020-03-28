@@ -24,7 +24,6 @@ public class MatchExternalTaskClient {
                 .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000))
                 .build();
 
-
         client.subscribe("auslieferungBestaetigung")
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
@@ -35,10 +34,5 @@ public class MatchExternalTaskClient {
                     externalTaskService.complete(externalTask);
                 }).open();
 
-        client.subscribe("logistikartVerarbeiten")
-                .lockDuration(2000)
-                .handler((externalTask, externalTaskService) -> {
-                    externalTaskService.complete(externalTask);
-                }).open();
     }
 }

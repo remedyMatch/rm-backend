@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.domain;
 
+import io.remedymatch.anfrage.domain.AnfrageEntity;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import lombok.*;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -54,5 +56,8 @@ public class AngebotEntity {
 
     @Column
     private boolean bedient;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<AnfrageEntity> anfragen;
 
 }

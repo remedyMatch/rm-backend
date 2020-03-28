@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static io.remedymatch.institution.api.InstitutionMapper.mapToDTO;
 
@@ -32,13 +31,6 @@ public class InstitutionController {
     private final PersonRepository personRepository;
     private final UserProvider userProvider;
     private final AnfrageRepository anfrageRepository;
-
-    @GetMapping
-    public ResponseEntity<List<InstitutionDTO>> alleLaden() {
-        val institutions = StreamSupport.stream(institutionsRepository.findAll().spliterator(), false)
-                .map(InstitutionMapper::mapToDTO).collect(Collectors.toList());
-        return ResponseEntity.ok(institutions);
-    }
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody InstitutionDTO institutionDTO) {

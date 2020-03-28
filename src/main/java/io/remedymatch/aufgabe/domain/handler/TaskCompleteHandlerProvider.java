@@ -14,7 +14,7 @@ public class TaskCompleteHandlerProvider {
 
     public final List<TaskCompleteHandler> taskCompleteHandler;
 
-    @Bean("TaskBeschreibungHandlerMap")
+    @Bean("TaskCompleteHandlerMap")
     public Map<String, TaskCompleteHandler> taskCompleteHandlerMap() {
         return taskCompleteHandler.stream().collect(Collectors.toMap(TaskCompleteHandler::taskKey, t -> t));
     }

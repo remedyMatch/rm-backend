@@ -29,5 +29,4 @@ public class AnfrageService {
         engineClient.anfrageProzessBeenden(anfrage.get().getProzessInstanzId(), new HashMap<>());
     }
 
-
 }

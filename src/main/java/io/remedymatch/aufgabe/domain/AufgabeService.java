@@ -27,7 +27,7 @@ public class AufgabeService {
     @Qualifier("TaskBeschreibungHandlerMap")
     private Map<String, TaskBeschreibungHandler> beschreibungHandlerMap;
 
-    @Qualifier("TaskBeschreibungHandlerMap")
+    @Qualifier("TaskCompleteHandlerMap")
     private Map<String, TaskCompleteHandler> taskCompleteHandlerMap;
 
     @Transactional

@@ -1,6 +1,5 @@
-package io.remedymatch.angebot.domain.aufgabe;
+package io.remedymatch.match.domain.aufgabe;
 
-import io.remedymatch.anfrage.domain.AnfrageRepository;
 import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;
@@ -10,9 +9,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Component
-public class AnfrageBearbeitenTaskCompleteHandler implements TaskCompleteHandler {
-
-    private final AnfrageRepository anfrageRepository;
+public class WareneingangBestaetigenTaskCompleteHandler implements TaskCompleteHandler {
 
     @Override
     public void taskPruefen(TaskDTO taskDTO, Map<String, Object> variables) {
@@ -21,6 +18,6 @@ public class AnfrageBearbeitenTaskCompleteHandler implements TaskCompleteHandler
 
     @Override
     public String taskKey() {
-        return AnfrageBearbeitenTaskContstants.TASK_KEY;
+        return WareneingangBestaetigenTaskContstants.TASK_KEY;
     }
 }

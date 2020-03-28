@@ -27,7 +27,6 @@ public class MatchExternalTaskClient {
         client.subscribe("auslieferungBestaetigung")
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
-
                     val matchId = externalTask.getVariable("matchId").toString();
                     val match = matchRepository.findById(UUID.fromString(matchId));
                     match.get().setStatus(MatchStatus.Ausgeliefert);

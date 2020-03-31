@@ -34,7 +34,7 @@ public class AngebotController {
 
         val user = personRepository.findByUsername(userProvider.getUserName());
 
-        val angebote = angebotRepository.findAllbyBedientFalse().stream()
+        val angebote = angebotRepository.findAllByBedientFalse().stream()
                 .filter(angebot -> !angebot.isBedient()).map(AngebotMapper::mapToDTO).collect(Collectors.toList());
 
         angebote.forEach(a -> {

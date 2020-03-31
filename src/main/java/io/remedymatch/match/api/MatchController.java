@@ -31,7 +31,7 @@ public class MatchController {
     public ResponseEntity<List<MatchDTO>> alleMatchesLaden() {
         val user = personRepository.findByUsername(userProvider.getUserName());
 
-        val matches = matchRepository.finAllByStatus(MatchStatus.Offen).stream()
+        val matches = matchRepository.findAllByStatus(MatchStatus.Offen).stream()
                 .map(MatchMapper::mapToDTO)
                 .collect(Collectors.toList());
 

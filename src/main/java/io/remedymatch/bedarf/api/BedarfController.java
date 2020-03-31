@@ -39,7 +39,7 @@ public class BedarfController {
     public ResponseEntity<List<BedarfDTO>> bedarfeLaden() {
         val user = personRepository.findByUsername(userProvider.getUserName());
 
-        val bedarfe = bedarfRepository.findAllbyBedientFalse().stream()
+        val bedarfe = bedarfRepository.findAllByBedientFalse().stream()
                 .filter(bedarf -> !bedarf.isBedient()).map(BedarfMapper::mapToDTO).collect(Collectors.toList());
 
         bedarfe.forEach(b -> {

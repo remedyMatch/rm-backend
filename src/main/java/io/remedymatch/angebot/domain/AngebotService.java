@@ -27,10 +27,10 @@ public class AngebotService {
     private final EngineClient engineClient;
 
     @Transactional
-    public void angebotMelden(AngebotEntity angebot, InstitutionEntity institutionEntity) {
+    public void angebotMelden(Angebot angebot, InstitutionEntity institutionEntity) {
         angebot.setInstitution(institutionEntity);
         angebot.setRest(angebot.getAnzahl());
-        angebotRepository.add(AngebotEntityConverter.convert(angebot));
+        angebotRepository.add(angebot);
     }
 
     @Transactional

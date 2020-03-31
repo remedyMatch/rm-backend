@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.domain;
 
+import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 import io.remedymatch.engine.client.EngineClient;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -32,7 +33,7 @@ public class AngebotAnfrageService {
 			throw new IllegalArgumentException("Anfrage ist nicht vorhanden und kann deshalb nicht storniert werden");
 		}
 
-		AngebotAnfrageEntity angebotAnfrage = anfrage.get();
+		AngebotAnfrage angebotAnfrage = anfrage.get();
 		if (!AngebotAnfrageStatus.Offen.equals(angebotAnfrage.getStatus())) {
 			throw new IllegalArgumentException(
 					"Eine Anfrage, die nicht im Status offen ist, kann nicht storniert werden");

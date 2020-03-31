@@ -94,10 +94,16 @@ public class AngebotService {
 			throw new IllegalArgumentException("Der ausgewählte Standort konnte nicht geunden werden");
 		}
 
-		val anfrage = AngebotAnfrageEntity.builder().institutionVon(anfrager)
-				.institutionAn(angebot.get().getInstitution()).kommentar(kommentar)
-				.standortAn(angebot.get().getStandort()).standortVon(standort).angebot(angebot.get()).anzahl(anzahl)
-				.status(AngebotAnfrageStatus.Offen).build();
+		val anfrage = AngebotAnfrage.builder() //
+				.institutionVon(anfrager) //
+				.institutionAn(angebot.get().getInstitution()) //
+				.kommentar(kommentar) //
+				.standortAn(angebot.get().getStandort()) //
+				.standortVon(standort) //
+				.angebot(angebot.get()) //
+				.anzahl(anzahl) //
+				.status(AngebotAnfrageStatus.Offen) //
+				.build();
 
 		anfrageRepository.update(anfrage);
 

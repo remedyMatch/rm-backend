@@ -43,6 +43,12 @@ public class AngebotAnfrageRepository {
 		return jpaRepository.findById(angebotAnfrageId.getValue()).map(AngebotAnfrageEntityConverter::convert);
 	}
 
+	public AngebotAnfrage add(final AngebotAnfrage angebotAnfrage) {
+		Assert.notNull(angebotAnfrage, "AngebotAnfrage ist null");
+
+		return convert(jpaRepository.save(convert(angebotAnfrage)));
+	}
+	
 	public AngebotAnfrage update(final AngebotAnfrage angebotAnfrage) {
 		Assert.notNull(angebotAnfrage, "AngebotAnfrage ist null");
 

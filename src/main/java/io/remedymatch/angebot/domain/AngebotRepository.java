@@ -1,5 +1,7 @@
 package io.remedymatch.angebot.domain;
 
+import static io.remedymatch.angebot.domain.AngebotEntityConverter.convert;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,13 +43,13 @@ public class AngebotRepository {
 	public Angebot add(final Angebot angebot) {
 		Assert.notNull(angebot, "Angebot ist null");
 
-		return AngebotEntityConverter.convert(jpaRepository.save(AngebotEntityConverter.convert(angebot)));
+		return convert(jpaRepository.save(convert(angebot)));
 	}
 
 	public Angebot update(final Angebot angebot) {
 		Assert.notNull(angebot, "Angebot ist null");
 
-		return AngebotEntityConverter.convert(jpaRepository.save(AngebotEntityConverter.convert(angebot)));
+		return convert(jpaRepository.save(convert(angebot)));
 	}
 
 	public void delete(final AngebotId angebotId) {

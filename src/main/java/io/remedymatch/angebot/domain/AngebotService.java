@@ -96,7 +96,7 @@ public class AngebotService {
 				.status(AngebotAnfrageStatus.Offen) //
 				.build();
 
-		anfrage = angebotAnfrageRepository.update(anfrage);
+		anfrage = angebotAnfrageRepository.add(anfrage);
 
 		var variables = new HashMap<String, Object>();
 		variables.put("institution", angebot.get().getInstitution().getId().toString());

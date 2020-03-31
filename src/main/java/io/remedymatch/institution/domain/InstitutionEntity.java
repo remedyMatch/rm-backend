@@ -1,6 +1,6 @@
 package io.remedymatch.institution.domain;
 
-import io.remedymatch.angebot.domain.AngebotEntity;
+import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.bedarf.domain.BedarfEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;

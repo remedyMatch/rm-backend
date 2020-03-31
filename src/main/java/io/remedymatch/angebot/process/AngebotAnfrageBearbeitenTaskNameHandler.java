@@ -27,7 +27,7 @@ public class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibung
         var anzahl = anfrage.get().getAngebot().getAnzahl();
 
         beschreibung += anfrage.get().getInstitutionVon().getName() + ": " + prefix;
-        beschreibung += (int) anzahl + " " + artikel.getName();
+        beschreibung += (int) anzahl.intValue() + " " + artikel.getName();
 
         return beschreibung;
     }

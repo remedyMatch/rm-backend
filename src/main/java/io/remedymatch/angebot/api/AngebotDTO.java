@@ -1,13 +1,15 @@
 package io.remedymatch.angebot.api;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import javax.validation.constraints.NotNull;
+
 import io.remedymatch.artikel.api.ArtikelDTO;
 import io.remedymatch.institution.api.InstitutionStandortDTO;
 import lombok.Builder;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -19,7 +21,7 @@ public class AngebotDTO {
     private ArtikelDTO artikel;
 
     @NotNull
-    private double anzahl;
+    private BigDecimal anzahl;
 
     @NotNull
     private InstitutionStandortDTO standort;
@@ -27,7 +29,7 @@ public class AngebotDTO {
     @NotNull
     private String kommentar;
 
-    private double rest;
+    private BigDecimal rest;
 
     private UUID institutionId;
 
@@ -41,6 +43,6 @@ public class AngebotDTO {
 
     private boolean bedient;
 
-    private double entfernung;
+    private BigDecimal entfernung;
 
 }

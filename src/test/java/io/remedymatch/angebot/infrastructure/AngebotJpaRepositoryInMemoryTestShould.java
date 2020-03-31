@@ -2,6 +2,7 @@ package io.remedymatch.angebot.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -20,7 +21,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.angebot.domain.AngebotEntity;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 
 @ExtendWith(SpringExtension.class)
@@ -44,8 +44,8 @@ public class AngebotJpaRepositoryInMemoryTestShould {
 	@DisplayName("alle nicht bediente Angebote zurueckliefern")
 	void alle_nicht_bediente_Angebote_zurueckliefern() {
 		ArtikelEntity beispielArtikel = persist(beispielArtikel());
-		AngebotEntity ersteAngebot = persist(angebot(beispielArtikel, 100));
-		AngebotEntity zweiteAngebot = persist(angebot(beispielArtikel, 200));
+		AngebotEntity ersteAngebot = persist(angebot(beispielArtikel, BigDecimal.valueOf(100)));
+		AngebotEntity zweiteAngebot = persist(angebot(beispielArtikel, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
 		assertEquals(Arrays.asList(ersteAngebot, zweiteAngebot), jpaRepository.findAllByBedientFalse());
@@ -60,7 +60,7 @@ public class AngebotJpaRepositoryInMemoryTestShould {
 
 	private AngebotEntity angebot(//
 			ArtikelEntity artikel,
-			double anzahl) {
+			BigDecimal anzahl) {
 		return AngebotEntity.builder() //
 				.anzahl(anzahl) //
 				.rest(anzahl) //

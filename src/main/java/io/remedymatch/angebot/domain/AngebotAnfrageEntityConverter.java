@@ -1,17 +1,14 @@
 package io.remedymatch.angebot.domain;
 
-import java.math.BigDecimal;
-
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 
-class AngebotAnfrageEntityMapper {
+class AngebotAnfrageEntityConverter {
 
 	static AngebotAnfrage convert(AngebotAnfrageEntity entity) {
-		if (entity == null)
-		{
+		if (entity == null) {
 			return null;
 		}
-		
+
 		return AngebotAnfrage.builder() //
 				.id(entity.getId()) //
 				.kommentar(entity.getKommentar()) //
@@ -19,9 +16,9 @@ class AngebotAnfrageEntityMapper {
 				.institutionVon(entity.getInstitutionVon()) //
 				.standortAn(entity.getStandortAn()) //
 				.standortVon(entity.getStandortVon()) //
-				.angebot(entity.getAngebot()) //
+				.angebot(AngebotEntityConverter.convert(entity.getAngebot())) //
 				.status(entity.getStatus())//
-				.anzahl(BigDecimal.valueOf(entity.getAnzahl())) //
+				.anzahl(entity.getAnzahl()) //
 				.prozessInstanzId(entity.getProzessInstanzId()) //
 				.build();
 	}
@@ -38,9 +35,9 @@ class AngebotAnfrageEntityMapper {
 				.institutionVon(angebotAnfrage.getInstitutionVon()) //
 				.standortAn(angebotAnfrage.getStandortAn()) //
 				.standortVon(angebotAnfrage.getStandortVon()) //
-				.angebot(angebotAnfrage.getAngebot()) //
+				.angebot(AngebotEntityConverter.convert(angebotAnfrage.getAngebot())) //
 				.status(angebotAnfrage.getStatus()) //
-				.anzahl(angebotAnfrage.getAnzahl().doubleValue()) //
+				.anzahl(angebotAnfrage.getAnzahl()) //
 				.prozessInstanzId(angebotAnfrage.getProzessInstanzId()) //
 				.build();
 	}

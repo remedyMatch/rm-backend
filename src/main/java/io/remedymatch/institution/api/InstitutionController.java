@@ -1,8 +1,29 @@
 package io.remedymatch.institution.api;
 
+import static io.remedymatch.institution.api.InstitutionMapper.mapToDTO;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.remedymatch.angebot.api.AngebotController;
 import io.remedymatch.angebot.api.AngebotDTO;
-import io.remedymatch.angebot.api.AngebotMapper;
 import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.AngebotRepository;
 import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
@@ -16,16 +37,6 @@ import io.remedymatch.shared.GeoCalc;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static io.remedymatch.institution.api.InstitutionMapper.mapToDTO;
 
 @RestController
 @AllArgsConstructor
@@ -36,9 +47,13 @@ public class InstitutionController {
     private final PersonRepository personRepository;
     private final UserProvider userProvider;
     private final BedarfAnfrageRepository bedarfAnfrageRepository;
+    private final AngebotRepository angebotRepository;
     private final AngebotAnfrageRepository angebotAnfrageRepository;
     private final InstitutionService institutionService;
 
+    @Autowired
+    private AngebotController angebotController;
+    
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody InstitutionDTO institution) {
         val person = personRepository.findByUsername(userProvider.getUserName());
@@ -93,8 +108,8 @@ public class InstitutionController {
 
     @GetMapping("/angebot")
     public ResponseEntity<List<AngebotDTO>> angebotLaden() {
-        val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(person.getInstitution().getAngebote().stream().map(AngebotMapper::mapToDTO).collect(Collectors.toList()));
+    	// FIXME: entfernen
+        return angebotController.getInstituionAngebote();
     }
 
     @GetMapping("/assigned")

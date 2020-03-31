@@ -27,7 +27,7 @@ public class AngebotService {
 	private final EngineClient engineClient;
 
 	@Transactional
-	public void angebotMelden(AngebotEntity angebot, InstitutionEntity institutionEntity) {
+	public void angebotMelden(Angebot angebot, InstitutionEntity institutionEntity) {
 		angebot.setInstitution(institutionEntity);
 		angebot.setRest(angebot.getAnzahl());
 		angebotRepository.add(angebot);
@@ -51,12 +51,12 @@ public class AngebotService {
 	}
 
 	@Transactional
-	public Optional<AngebotEntity> angebotLaden(UUID id) {
+	public Optional<Angebot> angebotLaden(UUID id) {
 		return angebotRepository.get(id);
 	}
 
 	@Transactional
-	public void angebotUpdaten(AngebotEntity angebot) {
+	public void angebotUpdaten(Angebot angebot) {
 		val oldAngebot = angebotRepository.get(angebot.getId()).get();
 		oldAngebot.setAnzahl(angebot.getAnzahl());
 		oldAngebot.setArtikel(angebot.getArtikel());
@@ -140,16 +140,16 @@ public class AngebotService {
 
 		// Restbestand des Angebots herabsetzen oder Exception werfen,
 		// wenn die Anfrage größer als das Angebot ist
-		if (anfrage.get().getAnzahl().doubleValue() > angebot.getAnzahl()) {
+		if (anfrage.get().getAnzahl().doubleValue() > angebot.getAnzahl().doubleValue()) {
 			anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
 			anfrageRepository.update(anfrage.get());
 			throw new IllegalArgumentException("Nicht genügend Ware auf Lager");
 		} else {
-			if (anfrage.get().getAnzahl().doubleValue() == angebot.getAnzahl()) {
+			if (anfrage.get().getAnzahl().doubleValue() == angebot.getAnzahl().doubleValue()) {
 				angebot.setBedient(true);
-				angebot.setRest(0);
+				angebot.setRest(BigDecimal.ZERO);
 			} else {
-				angebot.setRest(angebot.getRest() - anfrage.get().getAnzahl().doubleValue());
+				angebot.setRest(BigDecimal.valueOf(angebot.getRest().doubleValue() - anfrage.get().getAnzahl().doubleValue()));
 			}
 		}
 

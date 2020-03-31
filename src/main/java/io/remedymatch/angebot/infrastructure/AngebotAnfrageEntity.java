@@ -1,20 +1,35 @@
 package io.remedymatch.angebot.infrastructure;
 
-import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
-import io.remedymatch.angebot.domain.AngebotEntity;
-import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
+import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @EqualsAndHashCode
 @Builder
@@ -48,7 +63,7 @@ public class AngebotAnfrageEntity {
     private String prozessInstanzId;
 
     @Column
-    private double anzahl;
+    private BigDecimal anzahl;
 
     @Enumerated(EnumType.STRING)
     private AngebotAnfrageStatus status;

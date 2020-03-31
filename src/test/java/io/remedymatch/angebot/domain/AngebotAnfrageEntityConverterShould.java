@@ -12,12 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
+import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionStandortEntity;
 
 @ExtendWith(SpringExtension.class)
-@DisplayName("AngebotAnfrageEntityMapper soll")
-public class AngebotAnfrageEntityMapperShould {
+@DisplayName("AngebotAnfrageEntityConverter soll")
+public class AngebotAnfrageEntityConverterShould {
 
 	private static final UUID ANGEBOT_ANFRAGE_ID = UUID.randomUUID();
 	private static final String KOMMENTAR = "Kommentar";
@@ -25,7 +26,9 @@ public class AngebotAnfrageEntityMapperShould {
 	private static final InstitutionStandortEntity STANDORT_VON = InstitutionStandortEntity.builder().id(UUID.randomUUID()).build();
 	private static final InstitutionEntity INSTITUTION_AN= InstitutionEntity.builder().id(UUID.randomUUID()).build();
 	private static final InstitutionStandortEntity STANDORT_AN = InstitutionStandortEntity.builder().id(UUID.randomUUID()).build();
-	private static final AngebotEntity ANGEBOT = AngebotEntity.builder().id(UUID.randomUUID()).build();
+	private static final UUID ANGEBOT_ID = UUID.randomUUID();
+	private static final Angebot ANGEBOT = Angebot.builder().id(ANGEBOT_ID).build();
+	private static final AngebotEntity ANGEBOT_ENTITY = AngebotEntity.builder().id(ANGEBOT_ID).build();
 	private static final String PROZESSINSTANZ_ID = "ProzessInstanzId";
 	private static final BigDecimal ANZAHL = BigDecimal.valueOf(120.0);
 	private static final AngebotAnfrageStatus STATUS = AngebotAnfrageStatus.Offen;
@@ -33,25 +36,25 @@ public class AngebotAnfrageEntityMapperShould {
 	@Test
 	@DisplayName("Entity in Domain Objekt konvertieren")
 	void entity_in_Domain_Objekt_konvertieren() {
-		assertEquals(angebotAnfrage(), AngebotAnfrageEntityMapper.convert(entity()));
+		assertEquals(angebotAnfrage(), AngebotAnfrageEntityConverter.convert(entity()));
 	}
 
 	@Test
 	@DisplayName("null Entity in null Domain Objekt konvertieren")
 	void null_entity_in_null_Domain_Objekt_konvertieren() {
-		assertNull(AngebotAnfrageEntityMapper.convert((AngebotAnfrageEntity) null));
+		assertNull(AngebotAnfrageEntityConverter.convert((AngebotAnfrageEntity) null));
 	}
 
 	@Test
 	@DisplayName("Domain Objekt in Entity konvertieren")
 	void domain_Objekt_in_Entity_konvertieren() {
-		assertEquals(entity(), AngebotAnfrageEntityMapper.convert(angebotAnfrage()));
+		assertEquals(entity(), AngebotAnfrageEntityConverter.convert(angebotAnfrage()));
 	}
 
 	@Test
 	@DisplayName("null Domain Objekt in null Entity konvertieren")
 	void null_domain_Objekt_in_Entity_konvertieren() {
-		assertNull(AngebotAnfrageEntityMapper.convert((AngebotAnfrage) null));
+		assertNull(AngebotAnfrageEntityConverter.convert((AngebotAnfrage) null));
 	}
 	
 	private AngebotAnfrage angebotAnfrage() {
@@ -77,9 +80,9 @@ public class AngebotAnfrageEntityMapperShould {
 				.standortVon(STANDORT_VON) //
 				.institutionAn(INSTITUTION_AN) //
 				.standortAn(STANDORT_AN) //
-				.angebot(ANGEBOT) //
+				.angebot(ANGEBOT_ENTITY) //
 				.prozessInstanzId(PROZESSINSTANZ_ID) //
-				.anzahl(ANZAHL.doubleValue()) //
+				.anzahl(ANZAHL) //
 				.status(STATUS) //
 				.build();
 	}

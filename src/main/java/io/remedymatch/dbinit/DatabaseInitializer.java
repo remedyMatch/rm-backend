@@ -1,7 +1,8 @@
 package io.remedymatch.dbinit;
 
 import com.github.javafaker.Faker;
-import io.remedymatch.angebot.domain.AngebotEntity;
+
+import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.artikel.domain.ArtikelJpaRepository;
@@ -22,6 +23,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
@@ -184,7 +186,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 
     private AngebotEntity createAngebot(String kommentar, InstitutionStandortEntity standort, boolean medizinisch, boolean steril, boolean originalverpackt, double anzahl, LocalDateTime haltbarkeit, ArtikelEntity artikel, InstitutionEntity institution) {
         var angebot = AngebotEntity.builder() //
-                .anzahl(anzahl) //
+                .anzahl(BigDecimal.valueOf(anzahl)) //
                 .artikel(artikel) //
                 .haltbarkeit(haltbarkeit) //
                 .kommentar(kommentar) //

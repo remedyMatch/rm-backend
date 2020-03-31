@@ -5,10 +5,8 @@ import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
-import io.remedymatch.angebot.domain.AngebotEntity;
-
 public interface AngebotJpaRepository extends CrudRepository<AngebotEntity, UUID> {
-
 	List<AngebotEntity> findAllByBedientFalse();
 
+	List<AngebotEntity> findAllByInstitution_Id(UUID id);
 }

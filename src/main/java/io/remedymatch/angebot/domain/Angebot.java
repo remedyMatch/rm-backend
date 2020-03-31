@@ -1,8 +1,11 @@
 package io.remedymatch.angebot.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
+import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
@@ -20,15 +23,18 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class AngebotAnfrage {
+public class Angebot {
 	private UUID id;
-	private String kommentar;
-	private InstitutionEntity institutionVon;
-	private InstitutionEntity institutionAn;
-	private Angebot angebot;
-	private InstitutionStandortEntity standortVon;
-	private InstitutionStandortEntity standortAn;
-	private String prozessInstanzId;
 	private BigDecimal anzahl;
-	private AngebotAnfrageStatus status;
+	private BigDecimal rest;
+	private ArtikelEntity artikel;
+	private InstitutionEntity institution;
+	private InstitutionStandortEntity standort;
+	private LocalDateTime haltbarkeit;
+	private boolean steril;
+	private boolean originalverpackt;
+	private boolean medizinisch;
+	private String kommentar;
+	private boolean bedient;
+	private List<AngebotAnfrage> anfragen;
 }

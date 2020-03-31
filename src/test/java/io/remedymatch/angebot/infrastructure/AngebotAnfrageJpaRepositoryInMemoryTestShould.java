@@ -2,6 +2,7 @@ package io.remedymatch.angebot.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import javax.persistence.EntityManager;
@@ -40,24 +41,11 @@ public class AngebotAnfrageJpaRepositoryInMemoryTestShould {
 	@Rollback(true)
 	@Transactional
 	@Test
-	@DisplayName("alle Anfragen fuer InstitutionAn zurueckliefern")
-	void alle_Anfragen_fuer_InstitutionAn_zurueckliefern() {
-		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
-		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, 100));
-		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, 100));
-		entityManager.flush();
-
-		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionAn(meinKrankenhaus));
-	}
-	
-	@Rollback(true)
-	@Transactional
-	@Test
 	@DisplayName("alle Anfragen fuer InstitutionAn Id zurueckliefern")
 	void alle_Anfragen_fuer_InstitutionAnId_zurueckliefern() {
 		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
-		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, 100));
-		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, 100));
+		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
+		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
 		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionAn_Id(meinKrankenhaus.getId()));
@@ -66,24 +54,11 @@ public class AngebotAnfrageJpaRepositoryInMemoryTestShould {
 	@Rollback(true)
 	@Transactional
 	@Test
-	@DisplayName("alle Anfragen fuer InstitutionVon zurueckliefern")
-	void alle_Anfragen_fuer_InstitutionVon_zurueckliefern() {
-		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
-		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, 100));
-		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, 100));
-		entityManager.flush();
-
-		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionVon(meinKrankenhaus));
-	}
-	
-	@Rollback(true)
-	@Transactional
-	@Test
 	@DisplayName("alle Anfragen fuer InstitutionVon Id zurueckliefern")
 	void alle_Anfragen_fuer_InstitutionVon_Id_zurueckliefern() {
 		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
-		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, 100));
-		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, 100));
+		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
+		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
 		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionVon_Id(meinKrankenhaus.getId()));
@@ -106,18 +81,18 @@ public class AngebotAnfrageJpaRepositoryInMemoryTestShould {
 
 	private AngebotAnfrageEntity angebotAnfrageFuerInstitution(//
 			InstitutionEntity institutionAn, //
-			double anzahl) {
+			BigDecimal anzahl) {
 		return AngebotAnfrageEntity.builder() //
-				.anzahl(100) //
+				.anzahl(anzahl) //
 				.institutionAn(institutionAn)//
 				.build();
 	}
 
 	private AngebotAnfrageEntity angebotAnfrageVonInstitution(//
 			InstitutionEntity institutionVon, //
-			double anzahl) {
+			BigDecimal anzahl) {
 		return AngebotAnfrageEntity.builder() //
-				.anzahl(100) //
+				.anzahl(anzahl) //
 				.institutionVon(institutionVon)//
 				.build();
 	}

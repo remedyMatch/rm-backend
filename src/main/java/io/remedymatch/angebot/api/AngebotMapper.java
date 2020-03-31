@@ -1,36 +1,47 @@
 package io.remedymatch.angebot.api;
 
-import io.remedymatch.angebot.domain.AngebotEntity;
-import io.remedymatch.institution.api.InstitutionStandortMapper;
-
 import static io.remedymatch.artikel.api.ArtikelMapper.getArticleDTO;
 import static io.remedymatch.artikel.api.ArtikelMapper.getArticleEntity;
 
-public class AngebotMapper {
+import io.remedymatch.angebot.domain.Angebot;
+import io.remedymatch.institution.api.InstitutionStandortMapper;
 
-    public static AngebotDTO mapToDTO(AngebotEntity entity) {
+class AngebotMapper {
+
+    static AngebotDTO mapToDto(Angebot angebot) {
+    	if (angebot == null)
+    	{
+    		return null;
+    	}
+    	
         var builder = AngebotDTO.builder()
-                .id(entity.getId())
-                .anzahl(entity.getAnzahl())
-                .artikel(getArticleDTO(entity.getArtikel()))
-                .haltbarkeit(entity.getHaltbarkeit())
-                .medizinisch(entity.isMedizinisch())
-                .originalverpackt(entity.isOriginalverpackt())
-                .standort(entity.getStandort() != null ? InstitutionStandortMapper.mapToDTO(entity.getStandort()) : null)
-                .steril(entity.isSteril())
-                .bedient(entity.isBedient())
-                .rest(entity.getRest())
-                .kommentar(entity.getKommentar());
+                .id(angebot.getId())
+                .rest(angebot.getRest())
+                .anzahl(angebot.getAnzahl())
+                .artikel(getArticleDTO(angebot.getArtikel()))
+                .haltbarkeit(angebot.getHaltbarkeit())
+                .medizinisch(angebot.isMedizinisch())
+                .originalverpackt(angebot.isOriginalverpackt())
+                .standort(angebot.getStandort() != null ? InstitutionStandortMapper.mapToDTO(angebot.getStandort()) : null)
+                .steril(angebot.isSteril())
+                .bedient(angebot.isBedient())
+                .kommentar(angebot.getKommentar());
 
-        if (entity.getInstitution() != null) {
-            builder = builder.institutionId(entity.getInstitution().getId());
+        if (angebot.getInstitution() != null) {
+            builder = builder.institutionId(angebot.getInstitution().getId());
         }
         return builder.build();
     }
 
-    public static AngebotEntity mapToEntity(AngebotDTO dto) {
-        var builder = AngebotEntity.builder()
+    static Angebot mapToAngebot(AngebotDTO dto) {
+    	if (dto == null)
+    	{
+    		return null;
+    	}
+    	
+        var builder = Angebot.builder()
                 .id(dto.getId())
+                .rest(dto.getRest())
                 .anzahl(dto.getAnzahl())
                 .artikel(getArticleEntity(dto.getArtikel()))
                 .haltbarkeit(dto.getHaltbarkeit())

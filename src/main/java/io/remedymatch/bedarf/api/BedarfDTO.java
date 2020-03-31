@@ -20,14 +20,15 @@ public class BedarfDTO {
     @NotNull
     private double anzahl;
 
-    private double rest;
-
     @NotNull
     private InstitutionStandortDTO standort;
 
+    @NotNull
+    private String kommentar;
+
     private UUID institutionId;
 
-    private String kommentar;
+    private double rest;
 
     private boolean steril;
 

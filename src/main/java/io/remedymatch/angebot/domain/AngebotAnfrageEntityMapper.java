@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 
-public class AngebotAnfrageEntityMapper {
+class AngebotAnfrageEntityMapper {
 
-	public static AngebotAnfrage convert(AngebotAnfrageEntity entity) {
+	static AngebotAnfrage convert(AngebotAnfrageEntity entity) {
 		if (entity == null)
 		{
 			return null;
@@ -26,7 +26,7 @@ public class AngebotAnfrageEntityMapper {
 				.build();
 	}
 
-	public static AngebotAnfrageEntity convert(AngebotAnfrage angebotAnfrage) {
+	static AngebotAnfrageEntity convert(AngebotAnfrage angebotAnfrage) {
 		if (angebotAnfrage == null) {
 			return null;
 		}

@@ -117,16 +117,11 @@ public class BedarfService {
         //Bedarf als bedient markieren
         val bedarf = anfrage.get().getBedarf();
 
-        if (anfrage.get().getAnzahl() > bedarf.getAnzahl()) {
+        if (anfrage.get().getAnzahl() >= bedarf.getRest()) {
             bedarf.setBedient(true);
             bedarf.setRest(0);
         } else {
-            if (anfrage.get().getAnzahl() == bedarf.getAnzahl()) {
-                bedarf.setBedient(true);
-                bedarf.setRest(0);
-            } else {
-                bedarf.setRest(bedarf.getRest() - anfrage.get().getAnzahl());
-            }
+            bedarf.setRest(bedarf.getRest() - anfrage.get().getAnzahl());
         }
 
         bedarfRepository.save(bedarf);

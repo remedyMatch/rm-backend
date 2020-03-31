@@ -1,23 +1,22 @@
 package io.remedymatch.match.api;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-import javax.annotation.PostConstruct;
-
-import org.camunda.bpm.client.ExternalTaskClient;
-import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
-import org.springframework.stereotype.Component;
-
 import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
 import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.match.domain.MatchEntity;
 import io.remedymatch.match.domain.MatchRepository;
 import io.remedymatch.match.domain.MatchService;
 import io.remedymatch.match.domain.MatchStatus;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -46,44 +45,31 @@ public class MatchExternalTaskClient {
                     externalTaskService.complete(externalTask);
                 }).open();
 
-
-        client.subscribe("angebotMatchProzessStarten")
+        client.subscribe("matchErstellen")
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
 
-                    val anfrageId = externalTask.getVariable("objektId").toString();
+                    val anfrageId = externalTask.getVariable("anfrageId").toString();
+                    val anfrageTyp = externalTask.getVariable("anfrageTyp").toString();
 
-                    val match = matchService.matchAusAngebotErstellen(angebotAnfrageRepository.get(UUID.fromString(anfrageId)).get());
+                    MatchEntity match;
+
+                    if (anfrageTyp.equals(MatchProzessConstants.ANFRAGE_TYP_BEDARF)) {
+                        match = matchService.matchAusBedarfErstellen(bedarfAnfrageRepository.findById(UUID.fromString(anfrageId)).get());
+
+                    } else {
+                        match = matchService.matchAusAngebotErstellen(angebotAnfrageRepository.get(UUID.fromString(anfrageId)).get());
+                    }
 
                     val variables = new HashMap<String, Object>();
                     variables.put("lieferant", match.getInstitutionVon().getId().toString());
                     variables.put("objektId", match.getId().toString());
                     variables.put("empfaenger", match.getInstitutionAn().getId().toString());
 
-                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, match.getId().toString(), variables);
-
                     externalTaskService.complete(externalTask, variables);
 
                 }).open();
 
-        client.subscribe("bedarfMatchProzessStarten")
-                .lockDuration(2000)
-                .handler((externalTask, externalTaskService) -> {
-
-                    val anfrageId = externalTask.getVariable("objektId").toString();
-
-                    val match = matchService.matchAusBedarfErstellen(bedarfAnfrageRepository.findById(UUID.fromString(anfrageId)).get());
-
-                    val variables = new HashMap<String, Object>();
-                    variables.put("lieferant", match.getInstitutionVon().getId().toString());
-                    variables.put("objektId", match.getId().toString());
-                    variables.put("empfaenger", match.getInstitutionAn().getId().toString());
-
-                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, match.getId().toString(), variables);
-
-                    externalTaskService.complete(externalTask, variables);
-
-                }).open();
 
         client.subscribe("matchStornierungVerarbeiten")
                 .lockDuration(2000)

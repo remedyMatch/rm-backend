@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
+import io.remedymatch.institution.domain.InstitutionId;
 
 @Repository
 public class AngebotAnfrageRepository {
@@ -27,15 +28,17 @@ public class AngebotAnfrageRepository {
 		return jpaRepository.save(angebotAnfrage);
 	}
 	
-	public List<AngebotAnfrageEntity> getAngeboteFuerInstitutionVon(UUID institutionId) {
+	public List<AngebotAnfrageEntity> getAngeboteFuerInstitutionVon(InstitutionId institutionId) {
 		Assert.notNull(institutionId, "InstitutionId ist null");
+		Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
-		return jpaRepository.findAllByInstitutionVon_Id(institutionId);
+		return jpaRepository.findAllByInstitutionVon_Id(institutionId.getValue());
 	}
 	
-	public List<AngebotAnfrageEntity> getAngeboteFuerInstitutionAn(UUID institutionId) {
+	public List<AngebotAnfrageEntity> getAngeboteFuerInstitutionAn(InstitutionId institutionId) {
 		Assert.notNull(institutionId, "InstitutionId ist null");
+		Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
-		return jpaRepository.findAllByInstitutionAn_Id(institutionId);
+		return jpaRepository.findAllByInstitutionAn_Id(institutionId.getValue());
 	}
 }

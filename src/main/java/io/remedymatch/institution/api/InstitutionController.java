@@ -7,6 +7,7 @@ import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
 import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.institution.domain.InstitutionService;
 import io.remedymatch.institution.domain.InstitutionTyp;
@@ -105,8 +106,10 @@ public class InstitutionController {
     @GetMapping("anfragen/gestellt")
     public ResponseEntity<List<AnfrageDTO>> gestellteBedarfAnfragen() {
         val person = personRepository.findByUsername(userProvider.getUserName());
+        InstitutionId institutionId = new InstitutionId(person.getInstitution().getId());
+
         val bedarfAnfragen = bedarfAnfrageRepository.findAllByInstitutionVon(person.getInstitution());
-        val angebotAnfragen = angebotAnfrageRepository.getAngeboteFuerInstitutionVon(person.getInstitution().getId());
+		val angebotAnfragen = angebotAnfrageRepository.getAngeboteFuerInstitutionVon(institutionId);
         val anfrageDTOs = bedarfAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList());
         anfrageDTOs.addAll(angebotAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
 
@@ -121,8 +124,10 @@ public class InstitutionController {
     @GetMapping("anfragen/erhalten")
     public ResponseEntity<List<AnfrageDTO>> erhalteneBedarfAnfragen() {
         val person = personRepository.findByUsername(userProvider.getUserName());
+        InstitutionId institutionId = new InstitutionId(person.getInstitution().getId());
+
         val bedarfAnfragen = bedarfAnfrageRepository.findAllByInstitutionAn(person.getInstitution());
-        val angebotAnfragen = angebotAnfrageRepository.getAngeboteFuerInstitutionAn(person.getInstitution().getId());
+        val angebotAnfragen = angebotAnfrageRepository.getAngeboteFuerInstitutionAn(institutionId);
         val anfrageDTOs = bedarfAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList());
         anfrageDTOs.addAll(angebotAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
 

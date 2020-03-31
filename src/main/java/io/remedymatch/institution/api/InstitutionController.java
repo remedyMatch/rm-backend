@@ -6,6 +6,7 @@ import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageRepository;
 import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
+import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.institution.domain.InstitutionService;
 import io.remedymatch.institution.domain.InstitutionTyp;
@@ -16,8 +17,10 @@ import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.remedymatch.institution.api.InstitutionMapper.mapToDTO;
@@ -51,6 +54,25 @@ public class InstitutionController {
         institutionService.updateInstitution(savedInstitution.get());
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/hauptstandort")
+    public ResponseEntity<InstitutionEntity> updateHauptstandort(@RequestBody @Valid InstitutionStandortDTO standort) {
+        val person = personRepository.findByUsername(userProvider.getUserName());
+        return ResponseEntity.ok(institutionService.updateHauptstandort(person.getInstitution(), InstitutionStandortMapper.mapToEntity(standort)));
+    }
+
+    @PostMapping("/standort")
+    public ResponseEntity<InstitutionEntity> standortHinzufuegen(@RequestBody @Valid InstitutionStandortDTO standort) {
+        val person = personRepository.findByUsername(userProvider.getUserName());
+        return ResponseEntity.ok(institutionService.standortHinzufuegen(person.getInstitution(), InstitutionStandortMapper.mapToEntity(standort)));
+    }
+
+    @DeleteMapping("/standort/{standortId}")
+    public ResponseEntity<InstitutionEntity> standortEntfernen(@PathVariable("standortId") String standortId) {
+        val person = personRepository.findByUsername(userProvider.getUserName());
+        return ResponseEntity.ok(institutionService.standortEntfernen(person.getInstitution(), UUID.fromString(standortId)));
+    }
+
 
     @GetMapping("/typ")
     public ResponseEntity<List<String>> typenLaden() {

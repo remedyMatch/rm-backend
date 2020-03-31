@@ -1,11 +1,18 @@
 package io.remedymatch.dbinit;
 
 import com.github.javafaker.Faker;
+import io.remedymatch.angebot.domain.AngebotEntity;
 import io.remedymatch.angebot.domain.AngebotRepository;
+import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.artikel.domain.ArtikelJpaRepository;
+import io.remedymatch.artikel.domain.ArtikelKategorieEntity;
 import io.remedymatch.artikel.domain.ArtikelKategorieRepository;
 import io.remedymatch.bedarf.domain.BedarfRepository;
+import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionRepository;
+import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.person.domain.PersonEntity;
 import io.remedymatch.person.domain.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +20,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 /**
@@ -45,25 +54,28 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        //initTestdaten();
+        initTestdaten();
     }
 
-//    @Transactional
-//    public void initTestdaten() {
-//
-//        try {
-//            createKategorien();
-//            createInstitutions();
-//            createPersonen();
-//            createBedarfsListe();
-//            createAngebotsListe();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            log.error("Fehler beim Erstellen des initialen Datenbestandes", ex);
-//        }
-//    }
-//
+    @Transactional
+    public void initTestdaten() {
+
+        try {
+            createKategorien();
+            createInstitutions();
+            createPersonen();
+            // createBedarfsListe();
+            // createAngebotsListe();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("Fehler beim Erstellen des initialen Datenbestandes", ex);
+        }
+    }
+
 //    private void createAngebotsListe() {
+//
+//
+//
 //        var artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1", artikelKategorieRepository.findByName("Masken FFP1").get());
 //        var institution = institutionRepository.findByInstitutionKey("private100");
 //        createAngebot("Schutzmasken", "Köln", false, false, false, 20, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
@@ -170,22 +182,22 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 //
 //
 //    }
-//
-//    private AngebotEntity createAngebot(String kommentar, InstitutionStandortEntity standort, boolean medizinisch, boolean steril, boolean originalverpackt, double anzahl, LocalDateTime haltbarkeit, ArtikelEntity artikel, InstitutionEntity institution) {
-//        var angebot = AngebotEntity.builder() //
-//                .anzahl(anzahl) //
-//                .artikel(artikel) //
-//                .haltbarkeit(haltbarkeit) //
-//                .kommentar(kommentar) //
-//                .medizinisch(medizinisch) //
-//                .institution(institution) //
-//                .originalverpackt(originalverpackt) //
-//                .steril(steril) //
-//                .standort(standort) //
-//                .build();
-//        angebotRepository.save(angebot);
-//        return angebot;
-//    }
+
+    private AngebotEntity createAngebot(String kommentar, InstitutionStandortEntity standort, boolean medizinisch, boolean steril, boolean originalverpackt, double anzahl, LocalDateTime haltbarkeit, ArtikelEntity artikel, InstitutionEntity institution) {
+        var angebot = AngebotEntity.builder() //
+                .anzahl(anzahl) //
+                .artikel(artikel) //
+                .haltbarkeit(haltbarkeit) //
+                .kommentar(kommentar) //
+                .medizinisch(medizinisch) //
+                .institution(institution) //
+                .originalverpackt(originalverpackt) //
+                .steril(steril) //
+                .standort(standort) //
+                .build();
+        angebotRepository.save(angebot);
+        return angebot;
+    }
 //
 //    private void createBedarf(double anzahl, ArtikelEntity artikel, InstitutionEntity institution) {
 //        var bedarf = BedarfEntity.builder() //
@@ -247,148 +259,148 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 //
 //
 //    }
-//
-//    private ArtikelEntity createArtikel(String name, String beschreibung, ArtikelKategorieEntity kategorie) {
-//        var entity = ArtikelEntity.builder() //
-//                .beschreibung(beschreibung) //
-//                .hersteller(faker.company().name()) //
-//                .name(name) //
-//                .ean((faker.number().randomNumber(13, true) + "")) //
-//                .artikelKategorie(kategorie) //
-//                .build();
-//        artikelRepository.save(entity);
-//        return entity;
-//    }
-//
-//    private void createPersonen() {
-//        for (InstitutionEntity institution : institutionRepository.findAll()) {
-//            switch (institution.getTyp()) {
-//                case Krankenhaus:
-//                case Lieferant:
-//                case Andere:
-//                    createPerson(institution);
-//                    createPerson(institution);
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    }
-//
-//    private void createPerson(InstitutionEntity institution) {
-//        var personName = faker.name();
-//
-//        var person = PersonEntity.builder() //
-//                .institution(institution)
-//                .vorname(personName.firstName())
-//                .nachname(personName.lastName()) //
-//                .username(personName.username())
-//                .telefon(faker.phoneNumber().phoneNumber()) //
-//                .build();
-//        personRepository.save(person);
-//    }
-//
-//    private void createKategorien() {
-//        createKategorie("Masken FFP1");
-//        createKategorie("Masken FFP2");
-//        createKategorie("Masken FFP3");
-//
-//        createKategorie("Overall Größe S");
-//        createKategorie("Overall Größe M");
-//        createKategorie("Overall Größe L");
-//        createKategorie("Overall Größe XL");
-//
-//        createKategorie("Kittel One-Size");
-//
-//        createKategorie("Brillen");
-//
-//        createKategorie("Handschuhe S");
-//        createKategorie("Handschuhe M");
-//        createKategorie("Handschuhe L");
-//        createKategorie("Handschuhe XL");
-//
-//        createKategorie("Sterillium (Virugard)");
-//        createKategorie("Handdesinfektion");
-//        createKategorie("Blutentnahme Set");
-//        createKategorie("Schlauch Sauerstoffabgabe");
-//        createKategorie("Venenverweilkanülen");
-//        createKategorie("Infusionsbesteck");
-//        createKategorie("ZVK");
-//        createKategorie("arterielle Kanülen");
-//
-//        createKategorie("Narkosemittel");
-//        createKategorie("Schmerzmittel");
-//        createKategorie("Virostatika");
-//        createKategorie("Infusion");
-//    }
-//
-//    private void createKategorie(String name) {
-//        var entity = ArtikelKategorieEntity.builder() //
-//                .name(name) //
-//                .build();
-//        artikelKategorieRepository.save(entity);
-//    }
-//
-//    private void createInstitutions() {
-//        //Krankenhäuser
-//        createInstitution("institution1", "Paracelsus Klinik München", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution2", "Arabella-Klinik GmbH", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution3", "München Klinik Bogenhausen", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution4", "Städtisches Klinikum München GmbH", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution5", "Klinik Dr. Schreiber GmbH", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution6", "Immanuel Krankenhaus Berlin - Standort Buch", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution7", "Bundeswehrkrankenhaus Berlin", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution8", "Helios Klinikum Berlin-Buch", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution9", "Charitee - Universitätsmedizin Berlin", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution10", "Deutsches Herzzentrum Berlin", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution11", "DRK Kliniken Berlin Mitte", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution12", "Wilhelmsburger Krankenhaus Groö-Sand", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution13", "Universitätsklinikum Hamburg-Eppendorf", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution14", "Sankt Gertrauden-Krankenhaus GmbH", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution15", "St.Joseph Krankenhaus", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution16", "Heinrich Sengelmann Krankenhaus", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution17", "Krankenhaus Reinbek St. Adolf-Stift GmbH", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution18", "Asklepios Westklinikum Hamburg GmbH", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution19", "Elbe Klinikum Buxtehude", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution20", "Asklepios Klinik Nord, Heidberg", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution21", "Klinik Charlottenhaus", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution22", "Diakonie-Klinikum Stuttgart", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution23", "Krankenhaus vom Roten Kreuz Bad Cannstatt GmbH", InstitutionTyp.Krankenhaus);
-//        createInstitution("institution24", "Marienhospital Stuttgart", InstitutionTyp.Krankenhaus);
-//
-//        //Ärzte
-//        createInstitution("institution25", "Dr. Thoams Meier", InstitutionTyp.Arzt);
-//        createInstitution("institution26", "Prof. Dr. Hohenstett", InstitutionTyp.Arzt);
-//        createInstitution("institution27", "Dr. Hans Keller", InstitutionTyp.Arzt);
-//        createInstitution("institution28", "Gemeinschaftspraxis Jaeger", InstitutionTyp.Arzt);
-//
-//        //Hersteller
-//        createInstitution("institution29", "MediTech", InstitutionTyp.Lieferant);
-//        createInstitution("institution30", "CareTextil", InstitutionTyp.Lieferant);
-//        createInstitution("institution31", "HopitalServices", InstitutionTyp.Lieferant);
-//
-//        //Firmen und andere
-//        createInstitution("institution32", "Gebauedereinigung Stettner", InstitutionTyp.Andere);
-//        createInstitution("institution33", "Gebauedesanierung Rieger", InstitutionTyp.Andere);
-//        createInstitution("institution34", "Lackiererei Müller", InstitutionTyp.Andere);
-//        for (int i = 0; i < 100; i++) {
-//            String name = faker.company().name();
-//            createInstitution("other" + i, name, InstitutionTyp.Andere);
-//        }
-//
-//        //Privatpersonen
-//        for (int i = 0; i < 500; i++) {
-//            String name = faker.name().fullName();
-//            createInstitution("private" + i, name, InstitutionTyp.Privat);
-//        }
-//    }
-//
-//    private void createInstitution(String key, String name, InstitutionTyp type) {
-//        var entity = InstitutionEntity.builder() //
-//                .institutionKey(key) //
-//                .name(name) //
-//                .typ(type) //
-//                .build();
-//        institutionRepository.save(entity);
-//    }
+
+    private ArtikelEntity createArtikel(String name, String beschreibung, ArtikelKategorieEntity kategorie) {
+        var entity = ArtikelEntity.builder() //
+                .beschreibung(beschreibung) //
+                .hersteller(faker.company().name()) //
+                .name(name) //
+                .ean((faker.number().randomNumber(13, true) + "")) //
+                .artikelKategorie(kategorie) //
+                .build();
+        artikelRepository.save(entity);
+        return entity;
+    }
+
+    private void createPersonen() {
+        for (InstitutionEntity institution : institutionRepository.findAll()) {
+            switch (institution.getTyp()) {
+                case Krankenhaus:
+                case Lieferant:
+                case Andere:
+                    createPerson(institution);
+                    createPerson(institution);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void createPerson(InstitutionEntity institution) {
+        var personName = faker.name();
+
+        var person = PersonEntity.builder() //
+                .institution(institution)
+                .vorname(personName.firstName())
+                .nachname(personName.lastName()) //
+                .username(personName.username())
+                .telefon(faker.phoneNumber().phoneNumber()) //
+                .build();
+        personRepository.save(person);
+    }
+
+    private void createKategorien() {
+        createKategorie("Masken FFP1");
+        createKategorie("Masken FFP2");
+        createKategorie("Masken FFP3");
+
+        createKategorie("Overall Größe S");
+        createKategorie("Overall Größe M");
+        createKategorie("Overall Größe L");
+        createKategorie("Overall Größe XL");
+
+        createKategorie("Kittel One-Size");
+
+        createKategorie("Brillen");
+
+        createKategorie("Handschuhe S");
+        createKategorie("Handschuhe M");
+        createKategorie("Handschuhe L");
+        createKategorie("Handschuhe XL");
+
+        createKategorie("Sterillium (Virugard)");
+        createKategorie("Handdesinfektion");
+        createKategorie("Blutentnahme Set");
+        createKategorie("Schlauch Sauerstoffabgabe");
+        createKategorie("Venenverweilkanülen");
+        createKategorie("Infusionsbesteck");
+        createKategorie("ZVK");
+        createKategorie("arterielle Kanülen");
+
+        createKategorie("Narkosemittel");
+        createKategorie("Schmerzmittel");
+        createKategorie("Virostatika");
+        createKategorie("Infusion");
+    }
+
+    private void createKategorie(String name) {
+        var entity = ArtikelKategorieEntity.builder() //
+                .name(name) //
+                .build();
+        artikelKategorieRepository.save(entity);
+    }
+
+    private void createInstitutions() {
+        //Krankenhäuser
+        createInstitution("institution1", "Paracelsus Klinik München", InstitutionTyp.Krankenhaus);
+        createInstitution("institution2", "Arabella-Klinik GmbH", InstitutionTyp.Krankenhaus);
+        createInstitution("institution3", "München Klinik Bogenhausen", InstitutionTyp.Krankenhaus);
+        createInstitution("institution4", "Städtisches Klinikum München GmbH", InstitutionTyp.Krankenhaus);
+        createInstitution("institution5", "Klinik Dr. Schreiber GmbH", InstitutionTyp.Krankenhaus);
+        createInstitution("institution6", "Immanuel Krankenhaus Berlin - Standort Buch", InstitutionTyp.Krankenhaus);
+        createInstitution("institution7", "Bundeswehrkrankenhaus Berlin", InstitutionTyp.Krankenhaus);
+        createInstitution("institution8", "Helios Klinikum Berlin-Buch", InstitutionTyp.Krankenhaus);
+        createInstitution("institution9", "Charitee - Universitätsmedizin Berlin", InstitutionTyp.Krankenhaus);
+        createInstitution("institution10", "Deutsches Herzzentrum Berlin", InstitutionTyp.Krankenhaus);
+        createInstitution("institution11", "DRK Kliniken Berlin Mitte", InstitutionTyp.Krankenhaus);
+        createInstitution("institution12", "Wilhelmsburger Krankenhaus Groö-Sand", InstitutionTyp.Krankenhaus);
+        createInstitution("institution13", "Universitätsklinikum Hamburg-Eppendorf", InstitutionTyp.Krankenhaus);
+        createInstitution("institution14", "Sankt Gertrauden-Krankenhaus GmbH", InstitutionTyp.Krankenhaus);
+        createInstitution("institution15", "St.Joseph Krankenhaus", InstitutionTyp.Krankenhaus);
+        createInstitution("institution16", "Heinrich Sengelmann Krankenhaus", InstitutionTyp.Krankenhaus);
+        createInstitution("institution17", "Krankenhaus Reinbek St. Adolf-Stift GmbH", InstitutionTyp.Krankenhaus);
+        createInstitution("institution18", "Asklepios Westklinikum Hamburg GmbH", InstitutionTyp.Krankenhaus);
+        createInstitution("institution19", "Elbe Klinikum Buxtehude", InstitutionTyp.Krankenhaus);
+        createInstitution("institution20", "Asklepios Klinik Nord, Heidberg", InstitutionTyp.Krankenhaus);
+        createInstitution("institution21", "Klinik Charlottenhaus", InstitutionTyp.Krankenhaus);
+        createInstitution("institution22", "Diakonie-Klinikum Stuttgart", InstitutionTyp.Krankenhaus);
+        createInstitution("institution23", "Krankenhaus vom Roten Kreuz Bad Cannstatt GmbH", InstitutionTyp.Krankenhaus);
+        createInstitution("institution24", "Marienhospital Stuttgart", InstitutionTyp.Krankenhaus);
+
+        //Ärzte
+        createInstitution("institution25", "Dr. Thoams Meier", InstitutionTyp.Arzt);
+        createInstitution("institution26", "Prof. Dr. Hohenstett", InstitutionTyp.Arzt);
+        createInstitution("institution27", "Dr. Hans Keller", InstitutionTyp.Arzt);
+        createInstitution("institution28", "Gemeinschaftspraxis Jaeger", InstitutionTyp.Arzt);
+
+        //Hersteller
+        createInstitution("institution29", "MediTech", InstitutionTyp.Lieferant);
+        createInstitution("institution30", "CareTextil", InstitutionTyp.Lieferant);
+        createInstitution("institution31", "HopitalServices", InstitutionTyp.Lieferant);
+
+        //Firmen und andere
+        createInstitution("institution32", "Gebauedereinigung Stettner", InstitutionTyp.Andere);
+        createInstitution("institution33", "Gebauedesanierung Rieger", InstitutionTyp.Andere);
+        createInstitution("institution34", "Lackiererei Müller", InstitutionTyp.Andere);
+        for (int i = 0; i < 100; i++) {
+            String name = faker.company().name();
+            createInstitution("other" + i, name, InstitutionTyp.Andere);
+        }
+
+        //Privatpersonen
+        for (int i = 0; i < 500; i++) {
+            String name = faker.name().fullName();
+            createInstitution("private" + i, name, InstitutionTyp.Privat);
+        }
+    }
+
+    private void createInstitution(String key, String name, InstitutionTyp type) {
+        var entity = InstitutionEntity.builder() //
+                .institutionKey(key) //
+                .name(name) //
+                .typ(type) //
+                .build();
+        institutionRepository.save(entity);
+    }
 }

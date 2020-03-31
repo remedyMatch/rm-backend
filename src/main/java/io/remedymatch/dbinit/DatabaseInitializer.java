@@ -1,8 +1,19 @@
 package io.remedymatch.dbinit;
 
+import java.time.LocalDateTime;
+import java.util.Locale;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.javafaker.Faker;
+
 import io.remedymatch.angebot.domain.AngebotEntity;
-import io.remedymatch.angebot.domain.AngebotRepository;
+import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.artikel.domain.ArtikelJpaRepository;
 import io.remedymatch.artikel.domain.ArtikelKategorieEntity;
@@ -15,15 +26,6 @@ import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.person.domain.PersonEntity;
 import io.remedymatch.person.domain.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Locale;
 
 /**
  * TODO Test-Code nicht für Produktion
@@ -39,7 +41,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     private BedarfRepository bedarfRepository;
 
     @Autowired
-    private AngebotRepository angebotRepository;
+    private AngebotJpaRepository angebotRepository;
 
     @Autowired
     private ArtikelJpaRepository artikelRepository;

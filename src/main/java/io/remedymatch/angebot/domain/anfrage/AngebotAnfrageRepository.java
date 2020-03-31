@@ -16,10 +16,10 @@ public class AngebotAnfrageRepository {
 	@Autowired
 	private AngebotAnfrageJpaRepository jpaRepository;
 
-	public Optional<AngebotAnfrageEntity> get(UUID angebotId) {
-		Assert.notNull(angebotId, "AngebotId ist null");
+	public Optional<AngebotAnfrageEntity> get(UUID angebotAnfrageId) {
+		Assert.notNull(angebotAnfrageId, "AngebotAnfrageId ist null");
 
-		return jpaRepository.findById(angebotId);
+		return jpaRepository.findById(angebotAnfrageId);
 	}
 
 	public AngebotAnfrageEntity update(AngebotAnfrageEntity angebotAnfrage) {

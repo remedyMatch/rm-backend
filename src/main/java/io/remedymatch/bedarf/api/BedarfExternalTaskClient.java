@@ -1,6 +1,8 @@
 package io.remedymatch.bedarf.api;
 
 import io.remedymatch.bedarf.domain.BedarfService;
+import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.match.api.MatchProzessConstants;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -9,12 +11,14 @@ import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 
 @AllArgsConstructor
 @Component
 public class BedarfExternalTaskClient {
     private final RmBackendProperties properties;
     private final BedarfService bedarfService;
+    private final EngineClient engineClient;
 
     @PostConstruct
     public void doSubscribe() {
@@ -34,6 +38,23 @@ public class BedarfExternalTaskClient {
                     //hier eventuell E-Mail versand?
 
                     externalTaskService.complete(externalTask);
+                }).open();
+
+
+        client.subscribe("bedarfMatchProzessStarten")
+                .lockDuration(2000)
+                .handler((externalTask, externalTaskService) -> {
+
+                    val anfrageId = externalTask.getVariable("objektId").toString();
+
+                    val variables = new HashMap<String, Object>();
+                    variables.put("anfrageTyp", MatchProzessConstants.ANFRAGE_TYP_BEDARF);
+                    variables.put("anfrageId", anfrageId);
+
+                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, anfrageId, variables);
+
+                    externalTaskService.complete(externalTask, variables);
+
                 }).open();
     }
 }

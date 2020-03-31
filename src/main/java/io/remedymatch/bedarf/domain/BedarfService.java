@@ -100,7 +100,8 @@ public class BedarfService {
         val bedarf = anfrage.get().getBedarf();
 
         if (anfrage.get().getAnzahl() > bedarf.getAnzahl()) {
-            anfrage.get().setAnzahl(bedarf.getAnzahl());
+            bedarf.setBedient(true);
+            bedarf.setRest(0);
         } else {
             if (anfrage.get().getAnzahl() == bedarf.getAnzahl()) {
                 bedarf.setBedient(true);

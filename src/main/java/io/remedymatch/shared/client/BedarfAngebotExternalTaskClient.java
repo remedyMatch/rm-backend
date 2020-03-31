@@ -52,57 +52,8 @@ public class BedarfAngebotExternalTaskClient {
                     externalTaskService.complete(externalTask);
                 }).open();
 
-        client.subscribe("anfrageBestaetigung")
-                .lockDuration(2000)
-                .handler((externalTask, externalTaskService) -> {
 
-                    val anfrageId = externalTask.getVariable("anfrageId").toString();
-                    val prozessTyp = externalTask.getVariable("prozessTyp").toString();
-                    try {
-                        switch (prozessTyp) {
-                            case AnfrageProzessConstants.PROZESS_TYP_BEDARF:
-                                bedarfService.anfrageAnnehmen(anfrageId);
-                                break;
-                            case AnfrageProzessConstants.PROZESS_TYP_ANGEBOT:
-                                angebotService.anfrageAnnehmen(anfrageId);
-                                break;
-                        }
-                    } catch (IllegalArgumentException exception) {
-                        externalTaskService.handleBpmnError(externalTask, "wareNichtVerfuegbar");
-                        return;
-                    }
 
-                    val match = matchService.matcheErstellen(anfrageRepository.findById(UUID.fromString(anfrageId)).get());
-
-                    val variables = Variables.createVariables();
-                    variables.putValue("lieferant", match.getInstitutionVon().getId().toString());
-                    variables.putValue("matchId", match.getId().toString());
-                    variables.putValue("empfaenger", match.getInstitutionAn().getId().toString());
-
-                    externalTaskService.complete(externalTask, variables);
-
-                }).open();
-
-        client.subscribe("stornierungVerarbeiten")
-                .lockDuration(2000)
-                .handler((externalTask, externalTaskService) -> {
-
-                    System.out.println("Stornierung erhalten");
-
-//                    val anfrageId = externalTask.getVariable("anfrageId").toString();
-//                    val prozessTyp = externalTask.getVariable("prozessTyp").toString();
-//
-//                    switch (prozessTyp) {
-//                        case AnfrageProzessConstants.PROZESS_TYP_ANGEBOT:
-//                            bedarfService.anfrageStornieren(anfrageId);
-//                            break;
-//                        case AnfrageProzessConstants.PROZESS_TYP_BEDARF:
-//                            angebotService.anfrageStornieren(anfrageId);
-//                            break;
-//                    }
-
-                    externalTaskService.complete(externalTask);
-                }).open();
 
     }
 }

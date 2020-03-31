@@ -18,7 +18,7 @@ public class WareneingangBestaetigenTaskNameHandler implements TaskBeschreibungH
     @Override
     public String beschreibung(TaskDTO taskDTO) {
         val match = matchRepository.findById(UUID.fromString(taskDTO.getObjektId()));
-        return "Match zwischen " + match.get().getInstitutionVon().getName() + " und " + match.get().getInstitutionAn().getName();
+        return " Wareneingang für Match zwischen " + match.get().getInstitutionVon().getName() + " und " + match.get().getInstitutionAn().getName()+" bestätigen.";
     }
 
     @Override

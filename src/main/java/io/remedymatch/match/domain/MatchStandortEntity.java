@@ -35,4 +35,10 @@ public class MatchStandortEntity {
     @Column
     private String land;
 
+    @Column
+    private double longitude;
+
+    @Column
+    private double latitude;
+
 }

@@ -11,6 +11,8 @@ public class MatchStandortMapper {
                 .ort(entity.getOrt())
                 .plz(entity.getPlz())
                 .strasse(entity.getStrasse())
+                .longitude(entity.getLongitude())
+                .latitude(entity.getLatitude())
                 .build();
     }
 
@@ -21,6 +23,8 @@ public class MatchStandortMapper {
                 .ort(dto.getOrt())
                 .plz(dto.getPlz())
                 .strasse(dto.getStrasse())
+                .longitude(dto.getLongitude())
+                .latitude(dto.getLatitude())
                 .build();
     }
 

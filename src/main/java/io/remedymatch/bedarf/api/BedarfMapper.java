@@ -15,7 +15,7 @@ public class BedarfMapper {
                 .artikel(getArticleDTO(entity.getArtikel()))
                 .medizinisch(entity.isMedizinisch())
                 .originalverpackt(entity.isOriginalverpackt())
-                .standort(InstitutionStandortMapper.mapToDTO(entity.getStandort()))
+                .standort(entity.getStandort() != null ? InstitutionStandortMapper.mapToDTO(entity.getStandort()) : null)
                 .steril(entity.isSteril())
                 .rest(entity.getRest())
                 .kommentar(entity.getKommentar())
@@ -35,7 +35,7 @@ public class BedarfMapper {
                 .artikel(getArticleEntity(dto.getArtikel()))
                 .medizinisch(dto.isMedizinisch())
                 .originalverpackt(dto.isOriginalverpackt())
-                .standort(InstitutionStandortMapper.mapToEntity(dto.getStandort()))
+                .standort(dto.getStandort() != null ? InstitutionStandortMapper.mapToEntity(dto.getStandort()) : null)
                 .steril(dto.isSteril())
                 .kommentar(dto.getKommentar())
                 .bedient(dto.isBedient());

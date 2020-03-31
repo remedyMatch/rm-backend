@@ -16,6 +16,7 @@ public class AngebotMapper {
                 .haltbarkeit(entity.getHaltbarkeit())
                 .medizinisch(entity.isMedizinisch())
                 .originalverpackt(entity.isOriginalverpackt())
+                .standort(entity.getStandort() != null ? InstitutionStandortMapper.mapToDTO(entity.getStandort()) : null)
                 .standort(InstitutionStandortMapper.mapToDTO(entity.getStandort()))
                 .steril(entity.isSteril())
                 .bedient(entity.isBedient())
@@ -36,7 +37,7 @@ public class AngebotMapper {
                 .haltbarkeit(dto.getHaltbarkeit())
                 .medizinisch(dto.isMedizinisch())
                 .originalverpackt(dto.isOriginalverpackt())
-                .standort(InstitutionStandortMapper.mapToEntity(dto.getStandort()))
+                .standort(dto.getStandort() != null ? InstitutionStandortMapper.mapToEntity(dto.getStandort()) : null)
                 .steril(dto.isSteril())
                 .bedient(dto.isBedient())
                 .kommentar(dto.getKommentar());

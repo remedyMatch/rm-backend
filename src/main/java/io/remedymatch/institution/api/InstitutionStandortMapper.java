@@ -11,6 +11,8 @@ public class InstitutionStandortMapper {
                 .ort(entity.getOrt())
                 .plz(entity.getPlz())
                 .strasse(entity.getStrasse())
+                .longitude(entity.getLongitude())
+                .latitude(entity.getLatitude())
                 .build();
     }
 
@@ -21,6 +23,8 @@ public class InstitutionStandortMapper {
                 .ort(dto.getOrt())
                 .plz(dto.getPlz())
                 .strasse(dto.getStrasse())
+                .longitude(dto.getLongitude())
+                .latitude(dto.getLatitude())
                 .build();
     }
 

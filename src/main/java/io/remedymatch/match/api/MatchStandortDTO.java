@@ -23,4 +23,10 @@ public class MatchStandortDTO {
 
     @NotNull
     private String land;
+
+    private double longitude;
+
+    private double latitude;
+
+    private double entfernung;
 }

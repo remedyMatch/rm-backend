@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.domain.aufgabe;
+package io.remedymatch.angebot.process;
 
 import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageRepository;
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;

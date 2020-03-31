@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.domain.aufgabe;
+package io.remedymatch.angebot.process;
 
 public class AnfrageBearbeitenTaskContstants {
     public static String ANGENOMMEN = "angenommen";

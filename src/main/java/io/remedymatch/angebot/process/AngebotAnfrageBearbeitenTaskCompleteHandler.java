@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.domain.aufgabe;
+package io.remedymatch.angebot.process;
 
 import java.util.Map;
 import java.util.UUID;

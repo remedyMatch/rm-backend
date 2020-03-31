@@ -1,7 +1,6 @@
 package io.remedymatch.angebot.domain.aufgabe;
 
-import io.remedymatch.anfrage.domain.AnfrageRepository;
-import io.remedymatch.artikel.domain.ArtikelEntity;
+import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageRepository;
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;
@@ -12,9 +11,9 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Component
-public class AnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler {
+public class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler {
 
-    private final AnfrageRepository anfrageRepository;
+    private final AngebotAnfrageRepository anfrageRepository;
 
     @Override
     public String beschreibung(TaskDTO taskDTO) {
@@ -23,19 +22,9 @@ public class AnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler
 
         val anfrage = anfrageRepository.findById(UUID.fromString(taskDTO.getObjektId()));
 
-        String prefix;
-        ArtikelEntity artikel;
-        double anzahl;
-
-        if (anfrage.get().getBedarf() != null) {
-            prefix = "Anfrage zu Bedarf von ";
-            artikel = anfrage.get().getBedarf().getArtikel();
-            anzahl = anfrage.get().getBedarf().getAnzahl();
-        } else {
-            prefix = "Anfrage zu Angebot von ";
-            artikel = anfrage.get().getAngebot().getArtikel();
-            anzahl = anfrage.get().getAngebot().getAnzahl();
-        }
+        var prefix = "Anfrage zu Angebot von ";
+        var artikel = anfrage.get().getAngebot().getArtikel();
+        var anzahl = anfrage.get().getAngebot().getAnzahl();
 
         beschreibung += anfrage.get().getInstitutionVon().getName() + ": " + prefix;
         beschreibung += (int) anzahl + " " + artikel.getName();

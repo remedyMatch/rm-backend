@@ -1,30 +1,31 @@
 package io.remedymatch.angebot.domain;
 
-import io.remedymatch.anfrage.domain.AnfrageEntity;
-import io.remedymatch.anfrage.domain.AnfrageRepository;
-import io.remedymatch.anfrage.domain.AnfrageService;
-import io.remedymatch.anfrage.domain.AnfrageStatus;
-import io.remedymatch.engine.AnfrageProzessConstants;
+import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageEntity;
+import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageService;
+import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageStatus;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
-import static io.remedymatch.engine.AnfrageProzessConstants.PROZESS_KEY;
+import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.PROZESS_KEY;
 
 @AllArgsConstructor
 @Service
 public class AngebotService {
 
     private final AngebotRepository angebotRepository;
-    private final AnfrageRepository anfrageRepository;
-    private final AnfrageService anfrageService;
+    private final AngebotAnfrageRepository anfrageRepository;
+    private final AngebotAnfrageService anfrageService;
     private final EngineClient engineClient;
 
     @Transactional
@@ -49,7 +50,7 @@ public class AngebotService {
 
 
         if (angebot.get().getAnfragen() != null) {
-            angebot.get().getAnfragen().stream().filter(anfrage -> anfrage.getStatus().equals(AnfrageStatus.Offen)).forEach(anfrage ->
+            angebot.get().getAnfragen().stream().filter(anfrage -> anfrage.getStatus().equals(AngebotAnfrageStatus.Offen)).forEach(anfrage ->
                     anfrageService.anfrageStornieren(anfrage.getId().toString()));
         }
 
@@ -77,7 +78,7 @@ public class AngebotService {
     }
 
     @Transactional
-    public void starteAnfrage(UUID angebotId, InstitutionEntity anfrager, String kommentar, String standort, double anzahl) {
+    public void starteAnfrage(UUID angebotId, InstitutionEntity anfrager, String kommentar, InstitutionStandortEntity standort, double anzahl) {
 
         val angebot = angebotRepository.findById(angebotId);
 
@@ -85,7 +86,7 @@ public class AngebotService {
             throw new IllegalArgumentException("Angebot ist nicht vorhanden");
         }
 
-        val anfrage = AnfrageEntity.builder()
+        val anfrage = AngebotAnfrageEntity.builder()
                 .institutionVon(anfrager)
                 .institutionAn(angebot.get().getInstitution())
                 .kommentar(kommentar)
@@ -93,16 +94,20 @@ public class AngebotService {
                 .standortVon(standort)
                 .angebot(angebot.get())
                 .anzahl(anzahl)
-                .status(AnfrageStatus.Offen)
+                .status(AngebotAnfrageStatus.Offen)
                 .build();
 
         anfrageRepository.save(anfrage);
 
+        var variables = new HashMap<String, Object>();
+        variables.put("institution", angebot.get().getInstitution().getId().toString());
+        variables.put("objektId", anfrage.getId().toString());
+
+
         val prozessInstanzId = engineClient.prozessStarten(
                 PROZESS_KEY,
-                AnfrageProzessConstants.PROZESS_TYP_ANGEBOT,
                 anfrage.getId().toString(),
-                angebot.get().getInstitution().getId().toString());
+                variables);
         anfrage.setProzessInstanzId(prozessInstanzId);
         anfrageRepository.save(anfrage);
     }
@@ -113,7 +118,7 @@ public class AngebotService {
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage nicht vorhanden");
         }
-        anfrage.get().setStatus(AnfrageStatus.Storniert);
+        anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
         anfrageRepository.save(anfrage.get());
     }
 
@@ -123,7 +128,7 @@ public class AngebotService {
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage nicht vorhanden");
         }
-        anfrage.get().setStatus(AnfrageStatus.Angenommen);
+        anfrage.get().setStatus(AngebotAnfrageStatus.Angenommen);
 
         //Angebot als bedient markieren
         val angebot = anfrage.get().getAngebot();
@@ -131,7 +136,7 @@ public class AngebotService {
         //Restbestand des Angebots herabsetzen oder Exception werfen,
         // wenn die Anfrage größer als das Angebot ist
         if (anfrage.get().getAnzahl() > angebot.getAnzahl()) {
-            anfrage.get().setStatus(AnfrageStatus.Storniert);
+            anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
             anfrageRepository.save(anfrage.get());
             throw new IllegalArgumentException("Nicht genügend Ware auf Lager");
         } else {

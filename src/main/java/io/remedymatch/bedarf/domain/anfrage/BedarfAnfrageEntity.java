@@ -1,8 +1,8 @@
-package io.remedymatch.anfrage.domain;
+package io.remedymatch.bedarf.domain.anfrage;
 
-import io.remedymatch.angebot.domain.AngebotEntity;
 import io.remedymatch.bedarf.domain.BedarfEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,7 +17,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class AnfrageEntity {
+public class BedarfAnfrageEntity {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -37,14 +37,11 @@ public class AnfrageEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private BedarfEntity bedarf;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private AngebotEntity angebot;
+    @ManyToOne
+    private InstitutionStandortEntity standortVon;
 
-    @Column
-    private String standortVon;
-
-    @Column
-    private String standortAn;
+    @ManyToOne
+    private InstitutionStandortEntity standortAn;
 
     @Column
     private String prozessInstanzId;
@@ -53,6 +50,6 @@ public class AnfrageEntity {
     private double anzahl;
 
     @Enumerated(EnumType.STRING)
-    private AnfrageStatus status;
+    private BedarfAnfrageStatus status;
 
 }

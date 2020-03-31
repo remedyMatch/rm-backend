@@ -1,6 +1,7 @@
 package io.remedymatch.angebot.api;
 
 import io.remedymatch.angebot.domain.AngebotEntity;
+import io.remedymatch.institution.api.InstitutionStandortMapper;
 
 import static io.remedymatch.artikel.api.ArtikelMapper.getArticleDTO;
 import static io.remedymatch.artikel.api.ArtikelMapper.getArticleEntity;
@@ -15,7 +16,7 @@ public class AngebotMapper {
                 .haltbarkeit(entity.getHaltbarkeit())
                 .medizinisch(entity.isMedizinisch())
                 .originalverpackt(entity.isOriginalverpackt())
-                .standort(entity.getStandort())
+                .standort(InstitutionStandortMapper.mapToDTO(entity.getStandort()))
                 .steril(entity.isSteril())
                 .bedient(entity.isBedient())
                 .rest(entity.getRest())
@@ -35,7 +36,7 @@ public class AngebotMapper {
                 .haltbarkeit(dto.getHaltbarkeit())
                 .medizinisch(dto.isMedizinisch())
                 .originalverpackt(dto.isOriginalverpackt())
-                .standort(dto.getStandort())
+                .standort(InstitutionStandortMapper.mapToEntity(dto.getStandort()))
                 .steril(dto.isSteril())
                 .bedient(dto.isBedient())
                 .kommentar(dto.getKommentar());

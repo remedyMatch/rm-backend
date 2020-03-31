@@ -13,7 +13,8 @@ public class MatchDTO {
 
     private UUID id;
     private InstitutionDTO institutionVon;
-    private String adresseVon;
+    private MatchStandortDTO standortVon;
+    private MatchStandortDTO standortAn;
     private InstitutionDTO institutionAn;
     private UUID anfrageId;
     private MatchStatus status;

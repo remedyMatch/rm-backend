@@ -1,20 +1,20 @@
 package io.remedymatch.bedarf.domain;
 
-import io.remedymatch.anfrage.domain.AnfrageEntity;
-import io.remedymatch.anfrage.domain.AnfrageRepository;
-import io.remedymatch.anfrage.domain.AnfrageStatus;
-import io.remedymatch.engine.AnfrageProzessConstants;
+import io.remedymatch.bedarf.api.BedarfAnfrageProzessConstants;
+import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
+import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
+import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageStatus;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
-
-import static io.remedymatch.engine.AnfrageProzessConstants.PROZESS_KEY;
 
 @AllArgsConstructor
 @Service
@@ -22,7 +22,7 @@ public class BedarfService {
 
     private final BedarfRepository bedarfRepository;
     private final EngineClient engineClient;
-    private final AnfrageRepository anfrageRepository;
+    private final BedarfAnfrageRepository bedarfAnfrageRepository;
 
     @Transactional
     public void bedarfMelden(BedarfEntity bedarf, InstitutionEntity institutionEntity) {
@@ -48,7 +48,7 @@ public class BedarfService {
     }
 
     @Transactional
-    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar, String standort, double anzahl) {
+    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar, InstitutionStandortEntity standort, double anzahl) {
 
         val bedarf = bedarfRepository.findById(bedarfId);
 
@@ -56,7 +56,7 @@ public class BedarfService {
             throw new IllegalArgumentException("Bedarf ist nicht vorhanden");
         }
 
-        val anfrage = AnfrageEntity.builder()
+        val anfrage = BedarfAnfrageEntity.builder()
                 .institutionVon(anfrager)
                 .institutionAn(bedarf.get().getInstitution())
                 .kommentar(kommentar)
@@ -64,37 +64,39 @@ public class BedarfService {
                 .standortVon(standort)
                 .bedarf(bedarf.get())
                 .anzahl(anzahl)
-                .status(AnfrageStatus.Offen)
+                .status(BedarfAnfrageStatus.Offen)
                 .build();
-        anfrageRepository.save(anfrage);
+        bedarfAnfrageRepository.save(anfrage);
+
+        var variables = new HashMap<String, Object>();
+        variables.put("institution", bedarf.get().getInstitution().getId().toString());
+        variables.put("objektId", anfrage.getId().toString());
 
         val prozessInstanzId = engineClient.prozessStarten(
-                PROZESS_KEY,
-                AnfrageProzessConstants.PROZESS_TYP_BEDARF,
+                BedarfAnfrageProzessConstants.PROZESS_KEY,
                 anfrage.getId().toString(),
-                bedarf.get().getInstitution().getId().toString());
+                variables);
         anfrage.setProzessInstanzId(prozessInstanzId);
-        anfrageRepository.save(anfrage);
+        bedarfAnfrageRepository.save(anfrage);
     }
 
     @Transactional
     public void anfrageStornieren(String anfrageId) {
-        val anfrage = anfrageRepository.findById(UUID.fromString(anfrageId));
+        val anfrage = bedarfAnfrageRepository.findById(UUID.fromString(anfrageId));
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage nicht vorhanden");
         }
-        anfrage.get().setStatus(AnfrageStatus.Storniert);
-        anfrageRepository.save(anfrage.get());
+        anfrage.get().setStatus(BedarfAnfrageStatus.Storniert);
+        bedarfAnfrageRepository.save(anfrage.get());
     }
 
     @Transactional
     public void anfrageAnnehmen(String anfrageId) {
-        val anfrage = anfrageRepository.findById(UUID.fromString(anfrageId));
+        val anfrage = bedarfAnfrageRepository.findById(UUID.fromString(anfrageId));
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage nicht vorhanden");
         }
-        anfrage.get().setStatus(AnfrageStatus.Angenommen);
-
+        anfrage.get().setStatus(BedarfAnfrageStatus.Angenommen);
 
         //Bedarf als bedient markieren
         val bedarf = anfrage.get().getBedarf();
@@ -112,7 +114,7 @@ public class BedarfService {
         }
 
         bedarfRepository.save(bedarf);
-        anfrageRepository.save(anfrage.get());
+        bedarfAnfrageRepository.save(anfrage.get());
     }
 
 }

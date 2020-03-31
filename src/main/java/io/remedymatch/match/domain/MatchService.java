@@ -1,6 +1,7 @@
 package io.remedymatch.match.domain;
 
-import io.remedymatch.anfrage.domain.AnfrageEntity;
+import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageEntity;
+import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -16,20 +17,26 @@ public class MatchService {
     private final MatchRepository matchRepository;
 
     @Transactional
-    public MatchEntity matcheErstellen(AnfrageEntity anfrage) {
+    public MatchEntity matchAusBedarfErstellen(BedarfAnfrageEntity anfrage) {
         val match = new MatchEntity();
 
-        if (anfrage.getBedarf() != null) {
-            match.setInstitutionAn(anfrage.getInstitutionAn());
-            match.setInstitutionVon(anfrage.getInstitutionVon());
-            match.setStandortAn(anfrage.getStandortAn());
-            match.setStandortVon(anfrage.getStandortVon());
-        } else {
-            match.setInstitutionAn(anfrage.getInstitutionVon());
-            match.setInstitutionVon(anfrage.getInstitutionAn());
-            match.setStandortAn(anfrage.getStandortVon());
-            match.setStandortVon(anfrage.getStandortAn());
-        }
+        match.setInstitutionAn(anfrage.getInstitutionAn());
+        match.setInstitutionVon(anfrage.getInstitutionVon());
+        match.setStandortAn(MatchStandortMapper.mapToMatchStandort(anfrage.getStandortAn()));
+        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(anfrage.getStandortVon()));
+
+        match.setStatus(MatchStatus.Offen);
+        return matchRepository.save(match);
+    }
+
+    @Transactional
+    public MatchEntity matchAusAngebotErstellen(AngebotAnfrageEntity anfrage) {
+        val match = new MatchEntity();
+
+        match.setInstitutionAn(anfrage.getInstitutionVon());
+        match.setInstitutionVon(anfrage.getInstitutionAn());
+        match.setStandortAn(MatchStandortMapper.mapToMatchStandort(anfrage.getStandortVon()));
+        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(anfrage.getStandortAn()));
 
         match.setStatus(MatchStatus.Offen);
         return matchRepository.save(match);

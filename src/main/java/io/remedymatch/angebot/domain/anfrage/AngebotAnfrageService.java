@@ -1,4 +1,4 @@
-package io.remedymatch.anfrage.domain;
+package io.remedymatch.angebot.domain.anfrage;
 
 import io.remedymatch.engine.client.EngineClient;
 import lombok.AllArgsConstructor;
@@ -10,11 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.ANFRAGE_STORNIEREN_MESSAGE;
+
 @AllArgsConstructor
 @Component
-public class AnfrageService {
+public class AngebotAnfrageService {
 
-    private final AnfrageRepository anfrageRepository;
+    private final AngebotAnfrageRepository anfrageRepository;
     private final EngineClient engineClient;
 
     @Transactional
@@ -29,14 +31,14 @@ public class AnfrageService {
         if (anfrage.isEmpty())
             throw new IllegalArgumentException("Anfrage ist nicht vorhanden und kann deshalb nicht storniert werden");
 
-        if (!anfrage.get().getStatus().equals(AnfrageStatus.Offen)) {
-            throw new IllegalArgumentException("Eine Anfrage, die nicht im Status offen ist kann nicht storniert werden");
+        if (!anfrage.get().getStatus().equals(AngebotAnfrageStatus.Offen)) {
+            throw new IllegalArgumentException("Eine Anfrage, die nicht im Status offen ist, kann nicht storniert werden");
         }
 
-        anfrage.get().setStatus(AnfrageStatus.Storniert);
+        anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
         anfrageRepository.save(anfrage.get());
 
-        engineClient.anfrageProzessBeenden(anfrage.get().getProzessInstanzId(), variables);
+        engineClient.messageKorrelieren(anfrage.get().getProzessInstanzId(), ANFRAGE_STORNIEREN_MESSAGE, variables);
     }
 
 }

@@ -5,13 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class ProzessStartRequest {
     private String prozessKey;
-    private String anfrageId;
-    private String institutionId;
-    private String typ;
+    private String businessKey;
+    private Map<String, Object> variables;
 }

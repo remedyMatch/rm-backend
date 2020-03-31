@@ -54,13 +54,12 @@ public class EngineClient {
         }
     }
 
-    public String prozessStarten(String prozessKey, String typ, String anfrageId, String institutionId) {
+    public String prozessStarten(String prozessKey, String businessKey, Map<String, Object> variables) {
 
         val request = ProzessStartRequest.builder()
-                .anfrageId(anfrageId)
-                .institutionId(institutionId)
                 .prozessKey(prozessKey)
-                .typ(typ)
+                .variables(variables)
+                .businessKey(businessKey)
                 .build();
 
         val restTemplate = new RestTemplate();
@@ -87,10 +86,6 @@ public class EngineClient {
         if (response.getStatusCode().isError()) {
             throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
         }
-    }
-
-    public void anfrageProzessBeenden(String prozessInstanzId, Map<String, Object> variables) {
-        this.messageKorrelieren(prozessInstanzId, "stornierungErhalten", variables);
     }
 
 }

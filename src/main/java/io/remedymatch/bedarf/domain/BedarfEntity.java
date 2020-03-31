@@ -1,8 +1,9 @@
 package io.remedymatch.bedarf.domain;
 
-import io.remedymatch.anfrage.domain.AnfrageEntity;
 import io.remedymatch.artikel.domain.ArtikelEntity;
+import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -34,8 +35,8 @@ public class BedarfEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private InstitutionEntity institution;
 
-    @Column(length = 60)
-    private String standort;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private InstitutionStandortEntity standort;
 
     @Column
     private boolean steril;
@@ -50,7 +51,7 @@ public class BedarfEntity {
     private String kommentar;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<AnfrageEntity> anfragen;
+    private List<BedarfAnfrageEntity> anfragen;
 
     @Column
     private boolean bedient;

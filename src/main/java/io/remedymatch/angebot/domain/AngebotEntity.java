@@ -1,8 +1,9 @@
 package io.remedymatch.angebot.domain;
 
-import io.remedymatch.anfrage.domain.AnfrageEntity;
+import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageEntity;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -36,8 +37,8 @@ public class AngebotEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private InstitutionEntity institution;
 
-    @Column(length = 60)
-    private String standort;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private InstitutionStandortEntity standort;
 
     @Column
     private LocalDateTime haltbarkeit;
@@ -58,6 +59,6 @@ public class AngebotEntity {
     private boolean bedient;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<AnfrageEntity> anfragen;
+    private List<AngebotAnfrageEntity> anfragen;
 
 }

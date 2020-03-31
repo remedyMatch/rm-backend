@@ -16,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InstitutionEntity {
+
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -36,6 +37,11 @@ public class InstitutionEntity {
     @OneToMany(fetch = FetchType.LAZY)
     private List<AngebotEntity> angebote;
 
-    @Column
-    private String standort;
+    @OneToOne(fetch = FetchType.EAGER)
+    private InstitutionStandortEntity hauptstandort;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<InstitutionStandortEntity> standorte;
+
+
 }

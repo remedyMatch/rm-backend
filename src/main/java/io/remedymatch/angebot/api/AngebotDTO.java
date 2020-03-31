@@ -1,6 +1,7 @@
 package io.remedymatch.angebot.api;
 
 import io.remedymatch.artikel.api.ArtikelDTO;
+import io.remedymatch.institution.api.InstitutionStandortDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,7 +24,7 @@ public class AngebotDTO {
     private double rest;
 
     @NotNull
-    private String standort;
+    private InstitutionStandortDTO standort;
 
     private UUID institutionId;
 

@@ -1,6 +1,7 @@
 package io.remedymatch.angebot.api;
 
 import io.remedymatch.angebot.domain.AngebotService;
+import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
@@ -60,7 +61,12 @@ public class AngebotController {
     @PostMapping("/anfragen")
     public ResponseEntity<Void> angebotAnfragen(@RequestBody AngebotAnfragenRequest request) {
         val user = personRepository.findByUsername(userProvider.getUserName());
-        angebotService.starteAnfrage(request.getAngebotId(), user.getInstitution(), request.getKommentar(), request.getStandort(), request.getAnzahl());
+        angebotService.starteAnfrage(
+                request.getAngebotId(),
+                user.getInstitution(),
+                request.getKommentar(),
+                InstitutionStandortMapper.mapToEntity(request.getStandort()),
+                request.getAnzahl());
         return ResponseEntity.ok().build();
     }
 

@@ -1,8 +1,11 @@
 package io.remedymatch.bedarf.api;
 
-import io.remedymatch.anfrage.api.AnfrageDTO;
-import io.remedymatch.anfrage.api.AnfrageMapper;
 import io.remedymatch.bedarf.domain.BedarfService;
+import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
+import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageService;
+import io.remedymatch.institution.api.AnfrageDTO;
+import io.remedymatch.institution.api.AnfrageMapper;
+import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
@@ -27,6 +30,8 @@ public class BedarfController {
     private final BedarfService bedarfService;
     private final UserProvider userProvider;
     private final PersonRepository personRepository;
+    private final BedarfAnfrageService bedarfAnfrageService;
+    private final BedarfAnfrageRepository bedarfAnfrageRepository;
 
     @GetMapping()
     public ResponseEntity<List<BedarfDTO>> bedarfeLaden() {
@@ -62,7 +67,12 @@ public class BedarfController {
     @PostMapping("/bedienen")
     public ResponseEntity<Void> bedarfBedienen(@RequestBody BedarfBedienenRequest request) {
         val user = personRepository.findByUsername(userProvider.getUserName());
-        bedarfService.starteAnfrage(request.getBedarfId(), user.getInstitution(), request.getKommentar(), request.getStandort(), request.getAnzahl());
+        bedarfService.starteAnfrage(
+                request.getBedarfId(),
+                user.getInstitution(),
+                request.getKommentar(),
+                InstitutionStandortMapper.mapToEntity(request.getStandort()),
+                request.getAnzahl());
         return ResponseEntity.ok().build();
     }
 
@@ -85,5 +95,24 @@ public class BedarfController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(mapToDTO(bedarf.get()));
+    }
+
+    @DeleteMapping("/anfrage/{id}")
+    public ResponseEntity<Void> anfrageStornieren(@PathVariable("id") String anfrageId) {
+
+        val user = personRepository.findByUsername(userProvider.getUserName());
+        val anfrage = bedarfAnfrageRepository.findById(UUID.fromString(anfrageId));
+
+        if (anfrage.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!anfrage.get().getInstitutionVon().getId().equals(user.getInstitution().getId())
+                && !anfrage.get().getInstitutionAn().getId().equals(user.getInstitution().getId())) {
+            return ResponseEntity.status(403).build();
+        }
+
+        bedarfAnfrageService.anfrageStornieren(anfrageId);
+        return ResponseEntity.ok().build();
     }
 }

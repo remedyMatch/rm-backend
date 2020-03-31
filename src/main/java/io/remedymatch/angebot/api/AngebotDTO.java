@@ -40,4 +40,6 @@ public class AngebotDTO {
 
     private boolean bedient;
 
+    private double entfernung;
+
 }

@@ -1,7 +1,9 @@
 package io.remedymatch.angebot.api;
 
 import io.remedymatch.angebot.domain.AngebotService;
+import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.person.domain.PersonRepository;
+import io.remedymatch.shared.GeoCalc;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -28,8 +30,17 @@ public class AngebotController {
 
     @GetMapping
     public ResponseEntity<List<AngebotDTO>> getAll() {
+
+        val user = personRepository.findByUsername(userProvider.getUserName());
+
         val angebote = StreamSupport.stream(angebotService.alleAngeboteLaden().spliterator(), false)
                 .filter(angebot -> !angebot.isBedient()).map(AngebotMapper::mapToDTO).collect(Collectors.toList());
+
+        angebote.forEach(a -> {
+            var entfernung = GeoCalc.kilometerBerechnen(user.getInstitution().getHauptstandort(), InstitutionStandortMapper.mapToEntity(a.getStandort()));
+            a.setEntfernung(entfernung);
+        });
+
         return ResponseEntity.ok(angebote);
     }
 

@@ -36,4 +36,7 @@ public class BedarfDTO {
     private boolean medizinisch;
 
     private boolean bedient;
+
+    private double entfernung;
+
 }

@@ -5,7 +5,9 @@ import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageService;
 import io.remedymatch.institution.api.AnfrageDTO;
 import io.remedymatch.institution.api.AnfrageMapper;
+import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.person.domain.PersonRepository;
+import io.remedymatch.shared.GeoCalc;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -34,9 +36,17 @@ public class BedarfController {
 
     @GetMapping()
     public ResponseEntity<List<BedarfDTO>> bedarfeLaden() {
-        val institutions = StreamSupport.stream(bedarfService.alleBedarfeLaden().spliterator(), false)
+        val user = personRepository.findByUsername(userProvider.getUserName());
+
+        val bedarfe = StreamSupport.stream(bedarfService.alleBedarfeLaden().spliterator(), false)
                 .filter(bedarf -> !bedarf.isBedient()).map(BedarfMapper::mapToDTO).collect(Collectors.toList());
-        return ResponseEntity.ok(institutions);
+
+        bedarfe.forEach(b -> {
+            var entfernung = GeoCalc.kilometerBerechnen(user.getInstitution().getHauptstandort(), InstitutionStandortMapper.mapToEntity(b.getStandort()));
+            b.setEntfernung(entfernung);
+        });
+
+        return ResponseEntity.ok(bedarfe);
     }
 
     @PostMapping

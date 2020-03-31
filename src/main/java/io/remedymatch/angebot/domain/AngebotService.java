@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.domain;
 
+import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.ANFRAGE_STORNIEREN_MESSAGE;
 import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.PROZESS_KEY;
 
 import java.math.BigDecimal;
@@ -22,8 +23,7 @@ import lombok.val;
 @Service
 public class AngebotService {
 	private final AngebotRepository angebotRepository;
-	private final AngebotAnfrageRepository anfrageRepository;
-	private final AngebotAnfrageService anfrageService;
+	private final AngebotAnfrageRepository angebotAnfrageRepository;
 	private final EngineClient engineClient;
 
 	@Transactional
@@ -44,7 +44,7 @@ public class AngebotService {
 		if (angebot.get().getAnfragen() != null) {
 			angebot.get().getAnfragen().stream()
 					.filter(anfrage -> anfrage.getStatus().equals(AngebotAnfrageStatus.Offen))
-					.forEach(anfrage -> anfrageService.anfrageStornieren(anfrage.getId()));
+					.forEach(anfrage -> anfrageStornierenX(anfrage.getId()));
 		}
 
 		angebotRepository.delete(angebot.get().getId());
@@ -96,7 +96,7 @@ public class AngebotService {
 				.status(AngebotAnfrageStatus.Offen) //
 				.build();
 
-		anfrage = anfrageRepository.update(anfrage);
+		anfrage = angebotAnfrageRepository.update(anfrage);
 
 		var variables = new HashMap<String, Object>();
 		variables.put("institution", angebot.get().getInstitution().getId().toString());
@@ -104,22 +104,22 @@ public class AngebotService {
 
 		val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().toString(), variables);
 		anfrage.setProzessInstanzId(prozessInstanzId);
-		anfrageRepository.update(anfrage);
+		angebotAnfrageRepository.update(anfrage);
 	}
 
 	@Transactional
 	public void anfrageStornieren(final AngebotAnfrageId anfrageId) {
-		val anfrage = anfrageRepository.get(anfrageId);
+		val anfrage = angebotAnfrageRepository.get(anfrageId);
 		if (anfrage.isEmpty()) {
 			throw new IllegalArgumentException("Anfrage nicht vorhanden");
 		}
 		anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
-		anfrageRepository.update(anfrage.get());
+		angebotAnfrageRepository.update(anfrage.get());
 	}
 
 	@Transactional
 	public void anfrageAnnehmen(final AngebotAnfrageId anfrageId) {
-		val anfrage = anfrageRepository.get(anfrageId);
+		val anfrage = angebotAnfrageRepository.get(anfrageId);
 		if (anfrage.isEmpty()) {
 			throw new IllegalArgumentException("Anfrage nicht vorhanden");
 		}
@@ -132,7 +132,7 @@ public class AngebotService {
 		// wenn die Anfrage größer als das Angebot ist
 		if (anfrage.get().getAnzahl().doubleValue() > angebot.getRest().doubleValue()) {
 			anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
-			anfrageRepository.update(anfrage.get());
+			angebotAnfrageRepository.update(anfrage.get());
 			throw new IllegalArgumentException("Nicht genügend Ware auf Lager");
 		} else {
 			if (anfrage.get().getAnzahl().doubleValue() == angebot.getRest().doubleValue()) {
@@ -145,6 +145,27 @@ public class AngebotService {
 		}
 
 		angebotRepository.update(angebot);
-		anfrageRepository.update(anfrage.get());
+		angebotAnfrageRepository.update(anfrage.get());
+	}
+	
+	/* help methods */ 
+	
+	private void anfrageStornierenX(final AngebotAnfrageId anfrageId) {
+		val anfrage = angebotAnfrageRepository.get(anfrageId);
+
+		if (anfrage.isEmpty()) {
+			throw new IllegalArgumentException("Anfrage ist nicht vorhanden und kann deshalb nicht storniert werden");
+		}
+
+		AngebotAnfrage angebotAnfrage = anfrage.get();
+		if (!AngebotAnfrageStatus.Offen.equals(angebotAnfrage.getStatus())) {
+			throw new IllegalArgumentException(
+					"Eine Anfrage, die nicht im Status offen ist, kann nicht storniert werden");
+		}
+
+		angebotAnfrage.setStatus(AngebotAnfrageStatus.Storniert);
+		angebotAnfrageRepository.update(angebotAnfrage);
+
+		engineClient.messageKorrelieren(angebotAnfrage.getProzessInstanzId(), ANFRAGE_STORNIEREN_MESSAGE, new HashMap<>());
 	}
 }

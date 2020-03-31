@@ -17,7 +17,6 @@ public class AngebotMapper {
                 .medizinisch(entity.isMedizinisch())
                 .originalverpackt(entity.isOriginalverpackt())
                 .standort(entity.getStandort() != null ? InstitutionStandortMapper.mapToDTO(entity.getStandort()) : null)
-                .standort(InstitutionStandortMapper.mapToDTO(entity.getStandort()))
                 .steril(entity.isSteril())
                 .bedient(entity.isBedient())
                 .rest(entity.getRest())

@@ -1,22 +1,21 @@
 package io.remedymatch.angebot.domain;
 
-import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.PROZESS_KEY;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.hibernate.boot.model.naming.IllegalIdentifierException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.UUID;
+
+import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.PROZESS_KEY;
 
 @AllArgsConstructor
 @Service
@@ -96,7 +95,7 @@ public class AngebotService {
             throw new IllegalArgumentException("Der ausgewählte Standort konnte nicht geunden werden");
         }
 
-        val anfrage = AngebotAnfrage.builder() //
+        var anfrage = AngebotAnfrage.builder() //
                 .institutionVon(anfrager) //
                 .institutionAn(angebot.get().getInstitution()) //
                 .kommentar(kommentar) //
@@ -107,7 +106,7 @@ public class AngebotService {
                 .status(AngebotAnfrageStatus.Offen) //
                 .build();
 
-        anfrageRepository.update(anfrage);
+        anfrage = anfrageRepository.update(anfrage);
 
         var variables = new HashMap<String, Object>();
         variables.put("institution", angebot.get().getInstitution().getId().toString());

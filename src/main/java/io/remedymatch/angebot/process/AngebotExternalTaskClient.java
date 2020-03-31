@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.api;
+package io.remedymatch.angebot.process;
 
 import io.remedymatch.angebot.domain.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.AngebotService;

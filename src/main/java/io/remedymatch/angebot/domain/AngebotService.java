@@ -1,7 +1,7 @@
 package io.remedymatch.angebot.domain;
 
-import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.ANFRAGE_STORNIEREN_MESSAGE;
-import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.PROZESS_KEY;
+import static io.remedymatch.angebot.process.AngebotAnfrageProzessConstants.ANFRAGE_STORNIEREN_MESSAGE;
+import static io.remedymatch.angebot.process.AngebotAnfrageProzessConstants.PROZESS_KEY;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

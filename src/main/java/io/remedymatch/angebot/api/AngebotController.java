@@ -28,7 +28,6 @@ import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.shared.GeoCalc;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import lombok.val;
 
 @RestController

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class AngebotAnfragenRequest {
+class AngebotAnfragenRequest {
 
     @NotNull
     private UUID angebotId;

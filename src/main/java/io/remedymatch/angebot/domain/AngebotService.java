@@ -2,6 +2,7 @@ package io.remedymatch.angebot.domain;
 
 import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.PROZESS_KEY;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
@@ -101,7 +102,7 @@ public class AngebotService {
 				.standortAn(angebot.get().getStandort()) //
 				.standortVon(standort) //
 				.angebot(angebot.get()) //
-				.anzahl(anzahl) //
+				.anzahl(BigDecimal.valueOf(anzahl)) //
 				.status(AngebotAnfrageStatus.Offen) //
 				.build();
 
@@ -139,16 +140,16 @@ public class AngebotService {
 
 		// Restbestand des Angebots herabsetzen oder Exception werfen,
 		// wenn die Anfrage größer als das Angebot ist
-		if (anfrage.get().getAnzahl() > angebot.getAnzahl()) {
+		if (anfrage.get().getAnzahl().doubleValue() > angebot.getAnzahl()) {
 			anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
 			anfrageRepository.update(anfrage.get());
 			throw new IllegalArgumentException("Nicht genügend Ware auf Lager");
 		} else {
-			if (anfrage.get().getAnzahl() == angebot.getAnzahl()) {
+			if (anfrage.get().getAnzahl().doubleValue() == angebot.getAnzahl()) {
 				angebot.setBedient(true);
 				angebot.setRest(0);
 			} else {
-				angebot.setRest(angebot.getRest() - anfrage.get().getAnzahl());
+				angebot.setRest(angebot.getRest() - anfrage.get().getAnzahl().doubleValue());
 			}
 		}
 

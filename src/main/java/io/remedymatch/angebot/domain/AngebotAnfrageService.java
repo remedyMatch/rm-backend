@@ -1,17 +1,17 @@
 package io.remedymatch.angebot.domain;
 
-import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
-import io.remedymatch.engine.client.EngineClient;
-import lombok.AllArgsConstructor;
-import lombok.val;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.ANFRAGE_STORNIEREN_MESSAGE;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.ANFRAGE_STORNIEREN_MESSAGE;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import io.remedymatch.engine.client.EngineClient;
+import lombok.AllArgsConstructor;
+import lombok.val;
 
 @AllArgsConstructor
 @Component

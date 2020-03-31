@@ -72,116 +72,115 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         }
     }
 
-//    private void createAngebotsListe() {
-//
-//
-//
-//        var artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1", artikelKategorieRepository.findByName("Masken FFP1").get());
-//        var institution = institutionRepository.findByInstitutionKey("private100");
-//        createAngebot("Schutzmasken", "Köln", false, false, false, 20, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzmasken (aus Eigenbedarf)", "Schutzmasken FFP2", artikelKategorieRepository.findByName("Masken FFP2").get());
-//        institution = institutionRepository.findByInstitutionKey("private101");
-//        createAngebot("Schutzmasken", "Augsburg", false, false, false, 30, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzmasken von privat", "Schutzmasken FFP3", artikelKategorieRepository.findByName("Masken FFP3").get());
-//        institution = institutionRepository.findByInstitutionKey("private101");
-//        createAngebot("Schutzmasken", "Dresden", false, false, false, 50, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzmasken privat", "Schutzmasken FFP3", artikelKategorieRepository.findByName("Masken FFP3").get());
-//        institution = institutionRepository.findByInstitutionKey("private102");
+    private void createAngebotsListe() {
+
+
+        var artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1", artikelKategorieRepository.findByName("Masken FFP1").get());
+        var institution = institutionRepository.findByInstitutionKey("private100");
+        // createAngebot("Schutzmasken", "Köln", false, false, false, 20, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
+
+        artikel = createArtikel("Schutzmasken (aus Eigenbedarf)", "Schutzmasken FFP2", artikelKategorieRepository.findByName("Masken FFP2").get());
+        institution = institutionRepository.findByInstitutionKey("private101");
+        //createAngebot("Schutzmasken", "Augsburg", false, false, false, 30, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
+
+        artikel = createArtikel("Schutzmasken von privat", "Schutzmasken FFP3", artikelKategorieRepository.findByName("Masken FFP3").get());
+        institution = institutionRepository.findByInstitutionKey("private101");
+        // createAngebot("Schutzmasken", "Dresden", false, false, false, 50, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
+
+        artikel = createArtikel("Schutzmasken privat", "Schutzmasken FFP3", artikelKategorieRepository.findByName("Masken FFP3").get());
+        institution = institutionRepository.findByInstitutionKey("private102");
 //        createAngebot("Schutzmasken", "Flensburg", false, false, false, 50, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1", artikelKategorieRepository.findByName("Masken FFP1").get());
-//        institution = institutionRepository.findByInstitutionKey("private110");
+
+        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1", artikelKategorieRepository.findByName("Masken FFP1").get());
+        institution = institutionRepository.findByInstitutionKey("private110");
 //        createAngebot("Schutzmasken", "Köln", false, false, false, 20, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP2 neu", artikelKategorieRepository.findByName("Masken FFP2").get());
-//        institution = institutionRepository.findByInstitutionKey("private120");
+
+        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP2 neu", artikelKategorieRepository.findByName("Masken FFP2").get());
+        institution = institutionRepository.findByInstitutionKey("private120");
 //        createAngebot("Schutzmasken", "München", true, false, true, 50, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1 aus privatem Bestand", artikelKategorieRepository.findByName("Masken FFP1").get());
-//        institution = institutionRepository.findByInstitutionKey("private130");
+
+        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1 aus privatem Bestand", artikelKategorieRepository.findByName("Masken FFP1").get());
+        institution = institutionRepository.findByInstitutionKey("private130");
 //        createAngebot("Schutzmasken", "Köln", true, false, true, 20, LocalDate.now().plusYears(3).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP3 neu", artikelKategorieRepository.findByName("Masken FFP3").get());
-//        institution = institutionRepository.findByInstitutionKey("private140");
+
+        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP3 neu", artikelKategorieRepository.findByName("Masken FFP3").get());
+        institution = institutionRepository.findByInstitutionKey("private140");
 //        createAngebot("Schutzmasken", "Hamburg", true, false, true, 120, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP2 Restbestand", artikelKategorieRepository.findByName("Masken FFP2").get());
-//        institution = institutionRepository.findByInstitutionKey("private150");
+
+        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP2 Restbestand", artikelKategorieRepository.findByName("Masken FFP2").get());
+        institution = institutionRepository.findByInstitutionKey("private150");
 //        createAngebot("Schutzmasken", "Hamburg", true, false, true, 120, LocalDate.now().plusYears(3).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP2 von Privat", artikelKategorieRepository.findByName("Masken FFP2").get());
-//        institution = institutionRepository.findByInstitutionKey("private160");
+
+        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP2 von Privat", artikelKategorieRepository.findByName("Masken FFP2").get());
+        institution = institutionRepository.findByInstitutionKey("private160");
 //        createAngebot("Schutzmasken", "Berlin", true, false, true, 40, LocalDate.now().plusYears(3).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Brillen", "Arbeitsschutzbrille", artikelKategorieRepository.findByName("Brillen").get());
-//        institution = institutionRepository.findByInstitutionKey("private170");
+
+        artikel = createArtikel("Brillen", "Arbeitsschutzbrille", artikelKategorieRepository.findByName("Brillen").get());
+        institution = institutionRepository.findByInstitutionKey("private170");
 //        createAngebot("Brillen", "Stuttgart", true, false, true, 20, LocalDate.now().plusYears(3).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Brillen", "Arbeitsschutzbrille unbenutzt", artikelKategorieRepository.findByName("Brillen").get());
-//        institution = institutionRepository.findByInstitutionKey("private180");
+
+        artikel = createArtikel("Brillen", "Arbeitsschutzbrille unbenutzt", artikelKategorieRepository.findByName("Brillen").get());
+        institution = institutionRepository.findByInstitutionKey("private180");
 //        createAngebot("Brillen", "München", true, false, true, 15, LocalDate.now().plusYears(1).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Brillen", "Arbeitsschutzbrille (neu)", artikelKategorieRepository.findByName("Brillen").get());
-//        institution = institutionRepository.findByInstitutionKey("private190");
+
+        artikel = createArtikel("Brillen", "Arbeitsschutzbrille (neu)", artikelKategorieRepository.findByName("Brillen").get());
+        institution = institutionRepository.findByInstitutionKey("private190");
 //        createAngebot("Schutzbrillen", "Bonn", true, false, true, 15, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Handdesinfektion", "Kanister 50Liter (neu)", artikelKategorieRepository.findByName("Handdesinfektion").get());
-//        institution = institutionRepository.findByInstitutionKey("private200");
+
+        artikel = createArtikel("Handdesinfektion", "Kanister 50Liter (neu)", artikelKategorieRepository.findByName("Handdesinfektion").get());
+        institution = institutionRepository.findByInstitutionKey("private200");
 //        createAngebot("Handdesinfektion", "Karlsruhe", true, false, true, 2, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Handdesinfektion", "Kanister 10Liter unbenutzt", artikelKategorieRepository.findByName("Handdesinfektion").get());
-//        institution = institutionRepository.findByInstitutionKey("private210");
+
+        artikel = createArtikel("Handdesinfektion", "Kanister 10Liter unbenutzt", artikelKategorieRepository.findByName("Handdesinfektion").get());
+        institution = institutionRepository.findByInstitutionKey("private210");
 //        createAngebot("Handdesinfektion von private", "Augsburg", true, false, true, 3, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung", "unbenutzt", artikelKategorieRepository.findByName("Overall Größe M").get());
-//        institution = institutionRepository.findByInstitutionKey("private220");
+
+        artikel = createArtikel("Schutzbekleidung", "unbenutzt", artikelKategorieRepository.findByName("Overall Größe M").get());
+        institution = institutionRepository.findByInstitutionKey("private220");
 //        createAngebot("Overall", "Augsburg", true, false, true, 3, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung", "1 Karton mit 100 Stück unbenutzt", artikelKategorieRepository.findByName("Overall Größe L").get());
-//        institution = institutionRepository.findByInstitutionKey("private220");
+
+        artikel = createArtikel("Schutzbekleidung", "1 Karton mit 100 Stück unbenutzt", artikelKategorieRepository.findByName("Overall Größe L").get());
+        institution = institutionRepository.findByInstitutionKey("private220");
 //        createAngebot("Overall", "Augsburg", true, false, true, 100, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung", "unbenutzt/neu", artikelKategorieRepository.findByName("Overall Größe L").get());
-//        institution = institutionRepository.findByInstitutionKey("private220");
+
+        artikel = createArtikel("Schutzbekleidung", "unbenutzt/neu", artikelKategorieRepository.findByName("Overall Größe L").get());
+        institution = institutionRepository.findByInstitutionKey("private220");
 //        createAngebot("Overall", "Augsburg", true, false, true, 500, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung (neu)", "neu/steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
-//        institution = institutionRepository.findByInstitutionKey("private220");
+
+        artikel = createArtikel("Schutzbekleidung (neu)", "neu/steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
+        institution = institutionRepository.findByInstitutionKey("private220");
 //        createAngebot("mehere Overalls", "Berlin", true, false, true, 100, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung (neu)", "neu/steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
-//        institution = institutionRepository.findByInstitutionKey("other10");
+
+        artikel = createArtikel("Schutzbekleidung (neu)", "neu/steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
+        institution = institutionRepository.findByInstitutionKey("other10");
 //        createAngebot("Schutzbekleidung", "Frankfurt", true, false, true, 5000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung (neu)", "steril", artikelKategorieRepository.findByName("Overall Größe L").get());
-//        institution = institutionRepository.findByInstitutionKey("institution8");
+
+        artikel = createArtikel("Schutzbekleidung (neu)", "steril", artikelKategorieRepository.findByName("Overall Größe L").get());
+        institution = institutionRepository.findByInstitutionKey("institution8");
 //        createAngebot("Schutzbekleidung aus Krankenhausbestand", "Berlin", true, false, true, 6000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung (neu)", "steril", artikelKategorieRepository.findByName("Overall Größe M").get());
-//        institution = institutionRepository.findByInstitutionKey("other8");
+
+        artikel = createArtikel("Schutzbekleidung (neu)", "steril", artikelKategorieRepository.findByName("Overall Größe M").get());
+        institution = institutionRepository.findByInstitutionKey("other8");
 //        createAngebot("Schutzbekleidung aus Herstellung", "Hamburg", true, false, true, 20000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung (auf Lager)", "steril", artikelKategorieRepository.findByName("Overall Größe L").get());
-//        institution = institutionRepository.findByInstitutionKey("other8");
+
+        artikel = createArtikel("Schutzbekleidung (auf Lager)", "steril", artikelKategorieRepository.findByName("Overall Größe L").get());
+        institution = institutionRepository.findByInstitutionKey("other8");
 //        createAngebot("Schutzbekleidung aus Herstellung", "Hamburg", true, false, true, 15000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung (auf Lager)", "steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
-//        institution = institutionRepository.findByInstitutionKey("other8");
+
+        artikel = createArtikel("Schutzbekleidung (auf Lager)", "steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
+        institution = institutionRepository.findByInstitutionKey("other8");
 //        createAngebot("Schutzbekleidung aus Herstellung", "Hamburg", true, false, true, 30000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung", "steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
-//        institution = institutionRepository.findByInstitutionKey("institution34");
+
+        artikel = createArtikel("Schutzbekleidung", "steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
+        institution = institutionRepository.findByInstitutionKey("institution34");
 //        createAngebot("Schutzbekleidung im eigenen Bestand", "Düsseldorf", true, false, true, 500, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//        artikel = createArtikel("Schutzbekleidung", "steril", artikelKategorieRepository.findByName("Overall Größe L").get());
-//        institution = institutionRepository.findByInstitutionKey("institution34");
+
+        artikel = createArtikel("Schutzbekleidung", "steril", artikelKategorieRepository.findByName("Overall Größe L").get());
+        institution = institutionRepository.findByInstitutionKey("institution34");
 //        createAngebot("Schutzbekleidung im eigenen Bestand", "Düsseldorf", true, false, true, 200, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
-//
-//
-//    }
+
+
+    }
 
     private AngebotEntity createAngebot(String kommentar, InstitutionStandortEntity standort, boolean medizinisch, boolean steril, boolean originalverpackt, double anzahl, LocalDateTime haltbarkeit, ArtikelEntity artikel, InstitutionEntity institution) {
         var angebot = AngebotEntity.builder() //

@@ -23,5 +23,13 @@ public class RmBackendProperties {
     @NotBlank
     private String engineUrl;
 
+    @NotNull
+    @NotBlank
+    private String geocoderServiceBaseUrl;
+
+    @NotNull
+    @NotBlank
+    private String geocoderServiceApiKey;
+
 }
 

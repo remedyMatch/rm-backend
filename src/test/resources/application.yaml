@@ -3,6 +3,13 @@ remedy:
     disabled:
       true
 
+io:
+  remedymatch:
+    backend:
+      engineUrl: http://localhost:8085
+      geocoderServicebaseUrl: https://eu1.locationiq.com/v1
+      geocoderServiceApiKey: unset
+
 spring:
   datasource:
     url: jdbc:h2:mem:ccp;DB_CLOSE_ON_EXIT=FALSE

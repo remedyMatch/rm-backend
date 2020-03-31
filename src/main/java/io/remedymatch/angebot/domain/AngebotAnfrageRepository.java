@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.domain.anfrage;
+package io.remedymatch.angebot.domain;
 
 import java.util.List;
 import java.util.Optional;

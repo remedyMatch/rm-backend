@@ -1,6 +1,6 @@
 package io.remedymatch.angebot.process;
 
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.domain.anfrage;
+package io.remedymatch.angebot.domain;
 
 import io.remedymatch.engine.client.EngineClient;
 import lombok.AllArgsConstructor;

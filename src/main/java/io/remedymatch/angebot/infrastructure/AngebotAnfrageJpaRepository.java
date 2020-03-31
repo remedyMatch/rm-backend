@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageEntity;
+import io.remedymatch.angebot.domain.AngebotAnfrageEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 
 public interface AngebotAnfrageJpaRepository extends CrudRepository<AngebotAnfrageEntity, UUID> {

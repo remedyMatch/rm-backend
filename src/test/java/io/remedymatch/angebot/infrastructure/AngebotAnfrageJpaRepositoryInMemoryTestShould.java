@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageEntity;
+import io.remedymatch.angebot.domain.AngebotAnfrageEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionTyp;
 

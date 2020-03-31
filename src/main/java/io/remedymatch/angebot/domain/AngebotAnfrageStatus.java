@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.domain.anfrage;
+package io.remedymatch.angebot.domain;
 
 public enum AngebotAnfrageStatus {
 

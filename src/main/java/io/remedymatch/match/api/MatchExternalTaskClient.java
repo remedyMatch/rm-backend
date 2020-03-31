@@ -1,6 +1,6 @@
 package io.remedymatch.match.api;
 
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.match.domain.MatchRepository;

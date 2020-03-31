@@ -1,6 +1,6 @@
 package io.remedymatch.institution.api;
 
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageEntity;
+import io.remedymatch.angebot.domain.AngebotAnfrageEntity;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
 
 public class AnfrageMapper {

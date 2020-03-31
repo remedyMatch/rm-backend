@@ -2,7 +2,7 @@ package io.remedymatch.institution.api;
 
 import io.remedymatch.angebot.api.AngebotDTO;
 import io.remedymatch.angebot.api.AngebotMapper;
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
 import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;

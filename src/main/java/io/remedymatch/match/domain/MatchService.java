@@ -1,6 +1,6 @@
 package io.remedymatch.match.domain;
 
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageEntity;
+import io.remedymatch.angebot.domain.AngebotAnfrageEntity;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import lombok.AllArgsConstructor;

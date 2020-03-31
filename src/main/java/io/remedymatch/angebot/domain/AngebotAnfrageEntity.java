@@ -1,6 +1,5 @@
-package io.remedymatch.angebot.domain.anfrage;
+package io.remedymatch.angebot.domain;
 
-import io.remedymatch.angebot.domain.AngebotEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import lombok.*;

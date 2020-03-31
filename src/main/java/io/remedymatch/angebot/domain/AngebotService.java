@@ -10,10 +10,6 @@ import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageEntity;
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageRepository;
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageService;
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageStatus;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionStandortEntity;

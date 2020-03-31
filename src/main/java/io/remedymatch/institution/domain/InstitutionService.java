@@ -25,7 +25,15 @@ public class InstitutionService {
 
     public InstitutionEntity updateHauptstandort(InstitutionEntity institution, InstitutionStandortEntity standort) {
 
-        //TODO longitude / latitude berechnen
+        var longlatList = standortService.findePointsByAdressString(standort.getAdresse());
+
+        if (longlatList == null || longlatList.size() != 1) {
+            throw new IllegalArgumentException("Die Adresse konnte nicht aufgelöst werden");
+        }
+
+        standort.setLatitude(longlatList.get(0).getLatitude());
+        standort.setLongitude(longlatList.get(0).getLongitude());
+
         standort = institutionStandortRepository.save(standort);
         institution.setHauptstandort(standort);
         return institutionRepository.save(institution);
@@ -33,10 +41,14 @@ public class InstitutionService {
 
     public InstitutionEntity standortHinzufuegen(InstitutionEntity institution, InstitutionStandortEntity standort) {
 
-        //TODO longitude / latitude berechnen
-        var longlat = standortService.findePointsByAdressString(standort.getAdresse());
+        var longlatList = standortService.findePointsByAdressString(standort.getAdresse());
 
-        // standort.setLatitude(longlat.ge);
+        if (longlatList == null || longlatList.size() != 1) {
+            throw new IllegalArgumentException("Die Adresse konnte nicht aufgelöst werden");
+        }
+
+        standort.setLatitude(longlatList.get(0).getLatitude());
+        standort.setLongitude(longlatList.get(0).getLongitude());
 
         standort = institutionStandortRepository.save(standort);
         institution.getStandorte().add(standort);

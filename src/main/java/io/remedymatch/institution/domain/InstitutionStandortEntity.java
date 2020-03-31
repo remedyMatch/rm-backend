@@ -45,7 +45,7 @@ public class InstitutionStandortEntity {
     private double latitude;
 
     public String getAdresse() {
-        return strasse + ", " + plz + ", " + ort + ", " + land;
+        return strasse + ", " + plz + " " + ort + ", " + land;
     }
 
 }

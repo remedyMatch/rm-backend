@@ -74,3 +74,7 @@ einen neuen Bedarf anzulegen. Hier sollten nun Beispiel-Kategorien und -Artikel 
 angeboten werden. Das Anlegen eines neuen Bedarfs sollte ebenso funktionieren.
 
 
+
+
+
+

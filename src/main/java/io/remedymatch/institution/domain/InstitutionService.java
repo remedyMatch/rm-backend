@@ -27,7 +27,7 @@ public class InstitutionService {
 
         var longlatList = standortService.findePointsByAdressString(standort.getAdresse());
 
-        if (longlatList == null || longlatList.size() != 1) {
+        if (longlatList == null || longlatList.size() == 0) {
             throw new IllegalArgumentException("Die Adresse konnte nicht aufgelöst werden");
         }
 
@@ -43,7 +43,7 @@ public class InstitutionService {
 
         var longlatList = standortService.findePointsByAdressString(standort.getAdresse());
 
-        if (longlatList == null || longlatList.size() != 1) {
+        if (longlatList == null || longlatList.size() == 0) {
             throw new IllegalArgumentException("Die Adresse konnte nicht aufgelöst werden");
         }
 

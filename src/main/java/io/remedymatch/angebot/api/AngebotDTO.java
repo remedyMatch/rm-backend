@@ -21,14 +21,15 @@ public class AngebotDTO {
     @NotNull
     private double anzahl;
 
-    private double rest;
-
     @NotNull
     private InstitutionStandortDTO standort;
 
-    private UUID institutionId;
-
+    @NotNull
     private String kommentar;
+
+    private double rest;
+
+    private UUID institutionId;
 
     private LocalDateTime haltbarkeit;
 

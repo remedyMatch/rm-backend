@@ -16,7 +16,6 @@ public class InstitutionService {
     public InstitutionEntity updateInstitution(InstitutionEntity institution) {
         val savedInstitution = institutionRepository.findById(institution.getId()).get();
         savedInstitution.setName(institution.getName());
-        savedInstitution.setStandorte(institution.getStandorte());
         savedInstitution.setTyp(institution.getTyp());
         return institutionRepository.save(savedInstitution);
     }

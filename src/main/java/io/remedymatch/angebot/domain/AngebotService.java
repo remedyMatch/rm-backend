@@ -113,7 +113,7 @@ public class AngebotService {
                 .status(AngebotAnfrageStatus.Offen)
                 .build();
 
-        anfrageRepository.save(anfrage);
+        anfrageRepository.update(anfrage);
 
         var variables = new HashMap<String, Object>();
         variables.put("institution", angebot.get().getInstitution().getId().toString());
@@ -125,22 +125,22 @@ public class AngebotService {
                 anfrage.getId().toString(),
                 variables);
         anfrage.setProzessInstanzId(prozessInstanzId);
-        anfrageRepository.save(anfrage);
+        anfrageRepository.update(anfrage);
     }
 
     @Transactional
     public void anfrageStornieren(String anfrageId) {
-        val anfrage = anfrageRepository.findById(UUID.fromString(anfrageId));
+        val anfrage = anfrageRepository.get(UUID.fromString(anfrageId));
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage nicht vorhanden");
         }
         anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
-        anfrageRepository.save(anfrage.get());
+        anfrageRepository.update(anfrage.get());
     }
 
     @Transactional
     public void anfrageAnnehmen(String anfrageId) {
-        val anfrage = anfrageRepository.findById(UUID.fromString(anfrageId));
+        val anfrage = anfrageRepository.get(UUID.fromString(anfrageId));
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage nicht vorhanden");
         }
@@ -153,7 +153,7 @@ public class AngebotService {
         // wenn die Anfrage größer als das Angebot ist
         if (anfrage.get().getAnzahl() > angebot.getAnzahl()) {
             anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
-            anfrageRepository.save(anfrage.get());
+            anfrageRepository.update(anfrage.get());
             throw new IllegalArgumentException("Nicht genügend Ware auf Lager");
         } else {
             if (anfrage.get().getAnzahl() == angebot.getAnzahl()) {
@@ -165,6 +165,6 @@ public class AngebotService {
         }
 
         angebotRepository.save(angebot);
-        anfrageRepository.save(anfrage.get());
+        anfrageRepository.update(anfrage.get());
     }
 }

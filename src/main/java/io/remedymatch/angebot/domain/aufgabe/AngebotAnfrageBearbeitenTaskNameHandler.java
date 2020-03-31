@@ -20,7 +20,7 @@ public class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibung
 
         String beschreibung = "";
 
-        val anfrage = anfrageRepository.findById(UUID.fromString(taskDTO.getObjektId()));
+        val anfrage = anfrageRepository.get(UUID.fromString(taskDTO.getObjektId()));
 
         var prefix = "Anfrage zu Angebot von ";
         var artikel = anfrage.get().getAngebot().getArtikel();

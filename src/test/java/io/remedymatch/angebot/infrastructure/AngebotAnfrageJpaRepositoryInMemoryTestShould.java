@@ -54,6 +54,19 @@ public class AngebotAnfrageJpaRepositoryInMemoryTestShould {
 	@Rollback(true)
 	@Transactional
 	@Test
+	@DisplayName("alle Anfragen fuer InstitutionAn Id zurueckliefern")
+	void alle_Anfragen_fuer_InstitutionAnId_zurueckliefern() {
+		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
+		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, 100));
+		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, 100));
+		entityManager.flush();
+
+		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionAn_Id(meinKrankenhaus.getId()));
+	}
+	
+	@Rollback(true)
+	@Transactional
+	@Test
 	@DisplayName("alle Anfragen fuer InstitutionVon zurueckliefern")
 	void alle_Anfragen_fuer_InstitutionVon_zurueckliefern() {
 		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
@@ -62,6 +75,19 @@ public class AngebotAnfrageJpaRepositoryInMemoryTestShould {
 		entityManager.flush();
 
 		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionVon(meinKrankenhaus));
+	}
+	
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("alle Anfragen fuer InstitutionVon Id zurueckliefern")
+	void alle_Anfragen_fuer_InstitutionVon_Id_zurueckliefern() {
+		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
+		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, 100));
+		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, 100));
+		entityManager.flush();
+
+		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionVon_Id(meinKrankenhaus.getId()));
 	}
 
 	/* help methods */

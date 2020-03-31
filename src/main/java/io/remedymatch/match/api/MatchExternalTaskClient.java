@@ -51,7 +51,7 @@ public class MatchExternalTaskClient {
 
                     val anfrageId = externalTask.getVariable("objektId").toString();
 
-                    val match = matchService.matchAusAngebotErstellen(angebotAnfrageRepository.findById(UUID.fromString(anfrageId)).get());
+                    val match = matchService.matchAusAngebotErstellen(angebotAnfrageRepository.get(UUID.fromString(anfrageId)).get());
 
                     val variables = new HashMap<String, Object>();
                     variables.put("lieferant", match.getInstitutionVon().getId().toString());

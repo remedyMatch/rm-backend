@@ -106,7 +106,7 @@ public class InstitutionController {
     public ResponseEntity<List<AnfrageDTO>> gestellteBedarfAnfragen() {
         val person = personRepository.findByUsername(userProvider.getUserName());
         val bedarfAnfragen = bedarfAnfrageRepository.findAllByInstitutionVon(person.getInstitution());
-        val angebotAnfragen = angebotAnfrageRepository.findAllByInstitutionVon(person.getInstitution());
+        val angebotAnfragen = angebotAnfrageRepository.getAngeboteFuerInstitutionVon(person.getInstitution().getId());
         val anfrageDTOs = bedarfAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList());
         anfrageDTOs.addAll(angebotAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
 
@@ -122,7 +122,7 @@ public class InstitutionController {
     public ResponseEntity<List<AnfrageDTO>> erhalteneBedarfAnfragen() {
         val person = personRepository.findByUsername(userProvider.getUserName());
         val bedarfAnfragen = bedarfAnfrageRepository.findAllByInstitutionAn(person.getInstitution());
-        val angebotAnfragen = angebotAnfrageRepository.findAllByInstitutionAn(person.getInstitution());
+        val angebotAnfragen = angebotAnfrageRepository.getAngeboteFuerInstitutionAn(person.getInstitution().getId());
         val anfrageDTOs = bedarfAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList());
         anfrageDTOs.addAll(angebotAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
 

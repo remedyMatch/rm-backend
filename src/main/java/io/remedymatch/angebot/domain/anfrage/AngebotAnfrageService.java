@@ -16,29 +16,32 @@ import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.ANFRAGE_
 @Component
 public class AngebotAnfrageService {
 
-    private final AngebotAnfrageRepository anfrageRepository;
-    private final EngineClient engineClient;
+	private final AngebotAnfrageRepository anfrageRepository;
+	private final EngineClient engineClient;
 
-    @Transactional
-    public void anfrageStornieren(String anfrageId) {
-        this.anfrageStornieren(anfrageId, new HashMap<>());
-    }
+	@Transactional
+	public void anfrageStornieren(String anfrageId) {
+		this.anfrageStornieren(anfrageId, new HashMap<>());
+	}
 
-    @Transactional
-    public void anfrageStornieren(String anfrageId, Map<String, Object> variables) {
-        val anfrage = anfrageRepository.findById(UUID.fromString(anfrageId));
+	@Transactional
+	public void anfrageStornieren(String anfrageId, Map<String, Object> variables) {
+		val anfrage = anfrageRepository.get(UUID.fromString(anfrageId));
 
-        if (anfrage.isEmpty())
-            throw new IllegalArgumentException("Anfrage ist nicht vorhanden und kann deshalb nicht storniert werden");
+		if (anfrage.isEmpty()) {
+			throw new IllegalArgumentException("Anfrage ist nicht vorhanden und kann deshalb nicht storniert werden");
+		}
 
-        if (!anfrage.get().getStatus().equals(AngebotAnfrageStatus.Offen)) {
-            throw new IllegalArgumentException("Eine Anfrage, die nicht im Status offen ist, kann nicht storniert werden");
-        }
+		AngebotAnfrageEntity angebotAnfrage = anfrage.get();
+		if (!AngebotAnfrageStatus.Offen.equals(angebotAnfrage.getStatus())) {
+			throw new IllegalArgumentException(
+					"Eine Anfrage, die nicht im Status offen ist, kann nicht storniert werden");
+		}
 
-        anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
-        anfrageRepository.save(anfrage.get());
+		angebotAnfrage.setStatus(AngebotAnfrageStatus.Storniert);
+		anfrageRepository.update(angebotAnfrage);
 
-        engineClient.messageKorrelieren(anfrage.get().getProzessInstanzId(), ANFRAGE_STORNIEREN_MESSAGE, variables);
-    }
+		engineClient.messageKorrelieren(angebotAnfrage.getProzessInstanzId(), ANFRAGE_STORNIEREN_MESSAGE, variables);
+	}
 
 }

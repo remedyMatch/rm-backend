@@ -1,6 +1,7 @@
 package io.remedymatch.shared;
 
 import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.match.domain.MatchStandortEntity;
 import lombok.val;
 
 import java.util.Map;
@@ -43,6 +44,10 @@ public class GeoCalc {
     }
 
     public static double kilometerBerechnen(InstitutionStandortEntity von, InstitutionStandortEntity nach) {
+        return kilometerBerechnen(von.getLatitude(), von.getLongitude(), nach.getLatitude(), nach.getLongitude());
+    }
+
+    public static double kilometerBerechnen(MatchStandortEntity von, MatchStandortEntity nach) {
         return kilometerBerechnen(von.getLatitude(), von.getLongitude(), nach.getLatitude(), nach.getLongitude());
     }
 

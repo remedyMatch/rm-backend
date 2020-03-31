@@ -1,5 +1,6 @@
 package io.remedymatch.bedarf.api;
 
+import io.remedymatch.bedarf.domain.BedarfRepository;
 import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageService;
@@ -18,7 +19,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static io.remedymatch.bedarf.api.BedarfMapper.mapToDTO;
 import static io.remedymatch.bedarf.api.BedarfMapper.mapToEntity;
@@ -33,12 +33,13 @@ public class BedarfController {
     private final PersonRepository personRepository;
     private final BedarfAnfrageService bedarfAnfrageService;
     private final BedarfAnfrageRepository bedarfAnfrageRepository;
+    private final BedarfRepository bedarfRepository;
 
     @GetMapping()
     public ResponseEntity<List<BedarfDTO>> bedarfeLaden() {
         val user = personRepository.findByUsername(userProvider.getUserName());
 
-        val bedarfe = StreamSupport.stream(bedarfService.alleBedarfeLaden().spliterator(), false)
+        val bedarfe = bedarfRepository.findAllbyBedientFalse().stream()
                 .filter(bedarf -> !bedarf.isBedient()).map(BedarfMapper::mapToDTO).collect(Collectors.toList());
 
         bedarfe.forEach(b -> {

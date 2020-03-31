@@ -12,12 +12,20 @@ import java.util.UUID;
 public class MatchDTO {
 
     private UUID id;
+
     private InstitutionDTO institutionVon;
+
     private MatchStandortDTO standortVon;
+
     private MatchStandortDTO standortAn;
+
     private InstitutionDTO institutionAn;
+
     private UUID anfrageId;
+
     private MatchStatus status;
+
     private String prozessInstanzId;
 
+    private double entfernung;
 }

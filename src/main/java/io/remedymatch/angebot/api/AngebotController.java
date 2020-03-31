@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.api;
 
+import io.remedymatch.angebot.domain.AngebotRepository;
 import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.person.domain.PersonRepository;
@@ -14,7 +15,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static io.remedymatch.angebot.api.AngebotMapper.mapToEntity;
 
@@ -27,13 +27,14 @@ public class AngebotController {
     private final AngebotService angebotService;
     private final PersonRepository personRepository;
     private final UserProvider userProvider;
+    private final AngebotRepository angebotRepository;
 
     @GetMapping
     public ResponseEntity<List<AngebotDTO>> getAll() {
 
         val user = personRepository.findByUsername(userProvider.getUserName());
 
-        val angebote = StreamSupport.stream(angebotService.alleAngeboteLaden().spliterator(), false)
+        val angebote = angebotRepository.findAllbyBedientFalse().stream()
                 .filter(angebot -> !angebot.isBedient()).map(AngebotMapper::mapToDTO).collect(Collectors.toList());
 
         angebote.forEach(a -> {

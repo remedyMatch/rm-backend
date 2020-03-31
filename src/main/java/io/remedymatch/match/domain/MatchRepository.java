@@ -14,6 +14,8 @@ public interface MatchRepository extends CrudRepository<MatchEntity, UUID> {
     List<MatchEntity> findAllByInstitutionVon(InstitutionEntity institutionVon);
 
     List<MatchEntity> findAllByInstitutionAn(InstitutionEntity institutionAn);
+
+    List<MatchEntity> finAllByStatus(MatchStatus status);
 }
 
 

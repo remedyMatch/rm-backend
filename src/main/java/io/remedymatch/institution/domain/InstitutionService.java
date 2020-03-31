@@ -42,7 +42,7 @@ public class InstitutionService {
         if (standort.isEmpty()) {
             throw new IllegalArgumentException("Standort kann nicht gelöscht werden, da dieser nicht vorhanden ist.");
         }
-        institution.getStandorte().remove(standort);
+        institution.getStandorte().remove(standort.get());
         val inst = institutionRepository.save(institution);
         institutionStandortRepository.delete(standort.get());
         return inst;

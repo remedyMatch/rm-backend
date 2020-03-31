@@ -21,11 +21,17 @@ public class InstitutionService {
     }
 
     public InstitutionEntity updateHauptstandort(InstitutionEntity institution, InstitutionStandortEntity standort) {
+
+        //TODO longitude / latitude berechnen
+
         institution.setHauptstandort(standort);
         return institutionRepository.save(institution);
     }
 
     public InstitutionEntity standortHinzufuegen(InstitutionEntity institution, InstitutionStandortEntity standort) {
+
+        //TODO longitude / latitude berechnen
+
         institution.getStandorte().add(standort);
         return institutionRepository.save(institution);
     }

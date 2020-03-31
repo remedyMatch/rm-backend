@@ -1,4 +1,4 @@
-package io.remedymatch.standort.geocoding.impl.locationiq.domain;
+package io.remedymatch.geodaten.geocoding.impl.locationiq.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

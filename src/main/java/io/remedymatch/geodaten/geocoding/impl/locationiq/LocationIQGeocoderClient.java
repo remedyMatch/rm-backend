@@ -1,11 +1,11 @@
-package io.remedymatch.standort.geocoding.impl.locationiq;
+package io.remedymatch.geodaten.geocoding.impl.locationiq;
 
+import io.remedymatch.geodaten.geocoding.Geocoder;
+import io.remedymatch.geodaten.geocoding.domain.Adresse;
+import io.remedymatch.geodaten.geocoding.domain.Point;
+import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Query;
+import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Response;
 import io.remedymatch.properties.RmBackendProperties;
-import io.remedymatch.standort.geocoding.Geocoder;
-import io.remedymatch.standort.geocoding.domain.Adresse;
-import io.remedymatch.standort.geocoding.domain.Point;
-import io.remedymatch.standort.geocoding.impl.locationiq.domain.Query;
-import io.remedymatch.standort.geocoding.impl.locationiq.domain.Response;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;

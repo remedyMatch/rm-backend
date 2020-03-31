@@ -1,6 +1,6 @@
-package io.remedymatch.standort.geocoding.impl.locationiq.domain;
+package io.remedymatch.geodaten.geocoding.impl.locationiq.domain;
 
-import io.remedymatch.standort.geocoding.domain.Adresse;
+import io.remedymatch.geodaten.geocoding.domain.Adresse;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;

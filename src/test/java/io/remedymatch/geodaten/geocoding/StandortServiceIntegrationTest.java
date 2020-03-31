@@ -1,4 +1,4 @@
-package io.remedymatch.standort.geocoding;
+package io.remedymatch.geodaten.geocoding;
 
 //
 //@ExtendWith(SpringExtension.class)

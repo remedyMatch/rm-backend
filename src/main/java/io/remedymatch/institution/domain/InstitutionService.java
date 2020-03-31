@@ -1,6 +1,6 @@
 package io.remedymatch.institution.domain;
 
-import io.remedymatch.standort.api.StandortService;
+import io.remedymatch.geodaten.api.StandortService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;

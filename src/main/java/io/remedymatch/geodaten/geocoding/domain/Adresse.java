@@ -1,4 +1,4 @@
-package io.remedymatch.standort.geocoding.domain;
+package io.remedymatch.geodaten.geocoding.domain;
 
 import lombok.Getter;
 import lombok.Setter;

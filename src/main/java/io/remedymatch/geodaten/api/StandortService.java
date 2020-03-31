@@ -1,15 +1,15 @@
-package io.remedymatch.standort.api;
+package io.remedymatch.geodaten.api;
 
-import io.remedymatch.standort.geocoding.domain.Adresse;
-import io.remedymatch.standort.geocoding.Geocoder;
-import io.remedymatch.standort.geocoding.domain.Point;
+import io.remedymatch.geodaten.geocoding.Geocoder;
+import io.remedymatch.geodaten.geocoding.domain.Adresse;
+import io.remedymatch.geodaten.geocoding.domain.Point;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @AllArgsConstructor
-@Component
+@Service
 public class StandortService {
 
     private final Geocoder geocoder;

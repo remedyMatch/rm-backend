@@ -72,3 +72,12 @@ mit dem profile "test" gestartet, sollten nun auch Beispiel-Daten in der Applika
 Verfügung stehen. Dies kann einfach getestet werden indem man über den Bedarf-Button versucht 
 einen neuen Bedarf anzulegen. Hier sollten nun Beispiel-Kategorien und -Artikel zur Auswahl 
 angeboten werden. Das Anlegen eines neuen Bedarfs sollte ebenso funktionieren.
+
+
+
+
+
+
+
+
+

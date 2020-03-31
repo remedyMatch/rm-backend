@@ -51,7 +51,7 @@ public class InstitutionController {
             return ResponseEntity.notFound().build();
         }
 
-        institutionService.updateInstitution(savedInstitution.get());
+        institutionService.updateInstitution(InstitutionMapper.mapToEntity(institution));
         return ResponseEntity.ok().build();
     }
 

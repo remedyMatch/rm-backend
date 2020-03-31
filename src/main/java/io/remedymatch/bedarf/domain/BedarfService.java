@@ -82,6 +82,7 @@ public class BedarfService {
                 .anzahl(anzahl)
                 .status(BedarfAnfrageStatus.Offen)
                 .build();
+
         bedarfAnfrageRepository.save(anfrage);
 
         var variables = new HashMap<String, Object>();

@@ -21,16 +21,13 @@ import lombok.val;
 @AllArgsConstructor
 @Service
 public class AngebotService {
-
 	private final AngebotRepository angebotRepository;
 	private final AngebotAnfrageRepository anfrageRepository;
 	private final AngebotAnfrageService anfrageService;
 	private final EngineClient engineClient;
 
 	@Transactional
-	public void angebotMelden(//
-			final Angebot angebot, //
-			final InstitutionEntity institutionEntity) {
+	public void angebotMelden(Angebot angebot, InstitutionEntity institutionEntity) {
 		angebot.setInstitution(institutionEntity);
 		angebot.setRest(angebot.getAnzahl());
 		angebotRepository.add(angebot);
@@ -64,7 +61,7 @@ public class AngebotService {
 			final InstitutionEntity anfrager, //
 			final String kommentar, //
 			final UUID standortId, //
-			final double anzahl) {
+			double anzahl) {
 
 		val angebot = angebotRepository.get(angebotId);
 
@@ -88,7 +85,7 @@ public class AngebotService {
 			throw new IllegalArgumentException("Der ausgewählte Standort konnte nicht geunden werden");
 		}
 
-		val anfrage = AngebotAnfrage.builder() //
+		var anfrage = AngebotAnfrage.builder() //
 				.institutionVon(anfrager) //
 				.institutionAn(angebot.get().getInstitution()) //
 				.kommentar(kommentar) //
@@ -99,7 +96,7 @@ public class AngebotService {
 				.status(AngebotAnfrageStatus.Offen) //
 				.build();
 
-		anfrageRepository.update(anfrage);
+		anfrage = anfrageRepository.update(anfrage);
 
 		var variables = new HashMap<String, Object>();
 		variables.put("institution", angebot.get().getInstitution().getId().toString());

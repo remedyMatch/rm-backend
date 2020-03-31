@@ -23,6 +23,9 @@ public class InstitutionStandortEntity {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID id;
 
+    @Column(length = 60)
+    private String name;
+
     @Column
     private String plz;
 

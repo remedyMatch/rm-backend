@@ -10,7 +10,11 @@ import java.util.UUID;
 @Builder
 public class InstitutionStandortDTO {
 
+
     private UUID id;
+
+    @NotNull
+    private String name;
 
     @NotNull
     private String plz;
@@ -27,6 +31,4 @@ public class InstitutionStandortDTO {
     private double longitude;
 
     private double latitude;
-
-    private double entfernung;
 }

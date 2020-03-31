@@ -11,6 +11,7 @@ import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.institution.domain.InstitutionService;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.person.domain.PersonRepository;
+import io.remedymatch.shared.GeoCalc;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -108,6 +109,11 @@ public class InstitutionController {
         val angebotAnfragen = angebotAnfrageRepository.findAllByInstitutionVon(person.getInstitution());
         val anfrageDTOs = bedarfAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList());
         anfrageDTOs.addAll(angebotAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
+
+        anfrageDTOs.forEach(a -> {
+            var entfernung = GeoCalc.kilometerBerechnen(InstitutionStandortMapper.mapToEntity(a.getStandortVon()), InstitutionStandortMapper.mapToEntity(a.getStandortAn()));
+            a.setEntfernung(entfernung);
+        });
 
         return ResponseEntity.ok(anfrageDTOs);
     }

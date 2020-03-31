@@ -39,6 +39,6 @@ io:
     backend:
       engine-url: http://localhost:8085
       geocoderServicebaseUrl: https://eu1.locationiq.com/v1
-      geocoderServiceApiKey: unset
+      geocoderServiceApiKey: code
 
 spring.security.oauth2.resourceserver.jwt.issuer-uri: http://localhost:8090/auth/realms/master

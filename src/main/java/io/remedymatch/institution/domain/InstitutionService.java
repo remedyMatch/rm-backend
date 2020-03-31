@@ -1,5 +1,6 @@
 package io.remedymatch.institution.domain;
 
+import io.remedymatch.standort.api.StandortService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ public class InstitutionService {
 
     private final InstitutionRepository institutionRepository;
     private final InstitutionStandortRepository institutionStandortRepository;
+    private final StandortService standortService;
 
 
     public InstitutionEntity updateInstitution(InstitutionEntity institution) {
@@ -32,6 +34,10 @@ public class InstitutionService {
     public InstitutionEntity standortHinzufuegen(InstitutionEntity institution, InstitutionStandortEntity standort) {
 
         //TODO longitude / latitude berechnen
+        var longlat = standortService.findePointsByAdressString(standort.getAdresse());
+
+        // standort.setLatitude(longlat.ge);
+
         standort = institutionStandortRepository.save(standort);
         institution.getStandorte().add(standort);
         return institutionRepository.save(institution);

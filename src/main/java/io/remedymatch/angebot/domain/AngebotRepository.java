@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface AngebotRepository extends CrudRepository<AngebotEntity, UUID> {
 
-    List<AngebotEntity> findAllbyBedientFalse();
+    List<AngebotEntity> findAllByBedientFalse();
 
 }
 

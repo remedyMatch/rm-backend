@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface BedarfRepository extends CrudRepository<BedarfEntity, UUID> {
-    List<BedarfEntity> findAllbyBedientFalse();
+    List<BedarfEntity> findAllByBedientFalse();
 }
 
 

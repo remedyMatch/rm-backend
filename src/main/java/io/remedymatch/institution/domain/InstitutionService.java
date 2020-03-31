@@ -11,6 +11,7 @@ import java.util.UUID;
 public class InstitutionService {
 
     private final InstitutionRepository institutionRepository;
+    private final InstitutionStandortRepository institutionStandortRepository;
 
 
     public InstitutionEntity updateInstitution(InstitutionEntity institution) {
@@ -23,7 +24,7 @@ public class InstitutionService {
     public InstitutionEntity updateHauptstandort(InstitutionEntity institution, InstitutionStandortEntity standort) {
 
         //TODO longitude / latitude berechnen
-
+        standort = institutionStandortRepository.save(standort);
         institution.setHauptstandort(standort);
         return institutionRepository.save(institution);
     }
@@ -31,7 +32,7 @@ public class InstitutionService {
     public InstitutionEntity standortHinzufuegen(InstitutionEntity institution, InstitutionStandortEntity standort) {
 
         //TODO longitude / latitude berechnen
-
+        standort = institutionStandortRepository.save(standort);
         institution.getStandorte().add(standort);
         return institutionRepository.save(institution);
     }
@@ -41,6 +42,8 @@ public class InstitutionService {
         if (standort.isEmpty()) {
             throw new IllegalArgumentException("Standort kann nicht gelöscht werden, da dieser nicht vorhanden ist.");
         }
+
+        institutionStandortRepository.delete(standort.get());
         institution.getStandorte().remove(standort);
         return institutionRepository.save(institution);
     }

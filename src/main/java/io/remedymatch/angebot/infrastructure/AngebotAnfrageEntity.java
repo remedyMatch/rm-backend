@@ -1,5 +1,6 @@
-package io.remedymatch.angebot.domain.anfrage;
+package io.remedymatch.angebot.infrastructure;
 
+import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
 import io.remedymatch.angebot.domain.AngebotEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionStandortEntity;

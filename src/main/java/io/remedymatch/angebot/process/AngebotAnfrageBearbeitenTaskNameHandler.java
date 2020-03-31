@@ -1,6 +1,6 @@
-package io.remedymatch.angebot.domain.aufgabe;
+package io.remedymatch.angebot.process;
 
-import io.remedymatch.angebot.domain.anfrage.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibung
 
         String beschreibung = "";
 
-        val anfrage = anfrageRepository.findById(UUID.fromString(taskDTO.getObjektId()));
+        val anfrage = anfrageRepository.get(UUID.fromString(taskDTO.getObjektId()));
 
         var prefix = "Anfrage zu Angebot von ";
         var artikel = anfrage.get().getAngebot().getArtikel();

@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.domain;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import io.remedymatch.institution.domain.InstitutionEntity;
@@ -29,7 +30,7 @@ public class AngebotAnfrage {
 	private InstitutionStandortEntity standortVon;
 	private InstitutionStandortEntity standortAn;
 	private String prozessInstanzId;
-	private double anzahl;
+	private BigDecimal anzahl;
 	private AngebotAnfrageStatus status;
 
 }

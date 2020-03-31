@@ -1,5 +1,7 @@
 package io.remedymatch.institution.api;
 
+import java.math.BigDecimal;
+
 import io.remedymatch.angebot.domain.AngebotAnfrage;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
 
@@ -15,7 +17,7 @@ public class AnfrageMapper {
                 .standortAn(InstitutionStandortMapper.mapToDTO(entity.getStandortAn()))
                 .standortVon(InstitutionStandortMapper.mapToDTO(entity.getStandortVon()))
                 .status(entity.getStatus().toString())
-                .anzahl(entity.getAnzahl())
+                .anzahl(BigDecimal.valueOf(entity.getAnzahl()))
                 .prozessInstanzId(entity.getProzessInstanzId())
                 .build();
     }

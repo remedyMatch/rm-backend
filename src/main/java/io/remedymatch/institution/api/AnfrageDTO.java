@@ -1,9 +1,10 @@
 package io.remedymatch.institution.api;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.UUID;
 
 @Data
 @Builder
@@ -29,7 +30,7 @@ public class AnfrageDTO {
 
     private String prozessInstanzId;
 
-    private double anzahl;
+    private BigDecimal anzahl;
 
     private String status;
 

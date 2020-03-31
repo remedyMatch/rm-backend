@@ -1,6 +1,5 @@
 package io.remedymatch.bedarf.api;
 
-import io.remedymatch.institution.api.InstitutionStandortDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,7 +16,7 @@ public class BedarfBedienenRequest {
     private String kommentar;
 
     @NotNull
-    private InstitutionStandortDTO standort;
+    private UUID standortId;
 
     @NotNull
     private double anzahl;

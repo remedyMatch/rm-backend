@@ -5,7 +5,6 @@ import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageService;
 import io.remedymatch.institution.api.AnfrageDTO;
 import io.remedymatch.institution.api.AnfrageMapper;
-import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
@@ -71,7 +70,7 @@ public class BedarfController {
                 request.getBedarfId(),
                 user.getInstitution(),
                 request.getKommentar(),
-                InstitutionStandortMapper.mapToEntity(request.getStandort()),
+                request.getStandortId(),
                 request.getAnzahl());
         return ResponseEntity.ok().build();
     }

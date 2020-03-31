@@ -42,6 +42,4 @@ public class InstitutionEntity {
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<InstitutionStandortEntity> standorte;
-
-
 }

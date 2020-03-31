@@ -46,7 +46,6 @@ public class InstitutionController {
         }
 
         var savedInstitution = institutionsRepository.findById(institution.getId());
-
         if (savedInstitution.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -72,7 +71,6 @@ public class InstitutionController {
         val person = personRepository.findByUsername(userProvider.getUserName());
         return ResponseEntity.ok(institutionService.standortEntfernen(person.getInstitution(), UUID.fromString(standortId)));
     }
-
 
     @GetMapping("/typ")
     public ResponseEntity<List<String>> typenLaden() {

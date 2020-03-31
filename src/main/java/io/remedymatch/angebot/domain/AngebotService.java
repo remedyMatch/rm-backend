@@ -78,12 +78,28 @@ public class AngebotService {
     }
 
     @Transactional
-    public void starteAnfrage(UUID angebotId, InstitutionEntity anfrager, String kommentar, InstitutionStandortEntity standort, double anzahl) {
+    public void starteAnfrage(UUID angebotId, InstitutionEntity anfrager, String kommentar, UUID standortId, double anzahl) {
 
         val angebot = angebotRepository.findById(angebotId);
 
         if (angebot.isEmpty()) {
             throw new IllegalArgumentException("Angebot ist nicht vorhanden");
+        }
+
+        InstitutionStandortEntity standort = null;
+
+        if (anfrager.getHauptstandort().getId().equals(standortId)) {
+            standort = anfrager.getHauptstandort();
+        } else {
+            var foundStandort = anfrager.getStandorte().stream().filter(s -> s.getId().equals(standortId)).findFirst();
+
+            if (foundStandort.isPresent()) {
+                standort = foundStandort.get();
+            }
+        }
+
+        if (standort == null) {
+            throw new IllegalArgumentException("Der ausgewählte Standort konnte nicht geunden werden");
         }
 
         val anfrage = AngebotAnfrageEntity.builder()

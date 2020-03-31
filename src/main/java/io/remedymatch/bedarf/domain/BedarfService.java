@@ -48,9 +48,25 @@ public class BedarfService {
     }
 
     @Transactional
-    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar, InstitutionStandortEntity standort, double anzahl) {
+    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar, UUID standortId, double anzahl) {
 
         val bedarf = bedarfRepository.findById(bedarfId);
+
+        InstitutionStandortEntity standort = null;
+
+        if (anfrager.getHauptstandort().getId().equals(standortId)) {
+            standort = anfrager.getHauptstandort();
+        } else {
+            var foundStandort = anfrager.getStandorte().stream().filter(s -> s.getId().equals(standortId)).findFirst();
+
+            if (foundStandort.isPresent()) {
+                standort = foundStandort.get();
+            }
+        }
+
+        if (standort == null) {
+            throw new IllegalArgumentException("Der ausgewählte Standort konnte nicht geunden werden");
+        }
 
         if (bedarf.isEmpty()) {
             throw new IllegalArgumentException("Bedarf ist nicht vorhanden");

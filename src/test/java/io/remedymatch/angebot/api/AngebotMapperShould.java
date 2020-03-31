@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.angebot.domain.Angebot;
+import io.remedymatch.angebot.domain.AngebotId;
 import io.remedymatch.artikel.api.ArtikelDTO;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.api.InstitutionStandortDTO;
@@ -22,7 +23,7 @@ import io.remedymatch.institution.domain.InstitutionStandortEntity;
 @DisplayName("AngebotMapper soll")
 public class AngebotMapperShould {
 
-	private static final UUID ANGEBOT_ID = UUID.randomUUID();
+	private static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
 	private static final BigDecimal ANZAHL = BigDecimal.valueOf(120.0);
 	private static final BigDecimal REST = BigDecimal.valueOf(120.0);
 	private static final UUID ARTIKEL_ID = UUID.randomUUID();
@@ -82,7 +83,7 @@ public class AngebotMapperShould {
 
 	private AngebotDTO dto() {
 		return AngebotDTO.builder() //
-				.id(ANGEBOT_ID) //
+				.id(ANGEBOT_ID.getValue()) //
 				.anzahl(ANZAHL) //
 				.rest(REST) //
 				.artikel(ARTIKEL_DTO) //

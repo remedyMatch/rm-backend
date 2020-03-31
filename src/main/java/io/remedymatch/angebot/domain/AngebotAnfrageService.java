@@ -4,7 +4,6 @@ import static io.remedymatch.angebot.api.AngebotAnfrageProzessConstants.ANFRAGE_
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +20,14 @@ public class AngebotAnfrageService {
 	private final EngineClient engineClient;
 
 	@Transactional
-	public void anfrageStornieren(String anfrageId) {
-		this.anfrageStornieren(anfrageId, new HashMap<>());
+	public void anfrageStornieren(final AngebotAnfrageId anfrageId) {
+		anfrageStornieren(anfrageId, new HashMap<>());
 	}
 
-	@Transactional
-	public void anfrageStornieren(String anfrageId, Map<String, Object> variables) {
-		val anfrage = anfrageRepository.get(UUID.fromString(anfrageId));
+	private void anfrageStornieren(//
+			final AngebotAnfrageId anfrageId, //
+			final Map<String, Object> variables) {
+		val anfrage = anfrageRepository.get(anfrageId);
 
 		if (anfrage.isEmpty()) {
 			throw new IllegalArgumentException("Anfrage ist nicht vorhanden und kann deshalb nicht storniert werden");
@@ -44,5 +44,4 @@ public class AngebotAnfrageService {
 
 		engineClient.messageKorrelieren(angebotAnfrage.getProzessInstanzId(), ANFRAGE_STORNIEREN_MESSAGE, variables);
 	}
-
 }

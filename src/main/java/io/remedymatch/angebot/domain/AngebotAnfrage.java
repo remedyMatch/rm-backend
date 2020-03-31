@@ -1,7 +1,6 @@
 package io.remedymatch.angebot.domain;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionStandortEntity;
@@ -21,7 +20,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 public class AngebotAnfrage {
-	private UUID id;
+	private AngebotAnfrageId id;
 	private String kommentar;
 	private InstitutionEntity institutionVon;
 	private InstitutionEntity institutionAn;

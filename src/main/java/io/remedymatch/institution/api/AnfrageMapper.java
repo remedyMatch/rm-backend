@@ -24,11 +24,11 @@ public class AnfrageMapper {
 
     public static AnfrageDTO mapToDTO(AngebotAnfrage angebotAnfrage) {
         return AnfrageDTO.builder()
-                .id(angebotAnfrage.getId())
+                .id(angebotAnfrage.getId().getValue())
                 .kommentar(angebotAnfrage.getKommentar())
                 .institutionAn(InstitutionMapper.mapToDTO(angebotAnfrage.getInstitutionAn()))
                 .institutionVon(InstitutionMapper.mapToDTO(angebotAnfrage.getInstitutionVon()))
-                .bedarfId(angebotAnfrage.getAngebot() != null ? angebotAnfrage.getAngebot().getId() : null)
+                .bedarfId(angebotAnfrage.getAngebot() != null ? angebotAnfrage.getAngebot().getId().getValue() : null)
                 .standortAn(InstitutionStandortMapper.mapToDTO(angebotAnfrage.getStandortAn()))
                 .standortVon(InstitutionStandortMapper.mapToDTO(angebotAnfrage.getStandortVon()))
                 .status(angebotAnfrage.getStatus().toString())

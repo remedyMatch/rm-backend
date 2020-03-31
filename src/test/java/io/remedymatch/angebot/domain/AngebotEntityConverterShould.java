@@ -23,7 +23,7 @@ import io.remedymatch.institution.domain.InstitutionStandortEntity;
 @DisplayName("AngebotEntityConverter soll")
 public class AngebotEntityConverterShould {
 
-	private static final UUID ANGEBOT_ID = UUID.randomUUID();
+	private static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
 	private static final BigDecimal ANZAHL = BigDecimal.valueOf(120.0);
 	private static final BigDecimal REST = BigDecimal.valueOf(120.0);
 	private static final ArtikelEntity ARTIKEL = ArtikelEntity.builder().id(UUID.randomUUID()).build();
@@ -36,14 +36,14 @@ public class AngebotEntityConverterShould {
 	private static final boolean MEDIZINISCH = true;
 	private static final String KOMMENTAR = "Kommentar";
 	private static final boolean BEDIENT = false;
-	private static final UUID ANFRAGE_ID = UUID.randomUUID();
+	private static final AngebotAnfrageId ANFRAGE_ID = new AngebotAnfrageId(UUID.randomUUID());
 	private static final AngebotAnfrage ANFRAGE = AngebotAnfrage.builder().id(ANFRAGE_ID).build();
-	private static final AngebotAnfrageEntity ANFRAGE_ENTITY = AngebotAnfrageEntity.builder().id(ANFRAGE_ID).build();
+	private static final AngebotAnfrageEntity ANFRAGE_ENTITY = AngebotAnfrageEntity.builder().id(ANFRAGE_ID.getValue()).build();
 
 	@Test
 	@DisplayName("Entity in Domain Objekt konvertieren")
 	void entity_in_Domain_Objekt_konvertieren() {
-		assertEquals(angebot(), AngebotEntityConverter.convert(entity()));
+		assertEquals(angebot(true), AngebotEntityConverter.convert(entity(true)));
 	}
 
 	@Test
@@ -53,20 +53,26 @@ public class AngebotEntityConverterShould {
 	}
 
 	@Test
-	@DisplayName("Domain Objekt in Entity konvertieren")
-	void domain_Objekt_in_Entity_konvertieren() {
-		assertEquals(entity(), AngebotEntityConverter.convert(angebot()));
+	@DisplayName("Domain Objekt ohne Id in Entity konvertieren")
+	void domain_Objekt_ohne_Id_in_Entity_konvertieren() {
+		assertEquals(entity(false), AngebotEntityConverter.convert(angebot(false)));
 	}
 
+	@Test
+	@DisplayName("Domain Objekt mit Id in Entity konvertieren")
+	void domain_Objekt_mit_Id_in_Entity_konvertieren() {
+		assertEquals(entity(true), AngebotEntityConverter.convert(angebot(true)));
+	}
+	
 	@Test
 	@DisplayName("null Domain Objekt in null Entity konvertieren")
 	void null_domain_Objekt_in_Entity_konvertieren() {
 		assertNull(AngebotEntityConverter.convert((Angebot) null));
 	}
 
-	private Angebot angebot() {
+	private Angebot angebot(boolean mitId) {
 		return Angebot.builder() //
-				.id(ANGEBOT_ID) //
+				.id(mitId ? ANGEBOT_ID : null) //
 				.anzahl(ANZAHL) //
 				.rest(REST) //
 				.artikel(ARTIKEL) //
@@ -82,9 +88,9 @@ public class AngebotEntityConverterShould {
 				.build();
 	}
 
-	private AngebotEntity entity() {
+	private AngebotEntity entity(boolean mitId) {
 		return AngebotEntity.builder() //
-				.id(ANGEBOT_ID) //
+				.id(mitId ? ANGEBOT_ID.getValue() : null) //
 				.anzahl(ANZAHL) //
 				.rest(REST) //
 				.artikel(ARTIKEL) //

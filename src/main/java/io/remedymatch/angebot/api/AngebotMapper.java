@@ -3,19 +3,22 @@ package io.remedymatch.angebot.api;
 import static io.remedymatch.artikel.api.ArtikelMapper.getArticleDTO;
 import static io.remedymatch.artikel.api.ArtikelMapper.getArticleEntity;
 
+import java.util.UUID;
+
 import io.remedymatch.angebot.domain.Angebot;
+import io.remedymatch.angebot.domain.AngebotId;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
 
 class AngebotMapper {
 
-    static AngebotDTO mapToDto(Angebot angebot) {
+    static AngebotDTO mapToDto(final Angebot angebot) {
     	if (angebot == null)
     	{
     		return null;
     	}
     	
         var builder = AngebotDTO.builder()
-                .id(angebot.getId())
+                .id(angebot.getId().getValue())
                 .rest(angebot.getRest())
                 .anzahl(angebot.getAnzahl())
                 .artikel(getArticleDTO(angebot.getArtikel()))
@@ -33,14 +36,14 @@ class AngebotMapper {
         return builder.build();
     }
 
-    static Angebot mapToAngebot(AngebotDTO dto) {
+    static Angebot mapToAngebot(final AngebotDTO dto) {
     	if (dto == null)
     	{
     		return null;
     	}
     	
         var builder = Angebot.builder()
-                .id(dto.getId())
+                .id(maptToAngebotId(dto.getId()))
                 .rest(dto.getRest())
                 .anzahl(dto.getAnzahl())
                 .artikel(getArticleEntity(dto.getArtikel()))
@@ -52,5 +55,15 @@ class AngebotMapper {
                 .bedient(dto.isBedient())
                 .kommentar(dto.getKommentar());
         return builder.build();
+    }
+    
+    static AngebotId maptToAngebotId(final String angebotId)
+    {
+    	return maptToAngebotId(UUID.fromString(angebotId));
+    }
+    
+    static AngebotId maptToAngebotId(final UUID angebotId)
+    {
+    	return new AngebotId(angebotId);
     }
 }

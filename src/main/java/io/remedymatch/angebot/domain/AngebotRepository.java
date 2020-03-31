@@ -2,7 +2,6 @@ package io.remedymatch.angebot.domain;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class AngebotRepository {
 				.collect(Collectors.toList());
 	}
 
-	public List<Angebot> getAngeboteVonInstitution(InstitutionId institutionId) {
+	public List<Angebot> getAngeboteVonInstitution(final InstitutionId institutionId) {
 		Assert.notNull(institutionId, "InstitutionId ist null");
 		Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
@@ -31,28 +30,30 @@ public class AngebotRepository {
 				.map(AngebotEntityConverter::convert)//
 				.collect(Collectors.toList());
 	}
-	
-	public Optional<Angebot> get(UUID angebotId) {
-		Assert.notNull(angebotId, "AngebotId ist null");
 
-		return jpaRepository.findById(angebotId).map(AngebotEntityConverter::convert);
+	public Optional<Angebot> get(final AngebotId angebotId) {
+		Assert.notNull(angebotId, "AngebotId ist null");
+		Assert.notNull(angebotId.getValue(), "AngebotId ist null");
+
+		return jpaRepository.findById(angebotId.getValue()).map(AngebotEntityConverter::convert);
 	}
 
-	public Angebot add(Angebot angebot) {
+	public Angebot add(final Angebot angebot) {
 		Assert.notNull(angebot, "Angebot ist null");
 
 		return AngebotEntityConverter.convert(jpaRepository.save(AngebotEntityConverter.convert(angebot)));
 	}
 
-	public Angebot update(Angebot angebot) {
+	public Angebot update(final Angebot angebot) {
 		Assert.notNull(angebot, "Angebot ist null");
 
 		return AngebotEntityConverter.convert(jpaRepository.save(AngebotEntityConverter.convert(angebot)));
 	}
 
-	public void delete(UUID angebotId) {
+	public void delete(final AngebotId angebotId) {
 		Assert.notNull(angebotId, "AngebotId ist null");
+		Assert.notNull(angebotId.getValue(), "AngebotId ist null");
 
-		jpaRepository.deleteById(angebotId);
+		jpaRepository.deleteById(angebotId.getValue());
 	}
 }

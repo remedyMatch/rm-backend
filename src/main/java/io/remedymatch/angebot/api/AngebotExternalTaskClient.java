@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.api;
 
+import io.remedymatch.angebot.domain.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.match.api.MatchProzessConstants;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -32,7 +34,7 @@ public class AngebotExternalTaskClient {
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
                     val anfrageId = externalTask.getVariable("objektId").toString();
-                    angebotService.anfrageStornieren(anfrageId);
+                    angebotService.anfrageStornieren(new AngebotAnfrageId(UUID.fromString(anfrageId)));
 
                     //hier eventuell E-Mail versand?
 

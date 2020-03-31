@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import io.remedymatch.angebot.domain.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
 import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
@@ -26,12 +27,12 @@ public class AngebotAnfrageBearbeitenTaskCompleteHandler implements TaskComplete
             return;
         }
 
-        val anfrage = anfrageRepository.get(UUID.fromString(taskDTO.getObjektId()));
+        val anfrage = anfrageRepository.get(new AngebotAnfrageId(UUID.fromString(taskDTO.getObjektId())));
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage mit der Id: " + taskDTO.getObjektId() + " nicht vorhanden");
         }
         //Anfrage annehmen
-        angebotService.anfrageAnnehmen(taskDTO.getObjektId());
+        angebotService.anfrageAnnehmen(new AngebotAnfrageId(UUID.fromString(taskDTO.getObjektId())));
     }
 
     @Override

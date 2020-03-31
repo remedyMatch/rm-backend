@@ -8,14 +8,14 @@ import io.remedymatch.angebot.infrastructure.AngebotEntity.AngebotEntityBuilder;
 
 class AngebotEntityConverter {
 
-	static Angebot convert(AngebotEntity entity) {
+	static Angebot convert(final AngebotEntity entity) {
 		if (entity == null) {
 			return null;
 		}
 
 		AngebotBuilder builder = Angebot.builder();
 
-		builder.id(entity.getId()) //
+		builder.id(new AngebotId(entity.getId())) //
 				.anzahl(entity.getAnzahl()) //
 				.rest(entity.getRest()) //
 				.artikel(entity.getArtikel()) //
@@ -26,25 +26,26 @@ class AngebotEntityConverter {
 				.medizinisch(entity.isMedizinisch()) //
 				.kommentar(entity.getKommentar()) //
 				.bedient(entity.isBedient());
-		
-		if (entity.getAnfragen() != null)
-		{
+
+		if (entity.getAnfragen() != null) {
 			builder.anfragen(entity.getAnfragen().stream().map(AngebotAnfrageEntityConverter::convert)
 					.collect(Collectors.toList()));
 		}
-		
+
 		return builder.build();
 	}
 
-	static AngebotEntity convert(Angebot angebot) {
+	static AngebotEntity convert(final Angebot angebot) {
 		if (angebot == null) {
 			return null;
 		}
 
 		AngebotEntityBuilder builder = AngebotEntity.builder();
-		builder //
-				.id(angebot.getId()) //
-				.anzahl(angebot.getAnzahl()) //
+		if (angebot.getId() != null) {
+			builder.id(angebot.getId().getValue());
+		}
+
+		builder.anzahl(angebot.getAnzahl()) //
 				.rest(angebot.getRest()) //
 				.artikel(angebot.getArtikel()) //
 				.institution(angebot.getInstitution()).standort(angebot.getStandort())
@@ -53,14 +54,14 @@ class AngebotEntityConverter {
 				.originalverpackt(angebot.isOriginalverpackt()) //
 				.medizinisch(angebot.isMedizinisch()) //
 				.kommentar(angebot.getKommentar()) //
-				.bedient(angebot.isBedient());;
+				.bedient(angebot.isBedient());
+		;
 
-		if (angebot.getAnfragen() != null)
-		{
+		if (angebot.getAnfragen() != null) {
 			builder.anfragen(angebot.getAnfragen().stream().map(AngebotAnfrageEntityConverter::convert)
 					.collect(Collectors.toList()));
 		}
-		
+
 		return builder.build();
-}
+	}
 }

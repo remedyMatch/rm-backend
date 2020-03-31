@@ -3,7 +3,6 @@ package io.remedymatch.angebot.domain;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
@@ -24,7 +23,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 public class Angebot {
-	private UUID id;
+	private AngebotId id;
 	private BigDecimal anzahl;
 	private BigDecimal rest;
 	private ArtikelEntity artikel;

@@ -1,16 +1,17 @@
 package io.remedymatch.angebot.domain;
 
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
+import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity.AngebotAnfrageEntityBuilder;
 
 class AngebotAnfrageEntityConverter {
 
-	static AngebotAnfrage convert(AngebotAnfrageEntity entity) {
+	static AngebotAnfrage convert(final AngebotAnfrageEntity entity) {
 		if (entity == null) {
 			return null;
 		}
 
 		return AngebotAnfrage.builder() //
-				.id(entity.getId()) //
+				.id(new AngebotAnfrageId(entity.getId())) //
 				.kommentar(entity.getKommentar()) //
 				.institutionAn(entity.getInstitutionAn()) //
 				.institutionVon(entity.getInstitutionVon()) //
@@ -23,13 +24,18 @@ class AngebotAnfrageEntityConverter {
 				.build();
 	}
 
-	static AngebotAnfrageEntity convert(AngebotAnfrage angebotAnfrage) {
+	static AngebotAnfrageEntity convert(final AngebotAnfrage angebotAnfrage) {
 		if (angebotAnfrage == null) {
 			return null;
 		}
 
-		return AngebotAnfrageEntity.builder() //
-				.id(angebotAnfrage.getId()) //
+		AngebotAnfrageEntityBuilder builder = AngebotAnfrageEntity.builder();
+		if (angebotAnfrage.getId() != null)
+		{
+			builder.id(angebotAnfrage.getId().getValue());
+		}
+		
+		return builder //
 				.kommentar(angebotAnfrage.getKommentar()) //
 				.institutionAn(angebotAnfrage.getInstitutionAn()) //
 				.institutionVon(angebotAnfrage.getInstitutionVon()) //

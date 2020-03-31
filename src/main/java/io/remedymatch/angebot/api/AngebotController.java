@@ -4,12 +4,12 @@ import static io.remedymatch.angebot.api.AngebotMapper.mapToAngebot;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.remedymatch.angebot.domain.AngebotId;
 import io.remedymatch.angebot.domain.AngebotRepository;
 import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
@@ -27,11 +28,13 @@ import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.shared.GeoCalc;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 import lombok.val;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/angebot")
+@Validated
 public class AngebotController {
 
 	private final AngebotService angebotService;
@@ -76,10 +79,11 @@ public class AngebotController {
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<Void> angebotLoeschen(@PathVariable("id") String angebotId) {
+	public ResponseEntity<Void> angebotLoeschen(@PathVariable("id") String angebotIdValue) {
 
 		val user = personRepository.findByUsername(userProvider.getUserName());
-		val angebot = angebotService.angebotLaden(UUID.fromString(angebotId));
+		AngebotId angebotId = AngebotMapper.maptToAngebotId(angebotIdValue);
+		val angebot = angebotService.angebotLaden(angebotId);
 
 		if (angebot.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -88,15 +92,19 @@ public class AngebotController {
 		if (!angebot.get().getInstitution().getId().equals(user.getInstitution().getId())) {
 			return ResponseEntity.status(403).build();
 		}
-		angebotService.angebotLoeschen(UUID.fromString(angebotId));
+		angebotService.angebotLoeschen(angebotId);
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/anfragen")
 	public ResponseEntity<Void> angebotAnfragen(@RequestBody AngebotAnfragenRequest request) {
 		val user = personRepository.findByUsername(userProvider.getUserName());
-		angebotService.starteAnfrage(request.getAngebotId(), user.getInstitution(), request.getKommentar(),
-				request.getStandortId(), request.getAnzahl());
+		angebotService.starteAnfrage(//
+				AngebotMapper.maptToAngebotId(request.getAngebotId()), //
+				user.getInstitution(), //
+				request.getKommentar(), //
+				request.getStandortId(), //
+				request.getAnzahl());
 		return ResponseEntity.ok().build();
 	}
 

@@ -12,8 +12,7 @@ import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
 import io.remedymatch.engine.TaskDTO;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.person.domain.Person;
-import io.remedymatch.person.domain.PersonRepository;
-import io.remedymatch.web.UserProvider;
+import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -22,8 +21,7 @@ import lombok.val;
 public class AufgabeService {
 
     private final EngineClient engineClient;
-    private final UserProvider userProvider;
-    private final PersonRepository personRepository;
+    private final UserService userService;
 
     @Qualifier("TaskBeschreibungHandlerMap")
     private Map<String, TaskBeschreibungHandler> beschreibungHandlerMap;
@@ -50,7 +48,7 @@ public class AufgabeService {
 
     @Transactional
     public void aufgabeAbschließen(String taskId, Map<String, Object> variables) {
-        val person = personRepository.findByUsername(userProvider.getUserName()).get();
+        val person = userService.getContextUser();
         val task = engineClient.ladeTask(taskId, person.getInstitution().getId().toString());
         if (taskCompleteHandlerMap.containsKey(task.getTaskKey())) {
             taskCompleteHandlerMap.get(task.getTaskKey()).taskPruefen(task, variables);

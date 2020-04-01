@@ -1,15 +1,15 @@
 package io.remedymatch.institution.api;
 
 import static io.remedymatch.institution.api.InstitutionMapper.mapToDTO;
+import static io.remedymatch.institution.api.InstitutionStandortMapper.mapToStandort;
+import static io.remedymatch.institution.api.InstitutionStandortMapper.mapToStandortId;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,20 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.remedymatch.angebot.api.AngebotController;
 import io.remedymatch.angebot.api.AngebotDTO;
-import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
-import io.remedymatch.angebot.domain.AngebotRepository;
 import io.remedymatch.bedarf.api.BedarfController;
 import io.remedymatch.bedarf.api.BedarfDTO;
-import io.remedymatch.bedarf.api.BedarfMapper;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
-import io.remedymatch.institution.domain.InstitutionEntityConverter;
-import io.remedymatch.institution.domain.InstitutionId;
-import io.remedymatch.institution.domain.InstitutionRepository;
+import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.InstitutionService;
 import io.remedymatch.institution.domain.InstitutionTyp;
-import io.remedymatch.person.domain.PersonRepository;
-import io.remedymatch.shared.GeoCalc;
-import io.remedymatch.web.UserProvider;
+import io.remedymatch.user.domain.NotUserInstitutionObjectException;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -43,117 +35,77 @@ import lombok.val;
 @AllArgsConstructor
 @RequestMapping("/institution")
 public class InstitutionController {
+	private final InstitutionService institutionService;
+	private final AngebotController angebotController;
+	private final BedarfController bedarfController;
 
-    private final InstitutionRepository institutionsRepository;
-    private final PersonRepository personRepository;
-    private final UserProvider userProvider;
-    private final BedarfAnfrageRepository bedarfAnfrageRepository;
-    private final AngebotRepository angebotRepository;
-    private final AngebotAnfrageRepository angebotAnfrageRepository;
-    private final InstitutionService institutionService;
+	@PutMapping
+	public ResponseEntity<Void> update(@RequestBody InstitutionUpdateRequest institutionUpdate) {
+		try {
+			institutionService.userInstitutionAktualisieren(//
+					InstitutionMapper.maptToInstitutionId(institutionUpdate.getId()), //
+					institutionUpdate.getName(), //
+					institutionUpdate.getTyp());
+		} catch (ObjectNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} catch (NotUserInstitutionObjectException e) {
+			return ResponseEntity.status(403).build();
+		}
 
-    private final AngebotController angebotController;
-    private final BedarfController bedarfController;
-    
-    @PutMapping
-    public ResponseEntity<Void> update(@RequestBody InstitutionDTO institution) {
-        val person = personRepository.findByUsername(userProvider.getUserName());
+		return ResponseEntity.ok().build();
+	}
 
-        if (!person.getInstitution().getId().equals(institution.getId())) {
-            return ResponseEntity.status(403).build();
-        }
+	@PutMapping("/hauptstandort")
+	public ResponseEntity<InstitutionDTO> updateHauptstandort(@RequestBody @Valid InstitutionStandortDTO standort) {
+		return ResponseEntity
+				.ok(mapToDTO(institutionService.userInstitutionHauptstandortAktualisieren(mapToStandort(standort))));
+	}
 
-        var savedInstitution = institutionsRepository.get(new InstitutionId(institution.getId()));
-        if (savedInstitution.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+	@PostMapping("/standort")
+	public ResponseEntity<InstitutionDTO> standortHinzufuegen(@RequestBody @Valid InstitutionStandortDTO standort) {
+		return ResponseEntity
+				.ok(mapToDTO(institutionService.userInstitutionStandortHinzufuegen(mapToStandort(standort))));
+	}
 
-        institutionService.updateInstitution(InstitutionMapper.mapToEntity(institution));
-        return ResponseEntity.ok().build();
-    }
+	@DeleteMapping("/standort/{standortId}")
+	public ResponseEntity<InstitutionDTO> standortEntfernen(@PathVariable("standortId") String standortId) {
+		return ResponseEntity
+				.ok(mapToDTO(institutionService.userInstitutionStandortEntfernen(mapToStandortId(standortId))));
+	}
 
-    @PutMapping("/hauptstandort")
-    public ResponseEntity<InstitutionDTO> updateHauptstandort(@RequestBody @Valid InstitutionStandortDTO standort) {
-        val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(InstitutionMapper.mapToDTO(institutionService.updateHauptstandort(//
-        		InstitutionEntityConverter.convert(person.getInstitution()), //
-        		InstitutionStandortMapper.mapToStandort(standort))));
-    }
+	@GetMapping("/typ")
+	public ResponseEntity<List<String>> typenLaden() {
+		val typen = Arrays.asList(InstitutionTyp.Krankenhaus, InstitutionTyp.Arzt, InstitutionTyp.Lieferant,
+				InstitutionTyp.Privat, InstitutionTyp.Andere);
+		return ResponseEntity.ok(typen.stream().map(InstitutionTyp::toString).collect(Collectors.toList()));
+	}
 
-    @PostMapping("/standort")
-    public ResponseEntity<InstitutionDTO> standortHinzufuegen(@RequestBody @Valid InstitutionStandortDTO standort) {
-        val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(InstitutionMapper.mapToDTO(institutionService.standortHinzufuegen(//
-        		InstitutionEntityConverter.convert(person.getInstitution()), //
-        		InstitutionStandortMapper.mapToStandort(standort))));
-    }
+	@GetMapping("/bedarf")
+	public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
+		// FIXME: entfernen
+		return bedarfController.getInstituionBedarfee();
+	}
 
-    @DeleteMapping("/standort/{standortId}")
-    public ResponseEntity<InstitutionDTO> standortEntfernen(@PathVariable("standortId") String standortId) {
-        val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(InstitutionMapper.mapToDTO(institutionService.standortEntfernen(//
-        		InstitutionEntityConverter.convert(	person.getInstitution()), //
-        		UUID.fromString(standortId))));
-    }
+	@GetMapping("/angebot")
+	public ResponseEntity<List<AngebotDTO>> angebotLaden() {
+		// FIXME: entfernen
+		return angebotController.getInstituionAngebote();
+	}
 
-    @GetMapping("/typ")
-    public ResponseEntity<List<String>> typenLaden() {
-        val typen = Arrays.asList(
-                InstitutionTyp.Krankenhaus,
-                InstitutionTyp.Arzt,
-                InstitutionTyp.Lieferant,
-                InstitutionTyp.Privat,
-                InstitutionTyp.Andere);
-        return ResponseEntity.ok(typen.stream().map(InstitutionTyp::toString).collect(Collectors.toList()));
-    }
+	@GetMapping("/assigned")
+	public ResponseEntity<InstitutionDTO> institutionLaden() {
+		return ResponseEntity.ok(mapToDTO(institutionService.userInstitutionLaden()));
+	}
 
-    @GetMapping("/bedarf")
-    public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
-    	// FIXME: entfernen
-        return bedarfController.getInstituionBedarfee();
-    }
+	@GetMapping("/anfragen/gestellt")
+	public ResponseEntity<List<AnfrageDTO>> gestellteAnfragen() {
+		return ResponseEntity.ok(institutionService.getGestellteUserInstitutionAnfragen().stream()
+				.map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
+	}
 
-    @GetMapping("/angebot")
-    public ResponseEntity<List<AngebotDTO>> angebotLaden() {
-    	// FIXME: entfernen
-        return angebotController.getInstituionAngebote();
-    }
-
-    @GetMapping("/assigned")
-    public ResponseEntity<InstitutionDTO> institutionLaden() {
-        val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(mapToDTO(person.getInstitution()));
-    }
-
-    @GetMapping("anfragen/gestellt")
-    public ResponseEntity<List<AnfrageDTO>> gestellteBedarfAnfragen() {
-        val person = personRepository.findByUsername(userProvider.getUserName());
-        InstitutionId institutionId = new InstitutionId(person.getInstitution().getId());
-
-        val bedarfAnfragen = bedarfAnfrageRepository.findAllByInstitutionVon(person.getInstitution());
-		val angebotAnfragen = angebotAnfrageRepository.getAnfragenFuerInstitutionVon(institutionId);
-        val anfrageDTOs = bedarfAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList());
-        anfrageDTOs.addAll(angebotAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
-
-        anfrageDTOs.forEach(a -> {
-            var entfernung = GeoCalc.kilometerBerechnen(InstitutionStandortMapper.mapToEntity(a.getStandortVon()), InstitutionStandortMapper.mapToEntity(a.getStandortAn()));
-            a.setEntfernung(entfernung);
-        });
-
-        return ResponseEntity.ok(anfrageDTOs);
-    }
-
-    @GetMapping("anfragen/erhalten")
-    public ResponseEntity<List<AnfrageDTO>> erhalteneBedarfAnfragen() {
-        val person = personRepository.findByUsername(userProvider.getUserName());
-        InstitutionId institutionId = new InstitutionId(person.getInstitution().getId());
-
-        val bedarfAnfragen = bedarfAnfrageRepository.findAllByInstitutionAn(person.getInstitution());
-        val angebotAnfragen = angebotAnfrageRepository.getAnfragenFuerInstitutionAn(institutionId);
-        val anfrageDTOs = bedarfAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList());
-        anfrageDTOs.addAll(angebotAnfragen.stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
-
-        return ResponseEntity.ok(anfrageDTOs);
-    }
-
+	@GetMapping("/anfragen/erhalten")
+	public ResponseEntity<List<AnfrageDTO>> erhalteneAnfragen() {
+		return ResponseEntity.ok(institutionService.getErhalteneUserInstitutionAnfragen().stream()
+				.map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
+	}
 }

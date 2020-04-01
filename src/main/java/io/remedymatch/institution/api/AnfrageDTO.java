@@ -26,7 +26,7 @@ public class AnfrageDTO {
 
     private InstitutionStandortDTO standortVon;
 
-    private double entfernung;
+    private BigDecimal entfernung;
 
     private String prozessInstanzId;
 

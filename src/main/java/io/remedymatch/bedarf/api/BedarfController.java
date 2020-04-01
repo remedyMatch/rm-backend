@@ -23,7 +23,6 @@ import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageService;
 import io.remedymatch.institution.api.AnfrageDTO;
-import io.remedymatch.institution.api.AnfrageMapper;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.shared.GeoCalc;
@@ -106,13 +105,16 @@ public class BedarfController {
 
     @GetMapping("/{id}/anfragen")
     public ResponseEntity<List<AnfrageDTO>> anfragenLaden(@PathVariable("id") String bedarfId) {
-        val bedarf = bedarfService.bedarfLaden(bedarfId);
-
-        if (bedarf.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(bedarf.get().getAnfragen().stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
+//        val bedarf = bedarfService.bedarfLaden(bedarfId);
+//
+//        if (bedarf.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        return ResponseEntity.ok(bedarf.get().getAnfragen().stream().map(AnfrageMapper::mapToDTO).collect(Collectors.toList()));
+    	
+    	// FIXME
+    	return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")

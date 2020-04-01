@@ -1,12 +1,14 @@
 package io.remedymatch.institution.api;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.constraints.NotNull;
+
 import io.remedymatch.institution.domain.InstitutionTyp;
 import lombok.Builder;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -24,6 +26,6 @@ public class InstitutionDTO {
     private InstitutionTyp typ;
 
     private InstitutionStandortDTO hauptstandort;
-
-    private List<InstitutionStandortDTO> standorte;
+    @Builder.Default
+    private List<InstitutionStandortDTO> standorte = new ArrayList<>();
 }

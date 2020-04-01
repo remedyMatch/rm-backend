@@ -6,5 +6,4 @@ public enum InstitutionTyp {
     Lieferant,
     Privat,
     Andere
-
 }

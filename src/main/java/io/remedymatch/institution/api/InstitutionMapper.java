@@ -1,5 +1,6 @@
 package io.remedymatch.institution.api;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.remedymatch.institution.domain.Institution;
@@ -50,7 +51,7 @@ public class InstitutionMapper {
 
     public static Institution mapToEntity(InstitutionDTO dto) {
         var builder = Institution.builder()
-                .id(new InstitutionId(dto.getId()))
+                .id(maptToInstitutionId(dto.getId()))
                 .name(dto.getName())
                 .typ(dto.getTyp())
                 .institutionKey(dto.getInstitutionKey());
@@ -66,5 +67,10 @@ public class InstitutionMapper {
         }
 
         return builder.build();
+    }
+    
+    static InstitutionId maptToInstitutionId(final UUID institutionId)
+    {
+    	return new InstitutionId(institutionId);
     }
 }

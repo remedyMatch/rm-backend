@@ -164,7 +164,7 @@ public class AngebotService {
 	}
 
 	@Transactional
-	public void anfrageStornieren(final AngebotAnfrageId anfrageId) {
+	public void anfrageStornieren(final @NotNull @Valid AngebotAnfrageId anfrageId) {
 		val anfrage = angebotAnfrageRepository.get(anfrageId);
 		if (anfrage.isEmpty()) {
 			throw new IllegalArgumentException("Anfrage nicht vorhanden");
@@ -174,7 +174,7 @@ public class AngebotService {
 	}
 
 	@Transactional
-	public void anfrageAnnehmen(final AngebotAnfrageId anfrageId) {
+	public void anfrageAnnehmen(final @NotNull @Valid AngebotAnfrageId anfrageId) {
 		val anfrage = angebotAnfrageRepository.get(anfrageId);
 		if (anfrage.isEmpty()) {
 			throw new IllegalArgumentException("Anfrage nicht vorhanden");
@@ -206,7 +206,7 @@ public class AngebotService {
 
 	/* help methods */
 
-	private List<Angebot> mitEntfernung(final List<Angebot> angebote, InstitutionStandort userHauptstandort) {
+	private List<Angebot> mitEntfernung(final List<Angebot> angebote, final InstitutionStandort userHauptstandort) {
 		angebote.forEach(angebot -> angebot.setEntfernung(berechneEntfernung(//
 				userHauptstandort, //
 				angebot.getStandort())));

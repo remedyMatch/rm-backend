@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:rm-test-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    platform: h2
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+        
+remedy:
+  security:
+    disabled:
+      true
+
+io:
+  remedymatch:
+    backend:
+      engineUrl: http://localhost:8085
+      geocoderServicebaseUrl: https://eu1.locationiq.com/v1
+      geocoderServiceApiKey: unset
+        

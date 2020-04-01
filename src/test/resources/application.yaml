@@ -21,6 +21,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         generate_statistics: false
-        show_sql: false
+        show_sql: true
         use_sql_comments: false
         format_sql: false

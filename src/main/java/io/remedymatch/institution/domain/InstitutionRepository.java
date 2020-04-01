@@ -16,11 +16,11 @@ public class InstitutionRepository {
 	@Autowired
 	private InstitutionJpaRepository jpaRepository;
 
-	public Institution findByInstitutionKey(final String institutionKey)
+	public Optional<Institution> findByInstitutionKey(final String institutionKey)
 	{
 		Assert.isTrue(StringUtils.isNotBlank(institutionKey), "InstitutionKey ist blank");
 		
-		return convert(jpaRepository.findByInstitutionKey(institutionKey));
+		return jpaRepository.findByInstitutionKey(institutionKey).map(InstitutionEntityConverter::convert);
 	}
 	
 	public Optional<Institution> get(final InstitutionId institutionId) {

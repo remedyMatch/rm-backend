@@ -48,7 +48,7 @@ public class UserCreationFilter implements Filter {
 
         if (person.isEmpty()) {
 
-            var institution = Optional.ofNullable(institutionRepository.findByInstitutionKey(institutionKeyProvider.getInstitutionKey()));
+            var institution = institutionRepository.findByInstitutionKey(institutionKeyProvider.getInstitutionKey());
 
             if (institution.isEmpty()) {
                 val newInstitution = new Institution();

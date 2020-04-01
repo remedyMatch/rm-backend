@@ -58,9 +58,4 @@ public class InstitutionStandortEntity {
 
     @Column(name = "LATITUDE", nullable = true, updatable = true)
     private BigDecimal latitude;
-    
-    // FIXME delete
-    public String getAdresse() {
-		return strasse + ", " + plz + " " + ort + ", " + land;
-	}
 }

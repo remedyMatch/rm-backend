@@ -2,6 +2,8 @@ package io.remedymatch.institution.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
@@ -44,7 +46,7 @@ public class InstitutionJpaRepositoryShould {
 		persist(institution("andere"));
 		entityManager.flush();
 
-		assertEquals(meineInstitution, jpaRepository.findByInstitutionKey("meine"));
+		assertEquals(Optional.of(meineInstitution), jpaRepository.findByInstitutionKey("meine"));
 	}
 	
 	@Rollback(true)
@@ -58,7 +60,7 @@ public class InstitutionJpaRepositoryShould {
 		meineInstitution = persist(meineInstitution);
 		entityManager.flush();
 
-		assertEquals(meineInstitution, jpaRepository.findByInstitutionKey("meine"));
+		assertEquals(Optional.of(meineInstitution), jpaRepository.findById(meineInstitution.getId()));
 	}
 	
 	/* help methods */

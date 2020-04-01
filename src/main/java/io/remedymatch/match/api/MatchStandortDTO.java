@@ -1,10 +1,12 @@
 package io.remedymatch.match.api;
 
-import lombok.Builder;
-import lombok.Data;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
+
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 @Builder
@@ -24,9 +26,9 @@ public class MatchStandortDTO {
     @NotNull
     private String land;
 
-    private double longitude;
+    private BigDecimal longitude;
 
-    private double latitude;
+    private BigDecimal latitude;
 
     private double entfernung;
 }

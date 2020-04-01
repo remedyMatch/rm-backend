@@ -6,7 +6,7 @@ import java.util.List;
 
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.InstitutionStandort;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -28,7 +28,7 @@ public class Angebot {
 	private BigDecimal rest;
 	private ArtikelEntity artikel;
 	private InstitutionEntity institution;
-	private InstitutionStandortEntity standort;
+	private InstitutionStandort standort;
 	private LocalDateTime haltbarkeit;
 	private boolean steril;
 	private boolean originalverpackt;

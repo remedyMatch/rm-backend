@@ -70,7 +70,7 @@ class AngebotMapper {
                 .haltbarkeit(dto.getHaltbarkeit())
                 .medizinisch(dto.isMedizinisch())
                 .originalverpackt(dto.isOriginalverpackt())
-                .standort(dto.getStandort() != null ? InstitutionStandortMapper.mapToEntity(dto.getStandort()) : null)
+                .standort(dto.getStandort() != null ? InstitutionStandortMapper.mapToStandort(dto.getStandort()) : null)
                 .steril(dto.isSteril())
                 .bedient(dto.isBedient())
                 .kommentar(dto.getKommentar());

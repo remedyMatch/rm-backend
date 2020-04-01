@@ -17,7 +17,9 @@ import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("AngebotEntityConverter soll")
@@ -28,8 +30,9 @@ public class AngebotEntityConverterShould {
 	private static final BigDecimal REST = BigDecimal.valueOf(120.0);
 	private static final ArtikelEntity ARTIKEL = ArtikelEntity.builder().id(UUID.randomUUID()).build();
 	private static final InstitutionEntity INSTITUTION = InstitutionEntity.builder().id(UUID.randomUUID()).build();
-	private static final InstitutionStandortEntity STANDORT = InstitutionStandortEntity.builder().id(UUID.randomUUID())
-			.build();
+	private static final InstitutionStandortId STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
+	private static final InstitutionStandort STANDORT = InstitutionStandort.builder().id(STANDORT_ID).build();
+	private static final InstitutionStandortEntity STANDORT_ENTITY = InstitutionStandortEntity.builder().id(STANDORT_ID.getValue()).build();
 	private static final LocalDateTime HALTBARKEIT = LocalDateTime.now();
 	private static final boolean STERIL = true;
 	private static final boolean ORIGINALVERPACKT = true;
@@ -38,7 +41,8 @@ public class AngebotEntityConverterShould {
 	private static final boolean BEDIENT = false;
 	private static final AngebotAnfrageId ANFRAGE_ID = new AngebotAnfrageId(UUID.randomUUID());
 	private static final AngebotAnfrage ANFRAGE = AngebotAnfrage.builder().id(ANFRAGE_ID).build();
-	private static final AngebotAnfrageEntity ANFRAGE_ENTITY = AngebotAnfrageEntity.builder().id(ANFRAGE_ID.getValue()).build();
+	private static final AngebotAnfrageEntity ANFRAGE_ENTITY = AngebotAnfrageEntity.builder().id(ANFRAGE_ID.getValue())
+			.build();
 
 	@Test
 	@DisplayName("Entity in Domain Objekt konvertieren")
@@ -63,7 +67,7 @@ public class AngebotEntityConverterShould {
 	void domain_Objekt_mit_Id_in_Entity_konvertieren() {
 		assertEquals(entity(true), AngebotEntityConverter.convert(angebot(true)));
 	}
-	
+
 	@Test
 	@DisplayName("null Domain Objekt in null Entity konvertieren")
 	void null_domain_Objekt_in_Entity_konvertieren() {
@@ -95,7 +99,7 @@ public class AngebotEntityConverterShould {
 				.rest(REST) //
 				.artikel(ARTIKEL) //
 				.institution(INSTITUTION) //
-				.standort(STANDORT) //
+				.standort(STANDORT_ENTITY) //
 				.haltbarkeit(HALTBARKEIT) //
 				.steril(STERIL) //
 				.originalverpackt(ORIGINALVERPACKT) //

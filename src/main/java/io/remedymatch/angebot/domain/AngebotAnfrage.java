@@ -3,7 +3,7 @@ package io.remedymatch.angebot.domain;
 import java.math.BigDecimal;
 
 import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.InstitutionStandort;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,7 +22,7 @@ import lombok.ToString;
 public class AngebotAnfrage {
 	private AngebotAnfrageId id;
 	private InstitutionEntity institutionVon;
-	private InstitutionStandortEntity standortVon;
+	private InstitutionStandort standortVon;
 	private Angebot angebot;
 	private BigDecimal anzahl;
 	private String kommentar;

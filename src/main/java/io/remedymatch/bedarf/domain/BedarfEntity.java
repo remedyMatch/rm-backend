@@ -1,15 +1,27 @@
 package io.remedymatch.bedarf.domain;
 
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.GenericGenerator;
+
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import java.util.List;
-import java.util.UUID;
+import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter

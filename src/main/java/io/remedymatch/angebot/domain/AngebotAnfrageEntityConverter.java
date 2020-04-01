@@ -2,6 +2,7 @@ package io.remedymatch.angebot.domain;
 
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity.AngebotAnfrageEntityBuilder;
+import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
 
 class AngebotAnfrageEntityConverter {
 
@@ -14,7 +15,7 @@ class AngebotAnfrageEntityConverter {
 				.id(new AngebotAnfrageId(entity.getId())) //
 				.angebot(AngebotEntityConverter.convert(entity.getAngebot())) //
 				.institutionVon(entity.getInstitutionVon()) //
-				.standortVon(entity.getStandortVon()) //
+				.standortVon(InstitutionStandortEntityConverter.convert(entity.getStandortVon())) //
 				.kommentar(entity.getKommentar()) //
 				.anzahl(entity.getAnzahl()) //
 				.prozessInstanzId(entity.getProzessInstanzId()) //
@@ -36,7 +37,7 @@ class AngebotAnfrageEntityConverter {
 		return builder //
 				.angebot(AngebotEntityConverter.convert(angebotAnfrage.getAngebot())) //
 				.institutionVon(angebotAnfrage.getInstitutionVon()) //
-				.standortVon(angebotAnfrage.getStandortVon()) //
+				.standortVon(InstitutionStandortEntityConverter.convert(angebotAnfrage.getStandortVon())) //
 				.anzahl(angebotAnfrage.getAnzahl()) //
 				.kommentar(angebotAnfrage.getKommentar()) //
 				.prozessInstanzId(angebotAnfrage.getProzessInstanzId()) //

@@ -24,8 +24,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.TestApplication;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
@@ -84,6 +84,11 @@ public class AngebotJpaRepositoryShould {
 	
 	private InstitutionStandortEntity meinStandort() {
 		return InstitutionStandortEntity.builder() //
+				.name("Mein Standort") //
+				.plz("PLZ") //
+				.ort("Ort") //
+				.strasse("Strasse") //
+				.land("Land") //
 				.build();
 	}
 	

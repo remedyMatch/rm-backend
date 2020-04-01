@@ -1,11 +1,13 @@
 package io.remedymatch.institution.domain;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import io.remedymatch.geodaten.api.StandortService;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @AllArgsConstructor
 @Service
@@ -23,7 +25,7 @@ public class InstitutionService {
         return institutionRepository.save(savedInstitution);
     }
 
-    public InstitutionEntity updateHauptstandort(InstitutionEntity institution, InstitutionStandortEntity standort) {
+    public InstitutionEntity updateHauptstandort(InstitutionEntity institution, InstitutionStandort  standort) {
 
         var longlatList = standortService.findePointsByAdressString(standort.getAdresse());
 
@@ -31,15 +33,15 @@ public class InstitutionService {
             throw new IllegalArgumentException("Die Adresse konnte nicht aufgelöst werden");
         }
 
-        standort.setLatitude(longlatList.get(0).getLatitude());
-        standort.setLongitude(longlatList.get(0).getLongitude());
+        standort.setLatitude(BigDecimal.valueOf(longlatList.get(0).getLatitude()));
+        standort.setLongitude(BigDecimal.valueOf(longlatList.get(0).getLongitude()));
 
-        standort = institutionStandortRepository.save(standort);
-        institution.setHauptstandort(standort);
+        standort = institutionStandortRepository.update(standort);
+        institution.setHauptstandort(InstitutionStandortEntityConverter.convert(standort));
         return institutionRepository.save(institution);
     }
 
-    public InstitutionEntity standortHinzufuegen(InstitutionEntity institution, InstitutionStandortEntity standort) {
+    public InstitutionEntity standortHinzufuegen(InstitutionEntity institution, InstitutionStandort  standort) {
 
         var longlatList = standortService.findePointsByAdressString(standort.getAdresse());
 
@@ -47,11 +49,11 @@ public class InstitutionService {
             throw new IllegalArgumentException("Die Adresse konnte nicht aufgelöst werden");
         }
 
-        standort.setLatitude(longlatList.get(0).getLatitude());
-        standort.setLongitude(longlatList.get(0).getLongitude());
+        standort.setLatitude(BigDecimal.valueOf(longlatList.get(0).getLatitude()));
+        standort.setLongitude(BigDecimal.valueOf(longlatList.get(0).getLongitude()));
 
-        standort = institutionStandortRepository.save(standort);
-        institution.getStandorte().add(standort);
+        standort = institutionStandortRepository.update(standort);
+        institution.getStandorte().add(InstitutionStandortEntityConverter.convert(standort));
         return institutionRepository.save(institution);
     }
 
@@ -65,7 +67,7 @@ public class InstitutionService {
 
         institution.getStandorte().remove(standort.get());
         val inst = institutionRepository.save(institution);
-        institutionStandortRepository.delete(standort.get());
+        institutionStandortRepository.delete(new InstitutionStandortId(standort.get().getId()));
         return inst;
     }
 

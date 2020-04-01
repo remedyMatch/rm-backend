@@ -20,7 +20,7 @@ import org.hibernate.annotations.Type;
 
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -3,9 +3,9 @@ package io.remedymatch.institution.domain;
 import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity.InstitutionStandortEntityBuilder;
 
-class InstitutionStandortEntityConverter {
+public class InstitutionStandortEntityConverter {
 
-	static InstitutionStandort convert(final InstitutionStandortEntity entity) {
+	public static InstitutionStandort convert(final InstitutionStandortEntity entity) {
 		if (entity == null) {
 			return null;
 		}
@@ -22,7 +22,7 @@ class InstitutionStandortEntityConverter {
 				.build();
 	}
 
-	static InstitutionStandortEntity convert(final InstitutionStandort institutionStandort) {
+	public static InstitutionStandortEntity convert(final InstitutionStandort institutionStandort) {
 		if (institutionStandort == null) {
 			return null;
 		}

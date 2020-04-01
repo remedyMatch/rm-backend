@@ -22,9 +22,11 @@ import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.InstitutionId;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 import io.remedymatch.institution.domain.InstitutionStandortRepository;
+import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.user.domain.NotUserInstitutionObjectException;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
@@ -64,8 +66,8 @@ public class AngebotService {
 		// TODO haeslich
 		ArtikelEntity artikel = ArtikelMapper
 				.getArticleEntity(artikelRepository.get(neueAngebot.getArtikelId().getValue()));
-		Optional<InstitutionStandortEntity> institutionStandort = institutionStandortRepository
-				.findById(neueAngebot.getStandortId().getValue());
+		Optional<InstitutionStandort> institutionStandort = institutionStandortRepository
+				.get(neueAngebot.getStandortId());
 		if (institutionStandort.isEmpty()) {
 			// FIXME: Pruefung darauf, dass es der Stanrort meiner Institution ist
 			throw new IllegalArgumentException("InstitutionStandort nicht gefunden");
@@ -97,11 +99,11 @@ public class AngebotService {
 		if (!userService.isUserContextInstitution(new InstitutionId(angebot.get().getInstitution().getId()))) {
 			throw new NotUserInstitutionObjectException(EXCEPTION_MSG_ANGEBOT_NICHT_VON_USER_INSTITUTION);
 		}
-		
+
 		// Alle laufende Anfragen stornieren
 		angebotAnfrageRepository.storniereAlleOffeneAnfragen(angebotId);
 		// TODO Auch Prozesse beenden
-		
+
 		angebotRepository.delete(angebotId);
 	}
 
@@ -109,8 +111,7 @@ public class AngebotService {
 			final @NotNull @Valid AngebotId angebotId, //
 			final @NotNull @Valid InstitutionStandortId standortId, //
 			final @NotBlank String kommentar, //
-			final @NotNull BigDecimal anzahl)
-	{
+			final @NotNull BigDecimal anzahl) {
 		val angebot = angebotRepository.get(angebotId);
 
 		if (angebot.isEmpty()) {
@@ -123,7 +124,8 @@ public class AngebotService {
 		if (userInstitution.getHauptstandort().getId().equals(standortId)) {
 			standort = userInstitution.getHauptstandort();
 		} else {
-			var foundStandort = userInstitution.getStandorte().stream().filter(s -> s.getId().equals(standortId)).findFirst();
+			var foundStandort = userInstitution.getStandorte().stream().filter(s -> s.getId().equals(standortId))
+					.findFirst();
 
 			if (foundStandort.isPresent()) {
 				standort = foundStandort.get();
@@ -137,7 +139,7 @@ public class AngebotService {
 		var anfrage = AngebotAnfrage.builder() //
 				.angebot(angebot.get()) //
 				.institutionVon(userInstitution) //
-				.standortVon(standort) //
+				.standortVon(InstitutionStandortEntityConverter.convert(standort)) //
 				.anzahl(anzahl) //
 				.kommentar(kommentar) //
 				.status(AngebotAnfrageStatus.Offen) //
@@ -153,7 +155,7 @@ public class AngebotService {
 		anfrage.setProzessInstanzId(prozessInstanzId);
 		angebotAnfrageRepository.update(anfrage);
 	}
-	
+
 	@Transactional
 	@Deprecated
 	public void angebotMelden(Angebot angebot) {
@@ -208,8 +210,9 @@ public class AngebotService {
 	/* help methods */
 
 	private List<Angebot> mitEntfernung(final List<Angebot> angebote, InstitutionStandortEntity userHauptstandort) {
-		angebote.forEach(
-				angebot -> angebot.setEntfernung(berechneEntfernung(userHauptstandort, angebot.getStandort())));
+		angebote.forEach(angebot -> angebot.setEntfernung(berechneEntfernung(//
+				InstitutionStandortEntityConverter.convert(userHauptstandort), //
+				angebot.getStandort())));
 
 		return angebote;
 	}
@@ -219,13 +222,15 @@ public class AngebotService {
 		return angebot;
 	}
 
-	private BigDecimal berechneEntfernung(final InstitutionStandortEntity angebotStandort) {
-		return berechneEntfernung(userService.getContextInstitution().getHauptstandort(), angebotStandort);
+	private BigDecimal berechneEntfernung(final InstitutionStandort angebotStandort) {
+		return berechneEntfernung(//
+				InstitutionStandortEntityConverter.convert(userService.getContextInstitution().getHauptstandort()), //
+				angebotStandort);
 	}
 
 	private BigDecimal berechneEntfernung(//
-			final InstitutionStandortEntity userHauptstandort, //
-			final InstitutionStandortEntity angebotStandort) {
+			final InstitutionStandort userHauptstandort, //
+			final InstitutionStandort angebotStandort) {
 		return geoCalcService.berechneDistanzInKilometer(userHauptstandort, angebotStandort);
 	}
 

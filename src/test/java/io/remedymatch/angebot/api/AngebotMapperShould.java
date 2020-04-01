@@ -20,7 +20,7 @@ import io.remedymatch.artikel.api.ArtikelDTO;
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.artikel.domain.ArtikelId;
 import io.remedymatch.institution.api.InstitutionStandortDTO;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.InstitutionStandort;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 
 @ExtendWith(SpringExtension.class)
@@ -35,7 +35,7 @@ public class AngebotMapperShould {
 	private static final ArtikelDTO ARTIKEL_DTO = ArtikelDTO.builder().id(ARTIKEL_ID.getValue()).build();
 	private static final InstitutionStandortId STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
 	private static final InstitutionStandortDTO STANDORT_DTO = InstitutionStandortDTO.builder().id(STANDORT_ID.getValue()).build();
-	private static final InstitutionStandortEntity STANDORT_ENTITY = InstitutionStandortEntity.builder().id(STANDORT_ID.getValue())
+	private static final InstitutionStandort STANDORT = InstitutionStandort.builder().id(STANDORT_ID)
 			.build();
 	private static final LocalDateTime HALTBARKEIT = LocalDateTime.now();
 	private static final boolean STERIL = true;
@@ -115,7 +115,7 @@ public class AngebotMapperShould {
 				.anzahl(ANZAHL) //
 				.rest(REST) //
 				.artikel(ARTIKEL_ENTITY) //
-				.standort(STANDORT_ENTITY) //
+				.standort(STANDORT) //
 				.haltbarkeit(HALTBARKEIT) //
 				.steril(STERIL) //
 				.originalverpackt(ORIGINALVERPACKT) //

@@ -1,14 +1,15 @@
 package io.remedymatch.match.domain;
 
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import io.remedymatch.angebot.domain.AngebotAnfrage;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Component

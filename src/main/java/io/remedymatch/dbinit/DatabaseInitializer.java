@@ -1,5 +1,16 @@
 package io.remedymatch.dbinit;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Locale;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.javafaker.Faker;
 
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
@@ -11,21 +22,11 @@ import io.remedymatch.artikel.domain.ArtikelKategorieRepository;
 import io.remedymatch.bedarf.domain.BedarfRepository;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionRepository;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.person.domain.PersonEntity;
 import io.remedymatch.person.domain.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Locale;
 
 /**
  * TODO Test-Code nicht für Produktion

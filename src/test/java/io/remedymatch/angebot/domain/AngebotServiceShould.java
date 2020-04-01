@@ -23,7 +23,9 @@ import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionId;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
+import io.remedymatch.institution.domain.InstitutionStandortId;
 import io.remedymatch.institution.domain.InstitutionStandortRepository;
 import io.remedymatch.user.domain.UserService;
 import lombok.val;
@@ -45,45 +47,47 @@ import lombok.val;
 public class AngebotServiceShould {
 	@Autowired
 	private AngebotService angebotService;
-	
+
 	@MockBean
 	private UserService userService;
-	
+
 	@MockBean
 	private ArtikelRepository artikelRepository;
-	
+
 	@MockBean
 	private InstitutionStandortRepository institutionStandortRepository;
-	
+
 	@MockBean
 	private AngebotRepository angebotRepository;
-	
+
 	@MockBean
 	private AngebotAnfrageRepository angebotAnfrageRepository;
-	
+
 	@MockBean
 	private EngineClient engineClient;
-	
+
 	@MockBean
 	private GeoCalcService geoCalcService;
-	
+
 	@Test
 	@DisplayName("alle nicht bediente Angebote mit Entfernung liefern")
 	void alle_nicht_bediente_Angebote_mit_Entfernung_liefern() {
 		val meinStandort = standort("Mein Standort");
 		val angebotStandort = standort("Angebot Standort");
 		BigDecimal entfernungDerStandorte = BigDecimal.valueOf(12);
-		
+
 		AngebotId angebotId = angebotId();
-		given(angebotRepository.getAlleNichtBedienteAngebote()).willReturn(Arrays.asList(angebot(angebotId, angebotStandort)));
+		given(angebotRepository.getAlleNichtBedienteAngebote())
+				.willReturn(Arrays.asList(angebot(angebotId, angebotStandort)));
 		given(userService.getContextInstitution()).willReturn(institution(meinStandort));
-		given(geoCalcService.berechneDistanzInKilometer(meinStandort, angebotStandort)).willReturn(entfernungDerStandorte);
-		
+		given(geoCalcService.berechneDistanzInKilometer(meinStandort, angebotStandort))
+				.willReturn(entfernungDerStandorte);
+
 		val erwarteteAngebot = angebot(angebotId, angebotStandort);
 		erwarteteAngebot.setEntfernung(entfernungDerStandorte);
-		
+
 		assertEquals(Arrays.asList(erwarteteAngebot), angebotService.getAlleNichtBedienteAngebote());
-		
+
 		then(angebotRepository).should().getAlleNichtBedienteAngebote();
 		then(angebotRepository).shouldHaveNoMoreInteractions();
 		then(userService).should().getContextInstitution();
@@ -96,7 +100,7 @@ public class AngebotServiceShould {
 		then(angebotAnfrageRepository).shouldHaveNoInteractions();
 		then(engineClient).shouldHaveNoInteractions();
 	}
-	
+
 	@Test
 	@DisplayName("alle Angebote der User-Institution mit Entfernung liefern")
 	void alle_Angebote_einer_Institution_mit_Entfernung_liefern() {
@@ -105,17 +109,19 @@ public class AngebotServiceShould {
 		val meineInstitutionId = new InstitutionId(meineInstitution.getId());
 		val angebotStandort = standort("Angebot Standort");
 		BigDecimal entfernungDerStandorte = BigDecimal.valueOf(12);
-		
+
 		AngebotId angebotId = angebotId();
-		given(angebotRepository.getAngeboteVonInstitution(meineInstitutionId)).willReturn(Arrays.asList(angebot(angebotId, angebotStandort)));
+		given(angebotRepository.getAngeboteVonInstitution(meineInstitutionId))
+				.willReturn(Arrays.asList(angebot(angebotId, angebotStandort)));
 		given(userService.getContextInstitution()).willReturn(meineInstitution);
-		given(geoCalcService.berechneDistanzInKilometer(meinStandort, angebotStandort)).willReturn(entfernungDerStandorte);
-		
+		given(geoCalcService.berechneDistanzInKilometer(meinStandort, angebotStandort))
+				.willReturn(entfernungDerStandorte);
+
 		val erwarteteAngebot = angebot(angebotId, angebotStandort);
 		erwarteteAngebot.setEntfernung(entfernungDerStandorte);
-		
+
 		assertEquals(Arrays.asList(erwarteteAngebot), angebotService.getAngeboteDerUserInstitution());
-		
+
 		then(angebotRepository).should().getAngeboteVonInstitution(meineInstitutionId);
 		then(angebotRepository).shouldHaveNoMoreInteractions();
 		then(userService).should().getContextInstitution();
@@ -128,7 +134,7 @@ public class AngebotServiceShould {
 		then(angebotAnfrageRepository).shouldHaveNoInteractions();
 		then(engineClient).shouldHaveNoInteractions();
 	}
-	
+
 //	then(userService).shouldHaveNoInteractions();
 //	then(artikelRepository).shouldHaveNoInteractions();
 //	then(institutionStandortRepository).shouldHaveNoInteractions();
@@ -136,35 +142,30 @@ public class AngebotServiceShould {
 //	then(angebotAnfrageRepository).shouldHaveNoInteractions();
 //	then(geoCalcService).shouldHaveNoInteractions();
 //	then(engineClient).shouldHaveNoInteractions();
-	
-	
+
 	/* help method */
-	
-	private InstitutionEntity institution(final InstitutionStandortEntity hauptstandort)
-	{
+
+	private InstitutionEntity institution(final InstitutionStandort hauptstandort) {
 		return InstitutionEntity.builder() //
 				.id(UUID.randomUUID()) //
-				.hauptstandort(hauptstandort) //
+				.hauptstandort(InstitutionStandortEntityConverter.convert(hauptstandort)) //
 				.build();
 	}
-	
-	private InstitutionStandortEntity standort(final String name)
-	{
-		return InstitutionStandortEntity.builder() //
-				.id(UUID.randomUUID()) //
-				.name(name)
+
+	private InstitutionStandort standort(final String name) {
+		return InstitutionStandort.builder() //
+				.id(new InstitutionStandortId(UUID.randomUUID())) //
+				.name(name)//
 				.build();
 	}
-	
-	private AngebotId angebotId()
-	{
+
+	private AngebotId angebotId() {
 		return new AngebotId(UUID.randomUUID());
 	}
-	
+
 	private Angebot angebot(//
 			final AngebotId angebotId, //
-			final InstitutionStandortEntity standort)
-	{
+			final InstitutionStandort standort) {
 		return Angebot.builder() //
 				.id(angebotId) //
 				.standort(standort) //

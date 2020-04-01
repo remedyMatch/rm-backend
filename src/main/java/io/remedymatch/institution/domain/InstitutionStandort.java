@@ -43,4 +43,8 @@ public class InstitutionStandort {
 	
 	private BigDecimal longitude;
 	private BigDecimal latitude;
+	
+	public String getAdresse() {
+		return strasse + ", " + plz + " " + ort + ", " + land;
+	}
 }

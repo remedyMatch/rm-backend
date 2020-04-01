@@ -1,6 +1,7 @@
 package io.remedymatch.match.domain;
 
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
 
 public class MatchStandortMapper {
 
@@ -13,6 +14,17 @@ public class MatchStandortMapper {
                 .strasse(standortEntity.getStrasse())
                 .longitude(standortEntity.getLongitude())
                 .latitude(standortEntity.getLatitude())
+                .build();
+    }
+    
+    public static MatchStandortEntity mapToMatchStandort(InstitutionStandort standort) {
+        return MatchStandortEntity.builder()
+                .land(standort.getLand())
+                .ort(standort.getOrt())
+                .plz(standort.getPlz())
+                .strasse(standort.getStrasse())
+                .longitude(standort.getLongitude())
+                .latitude(standort.getLatitude())
                 .build();
     }
 

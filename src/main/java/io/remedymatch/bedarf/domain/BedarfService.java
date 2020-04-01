@@ -1,20 +1,22 @@
 package io.remedymatch.bedarf.domain;
 
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import io.remedymatch.bedarf.api.BedarfAnfrageProzessConstants;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageStatus;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionStandortEntity;
+import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
+import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
 
 @AllArgsConstructor
 @Service

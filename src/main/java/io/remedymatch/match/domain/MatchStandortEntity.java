@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
 
@@ -36,9 +38,9 @@ public class MatchStandortEntity {
     private String land;
 
     @Column
-    private double longitude;
+    private BigDecimal longitude;
 
     @Column
-    private double latitude;
+    private BigDecimal latitude;
 
 }

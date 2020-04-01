@@ -74,13 +74,13 @@ public class InstitutionController {
     @PutMapping("/hauptstandort")
     public ResponseEntity<InstitutionEntity> updateHauptstandort(@RequestBody @Valid InstitutionStandortDTO standort) {
         val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(institutionService.updateHauptstandort(person.getInstitution(), InstitutionStandortMapper.mapToEntity(standort)));
+        return ResponseEntity.ok(institutionService.updateHauptstandort(person.getInstitution(), InstitutionStandortMapper.mapToStandort(standort)));
     }
 
     @PostMapping("/standort")
     public ResponseEntity<InstitutionEntity> standortHinzufuegen(@RequestBody @Valid InstitutionStandortDTO standort) {
         val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(institutionService.standortHinzufuegen(person.getInstitution(), InstitutionStandortMapper.mapToEntity(standort)));
+        return ResponseEntity.ok(institutionService.standortHinzufuegen(person.getInstitution(), InstitutionStandortMapper.mapToStandort(standort)));
     }
 
     @DeleteMapping("/standort/{standortId}")

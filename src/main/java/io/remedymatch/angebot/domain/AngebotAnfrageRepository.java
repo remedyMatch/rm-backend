@@ -31,7 +31,7 @@ public class AngebotAnfrageRepository {
 		Assert.notNull(institutionId, "InstitutionId ist null");
 		Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
-		return jpaRepository.findAllByInstitutionAn_Id(institutionId.getValue()).stream()//
+		return jpaRepository.findAllByAngebot_Institution_Id(institutionId.getValue()).stream()//
 				.map(AngebotAnfrageEntityConverter::convert)//
 				.collect(Collectors.toList());
 	}

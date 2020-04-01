@@ -1,6 +1,5 @@
 package io.remedymatch.angebot.domain;
 
-import static io.remedymatch.angebot.process.AngebotAnfrageProzessConstants.ANFRAGE_STORNIEREN_MESSAGE;
 import static io.remedymatch.angebot.process.AngebotAnfrageProzessConstants.PROZESS_KEY;
 
 import java.math.BigDecimal;
@@ -100,6 +99,8 @@ public class AngebotService {
 		
 		// Alle laufende Anfragen stornieren
 		angebotAnfrageRepository.storniereAlleOffeneAnfragen(angebotId);
+		// TODO Auch Prozesse beenden
+		
 		angebotRepository.delete(angebotId);
 	}
 
@@ -133,13 +134,11 @@ public class AngebotService {
 		}
 
 		var anfrage = AngebotAnfrage.builder() //
-				.institutionVon(userInstitution) //
-				.institutionAn(angebot.get().getInstitution()) //
-				.kommentar(kommentar) //
-				.standortAn(angebot.get().getStandort()) //
-				.standortVon(standort) //
 				.angebot(angebot.get()) //
+				.institutionVon(userInstitution) //
+				.standortVon(standort) //
 				.anzahl(anzahl) //
+				.kommentar(kommentar) //
 				.status(AngebotAnfrageStatus.Offen) //
 				.build();
 

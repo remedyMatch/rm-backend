@@ -40,32 +40,25 @@ public class AngebotAnfrageEntity {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    private AngebotEntity angebot;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    private InstitutionEntity institutionVon;
+    
+    @ManyToOne
+    private InstitutionStandortEntity standortVon;
+    
+    @Column
+    private BigDecimal anzahl;
 
     @Column
     private String kommentar;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private InstitutionEntity institutionVon;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private InstitutionEntity institutionAn;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private AngebotEntity angebot;
-
-    @ManyToOne
-    private InstitutionStandortEntity standortVon;
-
-    @ManyToOne
-    private InstitutionStandortEntity standortAn;
-
     @Column
     private String prozessInstanzId;
 
-    @Column
-    private BigDecimal anzahl;
-
     @Enumerated(EnumType.STRING)
     private AngebotAnfrageStatus status;
-
 }

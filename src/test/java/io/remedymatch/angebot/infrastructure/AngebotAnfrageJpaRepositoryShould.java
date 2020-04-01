@@ -23,7 +23,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
 import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
-import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionTyp;
 
@@ -48,11 +47,12 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@DisplayName("alle Anfragen fuer InstitutionAn Id zurueckliefern")
 	void alle_Anfragen_fuer_InstitutionAnId_zurueckliefern() {
 		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
-		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
-		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageFuerInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
+		AngebotEntity angebot = persist(angebot(meinKrankenhaus));
+		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageFuerAngebot(angebot, BigDecimal.valueOf(100)));
+		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageFuerAngebot(angebot, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
-		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionAn_Id(meinKrankenhaus.getId()));
+		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByAngebot_Institution_Id(meinKrankenhaus.getId()));
 	}
 	
 	@Rollback(true)
@@ -120,6 +120,20 @@ public class AngebotAnfrageJpaRepositoryShould {
 				.bedient(false) //
 				.build();
 	}
+	
+	private AngebotEntity angebot(InstitutionEntity institutionEntity) {
+		return AngebotEntity.builder() //
+				.anzahl(BigDecimal.valueOf(100)) //
+				.rest(BigDecimal.valueOf(100)) //
+				.institution(institutionEntity) //
+				.haltbarkeit(LocalDateTime.now()) //
+				.steril(true) //
+				.originalverpackt(true) //
+				.medizinisch(true) //
+				.kommentar("Bla bla") //
+				.bedient(false) //
+				.build();
+	}
 
 	private AngebotAnfrageEntity angebotAnfrage(//
 			AngebotEntity angebot, //
@@ -131,12 +145,12 @@ public class AngebotAnfrageJpaRepositoryShould {
 				.build();
 	}
 	
-	private AngebotAnfrageEntity angebotAnfrageFuerInstitution(//
-			InstitutionEntity institutionAn, //
+	private AngebotAnfrageEntity angebotAnfrageFuerAngebot(//
+			AngebotEntity angebot, //
 			BigDecimal anzahl) {
 		return AngebotAnfrageEntity.builder() //
 				.anzahl(anzahl) //
-				.institutionAn(institutionAn)//
+				.angebot(angebot)//
 				.build();
 	}
 

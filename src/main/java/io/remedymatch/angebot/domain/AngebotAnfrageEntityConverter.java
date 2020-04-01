@@ -12,15 +12,13 @@ class AngebotAnfrageEntityConverter {
 
 		return AngebotAnfrage.builder() //
 				.id(new AngebotAnfrageId(entity.getId())) //
-				.kommentar(entity.getKommentar()) //
-				.institutionAn(entity.getInstitutionAn()) //
-				.institutionVon(entity.getInstitutionVon()) //
-				.standortAn(entity.getStandortAn()) //
-				.standortVon(entity.getStandortVon()) //
 				.angebot(AngebotEntityConverter.convert(entity.getAngebot())) //
-				.status(entity.getStatus())//
+				.institutionVon(entity.getInstitutionVon()) //
+				.standortVon(entity.getStandortVon()) //
+				.kommentar(entity.getKommentar()) //
 				.anzahl(entity.getAnzahl()) //
 				.prozessInstanzId(entity.getProzessInstanzId()) //
+				.status(entity.getStatus())//
 				.build();
 	}
 
@@ -36,15 +34,13 @@ class AngebotAnfrageEntityConverter {
 		}
 		
 		return builder //
-				.kommentar(angebotAnfrage.getKommentar()) //
-				.institutionAn(angebotAnfrage.getInstitutionAn()) //
-				.institutionVon(angebotAnfrage.getInstitutionVon()) //
-				.standortAn(angebotAnfrage.getStandortAn()) //
-				.standortVon(angebotAnfrage.getStandortVon()) //
 				.angebot(AngebotEntityConverter.convert(angebotAnfrage.getAngebot())) //
-				.status(angebotAnfrage.getStatus()) //
+				.institutionVon(angebotAnfrage.getInstitutionVon()) //
+				.standortVon(angebotAnfrage.getStandortVon()) //
 				.anzahl(angebotAnfrage.getAnzahl()) //
+				.kommentar(angebotAnfrage.getKommentar()) //
 				.prozessInstanzId(angebotAnfrage.getProzessInstanzId()) //
+				.status(angebotAnfrage.getStatus()) //
 				.build();
 	}
 }

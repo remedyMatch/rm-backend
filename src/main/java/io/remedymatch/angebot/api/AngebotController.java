@@ -24,7 +24,6 @@ import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 import io.remedymatch.user.domain.NotUserInstitutionObjectException;
 import lombok.AllArgsConstructor;
-import lombok.val;
 
 @RestController
 @AllArgsConstructor

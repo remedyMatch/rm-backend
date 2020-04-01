@@ -12,8 +12,8 @@ import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
 
 public interface AngebotAnfrageJpaRepository extends CrudRepository<AngebotAnfrageEntity, UUID> {
 
-	List<AngebotAnfrageEntity> findAllByInstitutionAn_Id(UUID id);
-
+	List<AngebotAnfrageEntity> findAllByAngebot_Institution_Id(UUID id);
+	
 	List<AngebotAnfrageEntity> findAllByInstitutionVon_Id(UUID id);
 	
 	@Modifying

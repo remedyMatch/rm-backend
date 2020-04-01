@@ -24,8 +24,6 @@ public class AngebotAnfrageEntityConverterShould {
 	private static final String KOMMENTAR = "Kommentar";
 	private static final InstitutionEntity INSTITUTION_VON = InstitutionEntity.builder().id(UUID.randomUUID()).build();
 	private static final InstitutionStandortEntity STANDORT_VON = InstitutionStandortEntity.builder().id(UUID.randomUUID()).build();
-	private static final InstitutionEntity INSTITUTION_AN= InstitutionEntity.builder().id(UUID.randomUUID()).build();
-	private static final InstitutionStandortEntity STANDORT_AN = InstitutionStandortEntity.builder().id(UUID.randomUUID()).build();
 	private static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
 	private static final Angebot ANGEBOT = Angebot.builder().id(ANGEBOT_ID).build();
 	private static final AngebotEntity ANGEBOT_ENTITY = AngebotEntity.builder().id(ANGEBOT_ID.getValue()).build();
@@ -66,14 +64,12 @@ public class AngebotAnfrageEntityConverterShould {
 	private AngebotAnfrage angebotAnfrage(boolean mitId) {
 		return AngebotAnfrage.builder() //
 				.id(mitId ? ANGEBOT_ANFRAGE_ID : null) //
-				.kommentar(KOMMENTAR) //
+				.angebot(ANGEBOT) //
 				.institutionVon(INSTITUTION_VON) //
 				.standortVon(STANDORT_VON) //
-				.institutionAn(INSTITUTION_AN) //
-				.standortAn(STANDORT_AN) //
-				.angebot(ANGEBOT) //
-				.prozessInstanzId(PROZESSINSTANZ_ID) //
 				.anzahl(ANZAHL) //
+				.kommentar(KOMMENTAR) //
+				.prozessInstanzId(PROZESSINSTANZ_ID) //
 				.status(STATUS) //
 				.build();
 	}
@@ -81,14 +77,12 @@ public class AngebotAnfrageEntityConverterShould {
 	private AngebotAnfrageEntity entity(boolean mitId) {
 		return AngebotAnfrageEntity.builder() //
 				.id(mitId ? ANGEBOT_ANFRAGE_ID.getValue() : null) //
-				.kommentar(KOMMENTAR) //
+				.angebot(ANGEBOT_ENTITY) //
 				.institutionVon(INSTITUTION_VON) //
 				.standortVon(STANDORT_VON) //
-				.institutionAn(INSTITUTION_AN) //
-				.standortAn(STANDORT_AN) //
-				.angebot(ANGEBOT_ENTITY) //
-				.prozessInstanzId(PROZESSINSTANZ_ID) //
 				.anzahl(ANZAHL) //
+				.kommentar(KOMMENTAR) //
+				.prozessInstanzId(PROZESSINSTANZ_ID) //
 				.status(STATUS) //
 				.build();
 	}

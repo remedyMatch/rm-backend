@@ -21,13 +21,11 @@ import lombok.ToString;
 @Builder
 public class AngebotAnfrage {
 	private AngebotAnfrageId id;
-	private String kommentar;
 	private InstitutionEntity institutionVon;
-	private InstitutionEntity institutionAn;
-	private Angebot angebot;
 	private InstitutionStandortEntity standortVon;
-	private InstitutionStandortEntity standortAn;
-	private String prozessInstanzId;
+	private Angebot angebot;
 	private BigDecimal anzahl;
+	private String kommentar;
+	private String prozessInstanzId;
 	private AngebotAnfrageStatus status;
 }

@@ -38,9 +38,9 @@ public class MatchService {
         val match = new MatchEntity();
 
         match.setInstitutionAn(angebotAnfrage.getInstitutionVon());
-        match.setInstitutionVon(angebotAnfrage.getInstitutionAn());
+        match.setInstitutionVon(angebotAnfrage.getAngebot().getInstitution());
         match.setStandortAn(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandortVon()));
-        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandortAn()));
+        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getAngebot().getStandort()));
 
         matchStandortRepository.save(match.getStandortVon());
         matchStandortRepository.save(match.getStandortAn());

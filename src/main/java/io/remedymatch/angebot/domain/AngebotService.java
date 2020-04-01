@@ -20,11 +20,11 @@ import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.artikel.domain.ArtikelRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 import io.remedymatch.institution.domain.InstitutionStandortRepository;
-import io.remedymatch.shared.GeoCalc;
 import io.remedymatch.user.domain.NotUserInstitutionObjectException;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
@@ -43,6 +43,7 @@ public class AngebotService {
 
 	private final AngebotRepository angebotRepository;
 	private final AngebotAnfrageRepository angebotAnfrageRepository;
+	private final GeoCalcService geoCalcService;
 	private final EngineClient engineClient;
 
 	public List<Angebot> getAlleNichtBedienteAngebote() {
@@ -225,7 +226,7 @@ public class AngebotService {
 	private BigDecimal berechneEntfernung(//
 			final InstitutionStandortEntity userHauptstandort, //
 			final InstitutionStandortEntity angebotStandort) {
-		return BigDecimal.valueOf(GeoCalc.kilometerBerechnen(userHauptstandort, angebotStandort));
+		return geoCalcService.berechneDistanzInKilometer(userHauptstandort, angebotStandort);
 	}
 
 //	private void anfrageStornierenX(final AngebotAnfrageId anfrageId) {

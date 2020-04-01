@@ -1,6 +1,6 @@
 package io.remedymatch.artikel.api;
 
-import io.remedymatch.artikel.domain.ArtikleRepository;
+import io.remedymatch.artikel.domain.ArtikelRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ArtikelController {
 
-    private final ArtikleRepository artikelRepository;
+    private final ArtikelRepository artikelRepository;
 
     @Transactional(readOnly = true)
     @GetMapping("/suche")

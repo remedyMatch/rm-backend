@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -19,5 +21,5 @@ class AngebotAnfragenRequest {
     private UUID standortId;
 
     @NotNull
-    private double anzahl;
+    private BigDecimal anzahl;
 }

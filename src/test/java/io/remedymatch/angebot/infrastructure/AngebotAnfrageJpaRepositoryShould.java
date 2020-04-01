@@ -3,7 +3,9 @@ package io.remedymatch.angebot.infrastructure;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -20,6 +22,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
+import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
+import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionTyp;
 
@@ -29,8 +33,8 @@ import io.remedymatch.institution.domain.InstitutionTyp;
 @ActiveProfiles("test")
 @Tag("InMemory")
 @Tag("SpringBoot")
-@DisplayName("AngebotAnfrageJpaRepository InMemory Test soll")
-public class AngebotAnfrageJpaRepositoryInMemoryTestShould {
+@DisplayName("AngebotAnfrageJpaRepository soll")
+public class AngebotAnfrageJpaRepositoryShould {
 
 	@Autowired
 	private EntityManager entityManager;
@@ -64,6 +68,31 @@ public class AngebotAnfrageJpaRepositoryInMemoryTestShould {
 		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionVon_Id(meinKrankenhaus.getId()));
 	}
 
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("Status der Anfragen aktualisieren")
+	void status_der_Anfragen_aktualisieren() {
+		AngebotEntity angebot = persist(angebot());
+		AngebotAnfrageEntity ersteOffeneAnfrage = persist(angebotAnfrage(angebot, AngebotAnfrageStatus.Offen));
+		AngebotAnfrageEntity zweiteOffeneAnfrage = persist(angebotAnfrage(angebot, AngebotAnfrageStatus.Offen));
+		AngebotAnfrageEntity dritteAnfrageStorniert = persist(angebotAnfrage(angebot, AngebotAnfrageStatus.Angenommen));
+		entityManager.flush();
+
+		assertEquals(Optional.of(ersteOffeneAnfrage), jpaRepository.findById(ersteOffeneAnfrage.getId()));
+		assertEquals(Optional.of(zweiteOffeneAnfrage), jpaRepository.findById(zweiteOffeneAnfrage.getId()));
+		assertEquals(Optional.of(dritteAnfrageStorniert), jpaRepository.findById(dritteAnfrageStorniert.getId()));
+		
+		jpaRepository.updateStatus(angebot.getId(), AngebotAnfrageStatus.Offen, AngebotAnfrageStatus.Storniert);
+		
+		entityManager.flush();
+		entityManager.clear();
+		
+		assertEquals(AngebotAnfrageStatus.Storniert, jpaRepository.findById(ersteOffeneAnfrage.getId()).get().getStatus());
+		assertEquals(AngebotAnfrageStatus.Storniert, jpaRepository.findById(zweiteOffeneAnfrage.getId()).get().getStatus());
+		assertEquals(AngebotAnfrageStatus.Angenommen, jpaRepository.findById(dritteAnfrageStorniert.getId()).get().getStatus());
+	}
+	
 	/* help methods */
 
 	public <E> E persist(E entity) {
@@ -78,7 +107,30 @@ public class AngebotAnfrageJpaRepositoryInMemoryTestShould {
 				.typ(InstitutionTyp.Krankenhaus) //
 				.build();
 	}
+	
+	private AngebotEntity angebot() {
+		return AngebotEntity.builder() //
+				.anzahl(BigDecimal.valueOf(100)) //
+				.rest(BigDecimal.valueOf(100)) //
+				.haltbarkeit(LocalDateTime.now()) //
+				.steril(true) //
+				.originalverpackt(true) //
+				.medizinisch(true) //
+				.kommentar("Bla bla") //
+				.bedient(false) //
+				.build();
+	}
 
+	private AngebotAnfrageEntity angebotAnfrage(//
+			AngebotEntity angebot, //
+			AngebotAnfrageStatus status) {
+		return AngebotAnfrageEntity.builder() //
+				.anzahl(BigDecimal.valueOf(50)) //
+				.angebot(angebot) //
+				.status(status) //
+				.build();
+	}
+	
 	private AngebotAnfrageEntity angebotAnfrageFuerInstitution(//
 			InstitutionEntity institutionAn, //
 			BigDecimal anzahl) {

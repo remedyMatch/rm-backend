@@ -30,7 +30,7 @@ import io.remedymatch.artikel.domain.ArtikelEntity;
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("AngebotJpaRepository InMemory Test soll")
-public class AngebotJpaRepositoryInMemoryTestShould {
+public class AngebotJpaRepositoryShould {
 
 	@Autowired
 	private EntityManager entityManager;

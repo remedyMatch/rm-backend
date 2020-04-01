@@ -5,9 +5,14 @@ import static io.remedymatch.artikel.api.ArtikelMapper.getArticleEntity;
 
 import java.util.UUID;
 
+import org.springframework.util.Assert;
+
 import io.remedymatch.angebot.domain.Angebot;
 import io.remedymatch.angebot.domain.AngebotId;
+import io.remedymatch.angebot.domain.NeueAngebot;
+import io.remedymatch.artikel.domain.ArtikelId;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
+import io.remedymatch.institution.domain.InstitutionStandortId;
 
 class AngebotMapper {
 
@@ -36,6 +41,21 @@ class AngebotMapper {
         return builder.build();
     }
 
+    static NeueAngebot mapToNeueAngebot(final NeueAngebotRequest neueAngebotRequest) {
+    	Assert.notNull(neueAngebotRequest, "NeueAngebotRequest ist null");
+    	
+        return NeueAngebot.builder() //
+                .anzahl(neueAngebotRequest.getAnzahl()) //
+                .artikelId(new ArtikelId(neueAngebotRequest.getArtikelId())) //
+                .standortId(new InstitutionStandortId(neueAngebotRequest.getStandortId())) //
+                .haltbarkeit(neueAngebotRequest.getHaltbarkeit()) //
+                .steril(neueAngebotRequest.isSteril()) //
+                .originalverpackt(neueAngebotRequest.isOriginalverpackt()) //
+                .medizinisch(neueAngebotRequest.isMedizinisch()) //
+                .kommentar(neueAngebotRequest.getKommentar()) //
+                .build();
+    }
+    
     static Angebot mapToAngebot(final AngebotDTO dto) {
     	if (dto == null)
     	{

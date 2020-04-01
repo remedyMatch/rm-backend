@@ -18,7 +18,7 @@ public class AngebotAnfrageRepository {
 	@Autowired
 	private AngebotAnfrageJpaRepository jpaRepository;
 
-	public List<AngebotAnfrage> getAngeboteFuerInstitutionVon(final InstitutionId institutionId) {
+	public List<AngebotAnfrage> getAnfragenFuerInstitutionVon(final InstitutionId institutionId) {
 		Assert.notNull(institutionId, "InstitutionId ist null");
 		Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
@@ -27,13 +27,20 @@ public class AngebotAnfrageRepository {
 				.collect(Collectors.toList());
 	}
 
-	public List<AngebotAnfrage> getAngeboteFuerInstitutionAn(final InstitutionId institutionId) {
+	public List<AngebotAnfrage> getAnfragenFuerInstitutionAn(final InstitutionId institutionId) {
 		Assert.notNull(institutionId, "InstitutionId ist null");
 		Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
 		return jpaRepository.findAllByInstitutionAn_Id(institutionId.getValue()).stream()//
 				.map(AngebotAnfrageEntityConverter::convert)//
 				.collect(Collectors.toList());
+	}
+	
+	public void storniereAlleOffeneAnfragen(final AngebotId angebotId) {
+		Assert.notNull(angebotId, "AngebotId ist null");
+		Assert.notNull(angebotId.getValue(), "AngebotId ist null");
+
+		jpaRepository.updateStatus(angebotId.getValue(), AngebotAnfrageStatus.Offen, AngebotAnfrageStatus.Storniert);
 	}
 
 	public Optional<AngebotAnfrage> get(final AngebotAnfrageId angebotAnfrageId) {

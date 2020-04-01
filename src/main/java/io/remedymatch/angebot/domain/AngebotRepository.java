@@ -39,6 +39,13 @@ public class AngebotRepository {
 
 		return jpaRepository.findById(angebotId.getValue()).map(AngebotEntityConverter::convert);
 	}
+	
+	public boolean has(final AngebotId angebotId) {
+		Assert.notNull(angebotId, "AngebotId ist null");
+		Assert.notNull(angebotId.getValue(), "AngebotId ist null");
+
+		return jpaRepository.existsById(angebotId.getValue());
+	}
 
 	public Angebot add(final Angebot angebot) {
 		Assert.notNull(angebot, "Angebot ist null");

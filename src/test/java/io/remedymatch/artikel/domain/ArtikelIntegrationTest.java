@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -122,42 +123,6 @@ public class ArtikelIntegrationTest {
         assertThat(fetchedArtikel.getHersteller(), is(artikelDTO.getHersteller()));
         assertThat(fetchedArtikel.getEan(), is(artikelDTO.getEan()));
     }
-
-    @Test
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
-    public void shouldUpdateArtikel() throws Exception {
-        var artikelKategorie = artikelKategorieRepository.save(
-                ArtikelKategorieEntity.builder()
-                        .name("shouldUpdateArtikel")
-                        .build()
-        );
-        var updateArtikelKategorie = artikelKategorieRepository.save(
-                ArtikelKategorieEntity.builder()
-                        .name("kategorie-updated")
-                        .build()
-        );
-        var artikelDTO = artikelForTC("shouldUpdateArtikel", ArtikelKategorieMapper.getArtikelKategorieDTO(artikelKategorie));
-        var savedArtikel = artikelJpaRepository.save(ArtikelMapper.getArticleEntity(artikelDTO));
-
-        artikelDTO.setId(savedArtikel.getId());
-        artikelDTO.setEan("ean-updated");
-        artikelDTO.setBeschreibung("beschreibung-updated");
-        artikelDTO.setHersteller("hersteller-updated");
-        artikelDTO.setArtikelKategorie(ArtikelKategorieMapper.getArtikelKategorieDTO(updateArtikelKategorie));
-
-        MvcResult putArtikelResult = mockMvc.perform(put("/artikel")
-                .contentType("application/json")
-                .accept("application/json")
-                .content(objectMapper.writeValueAsString(artikelDTO))).andReturn();
-        assertThat(putArtikelResult.getResponse().getStatus(), is(200));
-        ArtikelDTO fetchedArtikelUpdate = objectMapper.readValue(putArtikelResult.getResponse().getContentAsString(), ArtikelDTO.class);
-        assertThat(fetchedArtikelUpdate.getId(), is(savedArtikel.getId()));
-        assertThat(fetchedArtikelUpdate.getArtikelKategorie().getId(), is(artikelDTO.getArtikelKategorie().getId()));
-        assertThat(fetchedArtikelUpdate.getBeschreibung(), is(artikelDTO.getBeschreibung()));
-        assertThat(fetchedArtikelUpdate.getHersteller(), is(artikelDTO.getHersteller()));
-        assertThat(fetchedArtikelUpdate.getEan(), is(artikelDTO.getEan()));
-    }
-
 
     private ArtikelDTO artikelForTC(String tcNAME, ArtikelKategorieDTO artikelKategorieDTO) {
         return ArtikelDTO.builder()

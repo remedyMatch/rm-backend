@@ -1,28 +1,32 @@
 package io.remedymatch.geodaten.geocoding.impl.locationiq;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.remedymatch.geodaten.geocoding.Geocoder;
 import io.remedymatch.geodaten.geocoding.domain.Adresse;
 import io.remedymatch.geodaten.geocoding.domain.Point;
+import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.AdressQuery;
+import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.KoordinatenQuery;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Query;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Response;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY;
 
 @Component
 @RequiredArgsConstructor
@@ -33,33 +37,63 @@ public class LocationIQGeocoderClient implements Geocoder {
 
     @Override
     public List<Point> findePointsByAdressString(@NonNull String adressString) {
-        final Query query = new Query(adressString);
-        return queryGeocodeService(query);
+        final AdressQuery adressQuery = new AdressQuery(adressString);
+        final List<Response> responses = queryGeocodeService(adressQuery);
+        if (CollectionUtils.isEmpty(responses)) {
+            return List.of();
+        }
+        return responses.stream()
+                .map(response -> new Point(Double.parseDouble(response.getLat()), Double.parseDouble(response.getLon())))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Point> findePointsByAdresse(@NonNull Adresse adresse) {
-        final Query query = new Query(adresse);
-        return queryGeocodeService(query);
+        final AdressQuery adressQuery = new AdressQuery(adresse);
+        final List<Response> responses = queryGeocodeService(adressQuery);
+        if (CollectionUtils.isEmpty(responses)) {
+            return List.of();
+        }
+        return responses.stream()
+                .map(response -> new Point(Double.parseDouble(response.getLat()), Double.parseDouble(response.getLon())))
+                .collect(Collectors.toList());
     }
 
 
     @Override
-    public Adresse findeAdresseByPoint(@NonNull Point point) {
-        throw new NotImplementedException("TBD");
+    public String findeAdresseByPoint(@NonNull Point point) {
+        final KoordinatenQuery koordinatenQuery = new KoordinatenQuery(point);
+        final List<Response> responses = queryGeocodeService(koordinatenQuery);
+        if (CollectionUtils.isEmpty(responses)) {
+            return "";
+        }
+        return responses.stream()
+                .map(Response::getDisplay_name)
+                .collect(Collectors.toList())
+                .iterator()
+                .next();
     }
 
     @Override
-    public List<Adresse> findeAdressVorschlaegeByAdressString(@NonNull String adressString) {
-        throw new NotImplementedException("TBD");
+    public List<String> findeAdressVorschlaegeByAdressString(@NonNull String adressString) {
+        final AdressQuery adressQuery = new AdressQuery(adressString);
+        final List<Response> responses = queryGeocodeService(adressQuery);
+        if (CollectionUtils.isEmpty(responses)) {
+            return List.of();
+        }
+        return responses.stream()
+                .map(Response::getDisplay_name)
+                .collect(Collectors.toList());
     }
 
-    private List<Point> queryGeocodeService(Query query) throws RuntimeException {
-        final Map<String, String> queryParams = buildQueryParamsFromQuery(query);
+    private List<Response> queryGeocodeService(@NonNull Query query) throws RuntimeException {
+        final Map<String, String> queryParams = query.asMap();
+        putApiKeyInMap(queryParams);
         final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(properties.getGeocoderServiceBaseUrl() +
-                "/search.php");
+                query.url());
         queryParams.forEach(builder::queryParam);
         final URI url = builder.build().encode().toUri();
+        restTemplate.getMessageConverters().add(0, createMessageConverter());
         final ResponseEntity<Response[]> responseEntity = restTemplate.getForEntity(url, Response[].class);
         if (responseEntity.getStatusCode() != HttpStatus.OK) {
             throw new RuntimeException(responseEntity.getStatusCode().name());
@@ -68,44 +102,18 @@ public class LocationIQGeocoderClient implements Geocoder {
         if (gefundeneKoordinaten == null || gefundeneKoordinaten.length <= 0) {
             return List.of();
         }
-        return Arrays.stream(responseEntity.getBody())
-                .map(response -> new Point(Double.parseDouble(response.getLat()), Double.parseDouble(response.getLon())))
-                .collect(Collectors.toList());
+        return Arrays.stream(responseEntity.getBody()).collect(Collectors.toList());
     }
 
-    private Map<String, String> buildQueryParamsFromQuery(@NonNull Query query) {
-        final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("key", properties.getGeocoderServiceApiKey());
-        queryParams.put("format", "json");
-        if (isNotEmpty(query.getQ())) {
-            queryParams.put("q", query.getQ());
-            return queryParams;
-        } else {
-            if (isNotEmpty(query.getStreet())) {
-                queryParams.put("street", query.getStreet());
-            }
-            if (isNotEmpty(query.getCounty())) {
-                queryParams.put("county", query.getCounty());
-            }
-            if (isNotEmpty(query.getState())) {
-                queryParams.put("state", query.getState());
-            }
-            if (isNotEmpty(query.getCity())) {
-                queryParams.put("city", query.getCity());
-            }
-            if (isNotEmpty(query.getPostalcode())) {
-                queryParams.put("postalcode", query.getPostalcode());
-            }
-            queryParams.put("country", query.getCountry());
-        }
-        if (!(queryParams.containsKey("street")) &&
-                !(queryParams.containsKey("city")) &&
-                !(queryParams.containsKey("county")) &&
-                !(queryParams.containsKey("state")) &&
-                !(queryParams.containsKey("postalcode"))) {
-            throw new RuntimeException("Bei strukturierter Suche muss mindestens eine weitere Eigenschaft (neben dem " +
-                    "Land) gesetzt sein.");
-        }
-        return queryParams;
+    private HttpMessageConverter<?> createMessageConverter() {
+        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        converter.setObjectMapper(objectMapper);
+        return converter;
+    }
+
+    private void putApiKeyInMap(Map<String, String> map) {
+        map.put("key", properties.getGeocoderServiceApiKey());
     }
 }

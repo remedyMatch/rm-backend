@@ -11,7 +11,7 @@ public interface Geocoder {
 
     List<Point> findePointsByAdressString(String adressString);
 
-    Adresse findeAdresseByPoint(Point point);
+    String findeAdresseByPoint(Point point);
 
-    List<Adresse> findeAdressVorschlaegeByAdressString(String adressString);
+    List<String> findeAdressVorschlaegeByAdressString(String adressString);
 }

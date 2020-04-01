@@ -22,11 +22,11 @@ public class StandortService {
         return geocoder.findePointsByAdresse(adresse);
     }
 
-    public Adresse findeAdresseByPoint(Point point) {
+    public String findeAdresseByPoint(Point point) {
         return geocoder.findeAdresseByPoint(point);
     }
 
-    public List<Adresse> findeAdressVorschlaegeByAdressString(String adressString) {
+    public List<String> findeAdressVorschlaegeByAdressString(String adressString) {
         return geocoder.findeAdressVorschlaegeByAdressString(adressString);
     }
 }

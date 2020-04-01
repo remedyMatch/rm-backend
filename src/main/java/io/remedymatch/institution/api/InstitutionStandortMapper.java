@@ -2,7 +2,7 @@ package io.remedymatch.institution.api;
 
 import io.remedymatch.institution.domain.InstitutionStandort;
 import io.remedymatch.institution.domain.InstitutionStandortId;
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 
 public class InstitutionStandortMapper {
 

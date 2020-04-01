@@ -23,7 +23,7 @@ import io.remedymatch.bedarf.domain.BedarfRepository;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.institution.domain.InstitutionTyp;
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.person.domain.PersonEntity;
 import io.remedymatch.person.domain.PersonRepository;
 import lombok.extern.slf4j.Slf4j;

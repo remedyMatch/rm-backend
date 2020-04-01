@@ -26,7 +26,7 @@ import io.remedymatch.institution.domain.InstitutionStandort;
 import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 import io.remedymatch.institution.domain.InstitutionStandortRepository;
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.user.domain.NotUserInstitutionObjectException;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;

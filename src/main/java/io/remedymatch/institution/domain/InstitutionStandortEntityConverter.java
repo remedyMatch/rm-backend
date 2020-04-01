@@ -1,7 +1,7 @@
 package io.remedymatch.institution.domain;
 
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity.InstitutionStandortEntityBuilder;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity.InstitutionStandortEntityBuilder;
 
 public class InstitutionStandortEntityConverter {
 

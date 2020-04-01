@@ -2,7 +2,7 @@ package io.remedymatch.institution.domain;
 
 import java.util.stream.Collectors;
 
-import io.remedymatch.institution.domain.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 
 class InstitutionEntityConverter {
 

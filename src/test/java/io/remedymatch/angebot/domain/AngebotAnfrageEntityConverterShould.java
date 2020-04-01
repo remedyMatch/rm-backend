@@ -16,7 +16,7 @@ import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionStandort;
 import io.remedymatch.institution.domain.InstitutionStandortId;
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("AngebotAnfrageEntityConverter soll")

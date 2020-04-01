@@ -14,7 +14,7 @@ import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageStatus;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.institution.domain.InstitutionEntity;
 import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
 

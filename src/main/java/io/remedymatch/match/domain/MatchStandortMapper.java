@@ -1,7 +1,7 @@
 package io.remedymatch.match.domain;
 
 import io.remedymatch.institution.domain.InstitutionStandort;
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 
 public class MatchStandortMapper {
 

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import io.remedymatch.institution.domain.InstitutionStandort;
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.match.domain.MatchStandortEntity;
 import lombok.val;
 

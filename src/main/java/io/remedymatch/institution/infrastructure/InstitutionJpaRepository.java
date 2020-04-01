@@ -1,4 +1,4 @@
-package io.remedymatch.institution.domain.infrastructure;
+package io.remedymatch.institution.infrastructure;
 
 import java.util.UUID;
 

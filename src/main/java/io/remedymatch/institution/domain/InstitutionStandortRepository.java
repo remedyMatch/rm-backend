@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
-import io.remedymatch.angebot.domain.AngebotId;
-import io.remedymatch.institution.domain.infrastructure.InstitutionStandortJpaRepository;
+import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
 
 @Repository
 public class InstitutionStandortRepository {

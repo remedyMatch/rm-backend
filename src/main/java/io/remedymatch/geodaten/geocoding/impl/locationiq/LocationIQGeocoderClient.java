@@ -34,35 +34,15 @@ public class LocationIQGeocoderClient implements Geocoder {
     @Override
     public List<Point> findePointsByAdressString(@NonNull String adressString) {
         final Query query = new Query(adressString);
-        final Map<String, String> queryParams = buildQueryParamsFromQuery(query);
-        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(properties.getGeocoderServiceBaseUrl() + "/search.php");
-        queryParams.forEach(builder::queryParam);
-        final URI url = builder.build().encode().toUri();
-        final ResponseEntity<Response[]> responseEntity = restTemplate.getForEntity(url, Response[].class);
-        if (responseEntity.getStatusCode() != HttpStatus.OK) {
-            throw new RuntimeException(responseEntity.getStatusCode().name());
-        }
-        if (responseEntity.getBody() == null || responseEntity.getBody().length < 1) {
-            return List.of();
-        }
-        final List<Point> gefundeneKoordinaten = Arrays.stream(responseEntity.getBody())
-                .map(response -> new Point(Double.parseDouble(response.getLat()), Double.parseDouble(response.getLon())))
-                .collect(Collectors.toList());
-        return gefundeneKoordinaten;
+        return queryGeocodeService(query);
     }
 
     @Override
     public List<Point> findePointsByAdresse(@NonNull Adresse adresse) {
-        throw new NotImplementedException("TBD");
-//        final Query query = new Query(adresse);
-//        final Map<String, String> queryParams = buildQueryParamsFromQuery(query);
-//        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(properties.getGeocoderServiceBaseUrl() + "/search.php");
-//        queryParams.forEach(builder::queryParam);
-//        final ResponseEntity<Response> responseResponseEntity = restTemplate.getForEntity(builder.toUriString(), Response.class);
-//        final Response body = responseResponseEntity.getBody();
-//        Point point = new Point(Double.valueOf(body.getLat()), Double.valueOf(body.getLon()));
-//        return point;
+        final Query query = new Query(adresse);
+        return queryGeocodeService(query);
     }
+
 
     @Override
     public Adresse findeAdresseByPoint(@NonNull Point point) {
@@ -72,6 +52,25 @@ public class LocationIQGeocoderClient implements Geocoder {
     @Override
     public List<Adresse> findeAdressVorschlaegeByAdressString(@NonNull String adressString) {
         throw new NotImplementedException("TBD");
+    }
+
+    private List<Point> queryGeocodeService(Query query) throws RuntimeException {
+        final Map<String, String> queryParams = buildQueryParamsFromQuery(query);
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(properties.getGeocoderServiceBaseUrl() +
+                "/search.php");
+        queryParams.forEach(builder::queryParam);
+        final URI url = builder.build().encode().toUri();
+        final ResponseEntity<Response[]> responseEntity = restTemplate.getForEntity(url, Response[].class);
+        if (responseEntity.getStatusCode() != HttpStatus.OK) {
+            throw new RuntimeException(responseEntity.getStatusCode().name());
+        }
+        final Response[] gefundeneKoordinaten = responseEntity.getBody();
+        if (gefundeneKoordinaten == null || gefundeneKoordinaten.length <= 0) {
+            return List.of();
+        }
+        return Arrays.stream(responseEntity.getBody())
+                .map(response -> new Point(Double.parseDouble(response.getLat()), Double.parseDouble(response.getLon())))
+                .collect(Collectors.toList());
     }
 
     private Map<String, String> buildQueryParamsFromQuery(@NonNull Query query) {
@@ -84,23 +83,18 @@ public class LocationIQGeocoderClient implements Geocoder {
         } else {
             if (isNotEmpty(query.getStreet())) {
                 queryParams.put("street", query.getStreet());
-                return queryParams;
             }
             if (isNotEmpty(query.getCounty())) {
                 queryParams.put("county", query.getCounty());
-                return queryParams;
             }
             if (isNotEmpty(query.getState())) {
                 queryParams.put("state", query.getState());
-                return queryParams;
             }
             if (isNotEmpty(query.getCity())) {
                 queryParams.put("city", query.getCity());
-                return queryParams;
             }
             if (isNotEmpty(query.getPostalcode())) {
                 queryParams.put("postalcode", query.getPostalcode());
-                return queryParams;
             }
             queryParams.put("country", query.getCountry());
         }

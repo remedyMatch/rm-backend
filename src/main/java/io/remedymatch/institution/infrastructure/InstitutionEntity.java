@@ -1,5 +1,6 @@
 package io.remedymatch.institution.infrastructure;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,5 +60,6 @@ public class InstitutionEntity {
     private InstitutionStandortEntity hauptstandort;
 
     @OneToMany
-    private List<InstitutionStandortEntity> standorte;
+    @Builder.Default
+    private List<InstitutionStandortEntity> standorte = new ArrayList<>();
 }

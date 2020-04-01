@@ -1,5 +1,6 @@
 package io.remedymatch.institution.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.remedymatch.bedarf.domain.BedarfEntity;
@@ -25,5 +26,6 @@ public class Institution {
     private InstitutionTyp typ;
     private List<BedarfEntity> bedarfe;
     private InstitutionStandort  hauptstandort;
-    private List<InstitutionStandort> standorte;
+    @Builder.Default
+    private List<InstitutionStandort> standorte = new ArrayList<>();
 }

@@ -4,9 +4,9 @@ import java.util.stream.Collectors;
 
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 
-class InstitutionEntityConverter {
+public class InstitutionEntityConverter {
 
-	static Institution convert(InstitutionEntity entity) {
+	public static Institution convert(InstitutionEntity entity) {
 		if (entity == null) {
 			return null;
 		}
@@ -26,7 +26,7 @@ class InstitutionEntityConverter {
 		return builder.build();
 	}
 
-	static InstitutionEntity convert(Institution institution) {
+	public static InstitutionEntity convert(Institution institution) {
 		if (institution == null) {
 			return null;
 		}

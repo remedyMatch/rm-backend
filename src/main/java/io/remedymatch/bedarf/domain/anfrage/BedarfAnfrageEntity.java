@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 
 import io.remedymatch.bedarf.domain.BedarfEntity;
-import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

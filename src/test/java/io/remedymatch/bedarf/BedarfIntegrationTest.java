@@ -1,27 +1,14 @@
 package io.remedymatch.bedarf;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.remedymatch.TestApplication;
-import io.remedymatch.WithMockJWT;
-import io.remedymatch.artikel.ArtikelFixtures;
-import io.remedymatch.artikel.api.ArtikelMapper;
-import io.remedymatch.artikel.domain.ArtikelEntity;
-import io.remedymatch.artikel.domain.ArtikelJpaRepository;
-import io.remedymatch.artikel.domain.ArtikelKategorieEntity;
-import io.remedymatch.artikel.domain.ArtikelKategorieRepository;
-import io.remedymatch.bedarf.api.BedarfDTO;
-import io.remedymatch.bedarf.domain.BedarfEntity;
-import io.remedymatch.bedarf.domain.BedarfRepository;
-import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionRepository;
-import io.remedymatch.person.domain.PersonEntity;
-import io.remedymatch.person.domain.PersonRepository;
-import io.remedymatch.web.UserProvider;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import java.util.List;
+import java.util.UUID;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.collection.IsIterableWithSize;
-import org.hamcrest.core.IsIterableContaining;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -30,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,12 +25,22 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-import java.util.UUID;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import io.remedymatch.TestApplication;
+import io.remedymatch.WithMockJWT;
+import io.remedymatch.artikel.ArtikelFixtures;
+import io.remedymatch.artikel.api.ArtikelMapper;
+import io.remedymatch.artikel.domain.ArtikelJpaRepository;
+import io.remedymatch.artikel.domain.ArtikelKategorieRepository;
+import io.remedymatch.bedarf.api.BedarfDTO;
+import io.remedymatch.bedarf.domain.BedarfEntity;
+import io.remedymatch.bedarf.domain.BedarfRepository;
+import io.remedymatch.institution.domain.InstitutionRepository;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.person.domain.PersonEntity;
+import io.remedymatch.person.domain.PersonRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -77,25 +73,25 @@ public class BedarfIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeEach
-    @Transactional
-    public void beforeEach() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        bedarfRepository.deleteAll();
-        artikelJpaRepository.deleteAll();
-        artikelKategorieRepository.deleteAll();
-        personRepository.deleteAll();
-        institutionRepository.deleteAll();
-
-        var institution = institutionRepository.save(InstitutionEntity.builder()
-                .name("testinstitut")
-                .institutionKey(UUID.randomUUID().toString())
-                .build());
-        personRepository.save(PersonEntity.builder()
-                .username("testUser")
-                .institution(institution)
-                .build());
-    }
+//    @BeforeEach
+//    @Transactional
+//    public void beforeEach() {
+//        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+//        bedarfRepository.deleteAll();
+//        artikelJpaRepository.deleteAll();
+//        artikelKategorieRepository.deleteAll();
+//        personRepository.deleteAll();
+//        institutionRepository.deleteAll();
+//
+//        var institution = institutionRepository.add(InstitutionEntity.builder()
+//                .name("testinstitut")
+//                .institutionKey(UUID.randomUUID().toString())
+//                .build());
+//        personRepository.save(PersonEntity.builder()
+//                .username("testUser")
+//                .institution(institution)
+//                .build());
+//    }
 
     @Test
     @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "testUser")

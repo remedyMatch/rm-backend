@@ -1,12 +1,13 @@
 package io.remedymatch.match.domain;
 
 
-import io.remedymatch.institution.domain.InstitutionEntity;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.UUID;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 
 @Repository
 public interface MatchRepository extends CrudRepository<MatchEntity, UUID> {

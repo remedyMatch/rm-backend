@@ -20,9 +20,9 @@ import io.remedymatch.artikel.domain.ArtikelJpaRepository;
 import io.remedymatch.artikel.domain.ArtikelKategorieEntity;
 import io.remedymatch.artikel.domain.ArtikelKategorieRepository;
 import io.remedymatch.bedarf.domain.BedarfRepository;
-import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.person.domain.PersonEntity;
 import io.remedymatch.person.domain.PersonRepository;
@@ -51,7 +51,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     private ArtikelKategorieRepository artikelKategorieRepository;
 
     @Autowired
-    private InstitutionRepository institutionRepository;
+    private InstitutionJpaRepository institutionRepository;
 
     private Faker faker = new Faker(new Locale("de"));
 

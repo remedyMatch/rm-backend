@@ -36,7 +36,7 @@ class AngebotMapper {
                 .kommentar(angebot.getKommentar());
 
         if (angebot.getInstitution() != null) {
-            builder = builder.institutionId(angebot.getInstitution().getId());
+            builder = builder.institutionId(angebot.getInstitution().getId().getValue());
         }
         return builder.build();
     }

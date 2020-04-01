@@ -21,12 +21,9 @@ import io.remedymatch.artikel.domain.ArtikelRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionStandort;
-import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 import io.remedymatch.institution.domain.InstitutionStandortRepository;
-import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.user.domain.NotUserInstitutionObjectException;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
@@ -57,7 +54,7 @@ public class AngebotService {
 	public List<Angebot> getAngeboteDerUserInstitution() {
 		val userInstitution = userService.getContextInstitution();
 		return mitEntfernung(//
-				angebotRepository.getAngeboteVonInstitution(new InstitutionId(userInstitution.getId())), //
+				angebotRepository.getAngeboteVonInstitution(userInstitution.getId()), //
 				userInstitution.getHauptstandort());
 	}
 
@@ -96,7 +93,7 @@ public class AngebotService {
 			throw new ObjectNotFoundException(String.format(EXCEPTION_MSG_ANGEBOT_NICHT_GEFUNDEN, angebotId));
 		}
 
-		if (!userService.isUserContextInstitution(new InstitutionId(angebot.get().getInstitution().getId()))) {
+		if (!userService.isUserContextInstitution(angebot.get().getInstitution().getId())) {
 			throw new NotUserInstitutionObjectException(EXCEPTION_MSG_ANGEBOT_NICHT_VON_USER_INSTITUTION);
 		}
 
@@ -118,7 +115,7 @@ public class AngebotService {
 			throw new IllegalArgumentException("Angebot ist nicht vorhanden");
 		}
 
-		InstitutionStandortEntity standort = null;
+		InstitutionStandort  standort = null;
 
 		val userInstitution = userService.getContextInstitution();
 		if (userInstitution.getHauptstandort().getId().equals(standortId)) {
@@ -139,7 +136,7 @@ public class AngebotService {
 		var anfrage = AngebotAnfrage.builder() //
 				.angebot(angebot.get()) //
 				.institutionVon(userInstitution) //
-				.standortVon(InstitutionStandortEntityConverter.convert(standort)) //
+				.standortVon(standort) //
 				.anzahl(anzahl) //
 				.kommentar(kommentar) //
 				.status(AngebotAnfrageStatus.Offen) //
@@ -209,9 +206,9 @@ public class AngebotService {
 
 	/* help methods */
 
-	private List<Angebot> mitEntfernung(final List<Angebot> angebote, InstitutionStandortEntity userHauptstandort) {
+	private List<Angebot> mitEntfernung(final List<Angebot> angebote, InstitutionStandort userHauptstandort) {
 		angebote.forEach(angebot -> angebot.setEntfernung(berechneEntfernung(//
-				InstitutionStandortEntityConverter.convert(userHauptstandort), //
+				userHauptstandort, //
 				angebot.getStandort())));
 
 		return angebote;
@@ -224,7 +221,7 @@ public class AngebotService {
 
 	private BigDecimal berechneEntfernung(final InstitutionStandort angebotStandort) {
 		return berechneEntfernung(//
-				InstitutionStandortEntityConverter.convert(userService.getContextInstitution().getHauptstandort()), //
+				userService.getContextInstitution().getHauptstandort(), //
 				angebotStandort);
 	}
 

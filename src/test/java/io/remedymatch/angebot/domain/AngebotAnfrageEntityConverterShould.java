@@ -13,9 +13,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
-import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.Institution;
+import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionStandort;
 import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 
 @ExtendWith(SpringExtension.class)
@@ -24,7 +26,9 @@ public class AngebotAnfrageEntityConverterShould {
 
 	private static final AngebotAnfrageId ANGEBOT_ANFRAGE_ID = new AngebotAnfrageId(UUID.randomUUID());
 	private static final String KOMMENTAR = "Kommentar";
-	private static final InstitutionEntity INSTITUTION_VON = InstitutionEntity.builder().id(UUID.randomUUID()).build();
+	private static final InstitutionId INSTITUTION_VON_ID = new InstitutionId(UUID.randomUUID());
+	private static final Institution INSTITUTION_VON = Institution.builder().id(INSTITUTION_VON_ID).build();
+	private static final InstitutionEntity INSTITUTION_VON_ENTITY = InstitutionEntity.builder().id(INSTITUTION_VON_ID.getValue()).build();
 	private static final InstitutionStandortId STANDORT_VON_ID = new InstitutionStandortId(UUID.randomUUID());
 	private static final InstitutionStandort STANDORT_VON = InstitutionStandort.builder().id(STANDORT_VON_ID).build();
 	private static final InstitutionStandortEntity STANDORT_VON_ENTITY = InstitutionStandortEntity.builder()
@@ -83,7 +87,7 @@ public class AngebotAnfrageEntityConverterShould {
 		return AngebotAnfrageEntity.builder() //
 				.id(mitId ? ANGEBOT_ANFRAGE_ID.getValue() : null) //
 				.angebot(ANGEBOT_ENTITY) //
-				.institutionVon(INSTITUTION_VON) //
+				.institutionVon(INSTITUTION_VON_ENTITY) //
 				.standortVon(STANDORT_VON_ENTITY) //
 				.anzahl(ANZAHL) //
 				.kommentar(KOMMENTAR) //

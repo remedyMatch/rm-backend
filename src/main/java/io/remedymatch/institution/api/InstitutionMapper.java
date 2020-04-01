@@ -1,24 +1,46 @@
 package io.remedymatch.institution.api;
 
-import io.remedymatch.institution.domain.InstitutionEntity;
-
 import java.util.stream.Collectors;
+
+import io.remedymatch.institution.domain.Institution;
+import io.remedymatch.institution.domain.InstitutionId;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 
 public class InstitutionMapper {
 
-    public static InstitutionDTO mapToDTO(InstitutionEntity entity) {
+	public static InstitutionDTO mapToDTO(InstitutionEntity institution) {
         var builder = InstitutionDTO.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .typ(entity.getTyp())
-                .institutionKey(entity.getInstitutionKey());
+                .id(institution.getId())
+                .name(institution.getName())
+                .typ(institution.getTyp())
+                .institutionKey(institution.getInstitutionKey());
 
-        if (entity.getHauptstandort() != null) {
-            builder = builder.hauptstandort(InstitutionStandortMapper.mapToDTO(entity.getHauptstandort()));
+        if (institution.getHauptstandort() != null) {
+            builder = builder.hauptstandort(InstitutionStandortMapper.mapToDTO(institution.getHauptstandort()));
         }
 
-        if (entity.getStandorte() != null) {
-            builder = builder.standorte(entity.getStandorte().stream()
+        if (institution.getStandorte() != null) {
+            builder = builder.standorte(institution.getStandorte().stream()
+                    .map(InstitutionStandortMapper::mapToDTO)
+                    .collect(Collectors.toList()));
+        }
+
+        return builder.build();
+    }
+	
+    public static InstitutionDTO mapToDTO(Institution institution) {
+        var builder = InstitutionDTO.builder()
+                .id(institution.getId().getValue())
+                .name(institution.getName())
+                .typ(institution.getTyp())
+                .institutionKey(institution.getInstitutionKey());
+
+        if (institution.getHauptstandort() != null) {
+            builder = builder.hauptstandort(InstitutionStandortMapper.mapToDTO(institution.getHauptstandort()));
+        }
+
+        if (institution.getStandorte() != null) {
+            builder = builder.standorte(institution.getStandorte().stream()
                     .map(InstitutionStandortMapper::mapToDTO)
                     .collect(Collectors.toList()));
         }
@@ -26,20 +48,20 @@ public class InstitutionMapper {
         return builder.build();
     }
 
-    public static InstitutionEntity mapToEntity(InstitutionDTO dto) {
-        var builder = InstitutionEntity.builder()
-                .id(dto.getId())
+    public static Institution mapToEntity(InstitutionDTO dto) {
+        var builder = Institution.builder()
+                .id(new InstitutionId(dto.getId()))
                 .name(dto.getName())
                 .typ(dto.getTyp())
                 .institutionKey(dto.getInstitutionKey());
 
         if (dto.getHauptstandort() != null) {
-            builder = builder.hauptstandort(InstitutionStandortMapper.mapToEntity(dto.getHauptstandort()));
+            builder = builder.hauptstandort(InstitutionStandortMapper.mapToStandort(dto.getHauptstandort()));
         }
 
         if (dto.getStandorte() != null) {
             builder = builder.standorte(dto.getStandorte().stream()
-                    .map(InstitutionStandortMapper::mapToEntity)
+                    .map(InstitutionStandortMapper::mapToStandort)
                     .collect(Collectors.toList()));
         }
 

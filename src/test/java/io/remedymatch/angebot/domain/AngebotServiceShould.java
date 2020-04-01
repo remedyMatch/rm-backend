@@ -21,10 +21,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.artikel.domain.ArtikelRepository;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.Institution;
 import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionStandort;
-import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 import io.remedymatch.institution.domain.InstitutionStandortRepository;
 import io.remedymatch.user.domain.UserService;
@@ -106,7 +105,7 @@ public class AngebotServiceShould {
 	void alle_Angebote_einer_Institution_mit_Entfernung_liefern() {
 		val meinStandort = standort("Mein Standort");
 		val meineInstitution = institution(meinStandort);
-		val meineInstitutionId = new InstitutionId(meineInstitution.getId());
+		val meineInstitutionId = meineInstitution.getId();
 		val angebotStandort = standort("Angebot Standort");
 		BigDecimal entfernungDerStandorte = BigDecimal.valueOf(12);
 
@@ -145,10 +144,10 @@ public class AngebotServiceShould {
 
 	/* help method */
 
-	private InstitutionEntity institution(final InstitutionStandort hauptstandort) {
-		return InstitutionEntity.builder() //
-				.id(UUID.randomUUID()) //
-				.hauptstandort(InstitutionStandortEntityConverter.convert(hauptstandort)) //
+	private Institution institution(final InstitutionStandort hauptstandort) {
+		return Institution.builder() //
+				.id(new InstitutionId(UUID.randomUUID())) //
+				.hauptstandort(hauptstandort) //
 				.build();
 	}
 

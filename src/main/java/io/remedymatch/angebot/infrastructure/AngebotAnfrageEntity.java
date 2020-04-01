@@ -17,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
-import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

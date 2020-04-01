@@ -1,5 +1,23 @@
 package io.remedymatch.bedarf.api;
 
+import static io.remedymatch.bedarf.api.BedarfMapper.mapToDTO;
+import static io.remedymatch.bedarf.api.BedarfMapper.mapToEntity;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.remedymatch.bedarf.domain.BedarfRepository;
 import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
@@ -12,16 +30,6 @@ import io.remedymatch.shared.GeoCalc;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static io.remedymatch.bedarf.api.BedarfMapper.mapToDTO;
-import static io.remedymatch.bedarf.api.BedarfMapper.mapToEntity;
 
 @RestController
 @AllArgsConstructor
@@ -50,6 +58,16 @@ public class BedarfController {
         return ResponseEntity.ok(bedarfe);
     }
 
+    @GetMapping("/institution")
+	public ResponseEntity<List<BedarfDTO>> getInstituionBedarfee() {
+    	
+    	val user = personRepository.findByUsername(userProvider.getUserName());
+
+		return ResponseEntity.ok(bedarfRepository.findAllByInstitution_Id(user.getInstitution().getId()).stream()//
+				.map(BedarfMapper::mapToDTO)//
+				.collect(Collectors.toList()));
+	}
+    
     @PostMapping
     public ResponseEntity<Void> bedarfMelden(@RequestBody @Valid BedarfDTO bedarf) {
         val user = personRepository.findByUsername(userProvider.getUserName());

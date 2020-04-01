@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import io.remedymatch.artikel.domain.ArtikelEntity;
-import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.Institution;
 import io.remedymatch.institution.domain.InstitutionStandort;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +27,7 @@ public class Angebot {
 	private BigDecimal anzahl;
 	private BigDecimal rest;
 	private ArtikelEntity artikel;
-	private InstitutionEntity institution;
+	private Institution institution;
 	private InstitutionStandort standort;
 	private LocalDateTime haltbarkeit;
 	private boolean steril;

@@ -7,7 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.remedymatch.angebot.domain.AngebotAnfrage;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
-import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionEntityConverter;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -38,8 +39,8 @@ public class MatchService {
     public MatchEntity matchAusAngebotErstellen(AngebotAnfrage angebotAnfrage) {
         val match = new MatchEntity();
 
-        match.setInstitutionAn(angebotAnfrage.getInstitutionVon());
-        match.setInstitutionVon(angebotAnfrage.getAngebot().getInstitution());
+        match.setInstitutionAn(InstitutionEntityConverter.convert(angebotAnfrage.getInstitutionVon()));
+        match.setInstitutionVon(InstitutionEntityConverter.convert(angebotAnfrage.getAngebot().getInstitution()));
         match.setStandortAn(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandortVon()));
         match.setStandortVon(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getAngebot().getStandort()));
 

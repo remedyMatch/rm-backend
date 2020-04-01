@@ -2,7 +2,8 @@ package io.remedymatch.user.domain;
 
 import org.springframework.stereotype.Service;
 
-import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.Institution;
+import io.remedymatch.institution.domain.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.person.domain.PersonEntity;
 import io.remedymatch.person.domain.PersonRepository;
@@ -20,13 +21,13 @@ public class UserService {
 		 return personRepository.findByUsername(userProvider.getUserName());
 	}
 	
-	public InstitutionEntity getContextInstitution()
+	public Institution getContextInstitution()
 	{
-		 return getContextUser().getInstitution();
+		 return InstitutionEntityConverter.convert(getContextUser().getInstitution());
 	}
 	
 	public boolean isUserContextInstitution(final InstitutionId institutionId)
 	{
-		 return getContextInstitution().getId().equals(institutionId.getValue());
+		 return getContextInstitution().getId().equals(institutionId);
 	}
 }

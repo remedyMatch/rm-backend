@@ -16,9 +16,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.artikel.domain.ArtikelEntity;
-import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.Institution;
+import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionStandort;
 import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 
 @ExtendWith(SpringExtension.class)
@@ -29,7 +31,9 @@ public class AngebotEntityConverterShould {
 	private static final BigDecimal ANZAHL = BigDecimal.valueOf(120.0);
 	private static final BigDecimal REST = BigDecimal.valueOf(120.0);
 	private static final ArtikelEntity ARTIKEL = ArtikelEntity.builder().id(UUID.randomUUID()).build();
-	private static final InstitutionEntity INSTITUTION = InstitutionEntity.builder().id(UUID.randomUUID()).build();
+	private static final InstitutionId INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
+	private static final Institution INSTITUTION = Institution.builder().id(INSTITUTION_ID).build();
+	private static final InstitutionEntity INSTITUTION_ENTITY = InstitutionEntity.builder().id(INSTITUTION_ID.getValue()).build();
 	private static final InstitutionStandortId STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
 	private static final InstitutionStandort STANDORT = InstitutionStandort.builder().id(STANDORT_ID).build();
 	private static final InstitutionStandortEntity STANDORT_ENTITY = InstitutionStandortEntity.builder().id(STANDORT_ID.getValue()).build();
@@ -98,7 +102,7 @@ public class AngebotEntityConverterShould {
 				.anzahl(ANZAHL) //
 				.rest(REST) //
 				.artikel(ARTIKEL) //
-				.institution(INSTITUTION) //
+				.institution(INSTITUTION_ENTITY) //
 				.standort(STANDORT_ENTITY) //
 				.haltbarkeit(HALTBARKEIT) //
 				.steril(STERIL) //

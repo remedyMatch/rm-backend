@@ -24,10 +24,11 @@ import io.remedymatch.angebot.api.AngebotController;
 import io.remedymatch.angebot.api.AngebotDTO;
 import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
 import io.remedymatch.angebot.domain.AngebotRepository;
+import io.remedymatch.bedarf.api.BedarfController;
 import io.remedymatch.bedarf.api.BedarfDTO;
 import io.remedymatch.bedarf.api.BedarfMapper;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
-import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.institution.domain.InstitutionService;
@@ -51,8 +52,8 @@ public class InstitutionController {
     private final AngebotAnfrageRepository angebotAnfrageRepository;
     private final InstitutionService institutionService;
 
-    @Autowired
-    private AngebotController angebotController;
+    private final AngebotController angebotController;
+    private final BedarfController bedarfController;
     
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody InstitutionDTO institution) {
@@ -62,7 +63,7 @@ public class InstitutionController {
             return ResponseEntity.status(403).build();
         }
 
-        var savedInstitution = institutionsRepository.findById(institution.getId());
+        var savedInstitution = institutionsRepository.get(new InstitutionId(institution.getId()));
         if (savedInstitution.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -72,21 +73,27 @@ public class InstitutionController {
     }
 
     @PutMapping("/hauptstandort")
-    public ResponseEntity<InstitutionEntity> updateHauptstandort(@RequestBody @Valid InstitutionStandortDTO standort) {
+    public ResponseEntity<InstitutionDTO> updateHauptstandort(@RequestBody @Valid InstitutionStandortDTO standort) {
         val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(institutionService.updateHauptstandort(person.getInstitution(), InstitutionStandortMapper.mapToStandort(standort)));
+        return ResponseEntity.ok(InstitutionMapper.mapToDTO(institutionService.updateHauptstandort(//
+        		InstitutionEntityConverter.convert(person.getInstitution()), //
+        		InstitutionStandortMapper.mapToStandort(standort))));
     }
 
     @PostMapping("/standort")
-    public ResponseEntity<InstitutionEntity> standortHinzufuegen(@RequestBody @Valid InstitutionStandortDTO standort) {
+    public ResponseEntity<InstitutionDTO> standortHinzufuegen(@RequestBody @Valid InstitutionStandortDTO standort) {
         val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(institutionService.standortHinzufuegen(person.getInstitution(), InstitutionStandortMapper.mapToStandort(standort)));
+        return ResponseEntity.ok(InstitutionMapper.mapToDTO(institutionService.standortHinzufuegen(//
+        		InstitutionEntityConverter.convert(person.getInstitution()), //
+        		InstitutionStandortMapper.mapToStandort(standort))));
     }
 
     @DeleteMapping("/standort/{standortId}")
-    public ResponseEntity<InstitutionEntity> standortEntfernen(@PathVariable("standortId") String standortId) {
+    public ResponseEntity<InstitutionDTO> standortEntfernen(@PathVariable("standortId") String standortId) {
         val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(institutionService.standortEntfernen(person.getInstitution(), UUID.fromString(standortId)));
+        return ResponseEntity.ok(InstitutionMapper.mapToDTO(institutionService.standortEntfernen(//
+        		InstitutionEntityConverter.convert(	person.getInstitution()), //
+        		UUID.fromString(standortId))));
     }
 
     @GetMapping("/typ")
@@ -102,8 +109,8 @@ public class InstitutionController {
 
     @GetMapping("/bedarf")
     public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
-        val person = personRepository.findByUsername(userProvider.getUserName());
-        return ResponseEntity.ok(person.getInstitution().getBedarfe().stream().map(BedarfMapper::mapToDTO).collect(Collectors.toList()));
+    	// FIXME: entfernen
+        return bedarfController.getInstituionBedarfee();
     }
 
     @GetMapping("/angebot")

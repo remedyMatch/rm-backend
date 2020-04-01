@@ -1,21 +1,28 @@
 package io.remedymatch.web;
 
 
-import io.remedymatch.institution.domain.InstitutionEntity;
-import io.remedymatch.institution.domain.InstitutionRepository;
-import io.remedymatch.person.domain.PersonEntity;
-import io.remedymatch.person.domain.PersonRepository;
-import lombok.AllArgsConstructor;
-import lombok.val;
+import java.io.IOException;
+import java.util.Optional;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.*;
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.Optional;
+import io.remedymatch.institution.domain.Institution;
+import io.remedymatch.institution.domain.InstitutionEntityConverter;
+import io.remedymatch.institution.domain.InstitutionRepository;
+import io.remedymatch.person.domain.PersonEntity;
+import io.remedymatch.person.domain.PersonRepository;
+import lombok.AllArgsConstructor;
+import lombok.val;
 
 @Order(1)
 @AllArgsConstructor
@@ -44,13 +51,13 @@ public class UserCreationFilter implements Filter {
             var institution = Optional.ofNullable(institutionRepository.findByInstitutionKey(institutionKeyProvider.getInstitutionKey()));
 
             if (institution.isEmpty()) {
-                val newInstitution = new InstitutionEntity();
+                val newInstitution = new Institution();
                 newInstitution.setInstitutionKey(institutionKeyProvider.getInstitutionKey());
-                institution = Optional.of(institutionRepository.save(newInstitution));
+                institution = Optional.of(institutionRepository.add(newInstitution));
             }
 
             val newPerson = new PersonEntity();
-            newPerson.setInstitution(institution.get());
+            newPerson.setInstitution(InstitutionEntityConverter.convert(institution.get()));
             newPerson.setUsername(userNameProvider.getUserName());
             personRepository.save(newPerson);
         }

@@ -2,9 +2,9 @@ package io.remedymatch.institution.infrastructure;
 
 import java.util.UUID;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface InstitutionStandortJpaRepository extends CrudRepository<InstitutionStandortEntity, UUID> {
+public interface InstitutionStandortJpaRepository extends JpaRepository<InstitutionStandortEntity, UUID> {
 	// leer
 }

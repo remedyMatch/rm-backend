@@ -5,7 +5,6 @@ import static io.remedymatch.person.domain.PersonEntityConverter.convert;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,7 @@ public class PersonRepository {
 	private PersonJpaRepository jpaRepository;
 
 	public List<Person> getAlle() {
-		return StreamSupport.stream(jpaRepository.findAll().spliterator(), false).map(PersonEntityConverter::convert)
-				.collect(Collectors.toList());
+		return jpaRepository.findAll().stream().map(PersonEntityConverter::convert).collect(Collectors.toList());
 	}
 
 	public Optional<Person> findByUsername(final String username) {
@@ -35,7 +33,7 @@ public class PersonRepository {
 
 		return convert(jpaRepository.save(convert(person)));
 	}
-	
+
 	public Person update(final Person person) {
 		Assert.notNull(person, "Person ist null");
 

@@ -3,14 +3,14 @@ package io.remedymatch.angebot.infrastructure;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
 
-public interface AngebotAnfrageJpaRepository extends CrudRepository<AngebotAnfrageEntity, UUID> {
+public interface AngebotAnfrageJpaRepository extends JpaRepository<AngebotAnfrageEntity, UUID> {
 
 	List<AngebotAnfrageEntity> findAllByAngebot_Institution_Id(UUID id);
 	

@@ -10,10 +10,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
@@ -26,7 +29,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,47 +36,53 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
+@Entity(name = "Angebot")
+@Table(name = "RM_ANGEBOT")
 public class AngebotEntity {
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Type(type = "uuid-char")
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
     private UUID id;
 
-    @Column
-    private BigDecimal anzahl;
-
-    @Column
-    private BigDecimal rest;
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "ARTIKEL_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private ArtikelEntity artikel;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionEntity institution;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionStandortEntity standort;
 
-    @Column
+    @Column(name = "ANZAHL", nullable = false, updatable = false)
+    private BigDecimal anzahl;
+
+    @Column(name = "REST", nullable = false, updatable = true)
+    private BigDecimal rest;
+    
+    @Column(name = "HALTBARKEIT", nullable = false, updatable = false)
     private LocalDateTime haltbarkeit;
 
-    @Column
+    @Column(name = "STERIL", nullable = false, updatable = false)
     private boolean steril;
 
-    @Column
+    @Column(name = "ORIGINALVERPACKT", nullable = false, updatable = false)
     private boolean originalverpackt;
 
-    @Column
+    @Column(name = "MEDIZINISCH", nullable = false, updatable = false)
     private boolean medizinisch;
 
-    @Column
+    @Column(name = "KOMMENTAR", nullable = false, updatable = false)
     private String kommentar;
 
-    @Column
+    @Column(name = "BEDIENT", nullable = false, updatable = true)
     private boolean bedient;
-
+    
     @OneToMany(fetch = FetchType.LAZY)
     private List<AngebotAnfrageEntity> anfragen;
-
 }

@@ -4,6 +4,7 @@ import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.bedarf.domain.BedarfEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +21,8 @@ public class InstitutionEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Type(type = "uuid-char")
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
     private UUID id;
 
     @Column(length = 60)

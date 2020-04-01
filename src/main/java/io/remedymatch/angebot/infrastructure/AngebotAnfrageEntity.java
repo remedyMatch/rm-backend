@@ -7,12 +7,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
 import io.remedymatch.institution.domain.InstitutionEntity;
@@ -25,7 +27,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,32 +34,39 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
+@Entity(name = "AngebotAnfrage")
+@Table(name = "RM_ANGEBOT_ANFRAGE")
 public class AngebotAnfrageEntity {
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "id", nullable = false, updatable = false)
+    @Type(type = "uuid-char")
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
     private UUID id;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "ANGEBOT_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private AngebotEntity angebot;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "INSTITUTION_VON_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionEntity institutionVon;
     
     @ManyToOne
+    @JoinColumn(name = "STANDORT_VON_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionStandortEntity standortVon;
     
-    @Column
+    @Column(name = "ANZAHL", nullable = false, updatable = false)
     private BigDecimal anzahl;
 
-    @Column
+    @Column(name = "KOMMENTAR", nullable = false, updatable = false)
     private String kommentar;
 
-    @Column
+    @Column(name = "PROZESS_INSTANZ_ID", nullable = true, updatable = true)
     private String prozessInstanzId;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS", nullable = false, updatable = true)
     private AngebotAnfrageStatus status;
 }

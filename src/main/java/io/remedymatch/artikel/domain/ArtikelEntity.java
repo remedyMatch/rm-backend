@@ -2,6 +2,7 @@ package io.remedymatch.artikel.domain;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -19,7 +20,8 @@ public class ArtikelEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "id", nullable = false, updatable = false)
+    @Type(type = "uuid-char")
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "EAN", nullable = false, updatable = false)

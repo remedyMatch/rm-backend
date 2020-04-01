@@ -17,7 +17,7 @@ public interface AngebotAnfrageJpaRepository extends CrudRepository<AngebotAnfra
 	List<AngebotAnfrageEntity> findAllByInstitutionVon_Id(UUID id);
 	
 	@Modifying
-    @Query("UPDATE AngebotAnfrageEntity a SET a.status=:statusNeu WHERE a.angebot.id = :angebotId AND a.status=:statusAlt")
+    @Query("UPDATE AngebotAnfrage a SET a.status=:statusNeu WHERE a.angebot.id = :angebotId AND a.status=:statusAlt")
     void updateStatus(//
     		@Param("angebotId") UUID angebotId, //
     		@Param("statusAlt") AngebotAnfrageStatus statusAlt, //

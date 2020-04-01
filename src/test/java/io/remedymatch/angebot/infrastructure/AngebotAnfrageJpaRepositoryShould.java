@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
 import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
+import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionStandortEntity;
 import io.remedymatch.institution.domain.InstitutionTyp;
 
 @ExtendWith(SpringExtension.class)
@@ -41,15 +44,28 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@Autowired
 	private AngebotAnfrageJpaRepository jpaRepository;
 
+	private InstitutionEntity meinKrankenhaus;
+	private InstitutionStandortEntity meinStandort;
+	private ArtikelEntity beispielArtikel;
+	private AngebotEntity beispielAngebot;
+	
+	@BeforeEach
+	private void prepare()
+	{
+		meinKrankenhaus = persist(meinKrankenhaus());
+		meinStandort = persist(meinStandort());
+		beispielArtikel = persist(beispielArtikel());
+		beispielAngebot = persist(beispielAngebot());
+		entityManager.flush();
+	}
+	
 	@Rollback(true)
 	@Transactional
 	@Test
 	@DisplayName("alle Anfragen fuer InstitutionAn Id zurueckliefern")
 	void alle_Anfragen_fuer_InstitutionAnId_zurueckliefern() {
-		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
-		AngebotEntity angebot = persist(angebot(meinKrankenhaus));
-		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageFuerAngebot(angebot, BigDecimal.valueOf(100)));
-		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageFuerAngebot(angebot, BigDecimal.valueOf(200)));
+		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(100)));
+		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
 		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByAngebot_Institution_Id(meinKrankenhaus.getId()));
@@ -60,7 +76,6 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@Test
 	@DisplayName("alle Anfragen fuer InstitutionVon Id zurueckliefern")
 	void alle_Anfragen_fuer_InstitutionVon_Id_zurueckliefern() {
-		InstitutionEntity meinKrankenhaus = persist(meinKrankenhaus());
 		AngebotAnfrageEntity ersteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
 		AngebotAnfrageEntity zweiteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
 		entityManager.flush();
@@ -73,17 +88,16 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@Test
 	@DisplayName("Status der Anfragen aktualisieren")
 	void status_der_Anfragen_aktualisieren() {
-		AngebotEntity angebot = persist(angebot());
-		AngebotAnfrageEntity ersteOffeneAnfrage = persist(angebotAnfrage(angebot, AngebotAnfrageStatus.Offen));
-		AngebotAnfrageEntity zweiteOffeneAnfrage = persist(angebotAnfrage(angebot, AngebotAnfrageStatus.Offen));
-		AngebotAnfrageEntity dritteAnfrageStorniert = persist(angebotAnfrage(angebot, AngebotAnfrageStatus.Angenommen));
+		AngebotAnfrageEntity ersteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Offen));
+		AngebotAnfrageEntity zweiteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Offen));
+		AngebotAnfrageEntity dritteAnfrageStorniert = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Angenommen));
 		entityManager.flush();
 
 		assertEquals(Optional.of(ersteOffeneAnfrage), jpaRepository.findById(ersteOffeneAnfrage.getId()));
 		assertEquals(Optional.of(zweiteOffeneAnfrage), jpaRepository.findById(zweiteOffeneAnfrage.getId()));
 		assertEquals(Optional.of(dritteAnfrageStorniert), jpaRepository.findById(dritteAnfrageStorniert.getId()));
 		
-		jpaRepository.updateStatus(angebot.getId(), AngebotAnfrageStatus.Offen, AngebotAnfrageStatus.Storniert);
+		jpaRepository.updateStatus(beispielAngebot.getId(), AngebotAnfrageStatus.Offen, AngebotAnfrageStatus.Storniert);
 		
 		entityManager.flush();
 		entityManager.clear();
@@ -108,24 +122,28 @@ public class AngebotAnfrageJpaRepositoryShould {
 				.build();
 	}
 	
-	private AngebotEntity angebot() {
-		return AngebotEntity.builder() //
-				.anzahl(BigDecimal.valueOf(100)) //
-				.rest(BigDecimal.valueOf(100)) //
-				.haltbarkeit(LocalDateTime.now()) //
-				.steril(true) //
-				.originalverpackt(true) //
-				.medizinisch(true) //
-				.kommentar("Bla bla") //
-				.bedient(false) //
+	private InstitutionStandortEntity meinStandort() {
+		return InstitutionStandortEntity.builder() //
 				.build();
 	}
 	
-	private AngebotEntity angebot(InstitutionEntity institutionEntity) {
+	private ArtikelEntity beispielArtikel() {
+		return ArtikelEntity.builder() //
+				.ean("EAN") //
+				.name("egal") //
+				.beschreibung("beschreibung") //
+				.hersteller("hersteller") //
+				.build();
+	}
+	
+	private AngebotEntity beispielAngebot() {
 		return AngebotEntity.builder() //
+				.artikel(beispielArtikel) //
+				.institution(meinKrankenhaus) //
+				.standort(meinStandort) //
 				.anzahl(BigDecimal.valueOf(100)) //
 				.rest(BigDecimal.valueOf(100)) //
-				.institution(institutionEntity) //
+				.institution(meinKrankenhaus) //
 				.haltbarkeit(LocalDateTime.now()) //
 				.steril(true) //
 				.originalverpackt(true) //
@@ -139,8 +157,11 @@ public class AngebotAnfrageJpaRepositoryShould {
 			AngebotEntity angebot, //
 			AngebotAnfrageStatus status) {
 		return AngebotAnfrageEntity.builder() //
-				.anzahl(BigDecimal.valueOf(50)) //
 				.angebot(angebot) //
+				.institutionVon(meinKrankenhaus) //
+				.standortVon(meinStandort) //
+				.anzahl(BigDecimal.valueOf(50)) //
+				.kommentar("Bla bla") //
 				.status(status) //
 				.build();
 	}
@@ -149,8 +170,12 @@ public class AngebotAnfrageJpaRepositoryShould {
 			AngebotEntity angebot, //
 			BigDecimal anzahl) {
 		return AngebotAnfrageEntity.builder() //
-				.anzahl(anzahl) //
 				.angebot(angebot)//
+				.institutionVon(meinKrankenhaus) //
+				.standortVon(meinStandort) //
+				.anzahl(anzahl) //
+				.kommentar("Bla bla") //
+				.status(AngebotAnfrageStatus.Offen) //
 				.build();
 	}
 
@@ -158,8 +183,12 @@ public class AngebotAnfrageJpaRepositoryShould {
 			InstitutionEntity institutionVon, //
 			BigDecimal anzahl) {
 		return AngebotAnfrageEntity.builder() //
-				.anzahl(anzahl) //
+				.angebot(beispielAngebot) //
 				.institutionVon(institutionVon)//
+				.standortVon(meinStandort) //
+				.anzahl(anzahl) //
+				.kommentar("Bla bla") //
+				.status(AngebotAnfrageStatus.Offen) //
 				.build();
 	}
 }

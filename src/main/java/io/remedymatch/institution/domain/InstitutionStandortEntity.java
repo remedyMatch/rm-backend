@@ -2,6 +2,7 @@ package io.remedymatch.institution.domain;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
@@ -28,6 +29,8 @@ public class InstitutionStandortEntity {
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Type(type = "uuid-char")
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
 	private UUID id;
 
 	@Column(length = 60)

@@ -1,24 +1,25 @@
 package io.remedymatch.person.api;
 
-import io.remedymatch.person.domain.PersonEntity;
+import io.remedymatch.person.domain.Person;
+import io.remedymatch.person.domain.PersonId;
 
-public class PersonMapper {
+ class PersonMapper {
 
-    public static PersonDTO mapToDTO(PersonEntity entity) {
+    static PersonDTO mapToDTO(Person person) {
         return PersonDTO.builder()
-                .vorname(entity.getVorname())
-                .nachname(entity.getNachname())
-                .telefon(entity.getTelefon())
-                .id(entity.getId())
+        		.id(person.getId().getValue())
+                .vorname(person.getVorname())
+               .nachname(person.getNachname())
+                .telefon(person.getTelefon())
                 .build();
     }
 
-    public static PersonEntity mapToEntity(PersonDTO dto) {
-        return PersonEntity.builder()
+    static Person mapToEntity(PersonDTO dto) {
+        return Person.builder()
+        		.id(new PersonId(dto.getId()))
                 .vorname(dto.getVorname())
                 .nachname(dto.getNachname())
                 .telefon(dto.getTelefon())
-                .id(dto.getId())
                 .build();
     }
 }

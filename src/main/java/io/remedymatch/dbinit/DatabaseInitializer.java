@@ -24,8 +24,8 @@ import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
-import io.remedymatch.person.domain.PersonEntity;
-import io.remedymatch.person.domain.PersonRepository;
+import io.remedymatch.person.infrastructure.PersonEntity;
+import io.remedymatch.person.infrastructure.PersonJpaRepository;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DatabaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
-    private PersonRepository personRepository;
+    private PersonJpaRepository personRepository;
 
     @Autowired
     private BedarfRepository bedarfRepository;

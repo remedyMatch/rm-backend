@@ -1,38 +1,39 @@
 package io.remedymatch.person.api;
 
-import io.remedymatch.person.domain.PersonRepository;
-import lombok.AllArgsConstructor;
-import lombok.val;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.*;
+import static io.remedymatch.person.api.PersonMapper.mapToDTO;
+import static io.remedymatch.person.api.PersonMapper.mapToEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static io.remedymatch.person.api.PersonMapper.mapToDTO;
-import static io.remedymatch.person.api.PersonMapper.mapToEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.remedymatch.person.domain.PersonRepository;
+import lombok.AllArgsConstructor;
+import lombok.val;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/person")
-public class PersonController {
+class PersonController {
 
     private final PersonRepository personRepository;
 
     @GetMapping
     public ResponseEntity<List<PersonDTO>> alleLaden() {
-        var persons = StreamSupport.stream(personRepository.findAll().spliterator(), false)
-                .map(PersonMapper::mapToDTO).collect(Collectors.toList());
-        return ResponseEntity.ok(persons);
+        return ResponseEntity.ok(personRepository.getAlle().stream().map(PersonMapper::mapToDTO).collect(Collectors.toList()));
     }
 
     @PostMapping
     public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO person) {
-        val personEntity = mapToEntity(person);
-        return ResponseEntity.ok(mapToDTO(personRepository.save(personEntity)));
+        return ResponseEntity.ok(mapToDTO(personRepository.update(mapToEntity(person))));
     }
 
     @GetMapping("userInfo")

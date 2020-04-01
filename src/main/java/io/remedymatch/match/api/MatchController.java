@@ -1,5 +1,6 @@
 package io.remedymatch.match.api;
 
+import io.remedymatch.institution.domain.InstitutionEntityConverter;
 import io.remedymatch.match.domain.MatchRepository;
 import io.remedymatch.match.domain.MatchService;
 import io.remedymatch.person.domain.PersonRepository;
@@ -30,7 +31,7 @@ public class MatchController {
     public ResponseEntity<List<MatchDTO>> beteiligteMatches() {
         val user = personRepository.findByUsername(userProvider.getUserName());
 
-        val matches = matchService.beteiligteMatches(user.getInstitution())
+        val matches = matchService.beteiligteMatches(InstitutionEntityConverter.convert(user.get().getInstitution()))
                 .stream()
                 .map(MatchMapper::mapToDTO)
                 .collect(Collectors.toList());

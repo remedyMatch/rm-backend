@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import io.remedymatch.institution.domain.InstitutionStandort;
-import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.match.domain.MatchStandortEntity;
 import lombok.val;
 
@@ -52,16 +51,8 @@ public class GeoCalc {
 		return distanzBerechnen(lat1, lon1, lat2, lon2, DistanzTyp.Kilometer);
 	}
 
-	public static double kilometerBerechnen(InstitutionStandortEntity von, InstitutionStandortEntity nach) {
-		return kilometerBerechnen(//
-				von.getLatitude().doubleValue(), 
-				von.getLongitude().doubleValue(), 
-				nach.getLatitude().doubleValue(), 
-				nach.getLongitude().doubleValue());
-	}
-
 	public static double kilometerBerechnen(InstitutionStandort von, InstitutionStandort nach) {
-		return kilometerBerechnen(
+		return kilometerBerechnen(//
 				von.getLatitude().doubleValue(), 
 				von.getLongitude().doubleValue(), 
 				nach.getLatitude().doubleValue(), 

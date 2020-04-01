@@ -1,20 +1,21 @@
 package io.remedymatch.aufgabe.domain;
 
-import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
-import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
-import io.remedymatch.engine.TaskDTO;
-import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.person.domain.PersonEntity;
-import io.remedymatch.person.domain.PersonRepository;
-import io.remedymatch.web.UserProvider;
-import lombok.AllArgsConstructor;
-import lombok.val;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
+import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
+import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
+import io.remedymatch.engine.TaskDTO;
+import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.person.domain.Person;
+import io.remedymatch.person.domain.PersonRepository;
+import io.remedymatch.web.UserProvider;
+import lombok.AllArgsConstructor;
+import lombok.val;
 
 @AllArgsConstructor
 @Service
@@ -31,7 +32,7 @@ public class AufgabeService {
     private Map<String, TaskCompleteHandler> taskCompleteHandlerMap;
 
     @Transactional
-    public List<TaskDTO> aufgabenLaden(PersonEntity person) {
+    public List<TaskDTO> aufgabenLaden(Person person) {
         val aufgaben = engineClient.ladeAlleTask(person.getInstitution().getId().toString());
 
         aufgaben.forEach(aufgabe -> {
@@ -49,7 +50,7 @@ public class AufgabeService {
 
     @Transactional
     public void aufgabeAbschließen(String taskId, Map<String, Object> variables) {
-        val person = personRepository.findByUsername(userProvider.getUserName());
+        val person = personRepository.findByUsername(userProvider.getUserName()).get();
         val task = engineClient.ladeTask(taskId, person.getInstitution().getId().toString());
         if (taskCompleteHandlerMap.containsKey(task.getTaskKey())) {
             taskCompleteHandlerMap.get(task.getTaskKey()).taskPruefen(task, variables);

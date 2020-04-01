@@ -17,9 +17,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.InstitutionRepository;
-import io.remedymatch.person.domain.PersonEntity;
+import io.remedymatch.person.domain.Person;
 import io.remedymatch.person.domain.PersonRepository;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -56,10 +55,10 @@ public class UserCreationFilter implements Filter {
                 institution = Optional.of(institutionRepository.add(newInstitution));
             }
 
-            val newPerson = new PersonEntity();
-            newPerson.setInstitution(InstitutionEntityConverter.convert(institution.get()));
+            val newPerson = new Person();
+            newPerson.setInstitution(institution.get());
             newPerson.setUsername(userNameProvider.getUserName());
-            personRepository.save(newPerson);
+            personRepository.add(newPerson);
         }
     }
 }

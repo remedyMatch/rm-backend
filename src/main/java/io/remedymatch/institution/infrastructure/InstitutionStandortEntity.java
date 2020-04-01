@@ -30,7 +30,6 @@ import lombok.ToString;
 @Entity(name = "InstitutionStandort")
 @Table(name = "RM_INSTITUTION_STANDORT")
 public class InstitutionStandortEntity {
-
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")

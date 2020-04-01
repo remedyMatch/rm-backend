@@ -24,8 +24,10 @@ import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
 import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageService;
 import io.remedymatch.institution.api.AnfrageDTO;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
+import io.remedymatch.institution.domain.InstitutionEntityConverter;
 import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.shared.GeoCalc;
+import io.remedymatch.user.domain.UserService;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -36,21 +38,20 @@ import lombok.val;
 public class BedarfController {
 
     private final BedarfService bedarfService;
-    private final UserProvider userProvider;
-    private final PersonRepository personRepository;
+    private final UserService userService;
     private final BedarfAnfrageService bedarfAnfrageService;
     private final BedarfAnfrageRepository bedarfAnfrageRepository;
     private final BedarfRepository bedarfRepository;
 
     @GetMapping()
     public ResponseEntity<List<BedarfDTO>> bedarfeLaden() {
-        val user = personRepository.findByUsername(userProvider.getUserName());
+        val user = userService.getContextUser();
 
         val bedarfe = bedarfRepository.findAllByBedientFalse().stream()
                 .filter(bedarf -> !bedarf.isBedient()).map(BedarfMapper::mapToDTO).collect(Collectors.toList());
 
         bedarfe.forEach(b -> {
-            var entfernung = GeoCalc.kilometerBerechnen(user.getInstitution().getHauptstandort(), InstitutionStandortMapper.mapToEntity(b.getStandort()));
+            var entfernung = GeoCalc.kilometerBerechnen(user.getInstitution().getHauptstandort(), InstitutionStandortMapper.mapToStandort(b.getStandort()));
             b.setEntfernung(entfernung);
         });
 
@@ -60,23 +61,23 @@ public class BedarfController {
     @GetMapping("/institution")
 	public ResponseEntity<List<BedarfDTO>> getInstituionBedarfee() {
     	
-    	val user = personRepository.findByUsername(userProvider.getUserName());
+    	val user = userService.getContextUser();
 
-		return ResponseEntity.ok(bedarfRepository.findAllByInstitution_Id(user.getInstitution().getId()).stream()//
+		return ResponseEntity.ok(bedarfRepository.findAllByInstitution_Id(user.getInstitution().getId().getValue()).stream()//
 				.map(BedarfMapper::mapToDTO)//
 				.collect(Collectors.toList()));
 	}
     
     @PostMapping
     public ResponseEntity<Void> bedarfMelden(@RequestBody @Valid BedarfDTO bedarf) {
-        val user = personRepository.findByUsername(userProvider.getUserName());
-        bedarfService.bedarfMelden(mapToEntity(bedarf), user.getInstitution());
+    	val user = userService.getContextUser();
+        bedarfService.bedarfMelden(mapToEntity(bedarf), InstitutionEntityConverter.convert(user.getInstitution()));
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> bedarfLoeschen(@PathVariable("id") String bedarfId) {
-        val user = personRepository.findByUsername(userProvider.getUserName());
+    	val user = userService.getContextUser();
         val bedarf = bedarfService.bedarfLaden(bedarfId);
 
         if (bedarf.isEmpty()) {
@@ -93,10 +94,10 @@ public class BedarfController {
 
     @PostMapping("/bedienen")
     public ResponseEntity<Void> bedarfBedienen(@RequestBody BedarfBedienenRequest request) {
-        val user = personRepository.findByUsername(userProvider.getUserName());
+    	val user = userService.getContextUser();
         bedarfService.starteAnfrage(
                 request.getBedarfId(),
-                user.getInstitution(),
+                InstitutionEntityConverter.convert(user.getInstitution()),
                 request.getKommentar(),
                 request.getStandortId(),
                 request.getAnzahl());
@@ -130,7 +131,7 @@ public class BedarfController {
     @DeleteMapping("/anfrage/{id}")
     public ResponseEntity<Void> anfrageStornieren(@PathVariable("id") String anfrageId) {
 
-        val user = personRepository.findByUsername(userProvider.getUserName());
+    	val user = userService.getContextUser();
         val anfrage = bedarfAnfrageRepository.findById(UUID.fromString(anfrageId));
 
         if (anfrage.isEmpty()) {

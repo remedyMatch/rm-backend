@@ -39,4 +39,4 @@ io:
     backend:
       engine-url: http://localhost:8085
       geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
-      geocoderServiceApiKey: 2831cf619102d5
+      geocoderServiceApiKey: code

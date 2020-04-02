@@ -43,7 +43,7 @@ public class UserCreationFilter implements Filter {
 
     @Transactional
     protected synchronized void insertNewUser() {
-        val person = Optional.ofNullable(personRepository.findByUsername(userNameProvider.getUserName()));
+        val person = personRepository.findByUsername(userNameProvider.getUserName());
 
         if (person.isEmpty()) {
 

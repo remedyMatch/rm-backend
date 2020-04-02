@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -33,8 +32,8 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-@Entity(name = "MatchStandort")
-@Table(name = "RM_MATCH_STANDORT")
+@Entity(name = "Match")
+@Table(name = "RM_MATCH")
 public class MatchEntity {
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -54,11 +53,11 @@ public class MatchEntity {
 	@JoinColumn(name = "STANDORT_VON_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private MatchStandortEntity standortVon;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "INSTITUTION_AN_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private InstitutionEntity institutionAn;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "STANDORT_AN_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private MatchStandortEntity standortAn;
 

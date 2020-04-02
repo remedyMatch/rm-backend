@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BedarfBedienenRequest {
+class BedarfBedienenRequest {
 
     @NotNull
     private UUID bedarfId;

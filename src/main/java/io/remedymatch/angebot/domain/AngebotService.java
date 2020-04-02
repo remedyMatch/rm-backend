@@ -104,7 +104,7 @@ public class AngebotService {
     }
 
     @Transactional
-    public void bedarfAnfrageDerUserInstitutionLoeschen(final @NotNull @Valid AngebotAnfrageId anfrageId)
+    public void angebotAnfrageDerUserInstitutionLoeschen(final @NotNull @Valid AngebotAnfrageId anfrageId)
             throws ObjectNotFoundException, NotUserInstitutionObjectException {
         Optional<AngebotAnfrage> angebotAnfrage = angebotAnfrageRepository.get(anfrageId);
         if (!angebotAnfrage.isPresent()) {

@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.api;
 
+import io.remedymatch.angebot.domain.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.InstitutionStandortId;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.remedymatch.angebot.api.AngebotMapper.*;
@@ -67,6 +69,18 @@ public class AngebotController {
                 new InstitutionStandortId(request.getStandortId()), //
                 request.getKommentar(), //
                 request.getAnzahl());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/anfrage/{id}")
+    public ResponseEntity<Void> anfrageStornieren(@PathVariable("id") String anfrageId) {
+        try {
+            angebotService.angebotAnfrageDerUserInstitutionLoeschen(new AngebotAnfrageId(UUID.fromString(anfrageId)));
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (NotUserInstitutionObjectException e) {
+            return ResponseEntity.status(403).build();
+        }
         return ResponseEntity.ok().build();
     }
 }

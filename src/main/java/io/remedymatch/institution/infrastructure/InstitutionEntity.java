@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -59,7 +60,7 @@ public class InstitutionEntity {
     @JoinColumn(name = "HAUPTSTANDORT_UUID", referencedColumnName = "UUID", nullable = true, updatable = true)
     private InstitutionStandortEntity hauptstandort;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @Builder.Default
     private List<InstitutionStandortEntity> standorte = new ArrayList<>();
 }

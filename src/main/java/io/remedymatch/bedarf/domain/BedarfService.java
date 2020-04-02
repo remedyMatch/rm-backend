@@ -144,7 +144,7 @@ public class BedarfService {
 
         var variables = new HashMap<String, Object>();
         variables.put("institution", bedarf.get().getInstitution().getId().toString());
-        variables.put("objektId", anfrage.getId().toString());
+        variables.put("objektId", anfrage.getId().getValue().toString());
 
         val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().getValue().toString(), variables);
         anfrage.setProzessInstanzId(prozessInstanzId);

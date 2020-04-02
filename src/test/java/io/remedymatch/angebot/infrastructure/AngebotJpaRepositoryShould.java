@@ -23,6 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
 import io.remedymatch.artikel.infrastructure.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
@@ -44,6 +45,7 @@ public class AngebotJpaRepositoryShould {
 
 	private InstitutionEntity meinKrankenhaus;
 	private InstitutionStandortEntity meinStandort;
+	private ArtikelKategorieEntity beispielKategorieArtikel;
 	private ArtikelEntity beispielArtikel;
 	
 	@BeforeEach
@@ -51,6 +53,7 @@ public class AngebotJpaRepositoryShould {
 	{
 		meinKrankenhaus = persist(meinKrankenhaus());
 		meinStandort = persist(meinStandort());
+		beispielKategorieArtikel = persist(beispielArtikelKategorie());
 		beispielArtikel = persist(beispielArtikel());
 		entityManager.flush();
 	}
@@ -92,12 +95,19 @@ public class AngebotJpaRepositoryShould {
 				.build();
 	}
 	
+	private ArtikelKategorieEntity beispielArtikelKategorie() {
+		return ArtikelKategorieEntity.builder() //
+				.name("beispiel Kategorie") //
+				.build();
+	}
+	
 	private ArtikelEntity beispielArtikel() {
 		return ArtikelEntity.builder() //
 				.ean("EAN") //
 				.name("egal") //
 				.beschreibung("beschreibung") //
 				.hersteller("hersteller") //
+				.artikelKategorie(beispielKategorieArtikel) //
 				.build();
 	}
 	

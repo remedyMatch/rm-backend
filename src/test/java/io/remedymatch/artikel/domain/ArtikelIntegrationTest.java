@@ -104,7 +104,7 @@ public class ArtikelIntegrationTest {
         assertThat(artikelDTO.getEan(), is("shouldAddArtikel-ean"));
         assertThat(artikelDTO.getHersteller(), is("shouldAddArtikel-hersteller"));
         assertThat(artikelDTO.getBeschreibung(), is("shouldAddArtikel-description"));
-        assertThat(artikelDTO.getArtikelKategorie().getId(), is(artikelKategorie.getId()));
+        assertThat(artikelDTO.getArtikelKategorie().getId(), is(artikelKategorie.getId().getValue()));
 
         assertThat(artikelJpaRepository.findById(artikelDTO.getId()), notNullValue());
     }
@@ -120,11 +120,11 @@ public class ArtikelIntegrationTest {
         var artikelDTO = artikelForTC("shouldGetArtikelById", ArtikelKategorieMapper.getArtikelKategorieDTO(artikelKategorie));
         var artikel = artikelRepository.add(ArtikelMapper.getArtikel(artikelDTO));
 
-        MvcResult getArtikelResult = mockMvc.perform(get("/artikel/" + artikel.getId()).accept("application/json")).andReturn();
+        MvcResult getArtikelResult = mockMvc.perform(get("/artikel/" + artikel.getId().getValue()).accept("application/json")).andReturn();
         assertThat(getArtikelResult.getResponse().getStatus(), is(200));
         ArtikelDTO fetchedArtikel = objectMapper.readValue(getArtikelResult.getResponse().getContentAsString(), ArtikelDTO.class);
-        assertThat(fetchedArtikel.getId(), is(artikel.getId()));
-        assertThat(fetchedArtikel.getArtikelKategorie().getId(), is(artikel.getArtikelKategorie().getId()));
+        assertThat(fetchedArtikel.getId(), is(artikel.getId().getValue()));
+        assertThat(fetchedArtikel.getArtikelKategorie().getId(), is(artikel.getArtikelKategorie().getId().getValue()));
         assertThat(fetchedArtikel.getBeschreibung(), is(artikelDTO.getBeschreibung()));
         assertThat(fetchedArtikel.getHersteller(), is(artikelDTO.getHersteller()));
         assertThat(fetchedArtikel.getEan(), is(artikelDTO.getEan()));

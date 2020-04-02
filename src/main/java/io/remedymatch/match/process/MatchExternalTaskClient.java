@@ -1,4 +1,4 @@
-package io.remedymatch.match.api;
+package io.remedymatch.match.process;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -14,7 +14,9 @@ import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
 import io.remedymatch.bedarf.domain.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
 import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.match.domain.MatchEntity;
+import io.remedymatch.match.api.MatchProzessConstants;
+import io.remedymatch.match.domain.Match;
+import io.remedymatch.match.domain.MatchId;
 import io.remedymatch.match.domain.MatchRepository;
 import io.remedymatch.match.domain.MatchService;
 import io.remedymatch.match.domain.MatchStatus;
@@ -44,7 +46,7 @@ public class MatchExternalTaskClient {
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
                     val matchId = externalTask.getVariable("objektId").toString();
-                    val match = matchRepository.findById(UUID.fromString(matchId));
+                    val match = matchRepository.get(new MatchId(UUID.fromString(matchId)));
                     match.get().setStatus(MatchStatus.Ausgeliefert);
                     externalTaskService.complete(externalTask);
                 }).open();
@@ -56,7 +58,7 @@ public class MatchExternalTaskClient {
                     val anfrageId = externalTask.getVariable("anfrageId").toString();
                     val anfrageTyp = externalTask.getVariable("anfrageTyp").toString();
 
-                    MatchEntity match;
+                    Match match;
 
                     if (anfrageTyp.equals(MatchProzessConstants.ANFRAGE_TYP_BEDARF)) {
                         match = matchService.matchAusBedarfErstellen(bedarfAnfrageRepository.get(new BedarfAnfrageId(UUID.fromString(anfrageId))).get());

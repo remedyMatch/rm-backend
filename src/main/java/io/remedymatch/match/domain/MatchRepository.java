@@ -1,22 +1,52 @@
 package io.remedymatch.match.domain;
 
+import static io.remedymatch.match.domain.MatchEntityConverter.convert;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionId;
+import io.remedymatch.match.infrastructure.MatchJpaRepository;
 
 @Repository
-public interface MatchRepository extends CrudRepository<MatchEntity, UUID> {
+public class MatchRepository {
+	@Autowired
+	private MatchJpaRepository jpaRepository;
 
-    List<MatchEntity> findAllByInstitutionVon(InstitutionEntity institutionVon);
+	public List<Match> getMatchesFuerInstitutionAn(final InstitutionId institutionId) {
+		Assert.notNull(institutionId, "InstitutionId ist null");
+		Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
-    List<MatchEntity> findAllByInstitutionAn(InstitutionEntity institutionAn);
+		return jpaRepository.findAllByInstitutionAn_Id(institutionId.getValue()).stream()//
+				.map(MatchEntityConverter::convert)//
+				.collect(Collectors.toList());
+	}
+	
+	public List<Match> getMatchesFuerInstitutionVon(final InstitutionId institutionId) {
+		Assert.notNull(institutionId, "InstitutionId ist null");
+		Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
-    List<MatchEntity> findAllByStatus(MatchStatus status);
+		return jpaRepository.findAllByInstitutionVon_Id(institutionId.getValue()).stream()//
+				.map(MatchEntityConverter::convert)//
+				.collect(Collectors.toList());
+	}
+
+
+	public Optional<Match> get(final MatchId matchId) {
+		Assert.notNull(matchId, "MatchId ist null");
+		Assert.notNull(matchId.getValue(), "MatchId ist null");
+
+		return jpaRepository.findById(matchId.getValue()).map(MatchEntityConverter::convert);
+	}
+
+	public Match add(final Match match) {
+		Assert.notNull(match, "Match ist null");
+
+		return convert(jpaRepository.save(convert(match)));
+	}
 }
-
-

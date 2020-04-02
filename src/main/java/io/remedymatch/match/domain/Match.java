@@ -1,5 +1,6 @@
 package io.remedymatch.match.domain;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import io.remedymatch.institution.domain.Institution;
@@ -28,4 +29,5 @@ public class Match {
     private String kommentar;
     private String prozessInstanzId;
     private MatchStatus status;
+    private BigDecimal entfernung;
 }

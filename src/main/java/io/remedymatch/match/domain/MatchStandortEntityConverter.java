@@ -3,9 +3,9 @@ package io.remedymatch.match.domain;
 import io.remedymatch.match.infrastructure.MatchStandortEntity;
 import io.remedymatch.match.infrastructure.MatchStandortEntity.MatchStandortEntityBuilder;
 
-public class MatchStandortEntityConverter {
+class MatchStandortEntityConverter {
 
-	public static MatchStandort convert(final MatchStandortEntity entity) {
+	static MatchStandort convert(final MatchStandortEntity entity) {
 		if (entity == null) {
 			return null;
 		}
@@ -22,7 +22,7 @@ public class MatchStandortEntityConverter {
 				.build();
 	}
 
-	public static MatchStandortEntity convert(final MatchStandort matchStandort) {
+	static MatchStandortEntity convert(final MatchStandort matchStandort) {
 		if (matchStandort == null) {
 			return null;
 		}

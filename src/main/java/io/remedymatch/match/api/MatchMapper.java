@@ -1,20 +1,19 @@
 package io.remedymatch.match.api;
 
 import io.remedymatch.institution.api.InstitutionMapper;
-import io.remedymatch.match.domain.MatchEntity;
+import io.remedymatch.match.domain.Match;
 
-public class MatchMapper {
-
-    public static MatchDTO mapToDTO(MatchEntity entity) {
-        return MatchDTO.builder()
-                .id(entity.getId())
-                .anfrageId(entity.getAnfrageId())
-                .status(entity.getStatus())
-                .standortAn(MatchStandortMapper.mapToDTO(entity.getStandortAn()))
-                .standortVon(MatchStandortMapper.mapToDTO(entity.getStandortVon()))
-                .institutionVon(InstitutionMapper.mapToDTO(entity.getInstitutionVon()))
-                .institutionAn(InstitutionMapper.mapToDTO(entity.getInstitutionAn()))
-                .build();
-    }
-
+class MatchMapper {
+	static MatchDTO mapToDTO(Match match) {
+		return MatchDTO.builder() //
+				.id(match.getId().getValue()) //
+				.anfrageId(match.getAnfrageId()) //
+				.status(match.getStatus()) //
+				.standortAn(MatchStandortMapper.mapToDTO(match.getStandortAn())) //
+				.standortVon(MatchStandortMapper.mapToDTO(match.getStandortVon())) //
+				.institutionVon(InstitutionMapper.mapToDTO(match.getInstitutionVon())) //
+				.institutionAn(InstitutionMapper.mapToDTO(match.getInstitutionAn())) //
+				.entfernung(match.getEntfernung()) //
+				.build();
+	}
 }

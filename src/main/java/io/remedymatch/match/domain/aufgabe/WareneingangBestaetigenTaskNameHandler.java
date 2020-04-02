@@ -1,13 +1,15 @@
 package io.remedymatch.match.domain.aufgabe;
 
+import java.util.UUID;
+
+import org.springframework.stereotype.Component;
+
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.engine.TaskDTO;
+import io.remedymatch.match.domain.MatchId;
 import io.remedymatch.match.domain.MatchRepository;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -17,7 +19,7 @@ public class WareneingangBestaetigenTaskNameHandler implements TaskBeschreibungH
 
     @Override
     public String beschreibung(TaskDTO taskDTO) {
-        val match = matchRepository.findById(UUID.fromString(taskDTO.getObjektId()));
+        val match = matchRepository.get(new MatchId(UUID.fromString(taskDTO.getObjektId())));
         return " Wareneingang für Match zwischen " + match.get().getInstitutionVon().getName() + " und " + match.get().getInstitutionAn().getName()+" bestätigen.";
     }
 

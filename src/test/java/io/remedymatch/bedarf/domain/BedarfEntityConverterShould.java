@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -13,9 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfAnfrageEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
-import io.remedymatch.artikel.domain.ArtikelEntity;
 import io.remedymatch.institution.domain.Institution;
 import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionStandort;
@@ -37,7 +36,6 @@ public class BedarfEntityConverterShould {
 	private static final InstitutionStandortId STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
 	private static final InstitutionStandort STANDORT = InstitutionStandort.builder().id(STANDORT_ID).build();
 	private static final InstitutionStandortEntity STANDORT_ENTITY = InstitutionStandortEntity.builder().id(STANDORT_ID.getValue()).build();
-	private static final LocalDateTime HALTBARKEIT = LocalDateTime.now();
 	private static final boolean STERIL = true;
 	private static final boolean ORIGINALVERPACKT = true;
 	private static final boolean MEDIZINISCH = true;
@@ -86,7 +84,6 @@ public class BedarfEntityConverterShould {
 				.artikel(ARTIKEL) //
 				.institution(INSTITUTION) //
 				.standort(STANDORT) //
-				.haltbarkeit(HALTBARKEIT) //
 				.steril(STERIL) //
 				.originalverpackt(ORIGINALVERPACKT) //
 				.medizinisch(MEDIZINISCH) //
@@ -104,7 +101,6 @@ public class BedarfEntityConverterShould {
 				.artikel(ARTIKEL) //
 				.institution(INSTITUTION_ENTITY) //
 				.standort(STANDORT_ENTITY) //
-				.haltbarkeit(HALTBARKEIT) //
 				.steril(STERIL) //
 				.originalverpackt(ORIGINALVERPACKT) //
 				.medizinisch(MEDIZINISCH) //

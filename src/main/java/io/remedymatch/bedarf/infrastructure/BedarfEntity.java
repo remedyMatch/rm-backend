@@ -1,7 +1,6 @@
 package io.remedymatch.bedarf.infrastructure;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,9 +64,6 @@ public class BedarfEntity {
     @Column(name = "REST", nullable = false, updatable = true)
     private BigDecimal rest;
     
-    @Column(name = "HALTBARKEIT", nullable = false, updatable = false)
-    private LocalDateTime haltbarkeit;
-
     @Column(name = "STERIL", nullable = false, updatable = false)
     private boolean steril;
 

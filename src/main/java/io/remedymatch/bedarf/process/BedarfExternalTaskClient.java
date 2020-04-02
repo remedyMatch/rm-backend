@@ -9,7 +9,6 @@ import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.springframework.stereotype.Component;
 
-import io.remedymatch.angebot.domain.AngebotAnfrageId;
 import io.remedymatch.bedarf.domain.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.engine.client.EngineClient;

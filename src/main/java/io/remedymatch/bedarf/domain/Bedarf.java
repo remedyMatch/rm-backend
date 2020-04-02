@@ -1,7 +1,6 @@
 package io.remedymatch.bedarf.domain;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import io.remedymatch.artikel.domain.ArtikelEntity;
@@ -29,7 +28,6 @@ public class Bedarf {
 	private ArtikelEntity artikel;
 	private Institution institution;
 	private InstitutionStandort standort;
-	private LocalDateTime haltbarkeit;
 	private boolean steril;
 	private boolean originalverpackt;
 	private boolean medizinisch;

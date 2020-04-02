@@ -3,7 +3,6 @@ package io.remedymatch.bedarf.infrastructure;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -48,17 +47,16 @@ public class BedarfAnfrageJpaRepositoryShould {
 	private InstitutionStandortEntity meinStandort;
 	private ArtikelEntity beispielArtikel;
 	private BedarfEntity beispielBedarf;
-	
+
 	@BeforeEach
-	private void prepare()
-	{
+	private void prepare() {
 		meinKrankenhaus = persist(meinKrankenhaus());
 		meinStandort = persist(meinStandort());
 		beispielArtikel = persist(beispielArtikel());
 		beispielBedarf = persist(beispielBedarf());
 		entityManager.flush();
 	}
-	
+
 	@Rollback(true)
 	@Transactional
 	@Test
@@ -68,19 +66,23 @@ public class BedarfAnfrageJpaRepositoryShould {
 		BedarfAnfrageEntity zweiteAnfrage = persist(bedarfAnfrageFuerBedarf(beispielBedarf, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
-		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByBedarf_Institution_Id(meinKrankenhaus.getId()));
+		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage),
+				jpaRepository.findAllByBedarf_Institution_Id(meinKrankenhaus.getId()));
 	}
-	
+
 	@Rollback(true)
 	@Transactional
 	@Test
 	@DisplayName("alle Anfragen fuer InstitutionVon Id zurueckliefern")
 	void alle_Anfragen_fuer_InstitutionVon_Id_zurueckliefern() {
-		BedarfAnfrageEntity ersteAnfrage = persist(bedarfAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
-		BedarfAnfrageEntity zweiteAnfrage = persist(bedarfAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
+		BedarfAnfrageEntity ersteAnfrage = persist(
+				bedarfAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
+		BedarfAnfrageEntity zweiteAnfrage = persist(
+				bedarfAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
-		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage), jpaRepository.findAllByInstitutionVon_Id(meinKrankenhaus.getId()));
+		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage),
+				jpaRepository.findAllByInstitutionVon_Id(meinKrankenhaus.getId()));
 	}
 
 	@Rollback(true)
@@ -90,23 +92,27 @@ public class BedarfAnfrageJpaRepositoryShould {
 	void status_der_Anfragen_aktualisieren() {
 		BedarfAnfrageEntity ersteOffeneAnfrage = persist(bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.Offen));
 		BedarfAnfrageEntity zweiteOffeneAnfrage = persist(bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.Offen));
-		BedarfAnfrageEntity dritteAnfrageStorniert = persist(bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.Angenommen));
+		BedarfAnfrageEntity dritteAnfrageStorniert = persist(
+				bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.Angenommen));
 		entityManager.flush();
 
 		assertEquals(Optional.of(ersteOffeneAnfrage), jpaRepository.findById(ersteOffeneAnfrage.getId()));
 		assertEquals(Optional.of(zweiteOffeneAnfrage), jpaRepository.findById(zweiteOffeneAnfrage.getId()));
 		assertEquals(Optional.of(dritteAnfrageStorniert), jpaRepository.findById(dritteAnfrageStorniert.getId()));
-		
+
 		jpaRepository.updateStatus(beispielBedarf.getId(), BedarfAnfrageStatus.Offen, BedarfAnfrageStatus.Storniert);
-		
+
 		entityManager.flush();
 		entityManager.clear();
-		
-		assertEquals(BedarfAnfrageStatus.Storniert, jpaRepository.findById(ersteOffeneAnfrage.getId()).get().getStatus());
-		assertEquals(BedarfAnfrageStatus.Storniert, jpaRepository.findById(zweiteOffeneAnfrage.getId()).get().getStatus());
-		assertEquals(BedarfAnfrageStatus.Angenommen, jpaRepository.findById(dritteAnfrageStorniert.getId()).get().getStatus());
+
+		assertEquals(BedarfAnfrageStatus.Storniert,
+				jpaRepository.findById(ersteOffeneAnfrage.getId()).get().getStatus());
+		assertEquals(BedarfAnfrageStatus.Storniert,
+				jpaRepository.findById(zweiteOffeneAnfrage.getId()).get().getStatus());
+		assertEquals(BedarfAnfrageStatus.Angenommen,
+				jpaRepository.findById(dritteAnfrageStorniert.getId()).get().getStatus());
 	}
-	
+
 	/* help methods */
 
 	public <E> E persist(E entity) {
@@ -121,7 +127,7 @@ public class BedarfAnfrageJpaRepositoryShould {
 				.typ(InstitutionTyp.Krankenhaus) //
 				.build();
 	}
-	
+
 	private InstitutionStandortEntity meinStandort() {
 		return InstitutionStandortEntity.builder() //
 				.name("Mein Standort") //
@@ -131,7 +137,7 @@ public class BedarfAnfrageJpaRepositoryShould {
 				.land("Land") //
 				.build();
 	}
-	
+
 	private ArtikelEntity beispielArtikel() {
 		return ArtikelEntity.builder() //
 				.ean("EAN") //
@@ -140,7 +146,7 @@ public class BedarfAnfrageJpaRepositoryShould {
 				.hersteller("hersteller") //
 				.build();
 	}
-	
+
 	private BedarfEntity beispielBedarf() {
 		return BedarfEntity.builder() //
 				.artikel(beispielArtikel) //
@@ -149,7 +155,6 @@ public class BedarfAnfrageJpaRepositoryShould {
 				.anzahl(BigDecimal.valueOf(100)) //
 				.rest(BigDecimal.valueOf(100)) //
 				.institution(meinKrankenhaus) //
-				.haltbarkeit(LocalDateTime.now()) //
 				.steril(true) //
 				.originalverpackt(true) //
 				.medizinisch(true) //
@@ -170,7 +175,7 @@ public class BedarfAnfrageJpaRepositoryShould {
 				.status(status) //
 				.build();
 	}
-	
+
 	private BedarfAnfrageEntity bedarfAnfrageFuerBedarf(//
 			BedarfEntity bedarf, //
 			BigDecimal anzahl) {

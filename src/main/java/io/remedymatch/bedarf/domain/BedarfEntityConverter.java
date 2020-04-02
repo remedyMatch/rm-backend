@@ -23,7 +23,6 @@ class BedarfEntityConverter {
 				.artikel(entity.getArtikel()) //
 				.institution(InstitutionEntityConverter.convert(entity.getInstitution()))//
 				.standort(InstitutionStandortEntityConverter.convert(entity.getStandort()))
-				.haltbarkeit(entity.getHaltbarkeit()) //
 				.steril(entity.isSteril()) //
 				.originalverpackt(entity.isOriginalverpackt()) //
 				.medizinisch(entity.isMedizinisch()) //
@@ -53,7 +52,6 @@ class BedarfEntityConverter {
 				.artikel(bedarf.getArtikel()) //
 				.institution(InstitutionEntityConverter.convert(bedarf.getInstitution()))//
 				.standort(InstitutionStandortEntityConverter.convert(bedarf.getStandort()))
-				.haltbarkeit(bedarf.getHaltbarkeit()) //
 				.steril(bedarf.isSteril()) //
 				.originalverpackt(bedarf.isOriginalverpackt()) //
 				.medizinisch(bedarf.isMedizinisch()) //

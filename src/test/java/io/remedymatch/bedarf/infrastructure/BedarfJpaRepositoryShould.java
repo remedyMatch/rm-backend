@@ -3,7 +3,6 @@ package io.remedymatch.bedarf.infrastructure;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import javax.persistence.EntityManager;
@@ -109,7 +108,6 @@ public class BedarfJpaRepositoryShould {
 				.standort(meinStandort) //
 				.anzahl(anzahl) //
 				.rest(anzahl) //
-				.haltbarkeit(LocalDateTime.now()) //
 				.steril(true) //
 				.originalverpackt(true) //
 				.medizinisch(true) //

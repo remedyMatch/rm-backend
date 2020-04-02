@@ -143,7 +143,7 @@ public class AngebotService {
         variables.put("institution", angebot.get().getInstitution().getId().toString());
         variables.put("objektId", anfrage.getId().toString());
 
-        val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().toString(), variables);
+        val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().getValue().toString(), variables);
         anfrage.setProzessInstanzId(prozessInstanzId);
         angebotAnfrageRepository.update(anfrage);
     }

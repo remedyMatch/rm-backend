@@ -1,28 +1,22 @@
 package io.remedymatch.match.process;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-import javax.annotation.PostConstruct;
-
-import org.camunda.bpm.client.ExternalTaskClient;
-import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
-import org.springframework.stereotype.Component;
-
 import io.remedymatch.angebot.domain.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
 import io.remedymatch.bedarf.domain.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.match.api.MatchProzessConstants;
-import io.remedymatch.match.domain.Match;
-import io.remedymatch.match.domain.MatchId;
-import io.remedymatch.match.domain.MatchRepository;
-import io.remedymatch.match.domain.MatchService;
-import io.remedymatch.match.domain.MatchStatus;
+import io.remedymatch.match.domain.*;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -69,7 +63,7 @@ public class MatchExternalTaskClient {
 
                     val variables = new HashMap<String, Object>();
                     variables.put("lieferant", match.getInstitutionVon().getId().toString());
-                    variables.put("objektId", match.getId().toString());
+                    variables.put("objektId", match.getId().getValue().toString());
                     variables.put("empfaenger", match.getInstitutionAn().getId().toString());
 
                     externalTaskService.complete(externalTask, variables);

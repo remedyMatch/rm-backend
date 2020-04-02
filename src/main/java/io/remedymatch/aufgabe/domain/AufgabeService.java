@@ -1,12 +1,5 @@
 package io.remedymatch.aufgabe.domain;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
 import io.remedymatch.engine.TaskDTO;
@@ -15,6 +8,12 @@ import io.remedymatch.person.domain.Person;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -31,7 +30,7 @@ public class AufgabeService {
 
     @Transactional
     public List<TaskDTO> aufgabenLaden(Person person) {
-        val aufgaben = engineClient.ladeAlleTask(person.getInstitution().getId().toString());
+        val aufgaben = engineClient.ladeAlleTask(person.getInstitution().getId().getValue().toString());
 
         aufgaben.forEach(aufgabe -> {
                     if (beschreibungHandlerMap.containsKey(aufgabe.getTaskKey())) {

@@ -1,7 +1,7 @@
 package io.remedymatch.person.api;
 
 import static io.remedymatch.person.api.PersonMapper.mapToDTO;
-import static io.remedymatch.person.api.PersonMapper.mapToEntity;
+import static io.remedymatch.person.api.PersonMapper.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ class PersonController {
 
     @PostMapping
     public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO person) {
-        return ResponseEntity.ok(mapToDTO(personRepository.update(mapToEntity(person))));
+        return ResponseEntity.ok(mapToDTO(personRepository.update(mapToPerson(person))));
     }
 
     @GetMapping("userInfo")

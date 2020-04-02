@@ -62,7 +62,7 @@ public class AngebotMapperShould {
 
     @Test
     @DisplayName("null DTO in null Domain Objekt konvertieren")
-    void null_entity_in_null_Domain_Objekt_konvertieren() {
+    void null_DTO_in_null_Domain_Objekt_konvertieren() {
         assertNull(AngebotMapper.mapToAngebot((AngebotDTO) null));
     }
 

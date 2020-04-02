@@ -1,27 +1,25 @@
 package io.remedymatch.bedarf.api;
 
-import static io.remedymatch.artikel.api.ArtikelMapper.getArtikel;
-import static io.remedymatch.artikel.api.ArtikelMapper.getArtikelDTO;
-
-import java.util.UUID;
-
-import org.springframework.util.Assert;
-
 import io.remedymatch.artikel.domain.ArtikelId;
 import io.remedymatch.bedarf.domain.Bedarf;
 import io.remedymatch.bedarf.domain.BedarfId;
 import io.remedymatch.bedarf.domain.NeuesBedarf;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.InstitutionStandortId;
+import org.springframework.util.Assert;
+
+import java.util.UUID;
+
+import static io.remedymatch.artikel.api.ArtikelMapper.getArtikel;
+import static io.remedymatch.artikel.api.ArtikelMapper.getArtikelDTO;
 
 public class BedarfMapper {
 
     public static BedarfDTO mapToDTO(Bedarf bedarf) {
-    	if (bedarf == null)
-    	{
-    		return null;
-    	}
-    	
+        if (bedarf == null) {
+            return null;
+        }
+
         var builder = BedarfDTO.builder()
                 .id(bedarf.getId().getValue())
                 .rest(bedarf.getRest())
@@ -32,6 +30,7 @@ public class BedarfMapper {
                 .standort(bedarf.getStandort() != null ? InstitutionStandortMapper.mapToDTO(bedarf.getStandort()) : null)
                 .steril(bedarf.isSteril())
                 .kommentar(bedarf.getKommentar())
+                .entfernung(bedarf.getEntfernung())
                 .bedient(bedarf.isBedient());
 
         if (bedarf.getInstitution() != null) {
@@ -42,8 +41,8 @@ public class BedarfMapper {
     }
 
     static NeuesBedarf mapToNeuesBedarf(final NeuesBedarfRequest neuesBedarfRequest) {
-    	Assert.notNull(neuesBedarfRequest, "NeuesBedarfRequest ist null");
-    	
+        Assert.notNull(neuesBedarfRequest, "NeuesBedarfRequest ist null");
+
         return NeuesBedarf.builder() //
                 .anzahl(neuesBedarfRequest.getAnzahl()) //
                 .artikelId(new ArtikelId(neuesBedarfRequest.getArtikelId())) //
@@ -54,13 +53,12 @@ public class BedarfMapper {
                 .kommentar(neuesBedarfRequest.getKommentar()) //
                 .build();
     }
-    
+
     static Bedarf mapToBedarf(BedarfDTO dto) {
-    	if (dto == null)
-    	{
-    		return null;
-    	}
-    	
+        if (dto == null) {
+            return null;
+        }
+
         var builder = Bedarf.builder()
                 .id(maptToBedarfId(dto.getId()))
                 .rest(dto.getRest())
@@ -74,15 +72,13 @@ public class BedarfMapper {
                 .bedient(dto.isBedient());
         return builder.build();
     }
-    
 
-    static BedarfId maptToBedarfId(final String bedarfId)
-    {
-    	return maptToBedarfId(UUID.fromString(bedarfId));
+
+    static BedarfId maptToBedarfId(final String bedarfId) {
+        return maptToBedarfId(UUID.fromString(bedarfId));
     }
-    
-    static BedarfId maptToBedarfId(final UUID bedarfId)
-    {
-    	return new BedarfId(bedarfId);
+
+    static BedarfId maptToBedarfId(final UUID bedarfId) {
+        return new BedarfId(bedarfId);
     }
 }

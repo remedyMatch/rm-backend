@@ -275,12 +275,18 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     }
 
     private void createPersonen() {
+
         for (InstitutionEntity institution : institutionRepository.findAll()) {
+            /* QuickFix: Beim Initialisieren ist der Institutions-Typ der
+            Institution null..hier fliegt dann waehrend der initialisierung eine NPE.
+            */
+            if (institution.getTyp() == null) {
+                continue;
+            }
             switch (institution.getTyp()) {
                 case Krankenhaus:
                 case Lieferant:
                 case Andere:
-                    createPerson(institution);
                     createPerson(institution);
                     break;
                 default:

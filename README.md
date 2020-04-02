@@ -56,10 +56,11 @@ Alle Repositories sind zu finden unter https://github.com/remedyMatch .
 * `./build_pg.sh`
 * `./run_pg.sh`
 * Applikation starten (Klasse `RmBeApplication`)
-    * Beim __erstmaligen__ start als aktives Profil "test" verwenden 
+    * Beim __erstmaligen__ start als aktives Profil "test,prod" verwenden 
     (In der RunConfiguration)
         * Grund --> Damit wird die DbInit Config angezogen und die pusht dann 
         Testdaten in die Db
+    * Bei jedem weiteren Start das Profil "prod" verwenden
 
 ### Frontend
 

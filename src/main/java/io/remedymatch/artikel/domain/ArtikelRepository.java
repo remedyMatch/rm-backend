@@ -1,11 +1,14 @@
 package io.remedymatch.artikel.domain;
 
+import io.remedymatch.artikel.api.ArtikelController;
+import io.remedymatch.artikel.api.ArtikelMapper;
 import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
+import javax.websocket.Endpoint;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,7 +34,12 @@ public class ArtikelRepository {
     }
 
     public List<Artikel> findByNameLike(final String nameLike) {
-        Assert.isTrue(StringUtils.isNotBlank(nameLike), "NameLike ist blank");
+        /* QuickFix: Die GUI fragt via Endpoint im ArtikelController mit nameLike = empty
+            an..fuer die Uebersichtsseite.. hier darf kein Assert dafuer verwendet werden.
+        */ 
+        if (StringUtils.isEmpty(nameLike)) {
+            return jpaRepository.findAll().stream().map(ArtikelEntityConverter::convert).collect(Collectors.toList());
+        }
         return jpaRepository.findByNameLike(nameLike).stream().map(ArtikelEntityConverter::convert).collect(Collectors.toList());
     }
 

@@ -3,7 +3,7 @@ package io.remedymatch.bedarf.domain;
 import java.math.BigDecimal;
 import java.util.List;
 
-import io.remedymatch.artikel.domain.ArtikelEntity;
+import io.remedymatch.artikel.domain.Artikel;
 import io.remedymatch.institution.domain.Institution;
 import io.remedymatch.institution.domain.InstitutionStandort;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class Bedarf {
 	private BedarfId id;
 	private BigDecimal anzahl;
 	private BigDecimal rest;
-	private ArtikelEntity artikel;
+	private Artikel artikel;
 	private Institution institution;
 	private InstitutionStandort standort;
 	private boolean steril;

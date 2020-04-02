@@ -17,7 +17,7 @@ import io.remedymatch.angebot.domain.Angebot;
 import io.remedymatch.angebot.domain.AngebotId;
 import io.remedymatch.angebot.domain.NeueAngebot;
 import io.remedymatch.artikel.api.ArtikelDTO;
-import io.remedymatch.artikel.domain.ArtikelEntity;
+import io.remedymatch.artikel.domain.Artikel;
 import io.remedymatch.artikel.domain.ArtikelId;
 import io.remedymatch.institution.api.InstitutionStandortDTO;
 import io.remedymatch.institution.domain.InstitutionStandort;
@@ -31,7 +31,7 @@ public class AngebotMapperShould {
 	private static final BigDecimal ANZAHL = BigDecimal.valueOf(120.0);
 	private static final BigDecimal REST = BigDecimal.valueOf(120.0);
 	private static final ArtikelId ARTIKEL_ID = new ArtikelId(UUID.randomUUID());
-	private static final ArtikelEntity ARTIKEL_ENTITY = ArtikelEntity.builder().id(ARTIKEL_ID.getValue()).build();
+	private static final Artikel ARTIKEL = Artikel.builder().id(ARTIKEL_ID).build();
 	private static final ArtikelDTO ARTIKEL_DTO = ArtikelDTO.builder().id(ARTIKEL_ID.getValue()).build();
 	private static final InstitutionStandortId STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
 	private static final InstitutionStandortDTO STANDORT_DTO = InstitutionStandortDTO.builder().id(STANDORT_ID.getValue()).build();
@@ -114,7 +114,7 @@ public class AngebotMapperShould {
 				.id(ANGEBOT_ID) //
 				.anzahl(ANZAHL) //
 				.rest(REST) //
-				.artikel(ARTIKEL_ENTITY) //
+				.artikel(ARTIKEL) //
 				.standort(STANDORT) //
 				.haltbarkeit(HALTBARKEIT) //
 				.steril(STERIL) //

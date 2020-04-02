@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import io.remedymatch.artikel.api.ArtikelMapper;
-import io.remedymatch.artikel.domain.ArtikelEntity;
+import io.remedymatch.artikel.domain.Artikel;
 import io.remedymatch.artikel.domain.ArtikelRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.engine.client.EngineClient;
@@ -63,9 +62,7 @@ public class BedarfService {
 
 	@Transactional
 	public Bedarf neuesBedarfEinstellen(final @NotNull @Valid NeuesBedarf neuesBedarf) {
-		// TODO haeslich
-		ArtikelEntity artikel = ArtikelMapper
-				.getArticleEntity(artikelRepository.get(neuesBedarf.getArtikelId().getValue()));
+		Artikel artikel = artikelRepository.get(neuesBedarf.getArtikelId()).get();
 		Optional<InstitutionStandort> institutionStandort = institutionStandortRepository
 				.get(neuesBedarf.getStandortId());
 		if (institutionStandort.isEmpty()) {

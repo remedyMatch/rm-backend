@@ -1,35 +1,48 @@
 package io.remedymatch.artikel.api;
 
-import io.remedymatch.artikel.domain.ArtikelEntity;
+import java.util.UUID;
+
+import io.remedymatch.artikel.domain.Artikel;
+import io.remedymatch.artikel.domain.ArtikelId;
 
 public class ArtikelMapper {
-    public static ArtikelEntity getArticleEntity(ArtikelDTO artikel) {
-        var builder = ArtikelEntity.builder()
-                .id(artikel.getId())
-                .beschreibung(artikel.getBeschreibung())
-                .ean(artikel.getEan())
-                .hersteller(artikel.getHersteller())
+    public static Artikel getArtikel(ArtikelDTO artikel) {
+        var builder = Artikel.builder() //
+        		.id(maptToArtikelId(artikel.getId()))//
+				.beschreibung(artikel.getBeschreibung()) //
+                .ean(artikel.getEan()) //
+                .hersteller(artikel.getHersteller()) //
                 .name(artikel.getName());
 
         if (artikel.getArtikelKategorie() != null) {
-            builder = builder.artikelKategorie(ArtikelKategorieMapper.getArtikelKategorieEntity(artikel.getArtikelKategorie()));
+            builder = builder.artikelKategorie(ArtikelKategorieMapper.getArtikelKategorie(artikel.getArtikelKategorie()));
         }
 
         return builder.build();
     }
 
-    public static ArtikelDTO getArticleDTO(ArtikelEntity article) {
-        var builder = ArtikelDTO.builder()
-                .id(article.getId())
-                .beschreibung(article.getBeschreibung())
-                .ean(article.getEan())
-                .hersteller(article.getHersteller())
-                .name(article.getName());
+    public static ArtikelDTO getArtikelDTO(Artikel artikel) {
+        var builder = ArtikelDTO.builder() //
+                .id(artikel.getId().getValue()) //
+                .beschreibung(artikel.getBeschreibung()) //
+                .ean(artikel.getEan()) //
+                .hersteller(artikel.getHersteller()) //
+                .name(artikel.getName());
 
-        if (article.getArtikelKategorie() != null) {
-            builder = builder.artikelKategorie(ArtikelKategorieMapper.getArtikelKategorieDTO(article.getArtikelKategorie()));
+        if (artikel.getArtikelKategorie() != null) {
+            builder = builder.artikelKategorie(ArtikelKategorieMapper.getArtikelKategorieDTO(artikel.getArtikelKategorie()));
         }
 
         return builder.build();
+    }
+    
+	static ArtikelId maptToArtikelId(final String artikelId)
+    {
+    	return maptToArtikelId(UUID.fromString(artikelId));
+    }
+    
+    static ArtikelId maptToArtikelId(final UUID artikelId)
+    {
+    	return new ArtikelId(artikelId);
     }
 }

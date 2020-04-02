@@ -31,6 +31,8 @@ import io.remedymatch.artikel.api.ArtikelDTO;
 import io.remedymatch.artikel.api.ArtikelKategorieDTO;
 import io.remedymatch.artikel.api.ArtikelKategorieMapper;
 import io.remedymatch.artikel.api.ArtikelMapper;
+import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 
 @ExtendWith(SpringExtension.class)
@@ -48,8 +50,14 @@ public class ArtikelIntegrationTest {
     private ArtikelJpaRepository artikelJpaRepository;
 
     @Autowired
-    private ArtikelKategorieRepository artikelKategorieRepository;
+    private ArtikelRepository artikelRepository;
+    
+    @Autowired
+    private ArtikelKategorieJpaRepository artikelKategorieJpaRepository;
 
+    @Autowired
+    private ArtikelKategorieRepository artikelKategorieRepository;
+    
     @Autowired
     private BedarfJpaRepository bedarfRepository;
 
@@ -68,15 +76,15 @@ public class ArtikelIntegrationTest {
         angebotRepository.deleteAll();
         bedarfRepository.deleteAll();
         artikelJpaRepository.deleteAll();
-        artikelKategorieRepository.deleteAll();
+        artikelKategorieJpaRepository.deleteAll();
     }
 
     @Test
     @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
     public void shouldAddArtike() throws Exception {
 
-        var artikelKategorie = artikelKategorieRepository.save(
-                ArtikelKategorieEntity.builder()
+        var artikelKategorie = artikelKategorieRepository.add(
+                ArtikelKategorie.builder()
                         .name("shouldAddArtike")
                         .build()
         );
@@ -104,13 +112,13 @@ public class ArtikelIntegrationTest {
     @Test
     @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
     public void shouldGetArtikelById() throws Exception {
-        var artikelKategorie = artikelKategorieRepository.save(
-                ArtikelKategorieEntity.builder()
+        var artikelKategorie = artikelKategorieRepository.add(
+                ArtikelKategorie.builder()
                         .name("shouldGetArtikelById")
                         .build()
         );
         var artikelDTO = artikelForTC("shouldGetArtikelById", ArtikelKategorieMapper.getArtikelKategorieDTO(artikelKategorie));
-        var artikel = artikelJpaRepository.save(ArtikelMapper.getArticleEntity(artikelDTO));
+        var artikel = artikelRepository.add(ArtikelMapper.getArtikel(artikelDTO));
 
         MvcResult getArtikelResult = mockMvc.perform(get("/artikel/" + artikel.getId()).accept("application/json")).andReturn();
         assertThat(getArtikelResult.getResponse().getStatus(), is(200));

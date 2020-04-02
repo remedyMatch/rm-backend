@@ -14,8 +14,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.artikel.domain.ArtikelJpaRepository;
 import io.remedymatch.artikel.domain.ArtikelKategorieRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
 import io.remedymatch.bedarf.domain.BedarfRepository;
 import io.remedymatch.institution.domain.InstitutionRepository;
 import io.remedymatch.person.domain.PersonRepository;

@@ -1,7 +1,7 @@
 package io.remedymatch.angebot.api;
 
-import static io.remedymatch.artikel.api.ArtikelMapper.getArticleDTO;
-import static io.remedymatch.artikel.api.ArtikelMapper.getArticleEntity;
+import static io.remedymatch.artikel.api.ArtikelMapper.getArtikel;
+import static io.remedymatch.artikel.api.ArtikelMapper.getArtikelDTO;
 
 import java.util.UUID;
 
@@ -26,7 +26,7 @@ public class AngebotMapper {
                 .id(angebot.getId().getValue())
                 .rest(angebot.getRest())
                 .anzahl(angebot.getAnzahl())
-                .artikel(getArticleDTO(angebot.getArtikel()))
+                .artikel(getArtikelDTO(angebot.getArtikel()))
                 .haltbarkeit(angebot.getHaltbarkeit())
                 .medizinisch(angebot.isMedizinisch())
                 .originalverpackt(angebot.isOriginalverpackt())
@@ -66,7 +66,7 @@ public class AngebotMapper {
                 .id(maptToAngebotId(dto.getId()))
                 .rest(dto.getRest())
                 .anzahl(dto.getAnzahl())
-                .artikel(getArticleEntity(dto.getArtikel()))
+                .artikel(getArtikel(dto.getArtikel()))
                 .haltbarkeit(dto.getHaltbarkeit())
                 .medizinisch(dto.isMedizinisch())
                 .originalverpackt(dto.isOriginalverpackt())

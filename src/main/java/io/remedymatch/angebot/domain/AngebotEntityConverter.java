@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import io.remedymatch.angebot.domain.Angebot.AngebotBuilder;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotEntity.AngebotEntityBuilder;
+import io.remedymatch.artikel.domain.ArtikelEntityConverter;
 import io.remedymatch.institution.domain.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
 
@@ -20,7 +21,7 @@ class AngebotEntityConverter {
 		builder.id(new AngebotId(entity.getId())) //
 				.anzahl(entity.getAnzahl()) //
 				.rest(entity.getRest()) //
-				.artikel(entity.getArtikel()) //
+				.artikel(ArtikelEntityConverter.convert(entity.getArtikel())) //
 				.institution(InstitutionEntityConverter.convert(entity.getInstitution()))//
 				.standort(InstitutionStandortEntityConverter.convert(entity.getStandort()))
 				.haltbarkeit(entity.getHaltbarkeit()) //
@@ -50,7 +51,7 @@ class AngebotEntityConverter {
 
 		builder.anzahl(angebot.getAnzahl()) //
 				.rest(angebot.getRest()) //
-				.artikel(angebot.getArtikel()) //
+				.artikel(ArtikelEntityConverter.convert(angebot.getArtikel())) //
 				.institution(InstitutionEntityConverter.convert(angebot.getInstitution()))//
 				.standort(InstitutionStandortEntityConverter.convert(angebot.getStandort()))
 				.haltbarkeit(angebot.getHaltbarkeit()) //

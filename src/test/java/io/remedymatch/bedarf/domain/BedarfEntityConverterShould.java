@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.artikel.domain.ArtikelEntity;
+import io.remedymatch.artikel.domain.Artikel;
+import io.remedymatch.artikel.domain.ArtikelId;
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfAnfrageEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.institution.domain.Institution;
@@ -29,13 +31,17 @@ public class BedarfEntityConverterShould {
 	private static final BedarfId BEDARF_ID = new BedarfId(UUID.randomUUID());
 	private static final BigDecimal ANZAHL = BigDecimal.valueOf(120.0);
 	private static final BigDecimal REST = BigDecimal.valueOf(120.0);
-	private static final ArtikelEntity ARTIKEL = ArtikelEntity.builder().id(UUID.randomUUID()).build();
+	private static final ArtikelId ARTIKEL_ID = new ArtikelId(UUID.randomUUID());
+	private static final Artikel ARTIKEL = Artikel.builder().id(ARTIKEL_ID).build();
+	private static final ArtikelEntity ARTIKEL_ENTITY = ArtikelEntity.builder().id(ARTIKEL_ID.getValue()).build();
 	private static final InstitutionId INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 	private static final Institution INSTITUTION = Institution.builder().id(INSTITUTION_ID).build();
-	private static final InstitutionEntity INSTITUTION_ENTITY = InstitutionEntity.builder().id(INSTITUTION_ID.getValue()).build();
+	private static final InstitutionEntity INSTITUTION_ENTITY = InstitutionEntity.builder()
+			.id(INSTITUTION_ID.getValue()).build();
 	private static final InstitutionStandortId STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
 	private static final InstitutionStandort STANDORT = InstitutionStandort.builder().id(STANDORT_ID).build();
-	private static final InstitutionStandortEntity STANDORT_ENTITY = InstitutionStandortEntity.builder().id(STANDORT_ID.getValue()).build();
+	private static final InstitutionStandortEntity STANDORT_ENTITY = InstitutionStandortEntity.builder()
+			.id(STANDORT_ID.getValue()).build();
 	private static final boolean STERIL = true;
 	private static final boolean ORIGINALVERPACKT = true;
 	private static final boolean MEDIZINISCH = true;
@@ -98,7 +104,7 @@ public class BedarfEntityConverterShould {
 				.id(mitId ? BEDARF_ID.getValue() : null) //
 				.anzahl(ANZAHL) //
 				.rest(REST) //
-				.artikel(ARTIKEL) //
+				.artikel(ARTIKEL_ENTITY) //
 				.institution(INSTITUTION_ENTITY) //
 				.standort(STANDORT_ENTITY) //
 				.steril(STERIL) //

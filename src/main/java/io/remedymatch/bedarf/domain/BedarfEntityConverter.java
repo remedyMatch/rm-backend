@@ -2,6 +2,7 @@ package io.remedymatch.bedarf.domain;
 
 import java.util.stream.Collectors;
 
+import io.remedymatch.artikel.domain.ArtikelEntityConverter;
 import io.remedymatch.bedarf.domain.Bedarf.BedarfBuilder;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity.BedarfEntityBuilder;
@@ -20,7 +21,7 @@ class BedarfEntityConverter {
 		builder.id(new BedarfId(entity.getId())) //
 				.anzahl(entity.getAnzahl()) //
 				.rest(entity.getRest()) //
-				.artikel(entity.getArtikel()) //
+				.artikel(ArtikelEntityConverter.convert(entity.getArtikel())) //
 				.institution(InstitutionEntityConverter.convert(entity.getInstitution()))//
 				.standort(InstitutionStandortEntityConverter.convert(entity.getStandort()))
 				.steril(entity.isSteril()) //
@@ -49,7 +50,7 @@ class BedarfEntityConverter {
 
 		builder.anzahl(bedarf.getAnzahl()) //
 				.rest(bedarf.getRest()) //
-				.artikel(bedarf.getArtikel()) //
+				.artikel(ArtikelEntityConverter.convert(bedarf.getArtikel())) //
 				.institution(InstitutionEntityConverter.convert(bedarf.getInstitution()))//
 				.standort(InstitutionStandortEntityConverter.convert(bedarf.getStandort()))
 				.steril(bedarf.isSteril()) //

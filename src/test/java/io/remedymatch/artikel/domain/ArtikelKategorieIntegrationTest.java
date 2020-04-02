@@ -1,8 +1,9 @@
 package io.remedymatch.artikel.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.remedymatch.TestApplication;
-import io.remedymatch.WithMockJWT;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -18,9 +19,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.remedymatch.TestApplication;
+import io.remedymatch.WithMockJWT;
+import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -37,7 +42,7 @@ public class ArtikelKategorieIntegrationTest {
     private ArtikelJpaRepository artikelJpaRepository;
 
     @Autowired
-    private ArtikelKategorieRepository artikelKategorieRepository;
+    private ArtikelKategorieJpaRepository artikelKategorieRepository;
 
     private MockMvc mockMvc;
 

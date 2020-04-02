@@ -15,10 +15,10 @@ import com.github.javafaker.Faker;
 
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
-import io.remedymatch.artikel.domain.ArtikelEntity;
-import io.remedymatch.artikel.domain.ArtikelJpaRepository;
-import io.remedymatch.artikel.domain.ArtikelKategorieEntity;
-import io.remedymatch.artikel.domain.ArtikelKategorieRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
 import io.remedymatch.bedarf.domain.BedarfRepository;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
@@ -48,7 +48,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     private ArtikelJpaRepository artikelRepository;
 
     @Autowired
-    private ArtikelKategorieRepository artikelKategorieRepository;
+    private ArtikelKategorieJpaRepository artikelKategorieRepository;
 
     @Autowired
     private InstitutionJpaRepository institutionRepository;

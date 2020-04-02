@@ -1,56 +1,52 @@
 package io.remedymatch.artikel.domain;
 
-import io.remedymatch.artikel.api.ArtikelDTO;
-import io.remedymatch.artikel.api.ArtikelMapper;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Repository;
+import static io.remedymatch.artikel.domain.ArtikelEntityConverter.convert;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
+
+import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
+import lombok.AllArgsConstructor;
+
 @AllArgsConstructor
 @Repository
 public class ArtikelRepository {
     private final ArtikelJpaRepository jpaRepository;
-    private final ArtikelKategorieRepository artikelKategorieRepository;
 
-    public List<ArtikelDTO> search(String nameLike) {
-        if (nameLike != null && !nameLike.isBlank()) {
-            return jpaRepository.findByNameLike("%" + nameLike + "%").stream().map(ArtikelMapper::getArticleDTO).collect(Collectors.toList());
-        } else {
-            return jpaRepository.findAll().stream().map(ArtikelMapper::getArticleDTO).collect(Collectors.toList());
-        }
-    }
+    public List<Artikel> getAlle() {
+		return jpaRepository.findAll().stream().map(ArtikelEntityConverter::convert).collect(Collectors.toList());
+	}
+    
+	public List<Artikel> getArtikelVonKategorie(final ArtikelKategorieId artikelKategorieId) {
+		Assert.notNull(artikelKategorieId, "ArtikelKategorieId ist null");
+		Assert.notNull(artikelKategorieId.getValue(), "ArtikelKategorieId ist null");
 
-    public ArtikelDTO get(UUID articleId) {
-        return ArtikelMapper.getArticleDTO(jpaRepository.findById(articleId).orElseThrow());
-    }
+		return jpaRepository.findAllByArtikelKategorie_Id(artikelKategorieId.getValue()).stream()//
+				.map(ArtikelEntityConverter::convert)//
+				.collect(Collectors.toList());
+	}
+	
+	public List<Artikel> findByNameLike(final String nameLike) {
+		Assert.isTrue(StringUtils.isNotBlank(nameLike), "NameLike ist blank");
 
-    public ArtikelDTO add(ArtikelDTO artikel) {
-        var toSave = ArtikelMapper.getArticleEntity(artikel);
+		return jpaRepository.findByNameLike(nameLike).stream().map(ArtikelEntityConverter::convert).collect(Collectors.toList());
+	}
+	
+	public Optional<Artikel> get(final ArtikelId artikelId) {
+		Assert.notNull(artikelId, "ArtikelId ist null");
+		Assert.notNull(artikelId.getValue(), "ArtikelId ist null");
 
-        if (artikel.getArtikelKategorie() != null) {
-            toSave.setArtikelKategorie(artikelKategorieRepository.findById(artikel.getArtikelKategorie().getId()).orElseThrow());
-        }
-        return ArtikelMapper.getArticleDTO(jpaRepository.save(toSave));
-    }
+		return jpaRepository.findById(artikelId.getValue()).map(ArtikelEntityConverter::convert);
+	}
+	
+	public Artikel add(final Artikel artikel) {
+		Assert.notNull(artikel, "Artikel ist null");
 
-    public ArtikelDTO update(ArtikelDTO artikelDTO) {
-        var entity = jpaRepository.findById(artikelDTO.getId()).orElseThrow();
-
-        ArtikelKategorieEntity artikelKategorieEntity;
-        if (artikelDTO.getArtikelKategorie() != null && artikelDTO.getArtikelKategorie().getId() != null) {
-            artikelKategorieEntity = artikelKategorieRepository.findById(artikelDTO.getArtikelKategorie().getId()).orElseThrow();
-        } else {
-            artikelKategorieEntity = null;
-        }
-        entity.setArtikelKategorie(artikelKategorieEntity);
-        entity.setBeschreibung(artikelDTO.getBeschreibung());
-        entity.setEan(artikelDTO.getEan());
-        entity.setHersteller(artikelDTO.getHersteller());
-        entity.setName(artikelDTO.getName());
-        return ArtikelMapper.getArticleDTO(jpaRepository.save(entity));
-    }
+		return convert(jpaRepository.save(convert(artikel)));
+	}
 }

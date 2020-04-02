@@ -22,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.artikel.domain.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.bedarf.domain.BedarfAnfrageStatus;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;

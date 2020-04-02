@@ -1,9 +1,9 @@
 package io.remedymatch.artikel;
 
-import io.remedymatch.artikel.domain.ArtikelEntity;
-import io.remedymatch.artikel.domain.ArtikelKategorieEntity;
-
 import java.util.UUID;
+
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
 
 public class ArtikelFixtures {
     public static ArtikelKategorieEntity artikelKategorieEntity(String prefix) {

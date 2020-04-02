@@ -1,7 +1,7 @@
 package io.remedymatch.bedarf.api;
 
-import static io.remedymatch.artikel.api.ArtikelMapper.getArticleDTO;
-import static io.remedymatch.artikel.api.ArtikelMapper.getArticleEntity;
+import static io.remedymatch.artikel.api.ArtikelMapper.getArtikel;
+import static io.remedymatch.artikel.api.ArtikelMapper.getArtikelDTO;
 
 import java.util.UUID;
 
@@ -26,7 +26,7 @@ public class BedarfMapper {
                 .id(bedarf.getId().getValue())
                 .rest(bedarf.getRest())
                 .anzahl(bedarf.getAnzahl())
-                .artikel(getArticleDTO(bedarf.getArtikel()))
+                .artikel(getArtikelDTO(bedarf.getArtikel()))
                 .medizinisch(bedarf.isMedizinisch())
                 .originalverpackt(bedarf.isOriginalverpackt())
                 .standort(bedarf.getStandort() != null ? InstitutionStandortMapper.mapToDTO(bedarf.getStandort()) : null)
@@ -65,7 +65,7 @@ public class BedarfMapper {
                 .id(maptToBedarfId(dto.getId()))
                 .rest(dto.getRest())
                 .anzahl(dto.getAnzahl())
-                .artikel(getArticleEntity(dto.getArtikel()))
+                .artikel(getArtikel(dto.getArtikel()))
                 .medizinisch(dto.isMedizinisch())
                 .originalverpackt(dto.isOriginalverpackt())
                 .standort(dto.getStandort() != null ? InstitutionStandortMapper.mapToStandort(dto.getStandort()) : null)

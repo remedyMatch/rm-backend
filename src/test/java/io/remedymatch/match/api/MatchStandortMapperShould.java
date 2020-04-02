@@ -1,4 +1,4 @@
-package io.remedymatch.match.domain;
+package io.remedymatch.match.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -11,11 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.match.infrastructure.MatchStandortEntity;
+import io.remedymatch.match.domain.MatchStandort;
+import io.remedymatch.match.domain.MatchStandortId;
 
 @ExtendWith(SpringExtension.class)
-@DisplayName("MatchStandortEntityConverter soll")
-public class MatchStandortEntityConverterShould {
+@DisplayName("MatchStandortMapper soll")
+public class MatchStandortMapperShould {
 
 	private static final MatchStandortId MATCH_STANDORT_ID = new MatchStandortId(UUID.randomUUID());
 	private static final UUID INSTITUTION_STANDORT_ID = UUID.randomUUID();
@@ -28,32 +29,20 @@ public class MatchStandortEntityConverterShould {
 	private static final BigDecimal LATITUDE = BigDecimal.valueOf(555);
 
 	@Test
-	@DisplayName("Entity in Domain Objekt konvertieren")
-	void entity_in_Domain_Objekt_konvertieren() {
-		assertEquals(standort(), MatchStandortEntityConverter.convert(entity()));
+	@DisplayName("Domain Objekt in DTO konvertieren")
+	void domain_Objekt_in_DTO_konvertieren() {
+		assertEquals(matchStandortDTO(), MatchStandortMapper.mapToDTO(matchStandort()));
 	}
 
 	@Test
-	@DisplayName("null Entity in null Domain Objekt konvertieren")
-	void null_entity_in_null_Domain_Objekt_konvertieren() {
-		assertNull(MatchStandortEntityConverter.convert((MatchStandortEntity) null));
+	@DisplayName("null Domain Objekt in null DTO konvertieren")
+	void null_Domain_Objekt_in_null_DTO_konvertieren() {
+		assertNull(MatchStandortMapper.mapToDTO((MatchStandort) null));
 	}
 
-	@Test
-	@DisplayName("Domain Objekt in Entity konvertieren")
-	void domain_Objekt_in_Entity_konvertieren() {
-		assertEquals(entity(), MatchStandortEntityConverter.convert(standort()));
-	}
-
-	@Test
-	@DisplayName("null Domain Objekt in null Entity konvertieren")
-	void null_domain_Objekt_in_Entity_konvertieren() {
-		assertNull(MatchStandortEntityConverter.convert((MatchStandort) null));
-	}
-
-	private MatchStandort standort() {
-		return MatchStandort.builder() //
-				.id(MATCH_STANDORT_ID) //
+	private MatchStandortDTO matchStandortDTO() {
+		return MatchStandortDTO.builder() //
+				.id(MATCH_STANDORT_ID.getValue()) //
 				.institutionStandortId(INSTITUTION_STANDORT_ID) //
 				.name(NAME) //
 				.plz(PLZ) //
@@ -65,9 +54,9 @@ public class MatchStandortEntityConverterShould {
 				.build();
 	}
 
-	private MatchStandortEntity entity() {
-		return MatchStandortEntity.builder() //
-				.id(MATCH_STANDORT_ID.getValue()) //
+	private MatchStandort matchStandort() {
+		return MatchStandort.builder() //
+				.id(MATCH_STANDORT_ID) //
 				.institutionStandortId(INSTITUTION_STANDORT_ID) //
 				.name(NAME) //
 				.plz(PLZ) //

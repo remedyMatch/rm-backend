@@ -33,28 +33,31 @@ public class MatchStandortEntity {
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Type(type = "uuid-char")
-    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
+	@Type(type = "uuid-char")
+	@Column(name = "UUID", unique = true, nullable = false, updatable = false)
 	private UUID id;
 
-    @Column(name = "NAME", nullable = false, updatable = true, length = 64)
+	@Column(name = "INSTITUTION_STANDORT_ID", nullable = false, updatable = false)
+	private UUID institutionStandortId;
+
+	@Column(name = "NAME", nullable = false, updatable = true, length = 64)
 	private String name;
 
-    @Column(name = "PLZ", nullable = false, updatable = true, length = 8)
+	@Column(name = "PLZ", nullable = false, updatable = true, length = 8)
 	private String plz;
 
-    @Column(name = "ORT", nullable = false, updatable = true, length = 64)
+	@Column(name = "ORT", nullable = false, updatable = true, length = 64)
 	private String ort;
 
-    @Column(name = "STRASSE", nullable = false, updatable = true, length = 64)
-    private String strasse;
+	@Column(name = "STRASSE", nullable = false, updatable = true, length = 64)
+	private String strasse;
 
-    @Column(name = "LAND", nullable = false, updatable = true, length = 64)
-    private String land;
+	@Column(name = "LAND", nullable = false, updatable = true, length = 64)
+	private String land;
 
-    @Column(name = "LONGITUDE", nullable = true, updatable = true)
+	@Column(name = "LONGITUDE", nullable = true, updatable = true)
 	private BigDecimal longitude;
 
-    @Column(name = "LATITUDE", nullable = true, updatable = true)
-    private BigDecimal latitude;
+	@Column(name = "LATITUDE", nullable = true, updatable = true)
+	private BigDecimal latitude;
 }

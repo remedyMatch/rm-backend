@@ -1,6 +1,7 @@
 package io.remedymatch.match.domain;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -26,6 +27,9 @@ public class MatchStandort {
 	@Valid
 	private MatchStandortId id;
 
+	@NotNull
+	private UUID institutionStandortId;
+
 	@NotBlank
 	private String name;
 
@@ -40,10 +44,10 @@ public class MatchStandort {
 
 	@NotBlank
 	private String land;
-	
+
 	private BigDecimal longitude;
 	private BigDecimal latitude;
-	
+
 	public String getAdresse() {
 		return strasse + ", " + plz + " " + ort + ", " + land;
 	}

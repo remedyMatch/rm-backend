@@ -12,6 +12,7 @@ class MatchStandortEntityConverter {
 
 		return MatchStandort.builder()//
 				.id(new MatchStandortId(entity.getId())) //
+				.institutionStandortId(entity.getInstitutionStandortId()) //
 				.name(entity.getName()) //
 				.plz(entity.getPlz()) //
 				.ort(entity.getOrt()) //
@@ -33,6 +34,7 @@ class MatchStandortEntityConverter {
 		}
 
 		return builder
+				.institutionStandortId(matchStandort.getInstitutionStandortId()) //
 				.name(matchStandort.getName()) //
 				.plz(matchStandort.getPlz()) //
 				.ort(matchStandort.getOrt()) //

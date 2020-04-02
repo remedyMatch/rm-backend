@@ -1,4 +1,4 @@
-package io.remedymatch.bedarf.domain.aufgabe;
+package io.remedymatch.bedarf.process;
 
 public class BedarfAnfrageBearbeitenTaskContstants {
     public static String ANGENOMMEN = "angenommen";

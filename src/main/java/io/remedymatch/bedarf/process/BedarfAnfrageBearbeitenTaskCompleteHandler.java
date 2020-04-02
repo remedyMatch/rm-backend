@@ -1,22 +1,24 @@
-package io.remedymatch.bedarf.domain.aufgabe;
-
-import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
-import io.remedymatch.bedarf.domain.BedarfService;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
-import io.remedymatch.engine.TaskDTO;
-import lombok.AllArgsConstructor;
-import lombok.val;
-import org.springframework.stereotype.Component;
+package io.remedymatch.bedarf.process;
 
 import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.stereotype.Component;
+
+import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
+import io.remedymatch.bedarf.domain.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
+import io.remedymatch.bedarf.domain.BedarfService;
+import io.remedymatch.engine.TaskDTO;
+import lombok.AllArgsConstructor;
+import lombok.val;
 
 @AllArgsConstructor
 @Component
 public class BedarfAnfrageBearbeitenTaskCompleteHandler implements TaskCompleteHandler {
 
     private final BedarfAnfrageRepository bedarfAnfrageRepository;
-    private final BedarfService bedarfService;
+    private final BedarfService  bedarfService;
 
     @Override
     public void taskPruefen(TaskDTO taskDTO, Map<String, Object> variables) {
@@ -25,11 +27,11 @@ public class BedarfAnfrageBearbeitenTaskCompleteHandler implements TaskCompleteH
             return;
         }
 
-        val anfrage = bedarfAnfrageRepository.findById(UUID.fromString(taskDTO.getObjektId()));
+        val anfrage = bedarfAnfrageRepository.get(new BedarfAnfrageId(UUID.fromString(taskDTO.getObjektId())));
         if (anfrage.isEmpty()) {
             throw new IllegalArgumentException("Anfrage mit der Id: " + taskDTO.getObjektId() + " nicht vorhanden");
         }
-        bedarfService.anfrageAnnehmen(taskDTO.getObjektId());
+        bedarfService.anfrageAnnehmen(new BedarfAnfrageId(UUID.fromString(taskDTO.getObjektId())));
 
     }
 

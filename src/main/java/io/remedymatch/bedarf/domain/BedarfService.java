@@ -1,133 +1,271 @@
 package io.remedymatch.bedarf.domain;
 
+import static io.remedymatch.bedarf.process.BedarfAnfrageProzessConstants.PROZESS_KEY;
+
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
-import io.remedymatch.bedarf.api.BedarfAnfrageProzessConstants;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageStatus;
+import io.remedymatch.artikel.api.ArtikelMapper;
+import io.remedymatch.artikel.domain.ArtikelEntity;
+import io.remedymatch.artikel.domain.ArtikelRepository;
+import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
-import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.domain.InstitutionStandortRepository;
+import io.remedymatch.user.domain.NotUserInstitutionObjectException;
+import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
 @AllArgsConstructor
+@Validated
 @Service
 public class BedarfService {
+	private static final String EXCEPTION_MSG_BEDARF_NICHT_GEFUNDEN = "Bedarf fuer diese Id nicht gefunden: %s";
+	private static final String EXCEPTION_MSG_BEDARF_NICHT_VON_USER_INSTITUTION = "Bedarf gehoert nicht der Institution des angemeldetes Benutzers.";
 
-    private final BedarfRepository bedarfRepository;
-    private final EngineClient engineClient;
-    private final BedarfAnfrageRepository bedarfAnfrageRepository;
+	private static final String EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_GEFUNDEN = "BedarfAnfrage fuer diese Id nicht gefunden: %s";
+	private static final String EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_VON_USER_INSTITUTION = "BedarfAnfrage gehoert nicht der Institution des angemeldetes Benutzers.";
 
-    @Transactional
-    public void bedarfMelden(BedarfEntity bedarf, InstitutionEntity institutionEntity) {
-        bedarf.setInstitution(institutionEntity);
-        bedarf.setRest(bedarf.getAnzahl());
-        bedarfRepository.save(bedarf);
-    }
+	private final UserService userService;
+	private final ArtikelRepository artikelRepository;
+	private final InstitutionStandortRepository institutionStandortRepository;
 
-    @Transactional
-    public Optional<BedarfEntity> bedarfLaden(String bedarfId) {
-        return bedarfRepository.findById(UUID.fromString(bedarfId));
-    }
+	private final BedarfRepository bedarfRepository;
+	private final BedarfAnfrageRepository bedarfAnfrageRepository;
+	private final GeoCalcService geoCalcService;
+	private final EngineClient engineClient;
 
-    @Transactional
-    public Iterable<BedarfEntity> alleBedarfeLaden() {
-        return bedarfRepository.findAll();
-    }
+	public List<Bedarf> getAlleNichtBedienteBedarfe() {
+		return mitEntfernung(//
+				bedarfRepository.getAlleNichtBedienteBedarfe(), //
+				userService.getContextInstitution().getHauptstandort());
+	}
 
-    @Transactional
-    public void bedarfLoeschen(UUID id) {
-        val bedarf = bedarfRepository.findById(id);
-        bedarfRepository.delete(bedarf.get());
-    }
+	public List<Bedarf> getBedarfeDerUserInstitution() {
+		val userInstitution = userService.getContextInstitution();
+		return mitEntfernung(//
+				bedarfRepository.getBedarfeVonInstitution(userInstitution.getId()), //
+				userInstitution.getHauptstandort());
+	}
 
-    @Transactional
-    public void starteAnfrage(UUID bedarfId, InstitutionEntity anfrager, String kommentar, UUID standortId, double anzahl) {
+	@Transactional
+	public Bedarf neuesBedarfEinstellen(final @NotNull @Valid NeuesBedarf neuesBedarf) {
+		// TODO haeslich
+		ArtikelEntity artikel = ArtikelMapper
+				.getArticleEntity(artikelRepository.get(neuesBedarf.getArtikelId().getValue()));
+		Optional<InstitutionStandort> institutionStandort = institutionStandortRepository
+				.get(neuesBedarf.getStandortId());
+		if (institutionStandort.isEmpty()) {
+			// FIXME: Pruefung darauf, dass es der Stanrort meiner Institution ist
+			throw new IllegalArgumentException("InstitutionStandort nicht gefunden");
+		}
 
-        val bedarf = bedarfRepository.findById(bedarfId);
+		return mitEntfernung(bedarfRepository.add(Bedarf.builder() //
+				.anzahl(neuesBedarf.getAnzahl()) //
+				.rest(neuesBedarf.getAnzahl()) //
+				.artikel(artikel) //
+				.institution(userService.getContextInstitution()) //
+				.standort(institutionStandort.get()) //
+				.steril(neuesBedarf.isSteril()) //
+				.originalverpackt(neuesBedarf.isOriginalverpackt()) //
+				.medizinisch(neuesBedarf.isMedizinisch()) //
+				.kommentar(neuesBedarf.getKommentar()) //
+				.bedient(false) //
+				.build()));
+	}
 
-        InstitutionStandortEntity standort = null;
+	@Transactional
+	public void bedarfDerUserInstitutionLoeschen(final @NotNull @Valid BedarfId bedarfId)
+			throws ObjectNotFoundException, NotUserInstitutionObjectException {
+		Optional<Bedarf> bedarf = bedarfRepository.get(bedarfId);
+		if (!bedarf.isPresent()) {
+			throw new ObjectNotFoundException(String.format(EXCEPTION_MSG_BEDARF_NICHT_GEFUNDEN, bedarfId));
+		}
 
-        if (anfrager.getHauptstandort().getId().equals(standortId)) {
-            standort = anfrager.getHauptstandort();
-        } else {
-            var foundStandort = anfrager.getStandorte().stream().filter(s -> s.getId().equals(standortId)).findFirst();
+		if (!userService.isUserContextInstitution(bedarf.get().getInstitution().getId())) {
+			throw new NotUserInstitutionObjectException(EXCEPTION_MSG_BEDARF_NICHT_VON_USER_INSTITUTION);
+		}
 
-            if (foundStandort.isPresent()) {
-                standort = foundStandort.get();
-            }
-        }
+		// Alle laufende Anfragen stornieren
+		bedarfAnfrageRepository.storniereAlleOffeneAnfragen(bedarfId);
+		// TODO Auch Prozesse beenden
 
-        if (standort == null) {
-            throw new IllegalArgumentException("Der ausgewählte Standort konnte nicht geunden werden");
-        }
+		bedarfRepository.delete(bedarfId);
+	}
 
-        if (bedarf.isEmpty()) {
-            throw new IllegalArgumentException("Bedarf ist nicht vorhanden");
-        }
+	@Transactional
+	public void bedarfAnfrageErstellen(//
+			final @NotNull @Valid BedarfId bedarfId, //
+			final @NotNull @Valid InstitutionStandortId standortId, //
+			final @NotBlank String kommentar, //
+			final @NotNull BigDecimal anzahl) {
+		val bedarf = bedarfRepository.get(bedarfId);
 
-        val anfrage = BedarfAnfrageEntity.builder()
-                .institutionVon(anfrager)
-                .institutionAn(bedarf.get().getInstitution())
-                .kommentar(kommentar)
-                .standortAn(bedarf.get().getStandort())
-                .standortVon(standort)
-                .bedarf(bedarf.get())
-                .anzahl(anzahl)
-                .status(BedarfAnfrageStatus.Offen)
-                .build();
+		if (bedarf.isEmpty()) {
+			throw new IllegalArgumentException("Bedarf ist nicht vorhanden");
+		}
 
-        bedarfAnfrageRepository.save(anfrage);
+		InstitutionStandort  standort = null;
 
-        var variables = new HashMap<String, Object>();
-        variables.put("institution", bedarf.get().getInstitution().getId().toString());
-        variables.put("objektId", anfrage.getId().toString());
+		val userInstitution = userService.getContextInstitution();
+		if (userInstitution.getHauptstandort().getId().equals(standortId)) {
+			standort = userInstitution.getHauptstandort();
+		} else {
+			var foundStandort = userInstitution.getStandorte().stream().filter(s -> s.getId().equals(standortId))
+					.findFirst();
 
-        val prozessInstanzId = engineClient.prozessStarten(
-                BedarfAnfrageProzessConstants.PROZESS_KEY,
-                anfrage.getId().toString(),
-                variables);
-        anfrage.setProzessInstanzId(prozessInstanzId);
-        bedarfAnfrageRepository.save(anfrage);
-    }
+			if (foundStandort.isPresent()) {
+				standort = foundStandort.get();
+			}
+		}
 
-    @Transactional
-    public void anfrageStornieren(String anfrageId) {
-        val anfrage = bedarfAnfrageRepository.findById(UUID.fromString(anfrageId));
-        if (anfrage.isEmpty()) {
-            throw new IllegalArgumentException("Anfrage nicht vorhanden");
-        }
-        anfrage.get().setStatus(BedarfAnfrageStatus.Storniert);
-        bedarfAnfrageRepository.save(anfrage.get());
-    }
+		if (standort == null) {
+			throw new IllegalArgumentException("Der ausgewählte Standort konnte nicht geunden werden");
+		}
 
-    @Transactional
-    public void anfrageAnnehmen(String anfrageId) {
-        val anfrage = bedarfAnfrageRepository.findById(UUID.fromString(anfrageId));
-        if (anfrage.isEmpty()) {
-            throw new IllegalArgumentException("Anfrage nicht vorhanden");
-        }
-        anfrage.get().setStatus(BedarfAnfrageStatus.Angenommen);
+		var anfrage = BedarfAnfrage.builder() //
+				.bedarf(bedarf.get()) //
+				.institutionVon(userInstitution) //
+				.standortVon(standort) //
+				.anzahl(anzahl) //
+				.kommentar(kommentar) //
+				.status(BedarfAnfrageStatus.Offen) //
+				.build();
 
-        //Bedarf als bedient markieren
-        val bedarf = anfrage.get().getBedarf();
+		anfrage = bedarfAnfrageRepository.add(anfrage);
 
-        if (anfrage.get().getAnzahl() >= bedarf.getRest()) {
-            bedarf.setBedient(true);
-            bedarf.setRest(0);
-        } else {
-            bedarf.setRest(bedarf.getRest() - anfrage.get().getAnzahl());
-        }
+		var variables = new HashMap<String, Object>();
+		variables.put("institution", bedarf.get().getInstitution().getId().toString());
+		variables.put("objektId", anfrage.getId().toString());
 
-        bedarfRepository.save(bedarf);
-        bedarfAnfrageRepository.save(anfrage.get());
-    }
+		val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().toString(), variables);
+		anfrage.setProzessInstanzId(prozessInstanzId);
+		bedarfAnfrageRepository.update(anfrage);
+	}
 
+	@Transactional
+	public void bedarfAnfrageDerUserInstitutionLoeschen(final @NotNull @Valid BedarfAnfrageId anfrageId)
+			throws ObjectNotFoundException, NotUserInstitutionObjectException {
+		Optional<BedarfAnfrage> bedarfAnfrage = bedarfAnfrageRepository.get(anfrageId);
+		if (!bedarfAnfrage.isPresent()) {
+			throw new ObjectNotFoundException(String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_GEFUNDEN, anfrageId));
+		}
+
+		if (!userService.isUserContextInstitution(bedarfAnfrage.get().getBedarf().getInstitution().getId())) {
+			throw new NotUserInstitutionObjectException(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_VON_USER_INSTITUTION);
+		}
+
+		anfrageStornieren(anfrageId);
+	}
+	
+	@Transactional
+	@Deprecated
+	public void bedarfMelden(Bedarf bedarf) {
+		// sollte geloescht werden
+
+		bedarf.setInstitution(userService.getContextInstitution());
+		bedarf.setRest(bedarf.getAnzahl());
+		bedarfRepository.add(bedarf);
+	}
+
+	@Transactional
+	public void anfrageStornieren(final @NotNull @Valid BedarfAnfrageId anfrageId) {
+		val anfrage = bedarfAnfrageRepository.get(anfrageId);
+		if (anfrage.isEmpty()) {
+			throw new IllegalArgumentException("Anfrage nicht vorhanden");
+		}
+		anfrage.get().setStatus(BedarfAnfrageStatus.Storniert);
+		bedarfAnfrageRepository.update(anfrage.get());
+	}
+
+	@Transactional
+	public void anfrageAnnehmen(final @NotNull @Valid BedarfAnfrageId anfrageId) {
+		val anfrage = bedarfAnfrageRepository.get(anfrageId);
+		if (anfrage.isEmpty()) {
+			throw new IllegalArgumentException("Anfrage nicht vorhanden");
+		}
+		anfrage.get().setStatus(BedarfAnfrageStatus.Angenommen);
+
+		// Bedarf als bedient markieren
+		val bedarf = anfrage.get().getBedarf();
+
+		// Restbestand des Bedarfs herabsetzen oder Exception werfen,
+		// wenn die Anfrage größer als das Bedarf ist
+		if (anfrage.get().getAnzahl().doubleValue() > bedarf.getRest().doubleValue()) {
+			anfrage.get().setStatus(BedarfAnfrageStatus.Storniert);
+			bedarfAnfrageRepository.update(anfrage.get());
+			throw new IllegalArgumentException("Nicht genügend Ware auf Lager");
+		} else {
+			if (anfrage.get().getAnzahl().doubleValue() == bedarf.getRest().doubleValue()) {
+				bedarf.setBedient(true);
+				bedarf.setRest(BigDecimal.ZERO);
+			} else {
+				bedarf.setRest(
+						BigDecimal.valueOf(bedarf.getRest().doubleValue() - anfrage.get().getAnzahl().doubleValue()));
+			}
+		}
+
+		bedarfRepository.update(bedarf);
+		bedarfAnfrageRepository.update(anfrage.get());
+	}
+
+	/* help methods */
+
+	private List<Bedarf> mitEntfernung(final List<Bedarf> bedarfe, final InstitutionStandort userHauptstandort) {
+		bedarfe.forEach(bedarf -> bedarf.setEntfernung(berechneEntfernung(//
+				userHauptstandort, //
+				bedarf.getStandort())));
+
+		return bedarfe;
+	}
+
+	private Bedarf mitEntfernung(final Bedarf bedarf) {
+		bedarf.setEntfernung(berechneEntfernung(bedarf.getStandort()));
+		return bedarf;
+	}
+
+	private BigDecimal berechneEntfernung(final InstitutionStandort bedarfStandort) {
+		return berechneEntfernung(//
+				userService.getContextInstitution().getHauptstandort(), //
+				bedarfStandort);
+	}
+
+	private BigDecimal berechneEntfernung(//
+			final InstitutionStandort userHauptstandort, //
+			final InstitutionStandort bedarfStandort) {
+		return geoCalcService.berechneDistanzInKilometer(userHauptstandort, bedarfStandort);
+	}
+
+//	private void anfrageStornierenX(final BedarfAnfrageId anfrageId) {
+//		val anfrage = bedarfAnfrageRepository.get(anfrageId);
+//
+//		if (anfrage.isEmpty()) {
+//			throw new IllegalArgumentException("Anfrage ist nicht vorhanden und kann deshalb nicht storniert werden");
+//		}
+//
+//		BedarfAnfrage bedarfAnfrage = anfrage.get();
+//		if (!BedarfAnfrageStatus.Offen.equals(bedarfAnfrage.getStatus())) {
+//			throw new IllegalArgumentException(
+//					"Eine Anfrage, die nicht im Status offen ist, kann nicht storniert werden");
+//		}
+//
+//		bedarfAnfrage.setStatus(BedarfAnfrageStatus.Storniert);
+//		bedarfAnfrageRepository.update(bedarfAnfrage);
+//
+//		engineClient.messageKorrelieren(bedarfAnfrage.getProzessInstanzId(), ANFRAGE_STORNIEREN_MESSAGE,
+//				new HashMap<>());
+//	}
 }

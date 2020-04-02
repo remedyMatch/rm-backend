@@ -1,13 +1,15 @@
-package io.remedymatch.bedarf.domain.aufgabe;
+package io.remedymatch.bedarf.process;
+
+import java.util.UUID;
+
+import org.springframework.stereotype.Component;
 
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
+import io.remedymatch.bedarf.domain.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -20,14 +22,14 @@ public class BedarfAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungH
 
         String beschreibung = "";
 
-        val anfrage = anfrageRepository.findById(UUID.fromString(taskDTO.getObjektId()));
+        val anfrage = anfrageRepository.get(new BedarfAnfrageId(UUID.fromString(taskDTO.getObjektId())));
 
         var prefix = "Anfrage zu Bedarf von ";
         var artikel = anfrage.get().getBedarf().getArtikel();
         var anzahl = anfrage.get().getBedarf().getAnzahl();
 
         beschreibung += anfrage.get().getInstitutionVon().getName() + ": " + prefix;
-        beschreibung += (int) anzahl + " " + artikel.getName();
+        beschreibung += (int) anzahl.intValue() + " " + artikel.getName();
 
         return beschreibung;
     }

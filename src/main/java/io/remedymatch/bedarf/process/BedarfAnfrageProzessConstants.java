@@ -1,4 +1,4 @@
-package io.remedymatch.bedarf.api;
+package io.remedymatch.bedarf.process;
 
 public class BedarfAnfrageProzessConstants {
 

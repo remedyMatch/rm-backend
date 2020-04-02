@@ -15,39 +15,31 @@ import io.remedymatch.angebot.domain.AngebotAnfrage;
 import io.remedymatch.angebot.domain.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.AngebotAnfrageStatus;
 import io.remedymatch.angebot.domain.AngebotId;
-import io.remedymatch.bedarf.domain.BedarfEntity;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageStatus;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
-import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.bedarf.domain.Bedarf;
+import io.remedymatch.bedarf.domain.BedarfAnfrage;
+import io.remedymatch.bedarf.domain.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.BedarfAnfrageStatus;
+import io.remedymatch.bedarf.domain.BedarfId;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("AngebotAnfrageEntityConverter soll")
 public class AnfrageConverterShould {
 
 	private static final AngebotAnfrageId ANGEBOT_ANFRAGE_ID = new AngebotAnfrageId(UUID.randomUUID());
-	private static final UUID BEDARF_ANFRAGE_ID = UUID.randomUUID();
+	private static final BedarfAnfrageId BEDARF_ANFRAGE_ID = new BedarfAnfrageId(UUID.randomUUID());
 	private static final String KOMMENTAR = "Kommentar";
 	private static final InstitutionId INSTITUTION_AN_ID = new InstitutionId(UUID.randomUUID());
 	private static final Institution INSTITUTION_AN = Institution.builder().id(INSTITUTION_AN_ID).build();
-	private static final InstitutionEntity INSTITUTION_AN_ENTITY = InstitutionEntity.builder()
-			.id(INSTITUTION_AN_ID.getValue()).build();
 	private static final InstitutionStandortId STANDORT_AN_ID = new InstitutionStandortId(UUID.randomUUID());
 	private static final InstitutionStandort STANDORT_AN = InstitutionStandort.builder().id(STANDORT_AN_ID).build();
-	private static final InstitutionStandortEntity STANDORT_AN_ENTITY = InstitutionStandortEntity.builder()
-			.id(STANDORT_AN_ID.getValue()).build();
 	private static final InstitutionId INSTITUTION_VON_ID = new InstitutionId(UUID.randomUUID());
 	private static final Institution INSTITUTION_VON = Institution.builder().id(INSTITUTION_VON_ID).build();
-	private static final InstitutionEntity INSTITUTION_VON_ENTITY = InstitutionEntity.builder()
-			.id(INSTITUTION_VON_ID.getValue()).build();
 	private static final InstitutionStandortId STANDORT_VON_ID = new InstitutionStandortId(UUID.randomUUID());
 	private static final InstitutionStandort STANDORT_VON = InstitutionStandort.builder().id(STANDORT_VON_ID).build();
-	private static final InstitutionStandortEntity STANDORT_VON_ENTITY = InstitutionStandortEntity.builder()
-			.id(STANDORT_VON_ID.getValue()).build();
 	private static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
 	private static final Angebot ANGEBOT = Angebot.builder().id(ANGEBOT_ID).institution(INSTITUTION_AN).standort(STANDORT_AN).build();
-	private static final UUID BEDARF_ID = UUID.randomUUID();
-	private static final BedarfEntity BEDARF = BedarfEntity.builder().id(BEDARF_ID).institution(INSTITUTION_AN_ENTITY).standort(STANDORT_AN_ENTITY).build();
+	private static final BedarfId BEDARF_ID = new BedarfId(UUID.randomUUID());
+	private static final Bedarf BEDARF = Bedarf.builder().id(BEDARF_ID).institution(INSTITUTION_AN).standort(STANDORT_AN).build();
 	private static final String PROZESSINSTANZ_ID = "ProzessInstanzId";
 	private static final BigDecimal ANZAHL = BigDecimal.valueOf(120.0);
 	private static final AngebotAnfrageStatus ANGEBOT_ANFRAGE_STATUS = AngebotAnfrageStatus.Offen;
@@ -81,7 +73,7 @@ public class AnfrageConverterShould {
 	private Anfrage anfrageAusAngebot() {
 		return Anfrage.builder() //
 				.id(ANGEBOT_ANFRAGE_ID.getValue()) //
-				.angebotId(ANGEBOT.getId().getValue()) //
+				.angebotId(ANGEBOT_ID.getValue()) //
 				.institutionAn(INSTITUTION_AN) //
 				.standortAn(STANDORT_AN) //
 				.institutionVon(INSTITUTION_VON) //
@@ -93,13 +85,13 @@ public class AnfrageConverterShould {
 				.build();
 	}
 
-	private BedarfAnfrageEntity bedarfAnfrage() {
-		return BedarfAnfrageEntity.builder() //
+	private BedarfAnfrage bedarfAnfrage() {
+		return BedarfAnfrage.builder() //
 				.id(BEDARF_ANFRAGE_ID) //
 				.bedarf(BEDARF) //
-				.institutionVon(INSTITUTION_VON_ENTITY) //
-				.standortVon(STANDORT_VON_ENTITY) //
-				.anzahl(ANZAHL.doubleValue()) //
+				.institutionVon(INSTITUTION_VON) //
+				.standortVon(STANDORT_VON) //
+				.anzahl(ANZAHL) //
 				.kommentar(KOMMENTAR) //
 				.prozessInstanzId(PROZESSINSTANZ_ID) //
 				.status(BEDARF_ANFRAGE_STATUS) //
@@ -108,8 +100,8 @@ public class AnfrageConverterShould {
 
 	private Anfrage bedarfAusAngebot() {
 		return Anfrage.builder() //
-				.id(BEDARF_ANFRAGE_ID) //
-				.bedarfId(BEDARF_ID) //
+				.id(BEDARF_ANFRAGE_ID.getValue()) //
+				.bedarfId(BEDARF_ID.getValue()) //
 				.institutionAn(INSTITUTION_AN) //
 				.standortAn(STANDORT_AN) //
 				.institutionVon(INSTITUTION_VON) //

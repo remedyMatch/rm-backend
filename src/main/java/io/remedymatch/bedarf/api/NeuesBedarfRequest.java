@@ -10,16 +10,25 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BedarfBedienenRequest {
+class NeuesBedarfRequest {
 
     @NotNull
-    private UUID bedarfId;
+    private UUID artikelId;
 
-    private String kommentar;
+    @NotNull
+    private BigDecimal anzahl;
 
     @NotNull
     private UUID standortId;
 
     @NotNull
-    private BigDecimal anzahl;
+    private String kommentar;
+
+    private boolean steril;
+
+    private boolean originalverpackt;
+
+    private boolean medizinisch;
+
+    private boolean bedient;
 }

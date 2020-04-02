@@ -6,10 +6,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +31,7 @@ import io.remedymatch.artikel.api.ArtikelDTO;
 import io.remedymatch.artikel.api.ArtikelKategorieDTO;
 import io.remedymatch.artikel.api.ArtikelKategorieMapper;
 import io.remedymatch.artikel.api.ArtikelMapper;
-import io.remedymatch.bedarf.domain.BedarfRepository;
+import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -53,7 +51,7 @@ public class ArtikelIntegrationTest {
     private ArtikelKategorieRepository artikelKategorieRepository;
 
     @Autowired
-    private BedarfRepository bedarfRepository;
+    private BedarfJpaRepository bedarfRepository;
 
     @Autowired
     private AngebotJpaRepository angebotRepository;

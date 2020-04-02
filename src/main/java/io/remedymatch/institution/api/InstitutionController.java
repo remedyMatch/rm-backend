@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.remedymatch.angebot.api.AngebotController;
 import io.remedymatch.angebot.api.AngebotDTO;
-import io.remedymatch.bedarf.api.BedarfController;
+import io.remedymatch.angebot.api.AngebotMapper;
+import io.remedymatch.angebot.domain.AngebotService;
 import io.remedymatch.bedarf.api.BedarfDTO;
+import io.remedymatch.bedarf.api.BedarfMapper;
+import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.InstitutionService;
 import io.remedymatch.institution.domain.InstitutionTyp;
@@ -36,8 +38,8 @@ import lombok.val;
 @RequestMapping("/institution")
 public class InstitutionController {
 	private final InstitutionService institutionService;
-	private final AngebotController angebotController;
-	private final BedarfController bedarfController;
+	private final AngebotService angebotService;
+	private final BedarfService bedarfService;
 
 	@PutMapping
 	public ResponseEntity<Void> update(@RequestBody InstitutionUpdateRequest institutionUpdate) {
@@ -83,13 +85,17 @@ public class InstitutionController {
 	@GetMapping("/bedarf")
 	public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
 		// FIXME: entfernen
-		return bedarfController.getInstituionBedarfee();
+		return ResponseEntity.ok(bedarfService.getBedarfeDerUserInstitution().stream()//
+				.map(BedarfMapper::mapToDTO)//
+				.collect(Collectors.toList()));
 	}
 
 	@GetMapping("/angebot")
 	public ResponseEntity<List<AngebotDTO>> angebotLaden() {
 		// FIXME: entfernen
-		return angebotController.getInstituionAngebote();
+		return ResponseEntity.ok(angebotService.getAngeboteDerUserInstitution().stream()//
+				.map(AngebotMapper::mapToDto)//
+				.collect(Collectors.toList()));
 	}
 
 	@GetMapping("/assigned")

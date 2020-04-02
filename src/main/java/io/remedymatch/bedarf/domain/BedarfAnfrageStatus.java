@@ -1,4 +1,4 @@
-package io.remedymatch.bedarf.domain.anfrage;
+package io.remedymatch.bedarf.domain;
 
 public enum BedarfAnfrageStatus {
 

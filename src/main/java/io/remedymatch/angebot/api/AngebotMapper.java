@@ -14,9 +14,9 @@ import io.remedymatch.artikel.domain.ArtikelId;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 
-class AngebotMapper {
+public class AngebotMapper {
 
-    static AngebotDTO mapToDto(final Angebot angebot) {
+    public static AngebotDTO mapToDto(final Angebot angebot) {
     	if (angebot == null)
     	{
     		return null;

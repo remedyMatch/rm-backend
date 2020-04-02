@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 
 import io.remedymatch.angebot.domain.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageRepository;
+import io.remedymatch.bedarf.domain.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.match.domain.MatchEntity;
 import io.remedymatch.match.domain.MatchRepository;
@@ -58,7 +59,7 @@ public class MatchExternalTaskClient {
                     MatchEntity match;
 
                     if (anfrageTyp.equals(MatchProzessConstants.ANFRAGE_TYP_BEDARF)) {
-                        match = matchService.matchAusBedarfErstellen(bedarfAnfrageRepository.findById(UUID.fromString(anfrageId)).get());
+                        match = matchService.matchAusBedarfErstellen(bedarfAnfrageRepository.get(new BedarfAnfrageId(UUID.fromString(anfrageId))).get());
 
                     } else {
                         match = matchService.matchAusAngebotErstellen(angebotAnfrageRepository.get(new AngebotAnfrageId(UUID.fromString(anfrageId))).get());

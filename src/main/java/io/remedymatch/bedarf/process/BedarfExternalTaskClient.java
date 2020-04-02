@@ -1,17 +1,22 @@
-package io.remedymatch.bedarf.api;
+package io.remedymatch.bedarf.process;
 
+import java.util.HashMap;
+import java.util.UUID;
+
+import javax.annotation.PostConstruct;
+
+import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.springframework.stereotype.Component;
+
+import io.remedymatch.angebot.domain.AngebotAnfrageId;
+import io.remedymatch.bedarf.domain.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.match.api.MatchProzessConstants;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.camunda.bpm.client.ExternalTaskClient;
-import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
 
 @AllArgsConstructor
 @Component
@@ -33,7 +38,7 @@ public class BedarfExternalTaskClient {
                 .handler((externalTask, externalTaskService) -> {
 
                     val anfrageId = externalTask.getVariable("objektId").toString();
-                    bedarfService.anfrageStornieren(anfrageId);
+                    bedarfService.anfrageStornieren(new BedarfAnfrageId(UUID.fromString(anfrageId)));
 
                     //hier eventuell E-Mail versand?
 

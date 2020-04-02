@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.remedymatch.angebot.domain.AngebotAnfrage;
-import io.remedymatch.bedarf.domain.anfrage.BedarfAnfrageEntity;
+import io.remedymatch.bedarf.domain.BedarfAnfrage;
 import io.remedymatch.institution.domain.InstitutionEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import lombok.AllArgsConstructor;
@@ -20,13 +20,13 @@ public class MatchService {
     private final MatchStandortRepository matchStandortRepository;
 
     @Transactional
-    public MatchEntity matchAusBedarfErstellen(BedarfAnfrageEntity anfrage) {
+    public MatchEntity matchAusBedarfErstellen(BedarfAnfrage bedarfAnfrage) {
         val match = new MatchEntity();
 
-        match.setInstitutionAn(anfrage.getInstitutionAn());
-        match.setInstitutionVon(anfrage.getInstitutionVon());
-        match.setStandortAn(MatchStandortMapper.mapToMatchStandort(anfrage.getStandortAn()));
-        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(anfrage.getStandortVon()));
+        match.setInstitutionAn(InstitutionEntityConverter.convert(bedarfAnfrage.getInstitutionVon()));
+        match.setInstitutionVon(InstitutionEntityConverter.convert(bedarfAnfrage.getBedarf().getInstitution()));
+        match.setStandortAn(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getStandortVon()));
+        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getBedarf().getStandort()));
 
         matchStandortRepository.save(match.getStandortVon());
         matchStandortRepository.save(match.getStandortAn());

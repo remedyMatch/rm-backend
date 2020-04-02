@@ -45,14 +45,14 @@ public class InstitutionEntity {
     @Column(name = "UUID", unique = true, nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "NAME", nullable = false, updatable = true, length = 64)
+    @Column(name = "NAME", nullable = true, updatable = true, length = 64)
     private String name;
 
     @Column(name = "INSTITUTION_KEY", nullable = false, updatable = true, length = 64)
     private String institutionKey;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "TYP", nullable = false, updatable = true)
+    @Column(name = "TYP", nullable = true, updatable = true)
     private InstitutionTyp typ;
 
     @OneToOne

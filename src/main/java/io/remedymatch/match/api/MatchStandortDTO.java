@@ -14,6 +14,12 @@ public class MatchStandortDTO {
 
     private UUID id;
 
+	@NotNull
+	private UUID institutionStandortId;
+	
+    @NotNull
+    private String name;
+    
     @NotNull
     private String plz;
 

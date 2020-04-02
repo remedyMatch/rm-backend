@@ -5,6 +5,10 @@ import io.remedymatch.match.domain.Match;
 
 class MatchMapper {
 	static MatchDTO mapToDTO(Match match) {
+		if (match == null) {
+			return null;
+		}
+		
 		return MatchDTO.builder() //
 				.id(match.getId().getValue()) //
 				.anfrageId(match.getAnfrageId()) //
@@ -13,6 +17,8 @@ class MatchMapper {
 				.standortVon(MatchStandortMapper.mapToDTO(match.getStandortVon())) //
 				.institutionVon(InstitutionMapper.mapToDTO(match.getInstitutionVon())) //
 				.institutionAn(InstitutionMapper.mapToDTO(match.getInstitutionAn())) //
+				.kommentar(match.getKommentar()) //
+				.prozessInstanzId(match.getProzessInstanzId()) //
 				.entfernung(match.getEntfernung()) //
 				.build();
 	}

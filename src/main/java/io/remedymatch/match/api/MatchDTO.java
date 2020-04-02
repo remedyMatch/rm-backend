@@ -22,6 +22,8 @@ public class MatchDTO {
 
 	private InstitutionDTO institutionAn;
 
+	private String kommentar;
+	
 	private UUID anfrageId;
 
 	private MatchStatus status;

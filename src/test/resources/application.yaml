@@ -8,7 +8,7 @@ io:
     backend:
       engineUrl: http://localhost:8085
       geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
-      geocoderServiceApiKey: NOT_CONFIGURED
+      geocoderServiceApiKey: unset
 
 spring:
   datasource:

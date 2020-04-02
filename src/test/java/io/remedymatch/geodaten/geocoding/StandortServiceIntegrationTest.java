@@ -48,7 +48,7 @@ public class StandortServiceIntegrationTest {
     public void setup() {
         @NotNull @NotBlank String geocoderServiceApiKey = properties.getGeocoderServiceApiKey();
         serviceConfigured = StringUtils.isNotEmpty(geocoderServiceApiKey) &&
-                !(geocoderServiceApiKey.equals("NOT_CONFIGURED"));
+                !(geocoderServiceApiKey.equals("unset"));
     }
 
     @AfterEach

@@ -74,10 +74,23 @@ einen neuen Bedarf anzulegen. Hier sollten nun Beispiel-Kategorien und -Artikel 
 angeboten werden. Das Anlegen eines neuen Bedarfs sollte ebenso funktionieren.
 
 
+### Details
 
+Hier eine genauere Beschreibung was mit den Punkten "Applikation starten (Klasse `XYZ`)" 
+gemeint ist:
 
+Als Beispiel betrachten wir das Gateway --> *Applikation starten (Klasse `GatewayApplication`)*
 
+Um das zu tun, kann man beispielsweise IntelliJ benutzen. Hier eine Klick-Anleitung:
 
-
-
-
+* In IntelliJ: `File` - `Open...`
+* `rm-gateway` Ordner auswählen (darin liegen z.B. die Dateien `Dockerfile` und `docker-compose.yml`)
+* Java-JDK auswählen: `File` - `Project Structure...`
+* Sicherstellen, dass ein valides JDK mit Java Version 11 ausgwählt ist --> `Apply`
+* Sicherstellen, dass das Projekt als gradle Projekt von IntelliJ erkannt wurde (IntelliJ
+fragt in der Regel, nachdme das Java-JDK ausgewählt wurde, ob das Projekt ein Gradle-Projekt
+ist. Das bestätigen. Anschliessend zur Klasse `src/main/java/io/remedymatch/gateway/GatewayApplication.java`
+navigieren. IntelliJ sollte diese Klasse nun korrekt, als Spring Boot application class
+registrieren und einen entsprechenden "Play-Button" anzeigen, mit welchem man die Applikation
+starten kann. Falls dies nicht der Fall ist, kann man die Run Configuration auch manuell 
+konfigurieren (rechts oben die Kombobox neben dem "Run"- und "Debug"-Button.)

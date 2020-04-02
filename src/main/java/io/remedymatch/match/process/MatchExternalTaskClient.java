@@ -62,9 +62,9 @@ public class MatchExternalTaskClient {
                     }
 
                     val variables = new HashMap<String, Object>();
-                    variables.put("lieferant", match.getInstitutionVon().getId().toString());
+                    variables.put("lieferant", match.getInstitutionVon().getId().getValue().toString());
                     variables.put("objektId", match.getId().getValue().toString());
-                    variables.put("empfaenger", match.getInstitutionAn().getId().toString());
+                    variables.put("empfaenger", match.getInstitutionAn().getId().getValue().toString());
 
                     externalTaskService.complete(externalTask, variables);
 

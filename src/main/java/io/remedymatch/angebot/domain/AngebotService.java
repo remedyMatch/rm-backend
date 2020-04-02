@@ -33,6 +33,10 @@ public class AngebotService {
     private static final String EXCEPTION_MSG_ANGEBOT_NICHT_GEFUNDEN = "Angebot fuer diese Id nicht gefunden: %s";
     private static final String EXCEPTION_MSG_ANGEBOT_NICHT_VON_USER_INSTITUTION = "Angebot gehoert nicht der Institution des angemeldetes Benutzers.";
 
+    private static final String EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_GEFUNDEN = "AngebotAnfrage fuer diese Id nicht gefunden: %s";
+    private static final String EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_VON_USER_INSTITUTION = "AngebotAnfrage gehoert nicht der Institution des angemeldetes Benutzers.";
+
+
     private final UserService userService;
     private final ArtikelRepository artikelRepository;
     private final InstitutionStandortRepository institutionStandortRepository;
@@ -99,6 +103,21 @@ public class AngebotService {
         angebotRepository.delete(angebotId);
     }
 
+    @Transactional
+    public void bedarfAnfrageDerUserInstitutionLoeschen(final @NotNull @Valid AngebotAnfrageId anfrageId)
+            throws ObjectNotFoundException, NotUserInstitutionObjectException {
+        Optional<AngebotAnfrage> angebotAnfrage = angebotAnfrageRepository.get(anfrageId);
+        if (!angebotAnfrage.isPresent()) {
+            throw new ObjectNotFoundException(String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_GEFUNDEN, anfrageId));
+        }
+
+        if (!userService.isUserContextInstitution(angebotAnfrage.get().getInstitutionVon().getId())) {
+            throw new NotUserInstitutionObjectException(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_VON_USER_INSTITUTION);
+        }
+
+        anfrageStornieren(anfrageId);
+    }
+
     public void angebotAnfrageErstellen(//
                                         final @NotNull @Valid AngebotId angebotId, //
                                         final @NotNull @Valid InstitutionStandortId standortId, //
@@ -140,7 +159,7 @@ public class AngebotService {
         anfrage = angebotAnfrageRepository.add(anfrage);
 
         var variables = new HashMap<String, Object>();
-        variables.put("institution", angebot.get().getInstitution().getId().toString());
+        variables.put("institution", angebot.get().getInstitution().getId().getValue().toString());
         variables.put("objektId", anfrage.getId().getValue().toString());
 
         val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().getValue().toString(), variables);

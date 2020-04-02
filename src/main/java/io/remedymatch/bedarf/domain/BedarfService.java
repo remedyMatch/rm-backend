@@ -143,7 +143,7 @@ public class BedarfService {
         anfrage = bedarfAnfrageRepository.add(anfrage);
 
         var variables = new HashMap<String, Object>();
-        variables.put("institution", bedarf.get().getInstitution().getId().toString());
+        variables.put("institution", bedarf.get().getInstitution().getId().getValue().toString());
         variables.put("objektId", anfrage.getId().getValue().toString());
 
         val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().getValue().toString(), variables);
@@ -159,7 +159,7 @@ public class BedarfService {
             throw new ObjectNotFoundException(String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_GEFUNDEN, anfrageId));
         }
 
-        if (!userService.isUserContextInstitution(bedarfAnfrage.get().getBedarf().getInstitution().getId())) {
+        if (!userService.isUserContextInstitution(bedarfAnfrage.get().getInstitutionVon().getId())) {
             throw new NotUserInstitutionObjectException(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_VON_USER_INSTITUTION);
         }
 

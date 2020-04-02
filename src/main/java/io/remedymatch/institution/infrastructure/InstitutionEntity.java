@@ -43,7 +43,7 @@ public class InstitutionEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Type(type = "uuid-char")
-    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
     private UUID id;
 
     @Column(name = "NAME", nullable = true, updatable = true, length = 64)
@@ -53,7 +53,7 @@ public class InstitutionEntity {
     private String institutionKey;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "TYP", nullable = true, updatable = true)
+    @Column(name = "TYP", nullable = true, updatable = true, length = 64)
     private InstitutionTyp typ;
 
     @OneToOne

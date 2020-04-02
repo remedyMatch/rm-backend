@@ -34,7 +34,7 @@ public class InstitutionStandortEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Type(type = "uuid-char")
-    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
 	private UUID id;
 
     @Column(name = "NAME", nullable = false, updatable = true, length = 64)

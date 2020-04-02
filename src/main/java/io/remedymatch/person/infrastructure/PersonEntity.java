@@ -36,7 +36,7 @@ public class PersonEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Type(type = "uuid-char")
-    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
     private UUID id;
 
     @Column(name = "USERNAME", nullable = false, updatable = false, length = 64)
@@ -52,6 +52,7 @@ public class PersonEntity {
     private String telefon;
 
     @ManyToOne
+    @Type(type = "uuid-char")
     @JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionEntity institution;
 }

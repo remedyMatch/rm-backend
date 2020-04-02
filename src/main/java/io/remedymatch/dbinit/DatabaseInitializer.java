@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  * TODO Test-Code nicht für Produktion
  */
 @Component
-@Profile("test")
+@Profile("dbinit")
 @Slf4j
 public class DatabaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired

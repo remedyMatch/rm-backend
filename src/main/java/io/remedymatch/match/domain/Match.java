@@ -1,16 +1,10 @@
 package io.remedymatch.match.domain;
 
+import io.remedymatch.institution.domain.Institution;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.util.UUID;
-
-import io.remedymatch.institution.domain.Institution;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
@@ -22,6 +16,9 @@ import lombok.ToString;
 public class Match {
     private MatchId id;
     private UUID anfrageId;
+    private UUID aritkelId;
+    private BigDecimal anzahl;
+    private String anfrageTyp;
     private Institution institutionVon;
     private MatchStandort standortVon;
     private Institution institutionAn;

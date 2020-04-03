@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -29,6 +30,16 @@ public class MatchEntity {
     @Type(type = "uuid-char")
     @Column(name = "ANFRAGE_ID", nullable = false, updatable = false, length = 36)
     private UUID anfrageId;
+
+    @Type(type = "uuid-char")
+    @Column(name = "ARTIKEL_ID", nullable = false, updatable = false, length = 36)
+    private UUID aritkelId;
+
+    @Column(name = "ANZAHL", nullable = false, updatable = false)
+    private BigDecimal anzahl;
+
+    @Column(name = "ANFRAGE_TYP", nullable = true, updatable = true, length = 64)
+    private String anfrageTyp;
 
     @ManyToOne
     @JoinColumn(name = "INSTITUTION_VON_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)

@@ -27,6 +27,9 @@ public class MatchService {
         match.setInstitutionAn(bedarfAnfrage.getInstitutionVon());
         match.setStandortAn(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getStandortVon()));
         match.setAnfrageId(bedarfAnfrage.getId().getValue());
+        match.setAritkelId(bedarfAnfrage.getBedarf().getArtikel().getId().getValue());
+        match.setAnzahl(bedarfAnfrage.getBedarf().getAnzahl());
+        match.setAnfrageTyp("Bedarf");
         match.setKommentar("");
 
         match.setInstitutionVon(bedarfAnfrage.getBedarf().getInstitution());
@@ -46,6 +49,9 @@ public class MatchService {
         match.setInstitutionAn(angebotAnfrage.getInstitutionVon());
         match.setStandortAn(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandortVon()));
         match.setAnfrageId(angebotAnfrage.getId().getValue());
+        match.setAritkelId(angebotAnfrage.getAngebot().getArtikel().getId().getValue());
+        match.setAnzahl(angebotAnfrage.getAngebot().getAnzahl());
+        match.setAnfrageTyp("Angebot");
         match.setKommentar("");
 
         match.setInstitutionVon(angebotAnfrage.getAngebot().getInstitution());

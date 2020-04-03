@@ -44,6 +44,8 @@ public class MatchExternalTaskClient {
                     val matchId = externalTask.getVariable("objektId").toString();
                     val match = matchRepository.get(new MatchId(UUID.fromString(matchId)));
                     match.get().setStatus(MatchStatus.Ausgeliefert);
+                    matchRepository.save(match.get());
+
                     externalTaskService.complete(externalTask);
                 }).open();
 

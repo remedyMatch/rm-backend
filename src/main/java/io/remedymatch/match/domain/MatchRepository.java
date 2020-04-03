@@ -51,4 +51,10 @@ public class MatchRepository {
 
         return convert(jpaRepository.save(convert(match)));
     }
+
+    public Match save(final Match match) {
+        Assert.notNull(match.getId(), "Match ist null");
+
+        return convert(jpaRepository.save(convert(match)));
+    }
 }

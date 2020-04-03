@@ -21,7 +21,7 @@ class MatchMapper {
                 .prozessInstanzId(match.getProzessInstanzId()) //
                 .entfernung(match.getEntfernung()) //
                 .anfrageTyp(match.getAnfrageTyp())
-                .aritkelId(match.getAritkelId())
+                .artikelId(match.getAritkelId())
                 .anzahl(match.getAnzahl())
                 .build();
     }

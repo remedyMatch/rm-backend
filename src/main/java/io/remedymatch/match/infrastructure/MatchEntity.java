@@ -33,7 +33,7 @@ public class MatchEntity {
 
     @Type(type = "uuid-char")
     @Column(name = "ARTIKEL_ID", nullable = false, updatable = false, length = 36)
-    private UUID aritkelId;
+    private UUID artikelId;
 
     @Column(name = "ANZAHL", nullable = false, updatable = false)
     private BigDecimal anzahl;

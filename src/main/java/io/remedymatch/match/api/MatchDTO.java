@@ -32,7 +32,7 @@ public class MatchDTO {
 
     private BigDecimal entfernung;
 
-    private UUID aritkelId;
+    private UUID artikelId;
 
     private BigDecimal anzahl;
 

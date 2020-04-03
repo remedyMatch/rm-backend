@@ -67,6 +67,6 @@ public class AngebotEntity {
     @Column(name = "BEDIENT", nullable = false, updatable = true)
     private boolean bedient;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<AngebotAnfrageEntity> anfragen;
 }

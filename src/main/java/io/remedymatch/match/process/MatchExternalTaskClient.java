@@ -12,7 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.camunda.bpm.client.task.ExternalTask;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -49,22 +51,8 @@ public class MatchExternalTaskClient {
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
 
-                    val anfrageId = externalTask.getVariable("anfrageId").toString();
-                    val anfrageTyp = externalTask.getVariable("anfrageTyp").toString();
 
-                    Match match;
-
-                    if (anfrageTyp.equals(MatchProzessConstants.ANFRAGE_TYP_BEDARF)) {
-                        match = matchService.matchAusBedarfErstellen(bedarfAnfrageRepository.get(new BedarfAnfrageId(UUID.fromString(anfrageId))).get());
-
-                    } else {
-                        match = matchService.matchAusAngebotErstellen(angebotAnfrageRepository.get(new AngebotAnfrageId(UUID.fromString(anfrageId))).get());
-                    }
-
-                    val variables = new HashMap<String, Object>();
-                    variables.put("lieferant", match.getInstitutionVon().getId().getValue().toString());
-                    variables.put("objektId", match.getId().getValue().toString());
-                    variables.put("empfaenger", match.getInstitutionAn().getId().getValue().toString());
+                    val variables = matchErstellen(externalTask);
 
                     externalTaskService.complete(externalTask, variables);
 
@@ -92,5 +80,27 @@ public class MatchExternalTaskClient {
                     externalTaskService.complete(externalTask);
                 }).open();
 
+    }
+
+    @Transactional
+    public HashMap<String, Object> matchErstellen(ExternalTask externalTask) {
+        val anfrageId = externalTask.getVariable("anfrageId").toString();
+        val anfrageTyp = externalTask.getVariable("anfrageTyp").toString();
+
+        Match match;
+
+        if (anfrageTyp.equals(MatchProzessConstants.ANFRAGE_TYP_BEDARF)) {
+            match = matchService.matchAusBedarfErstellen(bedarfAnfrageRepository.get(new BedarfAnfrageId(UUID.fromString(anfrageId))).get());
+
+        } else {
+            match = matchService.matchAusAngebotErstellen(angebotAnfrageRepository.get(new AngebotAnfrageId(UUID.fromString(anfrageId))).get());
+        }
+
+        val variables = new HashMap<String, Object>();
+        variables.put("lieferant", match.getInstitutionVon().getId().getValue().toString());
+        variables.put("objektId", match.getId().getValue().toString());
+        variables.put("empfaenger", match.getInstitutionAn().getId().getValue().toString());
+
+        return variables;
     }
 }

@@ -1,32 +1,16 @@
 package io.remedymatch.bedarf.infrastructure;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-
 import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -63,7 +47,7 @@ public class BedarfEntity {
 
     @Column(name = "REST", nullable = false, updatable = true)
     private BigDecimal rest;
-    
+
     @Column(name = "STERIL", nullable = false, updatable = false)
     private boolean steril;
 
@@ -78,7 +62,7 @@ public class BedarfEntity {
 
     @Column(name = "BEDIENT", nullable = false, updatable = true)
     private boolean bedient;
-    
-    @OneToMany(fetch = FetchType.LAZY)
+
+    @OneToMany(fetch = FetchType.EAGER)
     private List<BedarfAnfrageEntity> anfragen;
 }

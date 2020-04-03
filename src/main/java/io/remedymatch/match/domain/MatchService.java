@@ -64,7 +64,7 @@ public class MatchService {
         val userInstitutionId = userService.getContextInstitution().getId();
 
         val matches = matchRepository.getMatchesFuerInstitutionAn(userInstitutionId);
-        matches.addAll(matchRepository.getMatchesFuerInstitutionAn(userInstitutionId));
+        matches.addAll(matchRepository.getMatchesFuerInstitutionVon(userInstitutionId));
 
         return mitEntfernung(matches);
     }

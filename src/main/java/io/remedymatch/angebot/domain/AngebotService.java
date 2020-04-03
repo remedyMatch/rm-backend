@@ -88,7 +88,7 @@ public class AngebotService {
     public void angebotDerUserInstitutionLoeschen(final @NotNull @Valid AngebotId angebotId)
             throws ObjectNotFoundException, NotUserInstitutionObjectException {
         Optional<Angebot> angebot = angebotRepository.get(angebotId);
-        if (!angebot.isPresent()) {
+        if (angebot.isEmpty()) {
             throw new ObjectNotFoundException(String.format(EXCEPTION_MSG_ANGEBOT_NICHT_GEFUNDEN, angebotId));
         }
 
@@ -98,6 +98,7 @@ public class AngebotService {
 
         // Alle laufende Anfragen stornieren
         angebotAnfrageRepository.storniereAlleOffeneAnfragen(angebotId);
+
         // TODO Auch Prozesse beenden
 
         angebotRepository.delete(angebotId);

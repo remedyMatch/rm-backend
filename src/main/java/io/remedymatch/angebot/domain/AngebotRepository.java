@@ -3,6 +3,7 @@ package io.remedymatch.angebot.domain;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.institution.domain.InstitutionId;
 import lombok.AllArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -21,7 +22,7 @@ public class AngebotRepository {
     private final AngebotJpaRepository jpaRepository;
 
     public List<Angebot> getAlleNichtBedienteAngebote() {
-        return jpaRepository.findAllByBedientFalse().stream().map(AngebotEntityConverter::convert)
+        return jpaRepository.findAllByDeletedFalseAndBedientFalse().stream().map(AngebotEntityConverter::convert)
                 .collect(Collectors.toList());
     }
 
@@ -29,7 +30,7 @@ public class AngebotRepository {
         Assert.notNull(institutionId, "InstitutionId ist null");
         Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
-        return jpaRepository.findAllByInstitution_Id(institutionId.getValue()).stream()//
+        return jpaRepository.findAllByDeletedFalseAndInstitution_Id(institutionId.getValue()).stream()//
                 .map(AngebotEntityConverter::convert)//
                 .collect(Collectors.toList());
     }
@@ -64,6 +65,9 @@ public class AngebotRepository {
         Assert.notNull(angebotId, "AngebotId ist null");
         Assert.notNull(angebotId.getValue(), "AngebotId ist null");
 
-        jpaRepository.deleteById(angebotId.getValue());
+        val angebot = jpaRepository.findById(angebotId.getValue());
+        angebot.get().setDeleted(true);
+
+        jpaRepository.save(angebot.get());
     }
 }

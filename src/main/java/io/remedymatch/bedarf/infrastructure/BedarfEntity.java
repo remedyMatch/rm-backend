@@ -63,6 +63,9 @@ public class BedarfEntity {
     @Column(name = "BEDIENT", nullable = false, updatable = true)
     private boolean bedient;
 
+    @Column(name = "DELETED", nullable = false, updatable = true)
+    private boolean deleted;
+
     @OneToMany(fetch = FetchType.LAZY)
     private List<BedarfAnfrageEntity> anfragen;
 }

@@ -1,12 +1,12 @@
 package io.remedymatch.angebot.infrastructure;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 public interface AngebotJpaRepository extends JpaRepository<AngebotEntity, UUID> {
-	List<AngebotEntity> findAllByBedientFalse();
+    List<AngebotEntity> findAllByDeletedFalseAndBedientFalse();
 
-	List<AngebotEntity> findAllByInstitution_Id(UUID id);
+    List<AngebotEntity> findAllByDeletedFalseAndInstitution_Id(UUID id);
 }

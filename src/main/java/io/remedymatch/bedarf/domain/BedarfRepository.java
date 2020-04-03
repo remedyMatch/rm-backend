@@ -3,6 +3,7 @@ package io.remedymatch.bedarf.domain;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.institution.domain.InstitutionId;
 import lombok.AllArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -21,7 +22,7 @@ public class BedarfRepository {
     private final BedarfJpaRepository jpaRepository;
 
     public List<Bedarf> getAlleNichtBedienteBedarfe() {
-        return jpaRepository.findAllByBedientFalse().stream().map(BedarfEntityConverter::convert)
+        return jpaRepository.findAllByDeletedFalseAndBedientFalse().stream().map(BedarfEntityConverter::convert)
                 .collect(Collectors.toList());
     }
 
@@ -29,7 +30,7 @@ public class BedarfRepository {
         Assert.notNull(institutionId, "InstitutionId ist null");
         Assert.notNull(institutionId.getValue(), "InstitutionId ist null");
 
-        return jpaRepository.findAllByInstitution_Id(institutionId.getValue()).stream()//
+        return jpaRepository.findAllByDeletedFalseAndInstitution_Id(institutionId.getValue()).stream()//
                 .map(BedarfEntityConverter::convert)//
                 .collect(Collectors.toList());
     }
@@ -64,6 +65,9 @@ public class BedarfRepository {
         Assert.notNull(bedarfId, "BedarfId ist null");
         Assert.notNull(bedarfId.getValue(), "BedarfId ist null");
 
-        jpaRepository.deleteById(bedarfId.getValue());
+        val bedarf = jpaRepository.findById(bedarfId.getValue());
+        bedarf.get().setDeleted(true);
+
+        jpaRepository.save(bedarf.get());
     }
 }

@@ -1,10 +1,10 @@
 package io.remedymatch.institution.api;
 
-import java.math.BigDecimal;
-import java.util.UUID;
-
 import lombok.Builder;
 import lombok.Data;
+
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -21,6 +21,8 @@ public class AnfrageDTO {
     private UUID bedarfId;
 
     private UUID angebotId;
+
+    private UUID artikelId;
 
     private InstitutionStandortDTO standortAn;
 

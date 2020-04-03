@@ -24,7 +24,7 @@ public class MatchService {
     public Match matchAusBedarfErstellen(BedarfAnfrage bedarfAnfrage) {
         val match = new Match();
 
-        match.setInstitutionAn(bedarfAnfrage.getInstitutionVon());
+        match.setInstitutionAn(bedarfAnfrage.getBedarf().getInstitution());
         match.setStandortAn(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getBedarf().getStandort()));
         match.setAnfrageId(bedarfAnfrage.getId().getValue());
         match.setAritkelId(bedarfAnfrage.getBedarf().getArtikel().getId().getValue());
@@ -32,7 +32,7 @@ public class MatchService {
         match.setAnfrageTyp("Bedarf");
         match.setKommentar("");
 
-        match.setInstitutionVon(bedarfAnfrage.getBedarf().getInstitution());
+        match.setInstitutionVon(bedarfAnfrage.getInstitutionVon());
         match.setStandortVon(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getStandortVon()));
 
         match.setStandortVon(matchStandortRepository.add(match.getStandortVon()));

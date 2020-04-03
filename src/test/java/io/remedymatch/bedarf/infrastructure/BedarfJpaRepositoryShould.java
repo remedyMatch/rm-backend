@@ -1,5 +1,7 @@
 package io.remedymatch.bedarf.infrastructure;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
@@ -66,7 +68,9 @@ public class BedarfJpaRepositoryShould {
 		BedarfEntity zweiteBedarf = persist(bedarf(BigDecimal.valueOf(200)));
 		entityManager.flush();
 
-		assertEquals(Arrays.asList(ersteBedarf, zweiteBedarf), jpaRepository.findAllByBedientFalse());
+		assertThat(//
+				jpaRepository.findAllByBedientFalse(), //
+				containsInAnyOrder(ersteBedarf, zweiteBedarf));
 	}
 
 	/* help methods */

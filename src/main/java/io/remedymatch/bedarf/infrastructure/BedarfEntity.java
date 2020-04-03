@@ -27,7 +27,7 @@ public class BedarfEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Type(type = "uuid-char")
-    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
     private UUID id;
 
     @ManyToOne
@@ -57,7 +57,7 @@ public class BedarfEntity {
     @Column(name = "MEDIZINISCH", nullable = false, updatable = false)
     private boolean medizinisch;
 
-    @Column(name = "KOMMENTAR", nullable = false, updatable = false)
+    @Column(name = "KOMMENTAR", nullable = false, updatable = false, length = 256)
     private String kommentar;
 
     @Column(name = "BEDIENT", nullable = false, updatable = true)

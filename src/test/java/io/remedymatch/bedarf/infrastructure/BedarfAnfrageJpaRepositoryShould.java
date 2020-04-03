@@ -1,9 +1,10 @@
 package io.remedymatch.bedarf.infrastructure;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -69,8 +70,9 @@ public class BedarfAnfrageJpaRepositoryShould {
 		BedarfAnfrageEntity zweiteAnfrage = persist(bedarfAnfrageFuerBedarf(beispielBedarf, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
-		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage),
-				jpaRepository.findAllByBedarf_Institution_Id(meinKrankenhaus.getId()));
+		assertThat(//
+				jpaRepository.findAllByBedarf_Institution_Id(meinKrankenhaus.getId()), //
+				containsInAnyOrder(ersteAnfrage, zweiteAnfrage));
 	}
 
 	@Rollback(true)
@@ -84,8 +86,9 @@ public class BedarfAnfrageJpaRepositoryShould {
 				bedarfAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
-		assertEquals(Arrays.asList(ersteAnfrage, zweiteAnfrage),
-				jpaRepository.findAllByInstitutionVon_Id(meinKrankenhaus.getId()));
+		assertThat(//
+				jpaRepository.findAllByInstitutionVon_Id(meinKrankenhaus.getId()), //
+				containsInAnyOrder(ersteAnfrage, zweiteAnfrage));
 	}
 
 	@Rollback(true)

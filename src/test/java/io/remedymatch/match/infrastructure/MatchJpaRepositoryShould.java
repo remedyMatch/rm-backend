@@ -1,8 +1,8 @@
 package io.remedymatch.match.infrastructure;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -64,7 +64,9 @@ public class MatchJpaRepositoryShould {
 		MatchEntity zweitesMatch = persist(match());
 		entityManager.flush();
 
-		assertEquals(Arrays.asList(erstesMatch, zweitesMatch), jpaRepository.findAllByInstitutionAn_Id(institutionAn.getId()));
+		assertThat(//
+				jpaRepository.findAllByInstitutionAn_Id(institutionAn.getId()), //
+				containsInAnyOrder(erstesMatch, zweitesMatch));
 	}
 	
 	@Rollback(true)
@@ -76,7 +78,9 @@ public class MatchJpaRepositoryShould {
 		MatchEntity zweitesMatch = persist(match());
 		entityManager.flush();
 
-		assertEquals(Arrays.asList(erstesMatch, zweitesMatch), jpaRepository.findAllByInstitutionVon_Id(institutionVon.getId()));
+		assertThat(//
+				jpaRepository.findAllByInstitutionVon_Id(institutionVon.getId()), //
+				containsInAnyOrder(erstesMatch, zweitesMatch));
 	}
 
 	@Rollback(true)
@@ -89,7 +93,9 @@ public class MatchJpaRepositoryShould {
 		persist(match(MatchStatus.Ausgeliefert));
 		entityManager.flush();
 		
-		assertEquals(Arrays.asList(erstesOffenesMatch, zweitesOffenesMatch), jpaRepository.findAllByStatus(MatchStatus.Offen));
+		assertThat(//
+				jpaRepository.findAllByStatus(MatchStatus.Offen), //
+				containsInAnyOrder(erstesOffenesMatch, zweitesOffenesMatch));
 	}
 	
 	/* help methods */
@@ -109,6 +115,7 @@ public class MatchJpaRepositoryShould {
 	
 	private MatchStandortEntity standort() {
 		return MatchStandortEntity.builder() //
+				.institutionStandortId(UUID.randomUUID()) //
 				.name("Mein Standort") //
 				.plz("PLZ") //
 				.ort("Ort") //

@@ -42,7 +42,7 @@ public class BedarfAnfrageEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Type(type = "uuid-char")
-	@Column(name = "UUID", unique = true, nullable = false, updatable = false)
+	@Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
 	private UUID id;
 
 	@ManyToOne
@@ -60,13 +60,13 @@ public class BedarfAnfrageEntity {
 	@Column(name = "ANZAHL", nullable = false, updatable = false)
 	private BigDecimal anzahl;
 
-	@Column(name = "KOMMENTAR", nullable = false, updatable = false)
+	@Column(name = "KOMMENTAR", nullable = false, updatable = false, length = 256)
 	private String kommentar;
 
-	@Column(name = "PROZESS_INSTANZ_ID", nullable = true, updatable = true)
+	@Column(name = "PROZESS_INSTANZ_ID", nullable = true, updatable = true, length = 64)
 	private String prozessInstanzId;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "STATUS", nullable = false, updatable = true)
+	@Column(name = "STATUS", nullable = false, updatable = true, length = 64)
 	private BedarfAnfrageStatus status;
 }

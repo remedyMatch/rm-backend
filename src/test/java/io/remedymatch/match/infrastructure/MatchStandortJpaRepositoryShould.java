@@ -3,6 +3,7 @@ package io.remedymatch.match.infrastructure;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -55,6 +56,7 @@ public class MatchStandortJpaRepositoryShould {
 	
 	private MatchStandortEntity standort() {
 		return MatchStandortEntity.builder() //
+				.institutionStandortId(UUID.randomUUID()) //
 				.name("Mein Standort") //
 				.plz("PLZ") //
 				.ort("Ort") //

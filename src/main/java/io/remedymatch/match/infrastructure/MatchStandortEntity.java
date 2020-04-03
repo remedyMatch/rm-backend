@@ -34,10 +34,11 @@ public class MatchStandortEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Type(type = "uuid-char")
-	@Column(name = "UUID", unique = true, nullable = false, updatable = false)
+	@Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
 	private UUID id;
 
-	@Column(name = "INSTITUTION_STANDORT_ID", nullable = false, updatable = false)
+	@Type(type = "uuid-char")
+	@Column(name = "INSTITUTION_STANDORT_ID", nullable = false, updatable = false, length = 36)
 	private UUID institutionStandortId;
 
 	@Column(name = "NAME", nullable = false, updatable = true, length = 64)

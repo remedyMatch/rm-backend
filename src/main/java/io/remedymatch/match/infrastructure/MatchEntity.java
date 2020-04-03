@@ -23,10 +23,11 @@ public class MatchEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Type(type = "uuid-char")
-    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
+    @Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
     private UUID id;
 
-    @Column(name = "ANFRAGE_ID", nullable = false, updatable = false)
+    @Type(type = "uuid-char")
+    @Column(name = "ANFRAGE_ID", nullable = false, updatable = false, length = 36)
     private UUID anfrageId;
 
     @ManyToOne
@@ -45,13 +46,14 @@ public class MatchEntity {
     @JoinColumn(name = "STANDORT_AN_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private MatchStandortEntity standortAn;
 
-    @Column(name = "KOMMENTAR", nullable = true, updatable = false)
+    @Column(name = "KOMMENTAR", nullable = true, updatable = false, length = 256)
     private String kommentar;
 
-    @Column(name = "PROZESS_INSTANZ_ID", nullable = true, updatable = true)
+    @Column(name = "PROZESS_INSTANZ_ID", nullable = true, updatable = true, length = 64)
     private String prozessInstanzId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS", nullable = false, updatable = true)
+    @Column(name = "STATUS", nullable = false, updatable = true, length = 64)
     private MatchStatus status;
+
 }

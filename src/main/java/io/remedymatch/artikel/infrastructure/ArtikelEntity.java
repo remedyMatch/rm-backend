@@ -36,19 +36,19 @@ public class ArtikelEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Type(type = "uuid-char")
-	@Column(name = "UUID", unique = true, nullable = false, updatable = false)
+	@Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
 	private UUID id;
 
-	@Column(name = "EAN", nullable = false, updatable = false)
+	@Column(name = "EAN", nullable = false, updatable = false, length = 34)
 	private String ean;
 
-	@Column(name = "NAME", nullable = false, updatable = true)
+	@Column(name = "NAME", nullable = false, updatable = true, length = 128)
 	private String name;
 
-	@Column(name = "description", nullable = false, updatable = true)
+	@Column(name = "description", nullable = false, updatable = true, length = 256)
 	private String beschreibung;
 
-	@Column(name = "manufacturer", nullable = false, updatable = true)
+	@Column(name = "manufacturer", nullable = false, updatable = true, length = 128)
 	private String hersteller;
 
 	@ManyToOne

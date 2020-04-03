@@ -1,15 +1,11 @@
 package io.remedymatch.bedarf.infrastructure;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
+import io.remedymatch.TestApplication;
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
+import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -22,12 +18,12 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.TestApplication;
-import io.remedymatch.artikel.infrastructure.ArtikelEntity;
-import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
-import io.remedymatch.institution.domain.InstitutionTyp;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
-import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
@@ -38,95 +34,94 @@ import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 @DisplayName("BedarfJpaRepository InMemory Test soll")
 public class BedarfJpaRepositoryShould {
 
-	@Autowired
-	private EntityManager entityManager;
+    @Autowired
+    private EntityManager entityManager;
 
-	@Autowired
-	private BedarfJpaRepository jpaRepository;
+    @Autowired
+    private BedarfJpaRepository jpaRepository;
 
-	private InstitutionEntity meinKrankenhaus;
-	private InstitutionStandortEntity meinStandort;
-	private ArtikelKategorieEntity beispielKategorieArtikel;
-	private ArtikelEntity beispielArtikel;
-	
-	@BeforeEach
-	private void prepare()
-	{
-		meinKrankenhaus = persist(meinKrankenhaus());
-		meinStandort = persist(meinStandort());
-		beispielKategorieArtikel = persist(beispielArtikelKategorie());
-		beispielArtikel = persist(beispielArtikel());
-		entityManager.flush();
-	}
-	
-	@Rollback(true)
-	@Transactional
-	@Test
-	@DisplayName("alle nicht bediente Bedarfe zurueckliefern")
-	void alle_nicht_bediente_Bedarfe_zurueckliefern() {
-		BedarfEntity ersteBedarf = persist(bedarf(BigDecimal.valueOf(100)));
-		BedarfEntity zweiteBedarf = persist(bedarf(BigDecimal.valueOf(200)));
-		entityManager.flush();
+    private InstitutionEntity meinKrankenhaus;
+    private InstitutionStandortEntity meinStandort;
+    private ArtikelKategorieEntity beispielKategorieArtikel;
+    private ArtikelEntity beispielArtikel;
 
-		assertThat(//
-				jpaRepository.findAllByBedientFalse(), //
-				containsInAnyOrder(ersteBedarf, zweiteBedarf));
-	}
+    @BeforeEach
+    private void prepare() {
+        meinKrankenhaus = persist(meinKrankenhaus());
+        meinStandort = persist(meinStandort());
+        beispielKategorieArtikel = persist(beispielArtikelKategorie());
+        beispielArtikel = persist(beispielArtikel());
+        entityManager.flush();
+    }
 
-	/* help methods */
+    @Rollback(true)
+    @Transactional
+    @Test
+    @DisplayName("alle nicht bediente Bedarfe zurueckliefern")
+    void alle_nicht_bediente_Bedarfe_zurueckliefern() {
+        BedarfEntity ersteBedarf = persist(bedarf(BigDecimal.valueOf(100)));
+        BedarfEntity zweiteBedarf = persist(bedarf(BigDecimal.valueOf(200)));
+        entityManager.flush();
 
-	public <E> E persist(E entity) {
-		entityManager.persist(entity);
-		return entity;
-	}
-	
-	private InstitutionEntity meinKrankenhaus() {
-		return InstitutionEntity.builder() //
-				.institutionKey("mein_krankenhaus") //
-				.name("Mein Krankenhaus") //
-				.typ(InstitutionTyp.Krankenhaus) //
-				.build();
-	}
-	
-	private InstitutionStandortEntity meinStandort() {
-		return InstitutionStandortEntity.builder() //
-				.name("Mein Standort") //
-				.plz("PLZ") //
-				.ort("Ort") //
-				.strasse("Strasse") //
-				.land("Land") //
-				.build();
-	}
-	
-	private ArtikelKategorieEntity beispielArtikelKategorie() {
-		return ArtikelKategorieEntity.builder() //
-				.name("beispiel Kategorie") //
-				.build();
-	}
+        assertThat(//
+                jpaRepository.findAllByDeletedFalseAndBedientFalse(), //
+                containsInAnyOrder(ersteBedarf, zweiteBedarf));
+    }
 
-	private ArtikelEntity beispielArtikel() {
-		return ArtikelEntity.builder() //
-				.ean("EAN") //
-				.name("egal") //
-				.beschreibung("beschreibung") //
-				.hersteller("hersteller") //
-				.artikelKategorie(beispielKategorieArtikel) //
-				.build();
-	}
-	
-	private BedarfEntity bedarf(//
-			BigDecimal anzahl) {
-		return BedarfEntity.builder() //
-				.artikel(beispielArtikel) //
-				.institution(meinKrankenhaus) //
-				.standort(meinStandort) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.steril(true) //
-				.originalverpackt(true) //
-				.medizinisch(true) //
-				.kommentar("Bla bla") //
-				.bedient(false) //
-				.build();
-	}
+    /* help methods */
+
+    public <E> E persist(E entity) {
+        entityManager.persist(entity);
+        return entity;
+    }
+
+    private InstitutionEntity meinKrankenhaus() {
+        return InstitutionEntity.builder() //
+                .institutionKey("mein_krankenhaus") //
+                .name("Mein Krankenhaus") //
+                .typ(InstitutionTyp.Krankenhaus) //
+                .build();
+    }
+
+    private InstitutionStandortEntity meinStandort() {
+        return InstitutionStandortEntity.builder() //
+                .name("Mein Standort") //
+                .plz("PLZ") //
+                .ort("Ort") //
+                .strasse("Strasse") //
+                .land("Land") //
+                .build();
+    }
+
+    private ArtikelKategorieEntity beispielArtikelKategorie() {
+        return ArtikelKategorieEntity.builder() //
+                .name("beispiel Kategorie") //
+                .build();
+    }
+
+    private ArtikelEntity beispielArtikel() {
+        return ArtikelEntity.builder() //
+                .ean("EAN") //
+                .name("egal") //
+                .beschreibung("beschreibung") //
+                .hersteller("hersteller") //
+                .artikelKategorie(beispielKategorieArtikel) //
+                .build();
+    }
+
+    private BedarfEntity bedarf(//
+                                BigDecimal anzahl) {
+        return BedarfEntity.builder() //
+                .artikel(beispielArtikel) //
+                .institution(meinKrankenhaus) //
+                .standort(meinStandort) //
+                .anzahl(anzahl) //
+                .rest(anzahl) //
+                .steril(true) //
+                .originalverpackt(true) //
+                .medizinisch(true) //
+                .kommentar("Bla bla") //
+                .bedient(false) //
+                .build();
+    }
 }

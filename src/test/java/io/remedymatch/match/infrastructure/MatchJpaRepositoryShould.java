@@ -136,7 +136,7 @@ public class MatchJpaRepositoryShould {
                 .kommentar("Bla bla") //
                 .anzahl(BigDecimal.TEN)
                 .anfrageTyp("Bedarf")
-                .aritkelId(UUID.randomUUID())
+                .artikelId(UUID.randomUUID())
                 .status(status) //
                 .build();
     }

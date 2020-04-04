@@ -42,6 +42,9 @@ public class ArtikelEntity {
 	@Column(name = "description", nullable = false, updatable = true, length = 1024)
 	private String beschreibung;
 
+	@Column(name = "standard", length = 1024)
+	private String norm;
+
 	@Column(name = "manufacturer", nullable = false, updatable = true, length = 128)
 	private String hersteller;
 

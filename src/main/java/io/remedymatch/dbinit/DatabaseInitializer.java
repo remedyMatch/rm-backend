@@ -1,18 +1,6 @@
 package io.remedymatch.dbinit;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Locale;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.github.javafaker.Faker;
-
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.artikel.infrastructure.ArtikelEntity;
@@ -27,6 +15,16 @@ import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Locale;
 
 /**
  * TODO Test-Code nicht für Produktion
@@ -68,119 +66,244 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
             createInstitutions();
             createPersonen();
             // createBedarfsListe();
-            createAngebotsListe();
+            createArtikel();
         } catch (Exception ex) {
             ex.printStackTrace();
             log.error("Fehler beim Erstellen des initialen Datenbestandes", ex);
         }
     }
 
-    private void createAngebotsListe() {
+    private void createArtikel() {
 
 
-        var artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1", artikelKategorieRepository.findByName("Masken FFP1").get());
-        var institution = institutionRepository.findByInstitutionKey("private100");
+        createArtikel("FFP2",
+                "Atmungsaktives Design, das nicht gegen den Mund zusammenfällt (z.B. Entenschnabel, becherförmig)Ausgestattet mit Ausatemventil • Versehen mit einer Metallplatte an der Nasenspitze • Kann wiederverwendbar (aus robustem Material, das gereinigt und desinfiziert werden kann) oder Einwegartikel sein",
+                "Atemschutzgerät \"N95\" gemäß FDA Klasse II, unter 21 CFR 878.4040, und CDC NIOSH, oder \"FFP2\" gemäß EN 149 Verordnung 2016/425 Kategorie III oder gleichwertige Normen",
+                artikelKategorieRepository.findByName("Schutzmasken").get()
+        );
+
+        createArtikel("FFP3",
+                "ausgestattet mit Ausatemventil",
+                "Normen/Standards: - \"FFP3\" gemäß EN 149:2001+A1 oder gleichwertige Normen",
+                artikelKategorieRepository.findByName("Schutzmasken").get()
+        );
+        // var institution = institutionRepository.findByInstitutionKey("private100");
         // createAngebot("Schutzmasken", "Köln", false, false, false, 20, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
 
-        artikel = createArtikel("Schutzmasken (aus Eigenbedarf)", "Schutzmasken FFP2", artikelKategorieRepository.findByName("Masken FFP2").get());
-        institution = institutionRepository.findByInstitutionKey("private101");
+        createArtikel("Mund-Nasen-Schutz",
+                "Hohe Flüssigkeitsresistenz • Gute Atmungsaktivität • Innen- und Außenflächen sind eindeutig gekennzeichnet",
+                "Normen/Standards: - EN 14683 Typ IIR Leistung - ASTM F2100 Stufe 2 oder Stufe 3 oder gleichwertig - Flüssigkeitswiderstand bei einem Druck von mindestens 120 mmHg basierend auf ASTM F1862-07, ISO 22609 oder gleichwertig - Atmungsaktivität: MIL-M-36945C, EN 14683 Anhang C, oder gleichwertig - Filtrationseffizienz: ASTM F2101, EN 14683 Anhang B oder gleichwertige Normenwiederverwendbar (aus robustem Material, das gereinigt und desinfiziert werden kann) oder Einwegartikel sein",
+                artikelKategorieRepository.findByName("Behelfs-Maske").get()
+        );
+        // institution = institutionRepository.findByInstitutionKey("private101");
         //createAngebot("Schutzmasken", "Augsburg", false, false, false, 30, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
 
-        artikel = createArtikel("Schutzmasken von privat", "Schutzmasken FFP3", artikelKategorieRepository.findByName("Masken FFP3").get());
-        institution = institutionRepository.findByInstitutionKey("private101");
+        createArtikel("Vollgesichtsschutz",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Behelfs-Maske").get()
+        );
+        // institution = institutionRepository.findByInstitutionKey("private101");
         // createAngebot("Schutzmasken", "Dresden", false, false, false, 50, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
 
-        artikel = createArtikel("Schutzmasken privat", "Schutzmasken FFP3", artikelKategorieRepository.findByName("Masken FFP3").get());
-        institution = institutionRepository.findByInstitutionKey("private102");
-//        createAngebot("Schutzmasken", "Flensburg", false, false, false, 50, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
+        createArtikel("Selbst hergestellt",
+                "KEIN medizinischer Artikel. Bietet keinen Schutz vor Infektion.",
+                "",
+                artikelKategorieRepository.findByName("Behelfs-Maske").get()
+        );
 
-        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1", artikelKategorieRepository.findByName("Masken FFP1").get());
-        institution = institutionRepository.findByInstitutionKey("private110");
-//        createAngebot("Schutzmasken", "Köln", false, false, false, 20, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
+        createArtikel("Essener Modell",
+                "selbstgenähe Maske, KEIN medizinischer Artikel. Bietet keinen Schutz vor Infektion.",
+                "",
+                artikelKategorieRepository.findByName("Behelfs-Maske").get()
+        );
 
-        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP2 neu", artikelKategorieRepository.findByName("Masken FFP2").get());
-        institution = institutionRepository.findByInstitutionKey("private120");
-//        createAngebot("Schutzmasken", "München", true, false, true, 50, LocalDate.now().plusYears(6).atStartOfDay(), artikel, institution);
+        createArtikel("Papiermaske",
+                "KEIN medizinischer Artikel. Bietet keinen Schutz vor Infektion.",
+                "",
+                artikelKategorieRepository.findByName("Behelfs-Maske").get()
+        );
 
-        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP1 aus privatem Bestand", artikelKategorieRepository.findByName("Masken FFP1").get());
-        institution = institutionRepository.findByInstitutionKey("private130");
-//        createAngebot("Schutzmasken", "Köln", true, false, true, 20, LocalDate.now().plusYears(3).atStartOfDay(), artikel, institution);
+        createArtikel("Kittel Gr. S",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP3 neu", artikelKategorieRepository.findByName("Masken FFP3").get());
-        institution = institutionRepository.findByInstitutionKey("private140");
-//        createAngebot("Schutzmasken", "Hamburg", true, false, true, 120, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Kittel Gr. M",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP2 Restbestand", artikelKategorieRepository.findByName("Masken FFP2").get());
-        institution = institutionRepository.findByInstitutionKey("private150");
-//        createAngebot("Schutzmasken", "Hamburg", true, false, true, 120, LocalDate.now().plusYears(3).atStartOfDay(), artikel, institution);
+        createArtikel("Kittel Gr. L",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzmasken", "Schutzmasken FFP2 von Privat", artikelKategorieRepository.findByName("Masken FFP2").get());
-        institution = institutionRepository.findByInstitutionKey("private160");
-//        createAngebot("Schutzmasken", "Berlin", true, false, true, 40, LocalDate.now().plusYears(3).atStartOfDay(), artikel, institution);
+        createArtikel("Kittel Gr. XL",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Brillen", "Arbeitsschutzbrille", artikelKategorieRepository.findByName("Brillen").get());
-        institution = institutionRepository.findByInstitutionKey("private170");
-//        createAngebot("Brillen", "Stuttgart", true, false, true, 20, LocalDate.now().plusYears(3).atStartOfDay(), artikel, institution);
+        createArtikel("Kittel Gr. XXL",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Brillen", "Arbeitsschutzbrille unbenutzt", artikelKategorieRepository.findByName("Brillen").get());
-        institution = institutionRepository.findByInstitutionKey("private180");
-//        createAngebot("Brillen", "München", true, false, true, 15, LocalDate.now().plusYears(1).atStartOfDay(), artikel, institution);
+        createArtikel("Kittel Gr. Unisize",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Brillen", "Arbeitsschutzbrille (neu)", artikelKategorieRepository.findByName("Brillen").get());
-        institution = institutionRepository.findByInstitutionKey("private190");
-//        createAngebot("Schutzbrillen", "Bonn", true, false, true, 15, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Schutzbrillen",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Handdesinfektion", "Kanister 50Liter (neu)", artikelKategorieRepository.findByName("Handdesinfektion").get());
-        institution = institutionRepository.findByInstitutionKey("private200");
-//        createAngebot("Handdesinfektion", "Karlsruhe", true, false, true, 2, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Overall S",
+                "Einmaliger Gebrauch, Einweg, Flüssigkeitsbeständig, Mit Kapuze, Langarm, Daumen-/Fingerschlaufen oder elastischen Manschetten zur Verankerung der Ärmel an Ort und Stelle",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Handdesinfektion", "Kanister 10Liter unbenutzt", artikelKategorieRepository.findByName("Handdesinfektion").get());
-        institution = institutionRepository.findByInstitutionKey("private210");
-//        createAngebot("Handdesinfektion von private", "Augsburg", true, false, true, 3, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Overall M",
+                "Einmaliger Gebrauch, Einweg, Flüssigkeitsbeständig, Mit Kapuze, Langarm, Daumen-/Fingerschlaufen oder elastischen Manschetten zur Verankerung der Ärmel an Ort und Stelle",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung", "unbenutzt", artikelKategorieRepository.findByName("Overall Größe M").get());
-        institution = institutionRepository.findByInstitutionKey("private220");
-//        createAngebot("Overall", "Augsburg", true, false, true, 3, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Overall L",
+                "Einmaliger Gebrauch, Einweg, Flüssigkeitsbeständig, Mit Kapuze, Langarm, Daumen-/Fingerschlaufen oder elastischen Manschetten zur Verankerung der Ärmel an Ort und Stelle",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung", "1 Karton mit 100 Stück unbenutzt", artikelKategorieRepository.findByName("Overall Größe L").get());
-        institution = institutionRepository.findByInstitutionKey("private220");
-//        createAngebot("Overall", "Augsburg", true, false, true, 100, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Overall XL",
+                "Einmaliger Gebrauch, Einweg, Flüssigkeitsbeständig, Mit Kapuze, Langarm, Daumen-/Fingerschlaufen oder elastischen Manschetten zur Verankerung der Ärmel an Ort und Stelle",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung", "unbenutzt/neu", artikelKategorieRepository.findByName("Overall Größe L").get());
-        institution = institutionRepository.findByInstitutionKey("private220");
-//        createAngebot("Overall", "Augsburg", true, false, true, 500, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Overall XXL",
+                "Einmaliger Gebrauch, Einweg, Flüssigkeitsbeständig, Mit Kapuze, Langarm, Daumen-/Fingerschlaufen oder elastischen Manschetten zur Verankerung der Ärmel an Ort und Stelle",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung (neu)", "neu/steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
-        institution = institutionRepository.findByInstitutionKey("private220");
-//        createAngebot("mehere Overalls", "Berlin", true, false, true, 100, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Overall Unisize",
+                "Einmaliger Gebrauch, Einweg, Flüssigkeitsbeständig, Mit Kapuze, Langarm, Daumen-/Fingerschlaufen oder elastischen Manschetten zur Verankerung der Ärmel an Ort und Stelle",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung (neu)", "neu/steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
-        institution = institutionRepository.findByInstitutionKey("other10");
-//        createAngebot("Schutzbekleidung", "Frankfurt", true, false, true, 5000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Einmalhandschuhe XS",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung (neu)", "steril", artikelKategorieRepository.findByName("Overall Größe L").get());
-        institution = institutionRepository.findByInstitutionKey("institution8");
-//        createAngebot("Schutzbekleidung aus Krankenhausbestand", "Berlin", true, false, true, 6000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Einmalhandschuhe S",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung (neu)", "steril", artikelKategorieRepository.findByName("Overall Größe M").get());
-        institution = institutionRepository.findByInstitutionKey("other8");
-//        createAngebot("Schutzbekleidung aus Herstellung", "Hamburg", true, false, true, 20000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Einmalhandschuhe M",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung (auf Lager)", "steril", artikelKategorieRepository.findByName("Overall Größe L").get());
-        institution = institutionRepository.findByInstitutionKey("other8");
-//        createAngebot("Schutzbekleidung aus Herstellung", "Hamburg", true, false, true, 15000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Einmalhandschuhe L",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung (auf Lager)", "steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
-        institution = institutionRepository.findByInstitutionKey("other8");
-//        createAngebot("Schutzbekleidung aus Herstellung", "Hamburg", true, false, true, 30000, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Einmalhandschuhe XL",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung", "steril", artikelKategorieRepository.findByName("Overall Größe XL").get());
-        institution = institutionRepository.findByInstitutionKey("institution34");
-//        createAngebot("Schutzbekleidung im eigenen Bestand", "Düsseldorf", true, false, true, 500, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Einmalhandschuhe XXL",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Schutzkleidung").get()
+        );
 
-        artikel = createArtikel("Schutzbekleidung", "steril", artikelKategorieRepository.findByName("Overall Größe L").get());
-        institution = institutionRepository.findByInstitutionKey("institution34");
-//        createAngebot("Schutzbekleidung im eigenen Bestand", "Düsseldorf", true, false, true, 200, LocalDate.now().plusYears(2).atStartOfDay(), artikel, institution);
+        createArtikel("Abstrichtupfer",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Probenentnahme").get()
+        );
+
+        createArtikel("Handdesinfektion viruzid",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Desinfektion").get()
+        );
+
+        createArtikel("Handdesinfektion nach WHO Standards",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Desinfektion").get()
+        );
+
+        createArtikel("Handdesinfektion begrenzt viruzid",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Desinfektion").get()
+        );
+
+        createArtikel("Flächendesinfektion viruzid",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Desinfektion").get()
+        );
+
+        createArtikel("Desinfektionslösung in Kittelflasche",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Desinfektion").get()
+        );
+
+        createArtikel("Ethanol",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Desinfektion").get()
+        );
+
+        createArtikel("Einweg-Sitzbezüge",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Hygiene").get()
+        );
+
+        createArtikel("Flüssigseife",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Hygiene").get()
+        );
+
+        createArtikel("Einweghandtücher",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Hygiene").get()
+        );
+
+        createArtikel("Toilettenpapier",
+                "",
+                "",
+                artikelKategorieRepository.findByName("Hygiene").get()
+        );
+
 
 
     }
@@ -262,12 +385,13 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 //
 //    }
 
-    private ArtikelEntity createArtikel(String name, String beschreibung, ArtikelKategorieEntity kategorie) {
+    private ArtikelEntity createArtikel(String name, String beschreibung, String norm, ArtikelKategorieEntity kategorie) {
         var entity = ArtikelEntity.builder() //
                 .beschreibung(beschreibung) //
                 .hersteller(faker.company().name()) //
                 .name(name) //
                 .ean((faker.number().randomNumber(13, true) + "")) //
+                .norm(norm)
                 .artikelKategorie(kategorie) //
                 .build();
         artikelRepository.save(entity);
@@ -309,37 +433,12 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     }
 
     private void createKategorien() {
-        createKategorie("Masken FFP1");
-        createKategorie("Masken FFP2");
-        createKategorie("Masken FFP3");
-
-        createKategorie("Overall Größe S");
-        createKategorie("Overall Größe M");
-        createKategorie("Overall Größe L");
-        createKategorie("Overall Größe XL");
-
-        createKategorie("Kittel One-Size");
-
-        createKategorie("Brillen");
-
-        createKategorie("Handschuhe S");
-        createKategorie("Handschuhe M");
-        createKategorie("Handschuhe L");
-        createKategorie("Handschuhe XL");
-
-        createKategorie("Sterillium (Virugard)");
-        createKategorie("Handdesinfektion");
-        createKategorie("Blutentnahme Set");
-        createKategorie("Schlauch Sauerstoffabgabe");
-        createKategorie("Venenverweilkanülen");
-        createKategorie("Infusionsbesteck");
-        createKategorie("ZVK");
-        createKategorie("arterielle Kanülen");
-
-        createKategorie("Narkosemittel");
-        createKategorie("Schmerzmittel");
-        createKategorie("Virostatika");
-        createKategorie("Infusion");
+        createKategorie("Behelfs-Maske");
+        createKategorie("Desinfektion");
+        createKategorie("Hygiene");
+        createKategorie("Probenentnahme");
+        createKategorie("Schutzkleidung");
+        createKategorie("Schutzmasken");
     }
 
     private void createKategorie(String name) {

@@ -1,0 +1,30 @@
+on: ["push", "pull_request"]
+
+name: npm install and gradle clean build
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '11.0.4'
+        java-package: jdk
+        architecture: x64
+
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+
+    - name: npm install
+      run: |
+        npm install
+
+    - uses: eskatos/gradle-command-action@v1
+      with:
+        arguments: clean build

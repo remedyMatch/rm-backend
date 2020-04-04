@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import io.remedymatch.artikel.domain.Artikel;
+import io.remedymatch.artikel.domain.ArtikelId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,10 +38,14 @@ public class AnfrageConverterShould {
 	private static final Institution INSTITUTION_VON = Institution.builder().id(INSTITUTION_VON_ID).build();
 	private static final InstitutionStandortId STANDORT_VON_ID = new InstitutionStandortId(UUID.randomUUID());
 	private static final InstitutionStandort STANDORT_VON = InstitutionStandort.builder().id(STANDORT_VON_ID).build();
+	private static final ArtikelId ARTIKEL_ID = new ArtikelId(UUID.randomUUID());
+	private static final Artikel ARTIKEL = Artikel.builder().id(ARTIKEL_ID).build();
 	private static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
-	private static final Angebot ANGEBOT = Angebot.builder().id(ANGEBOT_ID).institution(INSTITUTION_AN).standort(STANDORT_AN).build();
+	private static final Angebot ANGEBOT = Angebot.builder().id(ANGEBOT_ID).institution(INSTITUTION_AN)
+			.artikel(ARTIKEL).standort(STANDORT_AN).build();
 	private static final BedarfId BEDARF_ID = new BedarfId(UUID.randomUUID());
-	private static final Bedarf BEDARF = Bedarf.builder().id(BEDARF_ID).institution(INSTITUTION_AN).standort(STANDORT_AN).build();
+	private static final Bedarf BEDARF = Bedarf.builder().id(BEDARF_ID).institution(INSTITUTION_AN)
+			.artikel(ARTIKEL).standort(STANDORT_AN).build();
 	private static final String PROZESSINSTANZ_ID = "ProzessInstanzId";
 	private static final BigDecimal ANZAHL = BigDecimal.valueOf(120.0);
 	private static final AngebotAnfrageStatus ANGEBOT_ANFRAGE_STATUS = AngebotAnfrageStatus.Offen;
@@ -74,6 +80,7 @@ public class AnfrageConverterShould {
 		return Anfrage.builder() //
 				.id(ANGEBOT_ANFRAGE_ID.getValue()) //
 				.angebotId(ANGEBOT_ID.getValue()) //
+				.artikelId(ARTIKEL_ID.getValue())
 				.institutionAn(INSTITUTION_AN) //
 				.standortAn(STANDORT_AN) //
 				.institutionVon(INSTITUTION_VON) //
@@ -102,6 +109,7 @@ public class AnfrageConverterShould {
 		return Anfrage.builder() //
 				.id(BEDARF_ANFRAGE_ID.getValue()) //
 				.bedarfId(BEDARF_ID.getValue()) //
+				.artikelId(ARTIKEL_ID.getValue())
 				.institutionAn(INSTITUTION_AN) //
 				.standortAn(STANDORT_AN) //
 				.institutionVon(INSTITUTION_VON) //

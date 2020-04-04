@@ -1,8 +1,6 @@
 package io.remedymatch.geodaten.geocoding.domain;
 
-import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Response;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Getter

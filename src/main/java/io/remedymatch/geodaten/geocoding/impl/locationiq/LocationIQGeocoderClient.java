@@ -27,19 +27,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Component
 @RequiredArgsConstructor
 public class LocationIQGeocoderClient implements Geocoder {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final RmBackendProperties properties;
 
     @Override
     public List<Point> findePointsByAdressString(@NonNull String adressString) {
         final AdressQuery adressQuery = new AdressQuery(adressString);
         final List<Response> responses = queryGeocodeService(adressQuery);
-        if (CollectionUtils.isEmpty(responses)) {
+        if (isEmpty(responses)) {
             return List.of();
         }
         return responses.stream()
@@ -51,7 +52,7 @@ public class LocationIQGeocoderClient implements Geocoder {
     public List<Point> findePointsByAdresse(@NonNull Adresse adresse) {
         final AdressQuery adressQuery = new AdressQuery(adresse);
         final List<Response> responses = queryGeocodeService(adressQuery);
-        if (CollectionUtils.isEmpty(responses)) {
+        if (isEmpty(responses)) {
             return List.of();
         }
         return responses.stream()
@@ -64,7 +65,7 @@ public class LocationIQGeocoderClient implements Geocoder {
     public String findeAdresseByPoint(@NonNull Point point) {
         final KoordinatenQuery koordinatenQuery = new KoordinatenQuery(point);
         final List<Response> responses = queryGeocodeService(koordinatenQuery);
-        if (CollectionUtils.isEmpty(responses)) {
+        if (isEmpty(responses)) {
             return "";
         }
         return responses.stream()
@@ -78,7 +79,7 @@ public class LocationIQGeocoderClient implements Geocoder {
     public List<String> findeAdressVorschlaegeByAdressString(@NonNull String adressString) {
         final AdressQuery adressQuery = new AdressQuery(adressString);
         final List<Response> responses = queryGeocodeService(adressQuery);
-        if (CollectionUtils.isEmpty(responses)) {
+        if (isEmpty(responses)) {
             return List.of();
         }
         return responses.stream()
@@ -93,13 +94,17 @@ public class LocationIQGeocoderClient implements Geocoder {
                 query.url());
         queryParams.forEach(builder::queryParam);
         final URI url = builder.build().encode().toUri();
-        restTemplate.getMessageConverters().add(0, createMessageConverter());
+        List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
+        if (isEmpty(messageConverters) || !(messageConverters.get(0) instanceof MappingJackson2HttpMessageConverter)) {
+            final HttpMessageConverter<?> messageConverter = createMessageConverter();
+            restTemplate.getMessageConverters().add(0, messageConverter);
+        }
         final ResponseEntity<Response[]> responseEntity = restTemplate.getForEntity(url, Response[].class);
         if (responseEntity.getStatusCode() != HttpStatus.OK) {
             throw new RuntimeException(responseEntity.getStatusCode().name());
         }
-        final Response[] gefundeneKoordinaten = responseEntity.getBody();
-        if (gefundeneKoordinaten == null || gefundeneKoordinaten.length <= 0) {
+        final Response[] gefundeneResponses = responseEntity.getBody();
+        if (gefundeneResponses == null || gefundeneResponses.length <= 0) {
             return List.of();
         }
         return Arrays.stream(responseEntity.getBody()).collect(Collectors.toList());

@@ -2,13 +2,7 @@ package io.remedymatch.artikel.infrastructure;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -45,7 +39,7 @@ public class ArtikelEntity {
 	@Column(name = "NAME", nullable = false, updatable = true, length = 128)
 	private String name;
 
-	@Column(name = "description", nullable = false, updatable = true, length = 256)
+	@Column(name = "description", nullable = false, updatable = true, length = 1024)
 	private String beschreibung;
 
 	@Column(name = "manufacturer", nullable = false, updatable = true, length = 128)

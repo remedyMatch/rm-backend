@@ -32,9 +32,9 @@ jobs:
         arguments: clean build
 
     - name: Generate Code Coverage Report
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: jacocoTestReport
+      uses: eskatos/gradle-command-action@v1
+      with:
+        arguments: jacocoTestReport
 
     - name: Upload Code Coverage Report
       uses: codecov/codecov-action@v1

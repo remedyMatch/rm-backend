@@ -33,13 +33,34 @@ public class AngebotExternalTaskClient {
         client.subscribe("angebotAnfrageAblehnen")
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
-                    val anfrageId = externalTask.getVariable("objektId").toString();
-                    angebotService.anfrageStornieren(new AngebotAnfrageId(UUID.fromString(anfrageId)));
 
-                    //hier eventuell E-Mail versand?
+                    Integer retries = externalTask.getRetries();
+                    if (retries == null) {
+                        retries = 3;
+                    } else {
+                        retries--;
+                    }
+
+
+                    val anfrageId = externalTask.getVariable("objektId").toString();
+                    try {
+
+                        angebotService.anfrageStornieren(new AngebotAnfrageId(UUID.fromString(anfrageId)));
+
+                        //hier eventuell E-Mail versand?
+                    } catch (Exception e) {
+                        externalTaskService.handleFailure(externalTask, "Hello I am an error", "more space for details", retries, 30000);
+                    }
 
                     externalTaskService.complete(externalTask);
+
+
                 }).open();
+
+
+        //externalTaskService.handleFailure(externalTask.getId(), "I am a message", "I have more details", 1, 600000);
+        //externalTask.getRetries()
+
 
         client.subscribe("angebotMatchProzessStarten")
                 .lockDuration(2000)

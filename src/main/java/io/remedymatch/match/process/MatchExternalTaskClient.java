@@ -41,10 +41,24 @@ public class MatchExternalTaskClient {
         client.subscribe("auslieferungBestaetigung")
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
+
+                    //set retries for the external task in the engine
+                    Integer retries = externalTask.getRetries();
+                    if (retries == null) {
+                        retries = 3;
+                    } else {
+                        retries--;
+                    }
+
                     val matchId = externalTask.getVariable("objektId").toString();
                     val match = matchRepository.get(new MatchId(UUID.fromString(matchId)));
-                    match.get().setStatus(MatchStatus.Ausgeliefert);
-                    matchRepository.save(match.get());
+
+                    try {
+                        match.get().setStatus(MatchStatus.Ausgeliefert);
+                        matchRepository.save(match.get());
+                    } catch (Exception e) {
+                        externalTaskService.handleFailure(externalTask, "Hello I am an error", "more space for details", retries, 30000);
+                    }
 
                     externalTaskService.complete(externalTask);
                 }).open();

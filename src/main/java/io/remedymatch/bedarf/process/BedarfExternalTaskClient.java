@@ -1,14 +1,5 @@
 package io.remedymatch.bedarf.process;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-import javax.annotation.PostConstruct;
-
-import org.camunda.bpm.client.ExternalTaskClient;
-import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
-import org.springframework.stereotype.Component;
-
 import io.remedymatch.bedarf.domain.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.BedarfService;
 import io.remedymatch.engine.client.EngineClient;
@@ -16,6 +7,13 @@ import io.remedymatch.match.api.MatchProzessConstants;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -36,8 +34,20 @@ public class BedarfExternalTaskClient {
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
 
+                    //set retries for the external task in the engine
+                    Integer retries = externalTask.getRetries();
+                    if (retries == null) {
+                        retries = 3;
+                    } else {
+                        retries--;
+                    }
+
                     val anfrageId = externalTask.getVariable("objektId").toString();
-                    bedarfService.anfrageStornieren(new BedarfAnfrageId(UUID.fromString(anfrageId)));
+                    try {
+                        bedarfService.anfrageStornieren(new BedarfAnfrageId(UUID.fromString(anfrageId)));
+                    } catch (Exception e) {
+                        externalTaskService.handleFailure(externalTask, "Hello I am an error", "more space for details", retries, 30000);
+                    }
 
                     //hier eventuell E-Mail versand?
 

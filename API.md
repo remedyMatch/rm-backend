@@ -11,18 +11,30 @@ Beschreibung der Rest-API für:
 
 ## Übersicht
 
-* Alle nicht bediente Angebote laden
-** GET ../angebot/suche
-* Alle angebote meiner Institution laden
-** GET ../angebot
+* Alle aktuelle Angebote laden
+
+  `GET /angebot/suche`
+
+* Alle Angebote meiner Institution laden
+
+  `GET /angebot`
+
 * Neues Angebot einstellen
-** POST ../angebot
+
+  `POST /angebot`
+
 * Angebot löschen
-** DELETE ../angebot/{angebotId}
+
+  `DELETE /angebot/{angebotId}`
+
 * Angebot anfragen
-** POST ../angebot/{angebotId}/anfrage
+
+  `POST /angebot/{angebotId}/anfrage`
+
 * Angebot-Anfrage löschen
-** DELETE ../angebot/{angebotId}/anfrage/{anfrageId}
+
+  `DELETE /angebot/{angebotId}/anfrage/{anfrageId}`
+
 
 ## Alle aktuelle Angebote laden
 
@@ -75,7 +87,7 @@ Liefert alle aktuelle (nicht bediente) Angebote.
    curl -i -H 'Accept: application/json' http://localhost:7000/angebot/suche
   ```
 
-## Alle angebote meiner Institution laden
+## Alle Angebote meiner Institution laden
 
 Liefert alle aktuelle (nicht bediente) Angebote, die Personen aus meiner Institution gemeldet haben.
 
@@ -263,8 +275,6 @@ Angebot anfragen.
     "angebot": { "..." },
     "institutionVon": { "..." },
     "standortVon": { "..." },
-    "anzahl": 3000,
-    "kommentar": "Wir brauchen 3000 Masken"
     "anzahl": 3000,
     "kommentar": "Wir brauchen 3000 Masken"
     "prozessInstanzId": "...",
@@ -798,9 +808,86 @@ Ein Artikel hinzufügen.
 
 # Bedarf
 
-## Alle Bedarfe laden
+## Übersicht
 
-Liefert alle aktuelle Bedarfe.
+* Alle aktuelle Bedarfe laden
+
+  `GET /bedarf/suche`
+
+* Alle Bedarfe meiner Institution laden
+
+  `GET /bedarf`
+
+* Neues Bedarf melden
+
+  `POST /bedarf`
+
+* Bedarf löschen
+
+  `DELETE /bedarf/{bedarfId}`
+
+* Bedarf bedienen
+
+  `POST /bedarf/{bedarfId}/anfrage`
+
+* Bedarf-Anfrage löschen
+
+  `DELETE /bedarf/{bedarfId}/anfrage/{anfrageId}`
+
+
+## Alle aktuelle Bedarfe laden
+
+Liefert alle aktuelle (nicht bediente) Bedarfe.
+
+* **Request:**
+
+  `GET /bedarf/suche`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+      "artikelId": "12e79aaf-1edc-41b3-a83d-6b4f871dd5e3",
+      "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+      "anzahl": 10000,
+      "rest": 2000,
+      "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+      "standort": { "..." },
+      "steril": false,
+      "medizinisch": false,
+      "kommentar": "Wir brauchen 5000 Masken",
+      "entfernung": 25014
+    },
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/bedarf/suche
+  ```
+
+## Alle Bedarfe meiner Institution laden
+
+Liefert alle aktuelle (nicht bediente) Bedarfe, die Personen aus meiner Institution gemeldet haben.
 
 * **Request:**
 
@@ -821,11 +908,17 @@ Liefert alle aktuelle Bedarfe.
   ```
   [
     {
-      "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
-      "artikel": {
-        "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-      },
-      "anzahl": 10000
+      "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+      "artikelId": "12e79aaf-1edc-41b3-a83d-6b4f871dd5e3",
+      "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+      "anzahl": 10000,
+      "rest": 2000,
+      "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+      "standort": { "..." },
+      "steril": false,
+      "medizinisch": false,
+      "kommentar": "Wir brauchen 5000 Masken",
+      "entfernung": 25014
     },
     ...
   ]
@@ -842,9 +935,9 @@ Liefert alle aktuelle Bedarfe.
    curl -i -H 'Accept: application/json' http://localhost:7000/bedarf
   ```
 
-## Bedarf melden
+## Neues Bedarf einstellen
 
-Bedarf melden.
+Neues Bedarf melden.
 
 * **Request:**
 
@@ -858,10 +951,13 @@ Bedarf melden.
 
   ```
   {
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000
+    "artikelId": "12e79aaf-1edc-41b3-a83d-6b4f871dd5e3",
+    "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "anzahl": 10000,
+    "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
+    "kommentar": "Wir haben 10000 Masken übrig",
+    "steril": false,
+    "medizinisch": false
   }
   ```
 
@@ -871,61 +967,17 @@ Bedarf melden.
     **Content:** 
   ```
   {
-    "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000
-  }
-  ```
-  
-* **Error Response:**
-
-  * **Code:** 400 BAD REQUEST <br />
-    **Content:** `{ error : "..." }`
-
-  OR
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
-
-## Bedarf aktualisieren
-
-Bedarf aktualisieren.
-
-* **Request:**
-
-  `PUT /bedarf`
-
-* **URL Params**
-
-  None
-
-* **Data Params**
-
-  ```
-  {
-    "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000
-  }
-  ```
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** 
-  ```
-  {
-    "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000
+    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+    "artikelId": "12e79aaf-1edc-41b3-a83d-6b4f871dd5e3",
+    "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "anzahl": 10000,
+    "rest": 2000,
+    "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+    "standort": { "..." },
+    "steril": false,
+    "medizinisch": false,
+    "kommentar": "Wir brauchen 5000 Masken",
+    "entfernung": 25014
   }
   ```
   
@@ -981,7 +1033,109 @@ Bedarf löschen.
 * **Sample Call:**
 
   ```
-   curl -X DELETE http://localhost:7000/bedarf/b872561f-dab9-43c2-bec9-d4e3694a7ea1
+   curl -X DELETE http://localhost:7000/bedarf/5bc4f514-c591-470e-a056-933f3ea00421
+  ```
+
+## Bedarf bedienen
+
+Bedarf bedienen.
+
+* **Request:**
+
+  `POST /bedarf/{bedarfId}/anfrage`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `bedarfId=[UUID]`
+
+* **Data Params**
+
+  ```
+  {
+    "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
+    "anzahl": 3000,
+    "kommentar": "Wir haben 3000 Masken"
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+    "bedarf": { "..." },
+    "institutionVon": { "..." },
+    "standortVon": { "..." },
+    "anzahl": 3000,
+    "kommentar": "Wir brauchen 3000 Masken"
+    "prozessInstanzId": "...",
+    "status": "Offen"
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Bedarf nicht gefunden." }`
+
+* **Sample Call:**
+
+## Bedarf-Anfrage löschen
+
+Bedarf-Anfrage löschen.
+
+* **Request:**
+
+  `DELETE /bedarf/{bedarfId}/anfrage/{anfrageId}`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `bedarfId=[UUID]`
+   `anfrageId=[UUID]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Bedarf nicht gefunden." }`
+
+* **Sample Call:**
+
+  ```
+   curl -X DELETE http://localhost:7000/bedarf/5bc4f514-c591-470e-a056-933f3ea00421/anfrage/5bc4f514-c591-470e-a056-933f3ea00421
   ```
 
 # Institution

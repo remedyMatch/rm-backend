@@ -111,7 +111,6 @@ public class BedarfControllerMapperShould {
 				.steril(STERIL) //
 				.medizinisch(MEDIZINISCH) //
 				.kommentar(KOMMENTAR) //
-				.bedient(BEDIENT) //
 				.build();
 	}
 }

@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AngebotAnfrageRO {
+class AngebotAnfrageRO {
 
 	@NotNull
 	private UUID id;

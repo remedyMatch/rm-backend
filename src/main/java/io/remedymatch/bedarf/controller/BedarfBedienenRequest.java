@@ -5,18 +5,28 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Builder
 class BedarfBedienenRequest {
 
-    private String kommentar;
+	@NotNull
+	private UUID standortId;
+	
+	@NotNull
+	private BigDecimal anzahl;
 
-    @NotNull
-    private UUID standortId;
-
-    @NotNull
-    private BigDecimal anzahl;
+	private String kommentar;
 }

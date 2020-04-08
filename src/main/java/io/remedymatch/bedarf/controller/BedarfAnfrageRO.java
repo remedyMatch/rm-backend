@@ -7,8 +7,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 
+import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
+import io.remedymatch.institution.api.InstitutionDTO;
 import io.remedymatch.institution.api.InstitutionStandortDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,43 +26,32 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class BedarfRO {
+class BedarfAnfrageRO {
 
 	@NotNull
 	private UUID id;
 
 	@NotNull
 	@Valid
-	private UUID artikelId;
+	private BedarfRO bedarf;
 
 	@NotNull
 	@Valid
-	private UUID artikelVarianteId;
+	private InstitutionDTO institutionVon;
+
+	@NotNull
+	@Valid
+	private InstitutionStandortDTO standortVon;
 
 	@NotNull
 	@Positive
 	private BigDecimal anzahl;
 
-	@NotNull
-	@PositiveOrZero
-	private BigDecimal rest;
-
-	@NotNull
-	private UUID institutionId;
-
-	@NotNull
-	@Valid
-	private InstitutionStandortDTO standort;
-
-	private boolean steril;
-
-	private boolean medizinisch;
-
 	@NotBlank
 	private String kommentar;
 
-	@NotNull
-	@Positive
-	private BigDecimal entfernung;
+	private String prozessInstanzId;
 
+	@NotNull
+	private BedarfAnfrageStatus status;
 }

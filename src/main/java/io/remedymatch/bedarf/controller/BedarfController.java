@@ -1,5 +1,6 @@
 package io.remedymatch.bedarf.controller;
 
+import static io.remedymatch.bedarf.controller.BedarfControllerMapper.mapToAnfrageRO;
 import static io.remedymatch.bedarf.controller.BedarfControllerMapper.mapToBedarfRO;
 import static io.remedymatch.bedarf.controller.BedarfControllerMapper.mapToBedarfeRO;
 import static io.remedymatch.bedarf.controller.BedarfControllerMapper.mapToNeuesBedarf;
@@ -53,20 +54,8 @@ public class BedarfController {
 	}
 
 	@PostMapping
-	public ResponseEntity<BedarfRO> neueBedarfEinstellen(@RequestBody @Valid NeuesBedarfRequest neueBedarf) {
+	public ResponseEntity<BedarfRO> neuesBedarfMelden(@RequestBody @Valid NeuesBedarfRequest neueBedarf) {
 		return ResponseEntity.ok(mapToBedarfRO(bedarfAnlageService.neueBedarfEinstellen(mapToNeuesBedarf(neueBedarf))));
-	}
-
-	@PostMapping("/{bedarfId}/anfrage")
-	public ResponseEntity<Void> bedarfBedienen(//
-			@PathVariable("bedarfId") @NotNull UUID bedarfId, //
-			@RequestBody @Valid BedarfBedienenRequest request) {
-		bedarfService.bedarfAnfrageErstellen(//
-				BedarfControllerMapper.maptToBedarfId(bedarfId), //
-				new InstitutionStandortId(request.getStandortId()), //
-				request.getKommentar(), //
-				request.getAnzahl());
-		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/{bedarfId}")
@@ -83,10 +72,25 @@ public class BedarfController {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/anfrage/{anfrageId}")
-	public ResponseEntity<Void> anfrageStornieren(@PathVariable("anfrageId") String anfrageId) {
+	@PostMapping("/{bedarfId}/anfrage")
+	public ResponseEntity<BedarfAnfrageRO> bedarfBedienen(//
+			@PathVariable("bedarfId") @NotNull UUID bedarfId, //
+			@RequestBody @Valid BedarfBedienenRequest request) {
+		return ResponseEntity.ok(mapToAnfrageRO(bedarfService.bedarfAnfrageErstellen(//
+				BedarfControllerMapper.maptToBedarfId(bedarfId), //
+				new InstitutionStandortId(request.getStandortId()), //
+				request.getKommentar(), //
+				request.getAnzahl())));
+	}
+
+	@DeleteMapping("/{bedarfId}/anfrage/{anfrageId}")
+	public ResponseEntity<Void> anfrageStornieren(//
+			@PathVariable("bedarfId") @NotNull UUID bedarfId, //
+			@PathVariable("anfrageId") @NotNull UUID anfrageId) {
 		try {
-			bedarfService.bedarfAnfrageDerUserInstitutionLoeschen(new BedarfAnfrageId(UUID.fromString(anfrageId)));
+			bedarfService.bedarfAnfrageDerUserInstitutionLoeschen(//
+					BedarfControllerMapper.maptToBedarfId(bedarfId), //
+					new BedarfAnfrageId(anfrageId));
 		} catch (ObjectNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		} catch (NotUserInstitutionObjectException e) {

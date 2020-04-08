@@ -5,10 +5,20 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Builder
 class NeuesBedarfRequest {
 
@@ -30,6 +40,4 @@ class NeuesBedarfRequest {
 	private boolean steril;
 
 	private boolean medizinisch;
-
-	private boolean bedient;
 }

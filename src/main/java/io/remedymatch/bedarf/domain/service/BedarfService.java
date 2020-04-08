@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import io.remedymatch.artikel.domain.model.Artikel;
 import io.remedymatch.artikel.domain.service.ArtikelSucheService;
 import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
@@ -85,7 +84,7 @@ public class BedarfService {
 	}
 
 	@Transactional
-	public void bedarfAnfrageErstellen(//
+	public BedarfAnfrage bedarfAnfrageErstellen(//
 			final @NotNull @Valid BedarfId bedarfId, //
 			final @NotNull @Valid InstitutionStandortId standortId, //
 			final @NotBlank String kommentar, //
@@ -132,11 +131,13 @@ public class BedarfService {
 		val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().getValue().toString(),
 				variables);
 		anfrage.setProzessInstanzId(prozessInstanzId);
-		bedarfAnfrageRepository.update(anfrage);
+		return bedarfAnfrageRepository.update(anfrage);
 	}
 
 	@Transactional
-	public void bedarfAnfrageDerUserInstitutionLoeschen(final @NotNull @Valid BedarfAnfrageId anfrageId)
+	public void bedarfAnfrageDerUserInstitutionLoeschen(//
+			final @NotNull @Valid BedarfId bedarfId, //
+			final @NotNull @Valid BedarfAnfrageId anfrageId)
 			throws ObjectNotFoundException, NotUserInstitutionObjectException {
 		Optional<BedarfAnfrage> bedarfAnfrage = bedarfAnfrageRepository.get(anfrageId);
 		if (!bedarfAnfrage.isPresent()) {

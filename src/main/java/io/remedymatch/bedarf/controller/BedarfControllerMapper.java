@@ -7,12 +7,27 @@ import java.util.stream.Collectors;
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.bedarf.domain.model.Bedarf;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.domain.service.NeuesBedarf;
+import io.remedymatch.institution.api.InstitutionMapper;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 
 public class BedarfControllerMapper {
+
+	static BedarfAnfrageRO mapToAnfrageRO(final BedarfAnfrage bedarfAnfrage) {
+		return BedarfAnfrageRO.builder() //
+				.id(bedarfAnfrage.getId().getValue()) //
+				.bedarf(mapToBedarfRO(bedarfAnfrage.getBedarf())) //
+				.institutionVon(InstitutionMapper.mapToDTO(bedarfAnfrage.getInstitutionVon())) //
+				.standortVon(InstitutionStandortMapper.mapToDTO(bedarfAnfrage.getStandortVon())) //
+				.anzahl(bedarfAnfrage.getAnzahl()) //
+				.kommentar(bedarfAnfrage.getKommentar()) //
+				.prozessInstanzId(bedarfAnfrage.getProzessInstanzId()) //
+				.status(bedarfAnfrage.getStatus()) //
+				.build();
+	}
 
 	static List<BedarfRO> mapToBedarfeRO(final List<Bedarf> bedarfe) {
 		return bedarfe.stream().map(BedarfControllerMapper::mapToBedarfRO).collect(Collectors.toList());
@@ -30,7 +45,6 @@ public class BedarfControllerMapper {
 				.steril(bedarf.isSteril()) //
 				.medizinisch(bedarf.isMedizinisch()) //
 				.kommentar(bedarf.getKommentar()) //
-				.bedient(bedarf.isBedient()) //
 				.entfernung(bedarf.getEntfernung()) //
 				.build();
 	}

@@ -44,7 +44,7 @@ public class ArtikelVarianteEntity {
 	@Column(name = "VARIANTE", nullable = false, updatable = true, length = 64)
 	private String variante;
 
-	@Column(name = "NORM", nullable = true, updatable = true, length = 64)
+	@Column(name = "NORM", nullable = true, updatable = true, length = 1024)
 	private String norm;
 
 	@Column(name = "BESCHREIBUNG", nullable = false, updatable = true, length = 1024)

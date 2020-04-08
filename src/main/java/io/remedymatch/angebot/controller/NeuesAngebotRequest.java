@@ -31,6 +31,4 @@ class NeuesAngebotRequest {
     private boolean originalverpackt;
 
     private boolean medizinisch;
-
-    private boolean bedient;
 }

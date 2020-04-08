@@ -87,7 +87,9 @@ public class AngebotService {
 	}
 
 	@Transactional
-	public void angebotAnfrageDerUserInstitutionLoeschen(final @NotNull @Valid AngebotAnfrageId anfrageId)
+	public void angebotAnfrageDerUserInstitutionLoeschen(//
+			final @NotNull @Valid AngebotId angebotId, //
+			final @NotNull @Valid AngebotAnfrageId anfrageId)
 			throws ObjectNotFoundException, NotUserInstitutionObjectException {
 		Optional<AngebotAnfrage> angebotAnfrage = angebotAnfrageRepository.get(anfrageId);
 		if (!angebotAnfrage.isPresent()) {
@@ -101,7 +103,7 @@ public class AngebotService {
 		anfrageStornieren(anfrageId);
 	}
 
-	public void angebotAnfrageErstellen(//
+	public AngebotAnfrage angebotAnfrageErstellen(//
 			final @NotNull @Valid AngebotId angebotId, //
 			final @NotNull @Valid InstitutionStandortId standortId, //
 			final @NotBlank String kommentar, //
@@ -148,7 +150,7 @@ public class AngebotService {
 		val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().getValue().toString(),
 				variables);
 		anfrage.setProzessInstanzId(prozessInstanzId);
-		angebotAnfrageRepository.update(anfrage);
+		return angebotAnfrageRepository.update(anfrage);
 	}
 
 	@Transactional

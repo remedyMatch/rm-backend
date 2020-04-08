@@ -1,6 +1,9 @@
 package io.remedymatch.angebot.controller;
 
-import static io.remedymatch.angebot.controller.AngebotControllerMapper.*;
+import static io.remedymatch.angebot.controller.AngebotControllerMapper.mapToAnfrageRO;
+import static io.remedymatch.angebot.controller.AngebotControllerMapper.mapToAngebotRO;
+import static io.remedymatch.angebot.controller.AngebotControllerMapper.mapToAngeboteRO;
+import static io.remedymatch.angebot.controller.AngebotControllerMapper.mapToNeueAngebot;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,18 +59,6 @@ public class AngebotController {
 				.ok(mapToAngebotRO(angebotAnlageService.neueAngebotEinstellen(mapToNeueAngebot(neueAngebot))));
 	}
 
-	@PostMapping("/{angebotId}/anfrage")
-	public ResponseEntity<Void> angebotAnfragen(//
-			@PathVariable("angebotId") @NotNull UUID angebotId, //
-			@RequestBody @Valid AngebotAnfragenRequest request) {
-		angebotService.angebotAnfrageErstellen(//
-				AngebotControllerMapper.maptToAngebotId(request.getAngebotId()), //
-				new InstitutionStandortId(request.getStandortId()), //
-				request.getKommentar(), //
-				request.getAnzahl());
-		return ResponseEntity.ok().build();
-	}
-	
 	@DeleteMapping("/{angebotId}")
 	public ResponseEntity<Void> angebotLoeschen(//
 			@PathVariable("angebotId") @NotNull UUID angebotId) {
@@ -82,10 +73,25 @@ public class AngebotController {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/anfrage/{anfrageId}")
-	public ResponseEntity<Void> anfrageStornieren(@PathVariable("anfrageId") String anfrageId) {
+	@PostMapping("/{angebotId}/anfrage")
+	public ResponseEntity<AngebotAnfrageRO> angebotAnfragen(//
+			@PathVariable("angebotId") @NotNull UUID angebotId, //
+			@RequestBody @Valid AngebotAnfragenRequest request) {
+		return ResponseEntity.ok(mapToAnfrageRO(angebotService.angebotAnfrageErstellen(//
+				AngebotControllerMapper.maptToAngebotId(angebotId), //
+				new InstitutionStandortId(request.getStandortId()), //
+				request.getKommentar(), //
+				request.getAnzahl())));
+	}
+
+	@DeleteMapping("/{angebotId}/anfrage/{anfrageId}")
+	public ResponseEntity<Void> anfrageStornieren(//
+			@PathVariable("angebotId") @NotNull UUID angebotId, //
+			@PathVariable("anfrageId") @NotNull UUID anfrageId) {
 		try {
-			angebotService.angebotAnfrageDerUserInstitutionLoeschen(new AngebotAnfrageId(UUID.fromString(anfrageId)));
+			angebotService.angebotAnfrageDerUserInstitutionLoeschen(//
+					AngebotControllerMapper.maptToAngebotId(angebotId), //
+					new AngebotAnfrageId(anfrageId));
 		} catch (ObjectNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		} catch (NotUserInstitutionObjectException e) {

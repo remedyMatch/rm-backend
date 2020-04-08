@@ -14,9 +14,6 @@ import java.util.UUID;
 class AngebotAnfragenRequest {
 
 	@NotNull
-    private UUID angebotId;
-	
-	@NotNull
 	private UUID standortId;
     
     @NotNull

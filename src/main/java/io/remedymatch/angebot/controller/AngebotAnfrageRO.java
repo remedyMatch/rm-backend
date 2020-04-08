@@ -1,58 +1,47 @@
 package io.remedymatch.angebot.controller;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 
+import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
+import io.remedymatch.institution.api.InstitutionDTO;
 import io.remedymatch.institution.api.InstitutionStandortDTO;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class AngebotRO {
+public class AngebotAnfrageRO {
 
 	@NotNull
 	private UUID id;
 
 	@NotNull
 	@Valid
-	private UUID artikelVarianteId;
+	private AngebotRO angebot;
+
+	@NotNull
+	@Valid
+	private InstitutionDTO institutionVon;
+
+	@NotNull
+	@Valid
+	private InstitutionStandortDTO standortVon;
 
 	@NotNull
 	@Positive
 	private BigDecimal anzahl;
-	
-	@NotNull
-	@PositiveOrZero
-	private BigDecimal rest;
-	
-	@NotNull
-	private UUID institutionId;
 
-	@NotNull
-	@Valid
-	private InstitutionStandortDTO standort;
-	
-	@NotNull
-	private LocalDateTime haltbarkeit;
-
-	private boolean steril;
-
-	private boolean originalverpackt;
-
-	private boolean medizinisch;
-	
 	@NotBlank
 	private String kommentar;
 
+	private String prozessInstanzId;
+
 	@NotNull
-	@Positive
-	private BigDecimal entfernung;
+	private AngebotAnfrageStatus status;
 }

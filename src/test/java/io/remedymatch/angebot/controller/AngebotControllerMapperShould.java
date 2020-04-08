@@ -114,7 +114,6 @@ public class AngebotControllerMapperShould {
 				.originalverpackt(ORIGINALVERPACKT) //
 				.medizinisch(MEDIZINISCH) //
 				.kommentar(KOMMENTAR) //
-				.bedient(BEDIENT) //
 				.build();
 	}
 }

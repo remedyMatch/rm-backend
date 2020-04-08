@@ -12,9 +12,6 @@ import lombok.Data;
 @Builder
 class BedarfBedienenRequest {
 
-    @NotNull
-    private UUID bedarfId;
-
     private String kommentar;
 
     @NotNull

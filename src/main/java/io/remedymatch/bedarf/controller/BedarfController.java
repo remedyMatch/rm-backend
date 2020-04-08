@@ -62,7 +62,7 @@ public class BedarfController {
 			@PathVariable("bedarfId") @NotNull UUID bedarfId, //
 			@RequestBody @Valid BedarfBedienenRequest request) {
 		bedarfService.bedarfAnfrageErstellen(//
-				BedarfControllerMapper.maptToBedarfId(request.getBedarfId()), //
+				BedarfControllerMapper.maptToBedarfId(bedarfId), //
 				new InstitutionStandortId(request.getStandortId()), //
 				request.getKommentar(), //
 				request.getAnzahl());

@@ -5,13 +5,28 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.remedymatch.angebot.domain.model.Angebot;
+import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.domain.service.NeuesAngebot;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
+import io.remedymatch.institution.api.InstitutionMapper;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 
 class AngebotControllerMapper {
+
+	static AngebotAnfrageRO mapToAnfrageRO(final AngebotAnfrage angebotAnfrage) {
+		return AngebotAnfrageRO.builder() //
+				.id(angebotAnfrage.getId().getValue()) //
+				.angebot(mapToAngebotRO(angebotAnfrage.getAngebot())) //
+				.institutionVon(InstitutionMapper.mapToDTO(angebotAnfrage.getInstitutionVon())) //
+				.standortVon(InstitutionStandortMapper.mapToDTO(angebotAnfrage.getStandortVon())) //
+				.anzahl(angebotAnfrage.getAnzahl()) //
+				.kommentar(angebotAnfrage.getKommentar()) //
+				.prozessInstanzId(angebotAnfrage.getProzessInstanzId()) //
+				.status(angebotAnfrage.getStatus()) //
+				.build();
+	}
 
 	static List<AngebotRO> mapToAngeboteRO(final List<Angebot> angebote) {
 		return angebote.stream().map(AngebotControllerMapper::mapToAngebotRO).collect(Collectors.toList());
@@ -29,7 +44,6 @@ class AngebotControllerMapper {
 				.originalverpackt(angebot.isOriginalverpackt()) //
 				.medizinisch(angebot.isMedizinisch()) //
 				.kommentar(angebot.getKommentar()) //
-				.bedient(angebot.isBedient()) //
 				.entfernung(angebot.getEntfernung()) //
 				.build();
 	}

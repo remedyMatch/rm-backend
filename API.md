@@ -9,9 +9,75 @@ Beschreibung der Rest-API für:
 
 # Angebot
 
-## Alle Angebote laden
+## Übersicht
 
-Liefert alle aktuelle Angebote.
+* Alle nicht bediente Angebote laden
+** GET ../angebot/suche
+* Alle angebote meiner Institution laden
+** GET ../angebot
+* Neues Angebot einstellen
+** POST ../angebot
+* Angebot löschen
+** DELETE ../angebot/{angebotId}
+* Angebot anfragen
+** POST ../angebot/{angebotId}/anfrage
+* Angebot-Anfrage löschen
+** DELETE ../angebot/{angebotId}/anfrage/{anfrageId}
+
+## Alle aktuelle Angebote laden
+
+Liefert alle aktuelle (nicht bediente) Angebote.
+
+* **Request:**
+
+  `GET /angebot/suche`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+      "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+      "anzahl": 10000,
+      "rest": 2000,
+      "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+      "standort": { "..." },
+      "haltbarkeit": "2022-01-25T21:34:55",
+      "steril": false,
+      "originalverpackt": true,
+      "medizinisch": false,
+      "kommentar": "Wir haben 10000 Masken übrig",
+      "entfernung": 25014
+    },
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/angebot/suche
+  ```
+
+## Alle angebote meiner Institution laden
+
+Liefert alle aktuelle (nicht bediente) Angebote, die Personen aus meiner Institution gemeldet haben.
 
 * **Request:**
 
@@ -33,16 +99,17 @@ Liefert alle aktuelle Angebote.
   [
     {
       "id": "5bc4f514-c591-470e-a056-933f3ea00421",
-      "artikel": {
-        "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-      },
+      "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
       "anzahl": 10000,
-      "kommentar": "Wir haben 10000 Masken übrig",
-      "standort": "...",
+      "rest": 2000,
+      "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+      "standort": { "..." },
       "haltbarkeit": "2022-01-25T21:34:55",
       "steril": false,
       "originalverpackt": true,
-      "medizinisch": false
+      "medizinisch": false,
+      "kommentar": "Wir haben 10000 Masken übrig",
+      "entfernung": 25014
     },
     ...
   ]
@@ -59,9 +126,9 @@ Liefert alle aktuelle Angebote.
    curl -i -H 'Accept: application/json' http://localhost:7000/angebot
   ```
 
-## Angebot melden
+## Neues Angebot einstellen
 
-Angebot melden.
+Neues Angebot melden.
 
 * **Request:**
 
@@ -75,12 +142,10 @@ Angebot melden.
 
   ```
   {
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
+    "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
     "anzahl": 10000,
+    "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
     "kommentar": "Wir haben 10000 Masken übrig",
-    "standort": "...",
     "haltbarkeit": "2022-01-25T21:34:55",
     "steril": false,
     "originalverpackt": true,
@@ -95,78 +160,17 @@ Angebot melden.
   ```
   {
     "id": "5bc4f514-c591-470e-a056-933f3ea00421",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
+    "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
     "anzahl": 10000,
-    "kommentar": "Wir haben 10000 Masken übrig",
-    "standort": "...",
+    "rest": 2000,
+    "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+    "standort": { "..." },
     "haltbarkeit": "2022-01-25T21:34:55",
     "steril": false,
     "originalverpackt": true,
-    "medizinisch": false
-  }
-  ```
-  
-* **Error Response:**
-
-  * **Code:** 400 BAD REQUEST <br />
-    **Content:** `{ error : "..." }`
-
-  OR
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
-
-## Angebot aktualisieren
-
-Angebot aktualisieren.
-
-* **Request:**
-
-  `PUT /angebot`
-
-* **URL Params**
-
-  None
-
-* **Data Params**
-
-  ```
-  {
-    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000,
+    "medizinisch": false,
     "kommentar": "Wir haben 10000 Masken übrig",
-    "standort": "...",
-    "haltbarkeit": "2022-01-25T21:34:55",
-    "steril": false,
-    "originalverpackt": true,
-    "medizinisch": false
-  }
-  ```
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** 
-  ```
-  {
-    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000,
-    "kommentar": "Wir haben 10000 Masken übrig",
-    "standort": "...",
-    "haltbarkeit": "2022-01-25T21:34:55",
-    "steril": false,
-    "originalverpackt": true,
-    "medizinisch": false
+    "entfernung": 25014
   }
   ```
   
@@ -223,6 +227,110 @@ Angebot löschen.
 
   ```
    curl -X DELETE http://localhost:7000/angebot/5bc4f514-c591-470e-a056-933f3ea00421
+  ```
+
+## Angebot anfragen
+
+Angebot anfragen.
+
+* **Request:**
+
+  `POST /angebot/{angebotId}/anfrage`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `angebotId=[UUID]`
+
+* **Data Params**
+
+  ```
+  {
+    "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
+    "anzahl": 3000,
+    "kommentar": "Wir brauchen 3000 Masken"
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+    "angebot": { "..." },
+    "institutionVon": { "..." },
+    "standortVon": { "..." },
+    "anzahl": 3000,
+    "kommentar": "Wir brauchen 3000 Masken"
+    "anzahl": 3000,
+    "kommentar": "Wir brauchen 3000 Masken"
+    "prozessInstanzId": "...",
+    "status": "Offen"
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Angebot nicht gefunden." }`
+
+* **Sample Call:**
+
+## Angebot-Anfrage löschen
+
+Angebot-Anfrage löschen.
+
+* **Request:**
+
+  `DELETE /angebot/{angebotId}/anfrage/{anfrageId}`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `angebotId=[UUID]`
+   `anfrageId=[UUID]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Angebot nicht gefunden." }`
+
+* **Sample Call:**
+
+  ```
+   curl -X DELETE http://localhost:7000/angebot/5bc4f514-c591-470e-a056-933f3ea00421/anfrage/5bc4f514-c591-470e-a056-933f3ea00421
   ```
 
 # Artikel

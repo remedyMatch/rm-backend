@@ -11,12 +11,12 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
-import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageRepository;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageRepository;
+import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.geodaten.api.StandortService;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.user.domain.NotUserInstitutionObjectException;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
 import lombok.val;

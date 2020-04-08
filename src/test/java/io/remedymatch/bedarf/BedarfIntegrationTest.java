@@ -3,22 +3,13 @@ package io.remedymatch.bedarf;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.artikel.domain.ArtikelKategorieRepository;
-import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
-import io.remedymatch.bedarf.domain.BedarfRepository;
-import io.remedymatch.institution.domain.InstitutionRepository;
-import io.remedymatch.person.domain.PersonRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -30,26 +21,26 @@ import io.remedymatch.person.domain.PersonRepository;
 public class BedarfIntegrationTest {
     private MockMvc mockMvc;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    @Autowired
-    private BedarfRepository bedarfRepository;
-
-    @Autowired
-    private ArtikelJpaRepository artikelJpaRepository;
-
-    @Autowired
-    private InstitutionRepository institutionRepository;
-
-    @Autowired
-    private ArtikelKategorieRepository artikelKategorieRepository;
-
-    @Autowired
-    private PersonRepository personRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+//    @Autowired<>
+//    private WebApplicationContext webApplicationContext;
+//
+//    @Autowired
+//    private BedarfRepository bedarfRepository;
+//
+//    @Autowired
+//    private ArtikelJpaRepository artikelJpaRepository;
+//
+//    @Autowired
+//    private InstitutionRepository institutionRepository;
+//
+//    @Autowired
+//    private ArtikelKategorieRepository artikelKategorieRepository;
+//
+//    @Autowired
+//    private PersonRepository personRepository;
+//
+//    @Autowired
+//    private ObjectMapper objectMapper;
 
 //    @BeforeEach
 //    @Transactional

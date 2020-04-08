@@ -1,7 +1,7 @@
 package io.remedymatch.angebot.process;
 
-import io.remedymatch.angebot.domain.AngebotAnfrageId;
-import io.remedymatch.angebot.domain.AngebotService;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.service.AngebotService;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.match.api.MatchProzessConstants;
 import io.remedymatch.properties.RmBackendProperties;

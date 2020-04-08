@@ -37,11 +37,9 @@ public class BootstrapController {
 
         artikelJpaRepository.save(
                 ArtikelEntity.builder()
+                .artikelKategorie(kategorie.getId())
                 .name("beispiel")
-                .ean("beispiel-ean")
-                .hersteller("beispiel-hersteller")
                 .beschreibung("beispiel-beschreibung")
-                .artikelKategorie(kategorie)
                 .build()
         );
         logger.info( "Testdata created");

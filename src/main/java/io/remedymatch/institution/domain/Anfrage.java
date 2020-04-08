@@ -17,6 +17,7 @@ public class Anfrage {
     private UUID angebotId;
     private UUID bedarfId;
     private UUID artikelId;
+    private UUID artikelVarianteId;
     private BigDecimal anzahl;
     private String kommentar;
     private String prozessInstanzId;

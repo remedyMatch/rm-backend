@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import io.remedymatch.angebot.domain.AngebotAnfrageId;
-import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageRepository;
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;
@@ -25,11 +25,11 @@ public class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibung
         val anfrage = anfrageRepository.get(new AngebotAnfrageId(UUID.fromString(taskDTO.getObjektId())));
 
         var prefix = "Anfrage zu Angebot von ";
-        var artikel = anfrage.get().getAngebot().getArtikel();
+        var artikelVariante = anfrage.get().getAngebot().getArtikelVariante();
         var anzahl = anfrage.get().getAngebot().getAnzahl();
 
         beschreibung += anfrage.get().getInstitutionVon().getName() + ": " + prefix;
-        beschreibung += (int) anzahl.intValue() + " " + artikel.getName();
+        beschreibung += (int) anzahl.intValue() + " " + artikelVariante.getVariante();
 
         return beschreibung;
     }

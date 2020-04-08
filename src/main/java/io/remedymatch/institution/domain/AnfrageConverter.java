@@ -1,7 +1,7 @@
 package io.remedymatch.institution.domain;
 
-import io.remedymatch.angebot.domain.AngebotAnfrage;
-import io.remedymatch.bedarf.domain.BedarfAnfrage;
+import io.remedymatch.angebot.domain.model.AngebotAnfrage;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 
 class AnfrageConverter {
     static Anfrage convert(AngebotAnfrage angebotAnfrage) {
@@ -12,7 +12,8 @@ class AnfrageConverter {
                 .institutionVon(angebotAnfrage.getInstitutionVon()) //
                 .standortVon(angebotAnfrage.getStandortVon()) //
                 .angebotId(angebotAnfrage.getAngebot().getId().getValue()) //
-                .artikelId(angebotAnfrage.getAngebot().getArtikel().getId().getValue()) //
+                .artikelId(angebotAnfrage.getAngebot().getArtikelVariante().getArtikelId().getValue()) //
+                .artikelVarianteId(angebotAnfrage.getAngebot().getArtikelVariante().getId().getValue()) //
                 .anzahl(angebotAnfrage.getAnzahl()) //
                 .kommentar(angebotAnfrage.getKommentar()) //
                 .prozessInstanzId(angebotAnfrage.getProzessInstanzId()) //
@@ -30,6 +31,7 @@ class AnfrageConverter {
                 .bedarfId(bedarfAnfrage.getBedarf().getId().getValue()) //
                 .anzahl(bedarfAnfrage.getAnzahl()) //
                 .artikelId(bedarfAnfrage.getBedarf().getArtikel().getId().getValue()) //
+                .artikelVarianteId(bedarfAnfrage.getBedarf().getArtikelVariante().getId().getValue()) //
                 .kommentar(bedarfAnfrage.getKommentar()) //
                 .prozessInstanzId(bedarfAnfrage.getProzessInstanzId()) //
                 .status(bedarfAnfrage.getStatus().toString()) //

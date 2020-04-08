@@ -44,9 +44,7 @@ public class ArtikelJpaRepositoryInMemoryTestShould {
     private ArtikelEntity artikel(String name) {
         return ArtikelEntity.builder()
                 .name(name)
-                .ean("SAMPLE_EAN")
                 .beschreibung("Sample Beschreibung")
-                .hersteller("Egal")
                 .build();
     }
 }

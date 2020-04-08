@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,7 @@ import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Tag("InMemory")
+@Disabled
 @Tag("SpringBoot")
 public class ArtikelKategorieIntegrationTest {
 

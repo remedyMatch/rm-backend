@@ -5,9 +5,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import io.remedymatch.angebot.domain.AngebotAnfrageId;
-import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
-import io.remedymatch.angebot.domain.AngebotService;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.service.AngebotService;
 import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
 package io.remedymatch.match.domain;
 
-import io.remedymatch.angebot.domain.AngebotAnfrage;
-import io.remedymatch.bedarf.domain.BedarfAnfrage;
+import io.remedymatch.angebot.domain.model.AngebotAnfrage;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
@@ -28,6 +28,8 @@ public class MatchService {
         match.setStandortAn(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getBedarf().getStandort()));
         match.setAnfrageId(bedarfAnfrage.getId().getValue());
         match.setAritkelId(bedarfAnfrage.getBedarf().getArtikel().getId().getValue());
+        // FIXME
+        match.setAritkelId(bedarfAnfrage.getBedarf().getArtikelVariante().getId().getValue());
         match.setAnzahl(bedarfAnfrage.getAnzahl());
         match.setAnfrageTyp("Bedarf");
         match.setKommentar("");
@@ -49,7 +51,8 @@ public class MatchService {
         match.setInstitutionAn(angebotAnfrage.getInstitutionVon());
         match.setStandortAn(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandortVon()));
         match.setAnfrageId(angebotAnfrage.getId().getValue());
-        match.setAritkelId(angebotAnfrage.getAngebot().getArtikel().getId().getValue());
+        match.setAritkelId(angebotAnfrage.getAngebot().getArtikelVariante().getArtikelId().getValue());
+        match.setAritkelVarianteId(angebotAnfrage.getAngebot().getArtikelVariante().getId().getValue());
         match.setAnzahl(angebotAnfrage.getAnzahl());
         match.setAnfrageTyp("Angebot");
         match.setKommentar("");

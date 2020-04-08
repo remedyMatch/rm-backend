@@ -25,7 +25,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.TestApplication;
 import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
-import io.remedymatch.bedarf.domain.BedarfAnfrageStatus;
+import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
@@ -49,6 +50,7 @@ public class BedarfAnfrageJpaRepositoryShould {
 	private InstitutionStandortEntity meinStandort;
 	private ArtikelKategorieEntity beispielKategorieArtikel;
 	private ArtikelEntity beispielArtikel;
+	private ArtikelVarianteEntity beispielArtikelVariante;
 	private BedarfEntity beispielBedarf;
 
 	@BeforeEach
@@ -57,6 +59,7 @@ public class BedarfAnfrageJpaRepositoryShould {
 		meinStandort = persist(meinStandort());
 		beispielKategorieArtikel = persist(beispielArtikelKategorie());
 		beispielArtikel = persist(beispielArtikel());
+		beispielArtikelVariante = persist(beispielArtikelVariante());
 		beispielBedarf = persist(beispielBedarf());
 		entityManager.flush();
 	}
@@ -147,29 +150,37 @@ public class BedarfAnfrageJpaRepositoryShould {
 	private ArtikelKategorieEntity beispielArtikelKategorie() {
 		return ArtikelKategorieEntity.builder() //
 				.name("beispiel Kategorie") //
+				.icon("icon") //
 				.build();
 	}
 
 	private ArtikelEntity beispielArtikel() {
 		return ArtikelEntity.builder() //
-				.ean("EAN") //
+				.artikelKategorie(beispielKategorieArtikel.getId()) //
 				.name("egal") //
 				.beschreibung("beschreibung") //
-				.hersteller("hersteller") //
-				.artikelKategorie(beispielKategorieArtikel) //
+				.build();
+	}
+	
+	private ArtikelVarianteEntity beispielArtikelVariante() {
+		return ArtikelVarianteEntity.builder() //
+				.artikel(beispielArtikel.getId()) //
+				.variante("egal") //
+				.norm("egal") //
+				.beschreibung("beschreibung") //
 				.build();
 	}
 
 	private BedarfEntity beispielBedarf() {
 		return BedarfEntity.builder() //
 				.artikel(beispielArtikel) //
+				.artikelVariante(beispielArtikelVariante) //
 				.institution(meinKrankenhaus) //
 				.standort(meinStandort) //
 				.anzahl(BigDecimal.valueOf(100)) //
 				.rest(BigDecimal.valueOf(100)) //
 				.institution(meinKrankenhaus) //
 				.steril(true) //
-				.originalverpackt(true) //
 				.medizinisch(true) //
 				.kommentar("Bla bla") //
 				.bedient(false) //

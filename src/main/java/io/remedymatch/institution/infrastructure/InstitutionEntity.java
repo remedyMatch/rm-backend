@@ -2,6 +2,7 @@ package io.remedymatch.institution.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.springframework.util.Assert;
 
 import io.remedymatch.institution.domain.InstitutionTyp;
 import lombok.AllArgsConstructor;
@@ -63,4 +65,14 @@ public class InstitutionEntity {
     @OneToMany(fetch = FetchType.EAGER)
     @Builder.Default
     private List<InstitutionStandortEntity> standorte = new ArrayList<>();
+    
+    public Optional<InstitutionStandortEntity> findStandort(final UUID standortId) {
+    	Assert.notNull(standortId, "StandortId ist null.");
+		
+    	if (standortId.equals(hauptstandort.getId())) {
+    		return Optional.of(hauptstandort);
+    	}
+    	
+		return standorte.stream().filter(standort -> standortId.equals(standort.getId())).findAny();
+	}
 }

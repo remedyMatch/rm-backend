@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
-import io.remedymatch.bedarf.domain.BedarfAnfrageId;
-import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
-import io.remedymatch.bedarf.domain.BedarfService;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageRepository;
+import io.remedymatch.bedarf.domain.service.BedarfService;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;
 import lombok.val;

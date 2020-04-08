@@ -1,6 +1,7 @@
 package io.remedymatch.bedarf.infrastructure;
 
 import io.remedymatch.artikel.infrastructure.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import lombok.*;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +36,16 @@ public class BedarfEntity {
     @JoinColumn(name = "ARTIKEL_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private ArtikelEntity artikel;
 
+	@ManyToOne
+	@JoinColumn(name = "ARTIKEL_VARIANTE_UUID", referencedColumnName = "UUID", nullable = true, updatable = false)
+	private ArtikelVarianteEntity artikelVariante;
+    
+	@Column(name = "ANZAHL", nullable = false, updatable = false)
+	private BigDecimal anzahl;
+	
+	@Column(name = "REST", nullable = false, updatable = true)
+	private BigDecimal rest;
+	
     @ManyToOne
     @JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionEntity institution;
@@ -42,17 +54,8 @@ public class BedarfEntity {
     @JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionStandortEntity standort;
 
-    @Column(name = "ANZAHL", nullable = false, updatable = false)
-    private BigDecimal anzahl;
-
-    @Column(name = "REST", nullable = false, updatable = true)
-    private BigDecimal rest;
-
     @Column(name = "STERIL", nullable = false, updatable = false)
     private boolean steril;
-
-    @Column(name = "ORIGINALVERPACKT", nullable = false, updatable = false)
-    private boolean originalverpackt;
 
     @Column(name = "MEDIZINISCH", nullable = false, updatable = false)
     private boolean medizinisch;
@@ -67,5 +70,6 @@ public class BedarfEntity {
     private boolean deleted;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<BedarfAnfrageEntity> anfragen;
+	@Builder.Default
+    private List<BedarfAnfrageEntity> anfragen = new ArrayList<>();
 }

@@ -20,16 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.remedymatch.angebot.api.AngebotDTO;
-import io.remedymatch.angebot.api.AngebotMapper;
-import io.remedymatch.angebot.domain.AngebotService;
-import io.remedymatch.bedarf.api.BedarfDTO;
-import io.remedymatch.bedarf.api.BedarfMapper;
-import io.remedymatch.bedarf.domain.BedarfService;
+import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.InstitutionService;
 import io.remedymatch.institution.domain.InstitutionTyp;
-import io.remedymatch.user.domain.NotUserInstitutionObjectException;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -38,8 +32,6 @@ import lombok.val;
 @RequestMapping("/institution")
 public class InstitutionController {
 	private final InstitutionService institutionService;
-	private final AngebotService angebotService;
-	private final BedarfService bedarfService;
 
 	@PutMapping
 	public ResponseEntity<Void> update(@RequestBody InstitutionUpdateRequest institutionUpdate) {
@@ -80,22 +72,6 @@ public class InstitutionController {
 		val typen = Arrays.asList(InstitutionTyp.Krankenhaus, InstitutionTyp.Arzt, InstitutionTyp.Lieferant,
 				InstitutionTyp.Privat, InstitutionTyp.Andere);
 		return ResponseEntity.ok(typen.stream().map(InstitutionTyp::toString).collect(Collectors.toList()));
-	}
-
-	@GetMapping("/bedarf")
-	public ResponseEntity<List<BedarfDTO>> bedarfLaden() {
-		// FIXME: entfernen
-		return ResponseEntity.ok(bedarfService.getBedarfeDerUserInstitution().stream()//
-				.map(BedarfMapper::mapToDTO)//
-				.collect(Collectors.toList()));
-	}
-
-	@GetMapping("/angebot")
-	public ResponseEntity<List<AngebotDTO>> angebotLaden() {
-		// FIXME: entfernen
-		return ResponseEntity.ok(angebotService.getAngeboteDerUserInstitution().stream()//
-				.map(AngebotMapper::mapToDto)//
-				.collect(Collectors.toList()));
 	}
 
 	@GetMapping("/assigned")

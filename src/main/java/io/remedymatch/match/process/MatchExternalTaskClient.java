@@ -1,9 +1,9 @@
 package io.remedymatch.match.process;
 
-import io.remedymatch.angebot.domain.AngebotAnfrageId;
-import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
-import io.remedymatch.bedarf.domain.BedarfAnfrageId;
-import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageRepository;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageRepository;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.match.api.MatchProzessConstants;
 import io.remedymatch.match.domain.*;

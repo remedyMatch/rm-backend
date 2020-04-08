@@ -3,6 +3,7 @@ package io.remedymatch.bedarf.infrastructure;
 import io.remedymatch.TestApplication;
 import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
@@ -34,94 +35,102 @@ import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInA
 @DisplayName("BedarfJpaRepository InMemory Test soll")
 public class BedarfJpaRepositoryShould {
 
-    @Autowired
-    private EntityManager entityManager;
+	@Autowired
+	private EntityManager entityManager;
 
-    @Autowired
-    private BedarfJpaRepository jpaRepository;
+	@Autowired
+	private BedarfJpaRepository jpaRepository;
 
-    private InstitutionEntity meinKrankenhaus;
-    private InstitutionStandortEntity meinStandort;
-    private ArtikelKategorieEntity beispielKategorieArtikel;
-    private ArtikelEntity beispielArtikel;
+	private InstitutionEntity meinKrankenhaus;
+	private InstitutionStandortEntity meinStandort;
+	private ArtikelKategorieEntity beispielKategorieArtikel;
+	private ArtikelEntity beispielArtikel;
+	private ArtikelVarianteEntity beispielArtikelVariante;
 
-    @BeforeEach
-    private void prepare() {
-        meinKrankenhaus = persist(meinKrankenhaus());
-        meinStandort = persist(meinStandort());
-        beispielKategorieArtikel = persist(beispielArtikelKategorie());
-        beispielArtikel = persist(beispielArtikel());
-        entityManager.flush();
-    }
+	@BeforeEach
+	private void prepare() {
+		meinKrankenhaus = persist(meinKrankenhaus());
+		meinStandort = persist(meinStandort());
+		beispielKategorieArtikel = persist(beispielArtikelKategorie());
+		beispielArtikel = persist(beispielArtikel());
+		beispielArtikelVariante = persist(beispielArtikelVariante());
+		entityManager.flush();
+	}
 
-    @Rollback(true)
-    @Transactional
-    @Test
-    @DisplayName("alle nicht bediente Bedarfe zurueckliefern")
-    void alle_nicht_bediente_Bedarfe_zurueckliefern() {
-        BedarfEntity ersteBedarf = persist(bedarf(BigDecimal.valueOf(100)));
-        BedarfEntity zweiteBedarf = persist(bedarf(BigDecimal.valueOf(200)));
-        entityManager.flush();
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("alle nicht bediente Bedarfe zurueckliefern")
+	void alle_nicht_bediente_Bedarfe_zurueckliefern() {
+		BedarfEntity ersteBedarf = persist(bedarf(BigDecimal.valueOf(100)));
+		BedarfEntity zweiteBedarf = persist(bedarf(BigDecimal.valueOf(200)));
+		entityManager.flush();
 
-        assertThat(//
-                jpaRepository.findAllByDeletedFalseAndBedientFalse(), //
-                containsInAnyOrder(ersteBedarf, zweiteBedarf));
-    }
+		assertThat(//
+				jpaRepository.findAllByDeletedFalseAndBedientFalse(), //
+				containsInAnyOrder(ersteBedarf, zweiteBedarf));
+	}
 
-    /* help methods */
+	/* help methods */
 
-    public <E> E persist(E entity) {
-        entityManager.persist(entity);
-        return entity;
-    }
+	public <E> E persist(E entity) {
+		entityManager.persist(entity);
+		return entity;
+	}
 
-    private InstitutionEntity meinKrankenhaus() {
-        return InstitutionEntity.builder() //
-                .institutionKey("mein_krankenhaus") //
-                .name("Mein Krankenhaus") //
-                .typ(InstitutionTyp.Krankenhaus) //
-                .build();
-    }
+	private InstitutionEntity meinKrankenhaus() {
+		return InstitutionEntity.builder() //
+				.institutionKey("mein_krankenhaus") //
+				.name("Mein Krankenhaus") //
+				.typ(InstitutionTyp.Krankenhaus) //
+				.build();
+	}
 
-    private InstitutionStandortEntity meinStandort() {
-        return InstitutionStandortEntity.builder() //
-                .name("Mein Standort") //
-                .plz("PLZ") //
-                .ort("Ort") //
-                .strasse("Strasse") //
-                .land("Land") //
-                .build();
-    }
+	private InstitutionStandortEntity meinStandort() {
+		return InstitutionStandortEntity.builder() //
+				.name("Mein Standort") //
+				.plz("PLZ") //
+				.ort("Ort") //
+				.strasse("Strasse") //
+				.land("Land") //
+				.build();
+	}
 
-    private ArtikelKategorieEntity beispielArtikelKategorie() {
-        return ArtikelKategorieEntity.builder() //
-                .name("beispiel Kategorie") //
-                .build();
-    }
+	private ArtikelKategorieEntity beispielArtikelKategorie() {
+		return ArtikelKategorieEntity.builder() //
+				.name("beispiel Kategorie") //
+				.build();
+	}
 
-    private ArtikelEntity beispielArtikel() {
-        return ArtikelEntity.builder() //
-                .ean("EAN") //
-                .name("egal") //
-                .beschreibung("beschreibung") //
-                .hersteller("hersteller") //
-                .artikelKategorie(beispielKategorieArtikel) //
-                .build();
-    }
+	private ArtikelEntity beispielArtikel() {
+		return ArtikelEntity.builder() //
+				.name("egal") //
+				.beschreibung("beschreibung") //
+				.artikelKategorie(beispielKategorieArtikel.getId()) //
+				.build();
+	}
 
-    private BedarfEntity bedarf(//
-                                BigDecimal anzahl) {
-        return BedarfEntity.builder() //
-                .artikel(beispielArtikel) //
-                .institution(meinKrankenhaus) //
-                .standort(meinStandort) //
-                .anzahl(anzahl) //
-                .rest(anzahl) //
-                .steril(true) //
-                .originalverpackt(true) //
-                .medizinisch(true) //
-                .kommentar("Bla bla") //
-                .bedient(false) //
-                .build();
-    }
+	private ArtikelVarianteEntity beispielArtikelVariante() {
+		return ArtikelVarianteEntity.builder() //
+				.artikel(beispielArtikel.getId()) //
+				.variante("egal") //
+				.beschreibung("beschreibung") //
+				.build();
+	}
+
+	private BedarfEntity bedarf(//
+			BigDecimal anzahl) {
+		return BedarfEntity.builder() //
+				.artikel(beispielArtikel) //
+				.artikelVariante(beispielArtikelVariante) //
+				.institution(meinKrankenhaus) //
+				.standort(meinStandort) //
+				.anzahl(anzahl) //
+				.rest(anzahl) //
+				.steril(true) //
+				.medizinisch(true) //
+				.kommentar("Bla bla") //
+				.bedient(false) //
+				.build();
+	}
 }

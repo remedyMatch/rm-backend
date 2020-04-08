@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import io.remedymatch.bedarf.domain.BedarfAnfrageStatus;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
 
 
 public interface BedarfAnfrageJpaRepository extends JpaRepository<BedarfAnfrageEntity, UUID> {

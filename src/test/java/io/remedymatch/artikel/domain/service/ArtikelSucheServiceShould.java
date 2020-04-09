@@ -17,6 +17,7 @@ import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispiel
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -36,6 +37,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteJpaRepository;
+import io.remedymatch.domain.ObjectNotFoundException;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
@@ -151,8 +153,8 @@ class ArtikelSucheServiceShould {
 	}
 
 	@Test
-	@DisplayName("gesuchtes Artikel zurueckliefern")
-	void gesuchtes_Artikel_zurueckliefern() {
+	@DisplayName("gesuchtes Artikel finden")
+	void gesuchtes_Artikel_finden() {
 
 		val artikelId = beispielArtikelId();
 		val artikelEntity = beispielArtikelEntity();
@@ -168,7 +170,58 @@ class ArtikelSucheServiceShould {
 		then(artikelRepository).shouldHaveNoMoreInteractions();
 		then(artikelVarianteRepository).shouldHaveNoInteractions();
 	}
+	
+	@Test
+	@DisplayName("eine ObjectNotFoundException werfen wenn gesuchtes Artikel nicht existiert")
+	void eine_ObjectNotFoundException_werfen_wenn_gesuchtes_Artikel_nicht_existiert() {
+		assertThrows(ObjectNotFoundException.class, () -> sucheService.getArtikelOrElseThrow(beispielArtikelId()));
+	}
 
+	@Test
+	@DisplayName("gesuchtes Artikel zurueckliefern")
+	void gesuchtes_Artikel_zurueckliefern() {
+
+		val artikelId = beispielArtikelId();
+		val artikelEntity = beispielArtikelEntity();
+
+		given(artikelRepository.findById(artikelId.getValue())).willReturn(Optional.of(artikelEntity));
+
+		val expectedArtikel = beispielArtikel();
+
+		assertEquals(expectedArtikel, sucheService.getArtikelOrElseThrow(artikelId));
+
+		then(artikelKategorieRepository).shouldHaveNoInteractions();
+		then(artikelRepository).should().findById(artikelId.getValue());
+		then(artikelRepository).shouldHaveNoMoreInteractions();
+		then(artikelVarianteRepository).shouldHaveNoInteractions();
+	}
+	
+	@Test
+	@DisplayName("gesuchte Artikel Variante finden")
+	void gesuchte_Artikel_Variante_finen() {
+
+		val artikelVarianteId = beispielArtikelVarianteId();
+		val artikelVarianteEntity = beispielArtikelVarianteEntity();
+
+		given(artikelVarianteRepository.findById(artikelVarianteId.getValue()))
+				.willReturn(Optional.of(artikelVarianteEntity));
+
+		val expectedArtikelVariante = beispielArtikelVariante();
+
+		assertEquals(Optional.of(expectedArtikelVariante), sucheService.findArtikelVariante(artikelVarianteId));
+
+		then(artikelKategorieRepository).shouldHaveNoInteractions();
+		then(artikelRepository).shouldHaveNoInteractions();
+		then(artikelVarianteRepository).should().findById(artikelVarianteId.getValue());
+		then(artikelVarianteRepository).shouldHaveNoMoreInteractions();
+	}
+	
+	@Test
+	@DisplayName("eine ObjectNotFoundException werfen wenn gesuchtes Artikel Variante nicht existiert")
+	void eine_ObjectNotFoundException_werfen_wenn_gesuchtes_ArtikelVariante_nicht_existiert() {
+		assertThrows(ObjectNotFoundException.class, () -> sucheService.getArtikelVarianteOrElseThrow(beispielArtikelVarianteId()));
+	}
+	
 	@Test
 	@DisplayName("gesuchte Artikel Variante zurueckliefern")
 	void gesuchte_Artikel_Variante_zurueckliefern() {
@@ -181,7 +234,7 @@ class ArtikelSucheServiceShould {
 
 		val expectedArtikelVariante = beispielArtikelVariante();
 
-		assertEquals(Optional.of(expectedArtikelVariante), sucheService.findArtikelVariante(artikelVarianteId));
+		assertEquals(expectedArtikelVariante, sucheService.getArtikelVarianteOrElseThrow(artikelVarianteId));
 
 		then(artikelKategorieRepository).shouldHaveNoInteractions();
 		then(artikelRepository).shouldHaveNoInteractions();

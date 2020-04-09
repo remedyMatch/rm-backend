@@ -1,6 +1,10 @@
 package io.remedymatch.engine.client;
 
 import io.remedymatch.engine.TaskDTO;
+import io.remedymatch.engine.domain.BusinessKey;
+import io.remedymatch.engine.domain.MessageKey;
+import io.remedymatch.engine.domain.ProzessInstanzId;
+import io.remedymatch.engine.domain.ProzessKey;
 import io.remedymatch.engine.request.MessageKorrelierenRequest;
 import io.remedymatch.engine.request.ProzessStartRequest;
 import io.remedymatch.engine.request.TaskAbschliessenRequest;
@@ -9,83 +13,111 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
+
+import com.sun.istack.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 @AllArgsConstructor
 @Component
+@Validated
 public class EngineClient {
 
-    private final RmBackendProperties properties;
+	private final RmBackendProperties properties;
 
-    public TaskDTO ladeTask(String taskId, String institutionId) {
-        val restTemplate = new RestTemplate();
-        ResponseEntity<TaskDTO> taskResponse = restTemplate.getForEntity(properties.getEngineUrl() + "/restapi/task/" + institutionId + "/" + taskId, TaskDTO.class);
+	public ProzessInstanzId prozessStarten(//
+			final @NotNull @Valid ProzessKey prozessKey, //
+			final @NotNull @Valid BusinessKey businessKey, //
+			final @NotNull @Valid Map<String, Object> variables) {
 
-        if (taskResponse.getStatusCode().isError()) {
-            throw new RuntimeException("Beim laden des Task ist etwas fehlgeschlagen");
-        }
+		val request = ProzessStartRequest.builder().prozessKey(prozessKey.getValue()).variables(variables)
+				.businessKey(businessKey.getValue()).build();
 
-        val task = taskResponse.getBody();
-        return task;
-    }
+		val restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate
+				.postForEntity(properties.getEngineUrl() + "/restapi/prozess/start/", request, String.class);
 
-    public List<TaskDTO> ladeAlleTask(String institutionId) {
-        val restTemplate = new RestTemplate();
-        ResponseEntity<TaskDTO[]> taskResponse = restTemplate.getForEntity(properties.getEngineUrl() + "/restapi/task/institution/" + institutionId, TaskDTO[].class);
-        if (taskResponse.getStatusCode().isError()) {
-            throw new RuntimeException("Beim laden der Task ist etwas fehlgeschlagen");
-        }
-        val task = taskResponse.getBody();
-        return Arrays.asList(task);
-    }
+		if (response.getStatusCode().isError()) {
+			throw new RuntimeException("Beim Starten des Prozesses ist etwas fehlgeschlagen");
+		}
 
-    public void taskAbschliessen(String task, Map<String, Object> variables) {
+		return new ProzessInstanzId(response.getBody());
+	}
 
-        val request = TaskAbschliessenRequest.builder().variables(variables).build();
-        val restTemplate = new RestTemplate();
-        ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/task/" + task, request, Void.class);
+	public TaskDTO ladeTask(String taskId, String institutionId) {
+		val restTemplate = new RestTemplate();
+		ResponseEntity<TaskDTO> taskResponse = restTemplate.getForEntity(
+				properties.getEngineUrl() + "/restapi/task/" + institutionId + "/" + taskId, TaskDTO.class);
 
-        if (response.getStatusCode().isError()) {
-            throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
-        }
-    }
+		if (taskResponse.getStatusCode().isError()) {
+			throw new RuntimeException("Beim laden des Task ist etwas fehlgeschlagen");
+		}
 
-    public String prozessStarten(String prozessKey, String businessKey, Map<String, Object> variables) {
+		val task = taskResponse.getBody();
+		return task;
+	}
 
-        val request = ProzessStartRequest.builder()
-                .prozessKey(prozessKey)
-                .variables(variables)
-                .businessKey(businessKey)
-                .build();
+	public List<TaskDTO> ladeAlleTask(String institutionId) {
+		val restTemplate = new RestTemplate();
+		ResponseEntity<TaskDTO[]> taskResponse = restTemplate.getForEntity(
+				properties.getEngineUrl() + "/restapi/task/institution/" + institutionId, TaskDTO[].class);
+		if (taskResponse.getStatusCode().isError()) {
+			throw new RuntimeException("Beim laden der Task ist etwas fehlgeschlagen");
+		}
+		val task = taskResponse.getBody();
+		return Arrays.asList(task);
+	}
 
-        val restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/prozess/start/", request, String.class);
+	public void taskAbschliessen(String task, Map<String, Object> variables) {
 
-        if (response.getStatusCode().isError()) {
-            throw new RuntimeException("Beim Starten des Prozesses ist etwas fehlgeschlagen");
-        }
+		val request = TaskAbschliessenRequest.builder().variables(variables).build();
+		val restTemplate = new RestTemplate();
+		ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/task/" + task,
+				request, Void.class);
 
-        return response.getBody();
-    }
+		if (response.getStatusCode().isError()) {
+			throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
+		}
+	}
 
-    public void messageKorrelieren(String prozessInstanzId, String messageKey, Map<String, Object> variables) {
+	public void messageKorrelieren(//
+			final @NotNull @Valid ProzessKey prozessKey, //
+			final @NotNull @Valid MessageKey messageKey, //
+			final @NotNull @Valid Map<String, Object> variables) {
+		val request = MessageKorrelierenRequest.builder()//
+				// FIXME prozessKey
+//				.prozessInstanzId(prozessInstanzId) //
+				.messageKey(messageKey.getValue()) //
+				.variables(variables)//
+				.build();
 
-        val request = MessageKorrelierenRequest.builder()
-                .prozessInstanzId(prozessInstanzId)
-                .messageKey(messageKey)
-                .variables(variables)
-                .build();
+		ResponseEntity<Void> response = new RestTemplate()
+				.postForEntity(properties.getEngineUrl() + "/restapi/message/korrelieren/", request, Void.class);
 
-        val restTemplate = new RestTemplate();
-        ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/message/korrelieren/", request, Void.class);
+		if (response.getStatusCode().isError()) {
+			throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
+		}
+	}
 
-        if (response.getStatusCode().isError()) {
-            throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
-        }
-    }
+	public void messageKorrelieren(ProzessInstanzId prozessInstanzId, String messageKey,
+			Map<String, Object> variables) {
+
+		val request = MessageKorrelierenRequest.builder().prozessInstanzId(prozessInstanzId.getValue()).messageKey(messageKey)
+				.variables(variables).build();
+
+		val restTemplate = new RestTemplate();
+		ResponseEntity<Void> response = restTemplate
+				.postForEntity(properties.getEngineUrl() + "/restapi/message/korrelieren/", request, Void.class);
+
+		if (response.getStatusCode().isError()) {
+			throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
+		}
+	}
 
 }

@@ -31,6 +31,7 @@ import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.InstitutionStandortId;
@@ -97,10 +98,10 @@ public class BedarfAnlageService {
 
 		anfrage.setProzessInstanzId(engineClient.prozessStarten(//
 				PROZESS_KEY, //
-				anfrageId.toString(), //
+				new BusinessKey(anfrageId.toString()), //
 				Variables.createVariables()//
 						.putValue("institution", bedarf.getInstitution().getId().toString()) //
-						.putValue("objektId", anfrageId.toString())));
+						.putValue("objektId", anfrageId.toString())).getValue());
 
 		bedarfAnfrageRepository.save(anfrage);
 		return BedarfAnfrageEntityConverter.convertAnfrage(anfrage);

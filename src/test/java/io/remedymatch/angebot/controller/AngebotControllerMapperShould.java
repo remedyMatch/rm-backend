@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.AngebotId;
-import io.remedymatch.angebot.domain.service.NeuesAngebot;
+import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.institution.api.InstitutionStandortDTO;

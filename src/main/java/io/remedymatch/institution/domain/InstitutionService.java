@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import io.remedymatch.angebot.domain.service.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
@@ -32,15 +32,14 @@ public class InstitutionService {
 	private final InstitutionStandortRepository institutionStandortRepository;
 	private final StandortService standortService;
 	private final UserService userService;
-	private final AngebotAnfrageRepository angebotAnfrageRepository;
+	private final AngebotAnfrageSucheService angebotAnfrageSucheService;
 	private final BedarfAnfrageRepository bedarfAnfrageRepository;
 	private final GeoCalcService geoCalcService;
-	
-	public Institution userInstitutionLaden()
-	{
+
+	public Institution userInstitutionLaden() {
 		return userService.getContextInstitution();
 	}
-	
+
 	public Institution userInstitutionAktualisieren(//
 			final @NotNull @Valid InstitutionId institutionId, //
 			final @NotBlank String name, //
@@ -75,7 +74,7 @@ public class InstitutionService {
 		userInstitution.getStandorte().add(aktualisierteStandort);
 		return institutionRepository.update(userInstitution);
 	}
-	
+
 	public Institution userInstitutionStandortEntfernen(//
 			final @NotNull @Valid InstitutionStandortId standortId) {
 		val userInstitution = userService.getContextInstitution();
@@ -92,33 +91,31 @@ public class InstitutionService {
 		institutionStandortRepository.delete(standort.get().getId());
 		return inst;
 	}
-	
-	public List<Anfrage> getGestellteUserInstitutionAnfragen()
-	{
+
+	public List<Anfrage> getGestellteUserInstitutionAnfragen() {
 		val userInstitutionId = userService.getContextInstitution().getId();
 
-		val angebotAnfragen = angebotAnfrageRepository.getAnfragenFuerInstitutionVon(userInstitutionId);
+		val angebotAnfragen = angebotAnfrageSucheService.findAlleAnfragenDerInstitution(userInstitutionId);
 		val bedarfAnfragen = bedarfAnfrageRepository.getAnfragenFuerInstitutionVon(userInstitutionId);
 		val anfragen = angebotAnfragen.stream().map(AnfrageConverter::convert).collect(Collectors.toList());
 		anfragen.addAll(bedarfAnfragen.stream().map(AnfrageConverter::convert).collect(Collectors.toList()));
 
 		return mitEntfernung(anfragen);
 	}
-	
-	public List<Anfrage> getErhalteneUserInstitutionAnfragen()
-	{
+
+	public List<Anfrage> getErhalteneUserInstitutionAnfragen() {
 		val userInstitutionId = userService.getContextInstitution().getId();
 
-		val angebotAnfragen = angebotAnfrageRepository.getAnfragenFuerInstitutionAn(userInstitutionId);
+		val angebotAnfragen = angebotAnfrageSucheService.findAlleAnfragenDerAngebotInstitution(userInstitutionId);
 		val bedarfAnfragen = bedarfAnfrageRepository.getAnfragenFuerInstitutionAn(userInstitutionId);
 		val anfragen = angebotAnfragen.stream().map(AnfrageConverter::convert).collect(Collectors.toList());
 		anfragen.addAll(bedarfAnfragen.stream().map(AnfrageConverter::convert).collect(Collectors.toList()));
 
 		return mitEntfernung(anfragen);
 	}
-	
+
 	/* help methods */
-	
+
 	private InstitutionStandort standortSpeichern(final InstitutionStandort standort) {
 		var longlatList = standortService.findePointsByAdressString(standort.getAdresse());
 
@@ -131,7 +128,7 @@ public class InstitutionService {
 
 		return institutionStandortRepository.update(standort);
 	}
-	
+
 	private List<Anfrage> mitEntfernung(final List<Anfrage> anfragen) {
 		anfragen.forEach(anfrage -> anfrage.setEntfernung(geoCalcService.berechneDistanzInKilometer(//
 				anfrage.getStandortVon(), //

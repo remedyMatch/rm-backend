@@ -31,6 +31,7 @@ import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
@@ -70,10 +71,8 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@Test
 	@DisplayName("alle Anfragen fuer InstitutionAn Id zurueckliefern")
 	void alle_Anfragen_fuer_InstitutionAnId_zurueckliefern() {
-		AngebotAnfrageEntity ersteAnfrage = persist(
-				angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(100)));
-		AngebotAnfrageEntity zweiteAnfrage = persist(
-				angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(200)));
+		val ersteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(100)));
+		val zweiteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
 		assertThat(//
@@ -86,10 +85,8 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@Test
 	@DisplayName("alle Anfragen fuer InstitutionVon Id zurueckliefern")
 	void alle_Anfragen_fuer_InstitutionVon_Id_zurueckliefern() {
-		AngebotAnfrageEntity ersteAnfrage = persist(
-				angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
-		AngebotAnfrageEntity zweiteAnfrage = persist(
-				angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
+		val ersteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
+		val zweiteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
 		entityManager.flush();
 
 		assertThat(//
@@ -100,12 +97,24 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@Rollback(true)
 	@Transactional
 	@Test
+	@DisplayName("Offene Anfrage fuer AngebotId und AnfrageId zurueckliefern")
+	void offene_Anfrage_fuer_AngebotId_und_AnfrageId_zurueckliefern() {
+		val anfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
+		entityManager.flush();
+
+		assertEquals(Optional.of(anfrage), jpaRepository.findByAngebotIdAndAnfrageIdAndStatusOffen(//
+				beispielAngebot.getId(), //
+				anfrage.getId()));
+	}
+
+	@Rollback(true)
+	@Transactional
+	@Test
 	@DisplayName("Status der Anfragen aktualisieren")
 	void status_der_Anfragen_aktualisieren() {
-		AngebotAnfrageEntity ersteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Offen));
-		AngebotAnfrageEntity zweiteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Offen));
-		AngebotAnfrageEntity dritteAnfrageStorniert = persist(
-				angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Angenommen));
+		val ersteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Offen));
+		val zweiteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Offen));
+		val dritteAnfrageStorniert = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Angenommen));
 		entityManager.flush();
 
 		assertEquals(Optional.of(ersteOffeneAnfrage), jpaRepository.findById(ersteOffeneAnfrage.getId()));

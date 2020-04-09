@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.domain.service;
+package io.remedymatch.angebot.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

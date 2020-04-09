@@ -8,8 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
-import io.remedymatch.angebot.domain.service.AngebotAnfrageConverterFixtures;
-import io.remedymatch.angebot.domain.service.AngebotConverterFixtures;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures;
+import io.remedymatch.angebot.domain.service.AngebotTestFixtures;
 import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageConverterFixtures;
@@ -32,23 +32,23 @@ public class AnfrageConverterShould {
 	}
 
 	private AngebotAnfrage angebotAnfrage() {
-		return AngebotAnfrageConverterFixtures.beispielAngebotAnfrage();
+		return AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
 	}
 
 	private Anfrage anfrageAusAngebot() {
 		return Anfrage.builder() //
-				.id(AngebotAnfrageConverterFixtures.ANGEBOT_ANFRAGE_ID.getValue()) //
-				.angebotId(AngebotConverterFixtures.ANGEBOT_ID.getValue()) //
-				.artikelId(ArtikelTestFixtures.ARTIKEL_ID.getValue())//
-				.artikelVarianteId(ArtikelTestFixtures.ARTIKEL_VARIANTE_1_ID.getValue())//
-				.institutionAn(AngebotConverterFixtures.INSTITUTION) //
-				.standortAn(AngebotConverterFixtures.STANDORT) //
-				.institutionVon(AngebotAnfrageConverterFixtures.INSTITUTION_VON) //
-				.standortVon(AngebotAnfrageConverterFixtures.STANDORT_VON) //
-				.anzahl(AngebotAnfrageConverterFixtures.ANZAHL) //
-				.kommentar(AngebotAnfrageConverterFixtures.KOMMENTAR) //
-				.prozessInstanzId(AngebotAnfrageConverterFixtures.PROZESSINSTANZ_ID) //
-				.status(AngebotAnfrageConverterFixtures.STATUS.toString()) //
+				.id(AngebotAnfrageTestFixtures.beispielAngebotAnfrageId().getValue()) //
+				.angebotId(AngebotTestFixtures.ANGEBOT_ID.getValue()) //
+				.artikelId(AngebotTestFixtures.ANGEBOT_ARTIKEL_VARIANTE.getArtikelId().getValue())//
+				.artikelVarianteId(AngebotTestFixtures.ANGEBOT_ARTIKEL_VARIANTE.getId().getValue())//
+				.institutionAn(AngebotTestFixtures.ANGEBOT_INSTITUTION) //
+				.standortAn(AngebotTestFixtures.ANGEBOT_STANDORT) //
+				.institutionVon(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_INSTITUTION) //
+				.standortVon(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_STANDORT) //
+				.anzahl(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_ANZAHL) //
+				.kommentar(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_KOMMENTAR) //
+				.prozessInstanzId(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_PROZESSINSTANZ_ID) //
+				.status(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_STATUS.toString()) //
 				.build();
 	}
 

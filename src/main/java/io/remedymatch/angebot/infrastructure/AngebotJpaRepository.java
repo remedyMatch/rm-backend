@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface AngebotJpaRepository extends JpaRepository<AngebotEntity, UUID> {
     List<AngebotEntity> findAllByDeletedFalseAndBedientFalse();
 
-    List<AngebotEntity> findAllByDeletedFalseAndInstitution_Id(UUID id);
+    List<AngebotEntity> findAllByDeletedFalseAndBedientFalseAndInstitution_Id(UUID id);
 }

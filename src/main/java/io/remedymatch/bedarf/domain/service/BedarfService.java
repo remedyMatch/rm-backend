@@ -24,6 +24,7 @@ import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.InstitutionStandort;
 import io.remedymatch.institution.domain.InstitutionStandortId;
@@ -128,9 +129,9 @@ public class BedarfService {
 		variables.put("institution", bedarf.get().getInstitution().getId().getValue().toString());
 		variables.put("objektId", anfrage.getId().getValue().toString());
 
-		val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().getValue().toString(),
+		val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, new BusinessKey(anfrage.getId().getValue().toString()),
 				variables);
-		anfrage.setProzessInstanzId(prozessInstanzId);
+		anfrage.setProzessInstanzId(prozessInstanzId.getValue());
 		return bedarfAnfrageRepository.update(anfrage);
 	}
 

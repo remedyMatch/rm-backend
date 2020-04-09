@@ -3,6 +3,7 @@ package io.remedymatch.angebot.process;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.service.AngebotService;
 import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.match.api.MatchProzessConstants;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,7 @@ public class AngebotExternalTaskClient {
                     variables.put("anfrageTyp", MatchProzessConstants.ANFRAGE_TYP_ANGEBOT);
                     variables.put("anfrageId", anfrageId);
 
-                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, anfrageId, variables);
+                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, new BusinessKey(anfrageId), variables);
                     externalTaskService.complete(externalTask, variables);
 
                 }).open();

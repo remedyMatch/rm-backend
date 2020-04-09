@@ -49,14 +49,14 @@ public class AngebotJpaRepositoryShould {
 	private ArtikelVarianteEntity beispielArtikelVariante;
 
 	@BeforeEach
-    private void prepare() {
-        meinKrankenhaus = persist(meinKrankenhaus());
-        meinStandort = persist(meinStandort());
-        beispielKategorieArtikel = persist(beispielArtikelKategorie());
-        beispielArtikel = persist(beispielArtikel());
-        beispielArtikelVariante = persist(beispielArtikelVariante());
-        entityManager.flush();
-    }
+	private void prepare() {
+		meinKrankenhaus = persist(meinKrankenhaus());
+		meinStandort = persist(meinStandort());
+		beispielKategorieArtikel = persist(beispielArtikelKategorie());
+		beispielArtikel = persist(beispielArtikel());
+		beispielArtikelVariante = persist(beispielArtikelVariante());
+		entityManager.flush();
+	}
 
 	@Rollback(true)
 	@Transactional
@@ -68,6 +68,19 @@ public class AngebotJpaRepositoryShould {
 		entityManager.flush();
 
 		assertEquals(Arrays.asList(ersteAngebot, zweiteAngebot), jpaRepository.findAllByDeletedFalseAndBedientFalse());
+	}
+
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("alle nicht bediente Angebote einer Institution zurueckliefern")
+	void alle_nicht_bediente_Angebote_einer_Institution_zurueckliefern() {
+		AngebotEntity ersteAngebot = persist(angebot(BigDecimal.valueOf(100)));
+		AngebotEntity zweiteAngebot = persist(angebot(BigDecimal.valueOf(200)));
+		entityManager.flush();
+
+		assertEquals(Arrays.asList(ersteAngebot, zweiteAngebot),
+				jpaRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(meinKrankenhaus.getId()));
 	}
 
 	/* help methods */

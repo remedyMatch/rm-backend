@@ -26,15 +26,15 @@ public class AngebotSucheService {
 	private final GeoCalcService geoCalcService;
 
 	@Transactional(readOnly = true)
-	public List<Angebot> getAlleNichtBedienteAngebote() {
+	public List<Angebot> findAlleNichtBedienteAngebote() {
 		return mitEntfernung(angebotRepository.findAllByDeletedFalseAndBedientFalse());
 	}
 
 	@Transactional(readOnly = true)
-	public List<Angebot> getAngeboteDerUserInstitution() {
+	public List<Angebot> findAlleNichtBedienteAngeboteDerUserInstitution() {
 		val userInstitution = userService.getContextInstitution();
 		return mitEntfernung(
-				angebotRepository.findAllByDeletedFalseAndInstitution_Id(userInstitution.getId().getValue()));
+				angebotRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userInstitution.getId().getValue()));
 	}
 
 	private List<Angebot> mitEntfernung(final List<AngebotEntity> angebote) {
@@ -42,7 +42,7 @@ public class AngebotSucheService {
 	}
 
 	private Angebot mitEntfernung(final AngebotEntity angebot) {
-		val convertedAngebot = AngebotEntityConverter.convert(angebot);
+		val convertedAngebot = AngebotEntityConverter.convertAngebot(angebot);
 		convertedAngebot.setEntfernung(geoCalcService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
 		return convertedAngebot;
 	}

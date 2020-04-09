@@ -1,11 +1,6 @@
 package io.remedymatch.angebot.domain.service;
 
-import static io.remedymatch.angebot.process.AngebotAnfrageProzessConstants.PROZESS_KEY;
-
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -13,21 +8,25 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
-import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
 import io.remedymatch.angebot.domain.model.AngebotId;
-import io.remedymatch.artikel.domain.service.ArtikelSucheService;
+import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
+import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
+import io.remedymatch.angebot.infrastructure.AngebotEntity;
+import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.domain.OperationNotAlloudException;
+import io.remedymatch.institution.domain.InstitutionEntityConverter;
+import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionStandortId;
-import io.remedymatch.institution.domain.InstitutionStandortRepository;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -35,219 +34,215 @@ import lombok.val;
 @AllArgsConstructor
 @Validated
 @Service
+@Transactional
 public class AngebotService {
-	private static final String EXCEPTION_MSG_ANGEBOT_NICHT_GEFUNDEN = "Angebot fuer diese Id nicht gefunden: %s";
+
+	private static final String EXCEPTION_MSG_ANGEBOT_NICHT_GEFUNDEN = "Angebot mit diesem Id nicht gefunden. (Id: %s)";
+	private static final String EXCEPTION_MSG_ANGEBOT_BEDIEN = "Angebot bereits bedient.";
 	private static final String EXCEPTION_MSG_ANGEBOT_NICHT_VON_USER_INSTITUTION = "Angebot gehoert nicht der Institution des angemeldetes Benutzers.";
 
-	private static final String EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_GEFUNDEN = "AngebotAnfrage fuer diese Id nicht gefunden: %s";
+	private static final String EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_GEFUNDEN = "AngebotAnfrage mit diesem Id nicht gefunden. (Id: %s)";
+	private static final String EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_IN_ANGEBOT = "AngebotAnfrage gehört nicht zu dieser Angebot. (AngebotId: %s, AnfrageId: $s)";
+	private static final String EXCEPTION_MSG_ANGEBOT_ANFRAGE_GESCHLOSSEN = "AngebotAnfrage ist bereits erledigt. (Status: %s)";
+
+	private static final String EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION = "Standort gehoert nicht der Institution des angemeldetes Benutzers. (Id: %s)";
+
 	private static final String EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_VON_USER_INSTITUTION = "AngebotAnfrage gehoert nicht der Institution des angemeldetes Benutzers.";
 
+	private final AngebotJpaRepository angebotRepository;
+	private final AngebotAnfrageJpaRepository anfrageRepository;
+
 	private final UserService userService;
-	private final ArtikelSucheService artikelSucheService;
-	private final InstitutionStandortRepository institutionStandortRepository;
-
-	private final AngebotRepository angebotRepository;
-	private final AngebotAnfrageRepository angebotAnfrageRepository;
-	private final GeoCalcService geoCalcService;
-	private final EngineClient engineClient;
-
-//	@Transactional(readOnly = true)
-//	public List<Angebot> getAlleNichtBedienteAngebote() {
-//		return mitEntfernung(//
-//				angebotRepository.getAlleNichtBedienteAngebote(), //
-//				userService.getContextInstitution().getHauptstandort());
-//	}
-//
-//	@Transactional(readOnly = true)
-//	public List<Angebot> getAngeboteDerUserInstitution() {
-//		val userInstitution = userService.getContextInstitution();
-//		return mitEntfernung(//
-//				angebotRepository.getAngeboteVonInstitution(userInstitution.getId()), //
-//				userInstitution.getHauptstandort());
-//	}
+	private final AngebotAnfrageProzessService anfrageProzessService;
 
 	@Transactional
-	public void angebotDerUserInstitutionLoeschen(final @NotNull @Valid AngebotId angebotId)
-			throws ObjectNotFoundException, NotUserInstitutionObjectException {
-		Optional<Angebot> angebot = angebotRepository.get(angebotId);
-		if (angebot.isEmpty()) {
-			throw new ObjectNotFoundException(String.format(EXCEPTION_MSG_ANGEBOT_NICHT_GEFUNDEN, angebotId));
-		}
+	public void angebotDerUserInstitutionLoeschen(final @NotNull @Valid AngebotId angebotId) {
 
-		if (!userService.isUserContextInstitution(angebot.get().getInstitution().getId())) {
-			throw new NotUserInstitutionObjectException(EXCEPTION_MSG_ANGEBOT_NICHT_VON_USER_INSTITUTION);
-		}
+		val angebot = getNichtBedienteAngebotDerUserInstitution(angebotId);
 
 		// Alle laufende Anfragen stornieren
-		angebotAnfrageRepository.storniereAlleOffeneAnfragen(angebotId);
+		anfrageRepository.updateStatus(angebotId.getValue(), AngebotAnfrageStatus.Offen,
+				AngebotAnfrageStatus.Storniert);
 
-		// TODO Auch Prozesse beenden
+		// Prozesse stornieren
+		anfrageProzessService.prozesseStornieren(angebotId);
 
-		angebotRepository.delete(angebotId);
+		angebot.setDeleted(true);
+		angebotRepository.save(angebot);
 	}
 
 	@Transactional
-	public void angebotAnfrageDerUserInstitutionLoeschen(//
-			final @NotNull @Valid AngebotId angebotId, //
-			final @NotNull @Valid AngebotAnfrageId anfrageId)
-			throws ObjectNotFoundException, NotUserInstitutionObjectException {
-		Optional<AngebotAnfrage> angebotAnfrage = angebotAnfrageRepository.get(anfrageId);
-		if (!angebotAnfrage.isPresent()) {
-			throw new ObjectNotFoundException(String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_GEFUNDEN, anfrageId));
-		}
-
-		if (!userService.isUserContextInstitution(angebotAnfrage.get().getInstitutionVon().getId())) {
-			throw new NotUserInstitutionObjectException(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_VON_USER_INSTITUTION);
-		}
-
-		anfrageStornieren(anfrageId);
-	}
-
 	public AngebotAnfrage angebotAnfrageErstellen(//
 			final @NotNull @Valid AngebotId angebotId, //
 			final @NotNull @Valid InstitutionStandortId standortId, //
 			final @NotBlank String kommentar, //
 			final @NotNull BigDecimal anzahl) {
-		val angebot = angebotRepository.get(angebotId);
 
-		if (angebot.isEmpty()) {
-			throw new IllegalArgumentException("Angebot ist nicht vorhanden");
-		}
+		val angebot = getNichtBedienteAngebot(angebotId);
+		val userInstitution = getUserInstitution();
 
-		InstitutionStandort standort = null;
-
-		val userInstitution = userService.getContextInstitution();
-		if (userInstitution.getHauptstandort().getId().equals(standortId)) {
-			standort = userInstitution.getHauptstandort();
-		} else {
-			var foundStandort = userInstitution.getStandorte().stream().filter(s -> s.getId().equals(standortId))
-					.findFirst();
-
-			if (foundStandort.isPresent()) {
-				standort = foundStandort.get();
-			}
-		}
-
-		if (standort == null) {
-			throw new IllegalArgumentException("Der ausgewählte Standort konnte nicht geunden werden");
-		}
-
-		var anfrage = AngebotAnfrage.builder() //
-				.angebot(angebot.get()) //
+		var anfrage = anfrageRepository.save(AngebotAnfrageEntity.builder() //
+				.angebot(angebot) //
 				.institutionVon(userInstitution) //
-				.standortVon(standort) //
+				.standortVon(getUserInstitutionStandort(userInstitution, standortId)) //
 				.anzahl(anzahl) //
 				.kommentar(kommentar) //
 				.status(AngebotAnfrageStatus.Offen) //
-				.build();
+				.build());
+		val anfrageId = anfrage.getId();
 
-		anfrage = angebotAnfrageRepository.add(anfrage);
+		anfrage.setProzessInstanzId(anfrageProzessService.prozessStarten(//
+				angebotId, //
+				new AngebotAnfrageId(anfrageId), //
+				new InstitutionId(angebot.getInstitution().getId())).getValue());
 
-		var variables = new HashMap<String, Object>();
-		variables.put("institution", angebot.get().getInstitution().getId().getValue().toString());
-		variables.put("objektId", anfrage.getId().getValue().toString());
-
-		val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, anfrage.getId().getValue().toString(),
-				variables);
-		anfrage.setProzessInstanzId(prozessInstanzId);
-		return angebotAnfrageRepository.update(anfrage);
+		updateAnfrage(anfrage);
+		return AngebotAnfrageEntityConverter.convertAnfrage(anfrage);
 	}
 
 	@Transactional
-	@Deprecated
-	public void angebotMelden(Angebot angebot) {
-		// sollte geloescht werden
+	public void angebotAnfrageDerUserInstitutionLoeschen(//
+			final @NotNull @Valid AngebotId angebotId, //
+			final @NotNull @Valid AngebotAnfrageId anfrageId) {
+		val anfrage = getOffeneAnfrageDerUserInstitution(angebotId, anfrageId);
+		anfrage.setStatus(AngebotAnfrageStatus.Storniert);
 
-		angebot.setInstitution(userService.getContextInstitution());
-		angebot.setRest(angebot.getAnzahl());
-		angebotRepository.add(angebot);
+		// Prozess stornieren
+		anfrageProzessService.prozessStornieren(anfrageId);
+
+		anfrageRepository.save(anfrage);
 	}
 
 	@Transactional
 	public void anfrageStornieren(final @NotNull @Valid AngebotAnfrageId anfrageId) {
-		val anfrage = angebotAnfrageRepository.get(anfrageId);
-		if (anfrage.isEmpty()) {
-			throw new IllegalArgumentException("Anfrage nicht vorhanden");
-		}
-		anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
-		angebotAnfrageRepository.update(anfrage.get());
+		val anfrage = getOffeneAnfrage(anfrageId);
+		anfrage.setStatus(AngebotAnfrageStatus.Storniert);
+
+		anfrageRepository.save(anfrage);
 	}
 
 	@Transactional
 	public void anfrageAnnehmen(final @NotNull @Valid AngebotAnfrageId anfrageId) {
-		val anfrage = angebotAnfrageRepository.get(anfrageId);
-		if (anfrage.isEmpty()) {
-			throw new IllegalArgumentException("Anfrage nicht vorhanden");
-		}
-		anfrage.get().setStatus(AngebotAnfrageStatus.Angenommen);
+		val anfrage = getOffeneAnfrage(anfrageId);
 
 		// Angebot als bedient markieren
-		val angebot = anfrage.get().getAngebot();
+		val angebot = anfrage.getAngebot();
 
 		// Restbestand des Angebots herabsetzen oder Exception werfen,
 		// wenn die Anfrage größer als das Angebot ist
-		if (anfrage.get().getAnzahl().doubleValue() > angebot.getRest().doubleValue()) {
-			anfrage.get().setStatus(AngebotAnfrageStatus.Storniert);
-			angebotAnfrageRepository.update(anfrage.get());
+		val anfrageAnzahl = anfrage.getAnzahl();
+		BigDecimal angebotRest = angebot.getRest();
+		if (anfrageAnzahl.compareTo(angebotRest) > 0) {
+			anfrage.setStatus(AngebotAnfrageStatus.Storniert);
+			anfrageRepository.save(anfrage);
 			throw new IllegalArgumentException("Nicht genügend Ware auf Lager");
-		} else {
-			if (anfrage.get().getAnzahl().doubleValue() == angebot.getRest().doubleValue()) {
-				angebot.setBedient(true);
-				angebot.setRest(BigDecimal.ZERO);
-			} else {
-				angebot.setRest(
-						BigDecimal.valueOf(angebot.getRest().doubleValue() - anfrage.get().getAnzahl().doubleValue()));
-			}
 		}
 
-		angebotRepository.update(angebot);
-		angebotAnfrageRepository.update(anfrage.get());
+		// Angebot angenommen
+		anfrage.setStatus(AngebotAnfrageStatus.Angenommen);
+		anfrageRepository.save(anfrage);
+
+		if (anfrageAnzahl.compareTo(angebotRest) == 0) {
+			angebot.setBedient(true);
+			angebot.setRest(BigDecimal.ZERO);
+		} else {
+			angebot.setRest(angebotRest.subtract(angebotRest));
+		}
+
+		angebotRepository.save(angebot);
 	}
 
 	/* help methods */
 
-	private List<Angebot> mitEntfernung(final List<Angebot> angebote, final InstitutionStandort userHauptstandort) {
-		angebote.forEach(angebot -> angebot.setEntfernung(berechneEntfernung(//
-				userHauptstandort, //
-				angebot.getStandort())));
-
-		return angebote;
+	private AngebotAnfrage updateAnfrage(final @NotNull @Valid AngebotAnfrageEntity anfrageEntity) {
+		return AngebotAnfrageEntityConverter.convertAnfrage(anfrageRepository.save(anfrageEntity));
 	}
 
-	private Angebot mitEntfernung(final Angebot angebot) {
-		angebot.setEntfernung(berechneEntfernung(angebot.getStandort()));
+	private AngebotEntity getNichtBedienteAngebotDerUserInstitution(final @NotNull @Valid AngebotId angebotId) {
+		Assert.notNull(angebotId, "AngebotId ist null.");
+
+		val angebot = getNichtBedienteAngebot(angebotId);
+
+		if (!userService.isUserContextInstitution(new InstitutionId(angebot.getInstitution().getId()))) {
+			throw new OperationNotAlloudException(
+					String.format(EXCEPTION_MSG_ANGEBOT_NICHT_VON_USER_INSTITUTION, angebotId.getValue()));
+		}
+
 		return angebot;
 	}
 
-	private BigDecimal berechneEntfernung(final InstitutionStandort angebotStandort) {
-		return berechneEntfernung(//
-				userService.getContextInstitution().getHauptstandort(), //
-				angebotStandort);
+	private AngebotEntity getNichtBedienteAngebot(final @NotNull @Valid AngebotId angebotId) {
+		Assert.notNull(angebotId, "AngebotId ist null.");
+
+		val angebot = angebotRepository.findById(angebotId.getValue()) //
+				.orElseThrow(() -> new ObjectNotFoundException(
+						String.format(EXCEPTION_MSG_ANGEBOT_NICHT_GEFUNDEN, angebotId.getValue())));
+
+		if (angebot.isBedient()) {
+			throw new OperationNotAlloudException(EXCEPTION_MSG_ANGEBOT_BEDIEN);
+		}
+
+		return angebot;
 	}
 
-	private BigDecimal berechneEntfernung(//
-			final InstitutionStandort userHauptstandort, //
-			final InstitutionStandort angebotStandort) {
-		return geoCalcService.berechneDistanzInKilometer(userHauptstandort, angebotStandort);
+	private AngebotAnfrageEntity getOffeneAnfrageDerUserInstitution(//
+			final @NotNull @Valid AngebotId angebotId, //
+			final @NotNull @Valid AngebotAnfrageId angebotAnfrageId) {
+		Assert.notNull(angebotId, "AngebotId ist null.");
+		Assert.notNull(angebotAnfrageId, "AngebotAnfrageId ist null.");
+
+		val anfrage = getOffeneAnfrage(angebotId, angebotAnfrageId);
+
+		if (!userService.isUserContextInstitution(new InstitutionId(anfrage.getInstitutionVon().getId()))) {
+			throw new OperationNotAlloudException(
+					String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_VON_USER_INSTITUTION, angebotId.getValue()));
+		}
+
+		return anfrage;
 	}
 
-//	private void anfrageStornierenX(final AngebotAnfrageId anfrageId) {
-//		val anfrage = angebotAnfrageRepository.get(anfrageId);
-//
-//		if (anfrage.isEmpty()) {
-//			throw new IllegalArgumentException("Anfrage ist nicht vorhanden und kann deshalb nicht storniert werden");
-//		}
-//
-//		AngebotAnfrage angebotAnfrage = anfrage.get();
-//		if (!AngebotAnfrageStatus.Offen.equals(angebotAnfrage.getStatus())) {
-//			throw new IllegalArgumentException(
-//					"Eine Anfrage, die nicht im Status offen ist, kann nicht storniert werden");
-//		}
-//
-//		angebotAnfrage.setStatus(AngebotAnfrageStatus.Storniert);
-//		angebotAnfrageRepository.update(angebotAnfrage);
-//
-//		engineClient.messageKorrelieren(angebotAnfrage.getProzessInstanzId(), ANFRAGE_STORNIEREN_MESSAGE,
-//				new HashMap<>());
-//	}
+	private AngebotAnfrageEntity getOffeneAnfrage(//
+			final @NotNull @Valid AngebotId angebotId, //
+			final @NotNull @Valid AngebotAnfrageId angebotAnfrageId) {
+		Assert.notNull(angebotId, "AngebotId ist null.");
+		Assert.notNull(angebotAnfrageId, "AngebotAnfrageId ist null.");
+
+		val anfrage = getOffeneAnfrage(angebotAnfrageId);
+
+		if (!angebotId.getValue().equals(anfrage.getAngebot().getId())) {
+			throw new OperationNotAlloudException(String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_IN_ANGEBOT,
+					angebotId.getValue(), angebotAnfrageId.getValue()));
+		}
+
+		if (AngebotAnfrageStatus.Offen.equals(anfrage.getStatus())) {
+			throw new OperationNotAlloudException(
+					String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_GESCHLOSSEN, anfrage.getStatus()));
+		}
+
+		return anfrage;
+	}
+
+	private AngebotAnfrageEntity getOffeneAnfrage(//
+			final @NotNull @Valid AngebotAnfrageId angebotAnfrageId) {
+		Assert.notNull(angebotAnfrageId, "AngebotAnfrageId ist null.");
+
+		return anfrageRepository.findById(angebotAnfrageId.getValue())//
+				.orElseThrow(() -> new ObjectNotFoundException(
+						String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_GEFUNDEN, angebotAnfrageId.getValue())));
+	}
+
+	private InstitutionEntity getUserInstitution() {
+		return InstitutionEntityConverter.convert(userService.getContextInstitution());
+	}
+
+	private InstitutionStandortEntity getUserInstitutionStandort( //
+			final @NotNull InstitutionEntity userInstitution, //
+			final @NotNull @Valid InstitutionStandortId institutionStandortId) {
+		Assert.notNull(userInstitution, "InstitutionEntity ist null.");
+		Assert.notNull(institutionStandortId, "InstitutionStandortId ist null.");
+
+		return userInstitution.findStandort(institutionStandortId.getValue()) //
+				.orElseThrow(() -> new NotUserInstitutionObjectException(String
+						.format(EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION, institutionStandortId.getValue())));
+	}
 }

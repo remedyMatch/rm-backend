@@ -1,22 +1,30 @@
 package io.remedymatch.angebot.domain.service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
-import io.remedymatch.angebot.infrastructure.AngebotEntity.AngebotEntityBuilder;
 import io.remedymatch.artikel.domain.service.ArtikelEntityConverter;
 import io.remedymatch.institution.domain.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
 
-class AngebotEntityConverter {
+final class AngebotEntityConverter {
 
-	static Angebot convert(final AngebotEntity entity) {
+	private AngebotEntityConverter() {
+
+	}
+
+	static List<Angebot> convertAngebote(final List<AngebotEntity> entities) {
+		return entities.stream().map(AngebotEntityConverter::convertAngebot).collect(Collectors.toList());
+	}
+
+	static Angebot convertAngebot(final AngebotEntity entity) {
 		if (entity == null) {
 			return null;
 		}
-		
+
 		return Angebot.builder() //
 				.id(new AngebotId(entity.getId())) //
 				.anzahl(entity.getAnzahl()) //
@@ -32,36 +40,5 @@ class AngebotEntityConverter {
 				.bedient(entity.isBedient()) //
 				.anfragen(AngebotAnfrageEntityConverter.convertAnfragen(entity.getAnfragen())) //
 				.build();
-	}
-
-	static AngebotEntity convert(final Angebot angebot) {
-		if (angebot == null) {
-			return null;
-		}
-
-		AngebotEntityBuilder builder = AngebotEntity.builder();
-		if (angebot.getId() != null) {
-			builder.id(angebot.getId().getValue());
-		}
-
-		builder.anzahl(angebot.getAnzahl()) //
-				.rest(angebot.getRest()) //
-				.artikelVariante(ArtikelEntityConverter.convertVariante(angebot.getArtikelVariante())) //
-				.institution(InstitutionEntityConverter.convert(angebot.getInstitution()))//
-				.standort(InstitutionStandortEntityConverter.convert(angebot.getStandort()))
-				.haltbarkeit(angebot.getHaltbarkeit()) //
-				.steril(angebot.isSteril()) //
-				.originalverpackt(angebot.isOriginalverpackt()) //
-				.medizinisch(angebot.isMedizinisch()) //
-				.kommentar(angebot.getKommentar()) //
-				.bedient(angebot.isBedient());
-		;
-
-		if (angebot.getAnfragen() != null) {
-			builder.anfragen(angebot.getAnfragen().stream().map(AngebotAnfrageEntityConverter::convert)
-					.collect(Collectors.toList()));
-		}
-
-		return builder.build();
 	}
 }

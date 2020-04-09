@@ -1,43 +1,44 @@
 package io.remedymatch.angebot.domain.service;
 
-import static io.remedymatch.angebot.domain.service.AngebotConverterFixtures.beispielAngebot;
-import static io.remedymatch.angebot.domain.service.AngebotConverterFixtures.beispielAngebotEntity;
+import static io.remedymatch.angebot.domain.service.AngebotTestFixtures.beispielAngebot;
+import static io.remedymatch.angebot.domain.service.AngebotTestFixtures.beispielAngebotEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.angebot.domain.model.Angebot;
-import io.remedymatch.angebot.infrastructure.AngebotEntity;
-
 @ExtendWith(SpringExtension.class)
 @DisplayName("AngebotEntityConverter soll")
-public class AngebotEntityConverterShould {
+class AngebotEntityConverterShould {
 
 	@Test
-	@DisplayName("Entity in Domain Objekt konvertieren")
-	void entity_in_Domain_Objekt_konvertieren() {
-		assertEquals(beispielAngebot(), AngebotEntityConverter.convert(beispielAngebotEntity()));
+	@DisplayName("eine leere Liste der Entities in leere Liste der Domain Objekte konvertieren")
+	void eine_leere_Liste_der_Entities_in_leere_Liste_der_Domain_Objekte_konvertieren() {
+		assertEquals(Collections.emptyList(), AngebotEntityConverter.convertAngebote(Collections.emptyList()));
 	}
 
 	@Test
-	@DisplayName("null Entity in Domain Objekt konvertieren")
-	void null_Entity_in_Domain_Objekt_konvertieren() {
-		assertNull(AngebotEntityConverter.convert((AngebotEntity) null));
+	@DisplayName("eine Liste der Entities in Liste der Domain Objekte konvertieren")
+	void eine_Liste_der_Entities_in_Liste_der_Domain_Objekte_konvertieren() {
+		assertEquals(Arrays.asList(beispielAngebot()),
+				AngebotEntityConverter.convertAngebote(Arrays.asList(beispielAngebotEntity())));
 	}
 
 	@Test
-	@DisplayName("Domain Objekt in Entity konvertieren")
-	void domain_Objekt_in_Entity_konvertieren() {
-		assertEquals(beispielAngebotEntity(), AngebotEntityConverter.convert(beispielAngebot()));
+	@DisplayName("eine null Entity in ein null Domain Objekt konvertieren")
+	void eine_null_Entity_in_ein_null_Domain_Objekt_konvertieren() {
+		assertNull(AngebotEntityConverter.convertAngebot(null));
 	}
 
 	@Test
-	@DisplayName("null Domain Objekt in null Entity konvertieren")
-	void null_domain_Objekt_in_Entity_konvertieren() {
-		assertNull(AngebotEntityConverter.convert((Angebot) null));
+	@DisplayName("eine Entity in ein Domain Objekt konvertieren")
+	void eine_Entity_in_ein_Domain_Objekt_konvertieren() {
+		assertEquals(beispielAngebot(), AngebotEntityConverter.convertAngebot(beispielAngebotEntity()));
 	}
 }

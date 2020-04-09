@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.service.BedarfService;
 import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.match.api.MatchProzessConstants;
 import io.remedymatch.properties.RmBackendProperties;
 import lombok.AllArgsConstructor;
@@ -55,7 +56,7 @@ public class BedarfExternalTaskClient {
                     variables.put("anfrageTyp", MatchProzessConstants.ANFRAGE_TYP_BEDARF);
                     variables.put("anfrageId", anfrageId);
 
-                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, anfrageId, variables);
+                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, new BusinessKey(anfrageId), variables);
 
                     externalTaskService.complete(externalTask, variables);
 

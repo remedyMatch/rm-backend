@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotId;
-import io.remedymatch.angebot.domain.service.NeuesAngebot;
+import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.institution.api.InstitutionMapper;
 import io.remedymatch.institution.api.InstitutionStandortMapper;

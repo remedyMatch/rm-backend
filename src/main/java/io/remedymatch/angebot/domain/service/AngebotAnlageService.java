@@ -67,7 +67,7 @@ public class AngebotAnlageService {
 		return convertedAngebot;
 	}
 
-	private ArtikelVarianteEntity getArtikelVariante(//
+	ArtikelVarianteEntity getArtikelVariante(//
 			final @NotNull @Valid ArtikelVarianteId artikelVarianteId) {
 		Assert.notNull(artikelVarianteId, "ArtikelVarianteId sind null.");
 
@@ -80,7 +80,7 @@ public class AngebotAnlageService {
 		return InstitutionEntityConverter.convert(userService.getContextInstitution());
 	}
 
-	private InstitutionStandortEntity getUserInstitutionStandort( //
+	InstitutionStandortEntity getUserInstitutionStandort( //
 			final @NotNull InstitutionEntity userInstitution, //
 			final @NotNull @Valid InstitutionStandortId institutionStandortId) {
 		Assert.notNull(userInstitution, "InstitutionEntity ist null.");

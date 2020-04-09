@@ -43,7 +43,12 @@ public class ArtikelControllerMapper {
 
 	public static ArtikelVarianteRO mapVarianteToRO(final ArtikelVariante variante) {
 		return ArtikelVarianteRO.builder() //
-				// FIXME
+				.id(variante.getId().getValue()) //
+				.artikelId(variante.getArtikelId().getValue()) //
+				.variante(variante.getVariante()) //
+				.norm(variante.getNorm()) //
+				.beschreibung(variante.getBeschreibung()) //
+				.medizinischAuswaehlbar(variante.isMedizinischAuswaehlbar()) //
 				.build();
 	}
 

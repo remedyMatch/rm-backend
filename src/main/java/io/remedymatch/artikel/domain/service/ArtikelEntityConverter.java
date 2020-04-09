@@ -12,8 +12,10 @@ import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 
 public class ArtikelEntityConverter {
+	private ArtikelEntityConverter() {
+	}
 
-	public static List<Artikel> convertArtikel(final List<ArtikelEntity> entities) {
+	static List<Artikel> convertArtikel(final List<ArtikelEntity> entities) {
 		return entities.stream().map(ArtikelEntityConverter::convertArtikel).collect(Collectors.toList());
 	}
 
@@ -26,7 +28,7 @@ public class ArtikelEntityConverter {
 				.varianten(convertVarianten(entity.getVarianten())) //
 				.build();
 	}
-	
+
 	public static ArtikelEntity convertArtikel(final Artikel artikel) {
 		return ArtikelEntity.builder() //
 				.id(artikel.getId().getValue()) //
@@ -37,7 +39,7 @@ public class ArtikelEntityConverter {
 				.build();
 	}
 
-	private static List<ArtikelVariante> convertVarianten(final List<ArtikelVarianteEntity> entities) {
+	static List<ArtikelVariante> convertVarianten(final List<ArtikelVarianteEntity> entities) {
 		return entities.stream().map(ArtikelEntityConverter::convertVariante).collect(Collectors.toList());
 	}
 
@@ -51,11 +53,11 @@ public class ArtikelEntityConverter {
 				.medizinischAuswaehlbar(entity.isMedizinischAuswaehlbar()) //
 				.build();
 	}
-	
-	private static List<ArtikelVarianteEntity> convertVarianteEntities(final List<ArtikelVariante> varianten) {
+
+	static List<ArtikelVarianteEntity> convertVarianteEntities(final List<ArtikelVariante> varianten) {
 		return varianten.stream().map(ArtikelEntityConverter::convertVariante).collect(Collectors.toList());
 	}
-	
+
 	public static ArtikelVarianteEntity convertVariante(final ArtikelVariante variante) {
 		return ArtikelVarianteEntity.builder() //
 				.id(variante.getId().getValue()) //

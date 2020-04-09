@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.UUID;
 
-import io.remedymatch.artikel.domain.service.ArtikelConverterFixtures;
+import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
@@ -43,8 +43,8 @@ public final class BedarfConverterFixtures {
 	public static Bedarf beispielBedarf() {
 		return Bedarf.builder() //
 				.id(BEDARF_ID) //
-				.artikel(ArtikelConverterFixtures.beispielArtikel()) //
-				.artikelVariante(ArtikelConverterFixtures.beispielArtikelVariante1()) //
+				.artikel(ArtikelTestFixtures.beispielArtikel()) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante1()) //
 				.anzahl(ANZAHL) //
 				.rest(REST) //
 				.institution(INSTITUTION) //
@@ -60,8 +60,8 @@ public final class BedarfConverterFixtures {
 	public static BedarfEntity beispielBedarfEntity() {
 		return BedarfEntity.builder() //
 				.id(BEDARF_ID.getValue()) //
-				.artikel(ArtikelConverterFixtures.beispielArtikelEntity()) //
-				.artikelVariante(ArtikelConverterFixtures.beispielArtikelVariante1Entity()) //
+				.artikel(ArtikelTestFixtures.beispielArtikelEntity()) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante1Entity()) //
 				.anzahl(ANZAHL) //
 				.rest(REST) //
 				.institution(INSTITUTION_ENTITY) //

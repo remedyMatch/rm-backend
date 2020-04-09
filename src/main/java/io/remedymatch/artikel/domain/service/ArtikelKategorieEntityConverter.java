@@ -8,6 +8,9 @@ import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
 
 class ArtikelKategorieEntityConverter {
+	private ArtikelKategorieEntityConverter() {
+
+	}
 
 	static List<ArtikelKategorie> convertKategorien(final List<ArtikelKategorieEntity> entities) {
 		return entities.stream().map(ArtikelKategorieEntityConverter::convertKategorie).collect(Collectors.toList());
@@ -21,6 +24,7 @@ class ArtikelKategorieEntityConverter {
 		return ArtikelKategorie.builder() //
 				.id(new ArtikelKategorieId(entity.getId())) //
 				.name(entity.getName()) //
+				.icon(entity.getIcon()) //
 				.build();
 	}
 }

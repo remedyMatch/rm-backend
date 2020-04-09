@@ -10,7 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.service.AngebotAnfrageConverterFixtures;
 import io.remedymatch.angebot.domain.service.AngebotConverterFixtures;
-import io.remedymatch.artikel.domain.service.ArtikelConverterFixtures;
+import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageConverterFixtures;
 import io.remedymatch.bedarf.domain.service.BedarfConverterFixtures;
@@ -39,8 +39,8 @@ public class AnfrageConverterShould {
 		return Anfrage.builder() //
 				.id(AngebotAnfrageConverterFixtures.ANGEBOT_ANFRAGE_ID.getValue()) //
 				.angebotId(AngebotConverterFixtures.ANGEBOT_ID.getValue()) //
-				.artikelId(ArtikelConverterFixtures.ARTIKEL_ID.getValue())//
-				.artikelVarianteId(ArtikelConverterFixtures.ARTIKEL_VARIANTE_1_ID.getValue())//
+				.artikelId(ArtikelTestFixtures.ARTIKEL_ID.getValue())//
+				.artikelVarianteId(ArtikelTestFixtures.ARTIKEL_VARIANTE_1_ID.getValue())//
 				.institutionAn(AngebotConverterFixtures.INSTITUTION) //
 				.standortAn(AngebotConverterFixtures.STANDORT) //
 				.institutionVon(AngebotAnfrageConverterFixtures.INSTITUTION_VON) //
@@ -60,8 +60,8 @@ public class AnfrageConverterShould {
 		return Anfrage.builder() //
 				.id(BedarfAnfrageConverterFixtures.BEDARF_ANFRAGE_ID.getValue()) //
 				.bedarfId(BedarfConverterFixtures.BEDARF_ID.getValue()) //
-				.artikelId(ArtikelConverterFixtures.ARTIKEL_ID.getValue())//
-				.artikelVarianteId(ArtikelConverterFixtures.ARTIKEL_VARIANTE_1_ID.getValue())//
+				.artikelId(ArtikelTestFixtures.ARTIKEL_ID.getValue())//
+				.artikelVarianteId(ArtikelTestFixtures.ARTIKEL_VARIANTE_1_ID.getValue())//
 				.institutionAn(BedarfConverterFixtures.INSTITUTION) //
 				.standortAn(BedarfConverterFixtures.STANDORT) //
 				.institutionVon(BedarfAnfrageConverterFixtures.INSTITUTION_VON) //

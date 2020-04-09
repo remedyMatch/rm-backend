@@ -11,7 +11,7 @@ import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
-import io.remedymatch.artikel.domain.service.ArtikelConverterFixtures;
+import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.institution.domain.Institution;
 import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionStandort;
@@ -46,7 +46,7 @@ public final class AngebotConverterFixtures {
 	public static Angebot beispielAngebot() {
 		return Angebot.builder() //
 				.id(ANGEBOT_ID) //
-				.artikelVariante(ArtikelConverterFixtures.beispielArtikelVariante1()) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante1()) //
 				.anzahl(ANZAHL) //
 				.rest(REST) //
 				.institution(INSTITUTION) //
@@ -64,7 +64,7 @@ public final class AngebotConverterFixtures {
 	public static AngebotEntity beispielAngebotEntity() {
 		return AngebotEntity.builder() //
 				.id(ANGEBOT_ID.getValue()) //
-				.artikelVariante(ArtikelConverterFixtures.beispielArtikelVariante1Entity()) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante1Entity()) //
 				.anzahl(ANZAHL) //
 				.rest(REST) //
 				.institution(INSTITUTION_ENTITY) //

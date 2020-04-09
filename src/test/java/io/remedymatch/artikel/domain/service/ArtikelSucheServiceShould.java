@@ -1,5 +1,19 @@
 package io.remedymatch.artikel.domain.service;
 
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikel;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikel1;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikel1Entity;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikel2;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikel2Entity;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelEntity;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelId;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelKategorie1;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelKategorie1Entity;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelKategorie2;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelKategorie2Entity;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVariante;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVarianteEntity;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVarianteId;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,11 +22,7 @@ import static org.mockito.BDDMockito.then;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,14 +33,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.artikel.domain.model.Artikel;
-import io.remedymatch.artikel.domain.model.ArtikelId;
-import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
-import io.remedymatch.artikel.domain.model.ArtikelVariante;
-import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
-import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteJpaRepository;
 import lombok.val;
 
@@ -43,9 +47,8 @@ import lombok.val;
 		ArtikelVarianteJpaRepository.class //
 })
 @Tag("Spring")
-@Disabled
 @DisplayName("ArtikelSucheService soll")
-public class ArtikelSucheServiceShould {
+class ArtikelSucheServiceShould {
 	@Autowired
 	private ArtikelSucheService sucheService;
 
@@ -59,107 +62,130 @@ public class ArtikelSucheServiceShould {
 	private ArtikelVarianteJpaRepository artikelVarianteRepository;
 
 	@Test
+	@DisplayName("alle vorhandene Artikel Kategorien zurueckliefern")
+	void alle_vorhandene_Artikel_Kategorien_zurueckliefern() {
+
+		val artikelKategorie1Entity = beispielArtikelKategorie1Entity();
+		val artikelKategorie2Entity = beispielArtikelKategorie2Entity();
+
+		given(artikelKategorieRepository.findAll()).willReturn(Arrays.asList(artikelKategorie1Entity, artikelKategorie2Entity));
+
+		val expectedArtikel1Kategorie = beispielArtikelKategorie1();
+		val expectedArtikel2Kategorie = beispielArtikelKategorie2();
+
+		assertThat(//
+				sucheService.findAlleKategorien(), //
+				containsInAnyOrder(expectedArtikel1Kategorie, expectedArtikel2Kategorie));
+
+		then(artikelKategorieRepository).should().findAll();
+		then(artikelKategorieRepository).shouldHaveNoMoreInteractions();
+		then(artikelRepository).shouldHaveNoInteractions();
+		then(artikelVarianteRepository).shouldHaveNoInteractions();
+	}
+
+	@Test
 	@DisplayName("alle vorhandene Artikel zurueckliefern")
 	void alle_vorhandene_Artikel_zurueckliefern() {
 
-		val artikelKategorieId = randomArtikelKategorieId();
-
-		val artikel1Id = randomArtikelId();
-		val artikel1 = artikelMitVarianten(artikel1Id, artikelKategorieId, "Artikel 1", "Artikel 1 M", "Artikel 1 XL");
-		val artikel1Entity = artikelEntityMitVarianten(artikel1Id, artikelKategorieId, "Artikel 1", "Artikel 1 M",
-				"Artikel 1 XL");
-
-		val artikel2Id = randomArtikelId();
-		val artikel2 = artikelMitVarianten(artikel2Id, artikelKategorieId, "Artikel 2", "Artikel 2 500ml",
-				"Artikel 2 1l");
-		val artikel2Entity = artikelEntityMitVarianten(artikel2Id, artikelKategorieId, "Artikel", "Artikel 2 500ml",
-				"Artikel 2 1l");
+		val artikel1Entity = beispielArtikel1Entity();
+		val artikel2Entity = beispielArtikel2Entity();
 
 		given(artikelRepository.findAll()).willReturn(Arrays.asList(artikel1Entity, artikel2Entity));
 
+		val expectedArtikel1 = beispielArtikel1();
+		val expectedArtikel2 = beispielArtikel2();
+
 		assertThat(//
 				sucheService.findAlleArtikel(), //
-				containsInAnyOrder(artikel1, artikel2));
+				containsInAnyOrder(expectedArtikel1, expectedArtikel2));
 
+		then(artikelKategorieRepository).shouldHaveNoInteractions();
 		then(artikelRepository).should().findAll();
 		then(artikelRepository).shouldHaveNoMoreInteractions();
+		then(artikelVarianteRepository).shouldHaveNoInteractions();
+	}
+
+	@Test
+	@DisplayName("alle vorhandene Artikel zurueckliefern, wenn Name leer ist")
+	void alle_vorhandene_Artikel_zurueckliefern_wenn_Name_leer_ist() {
+
+		val artikel1Entity = beispielArtikel1Entity();
+		val artikel2Entity = beispielArtikel2Entity();
+
+		given(artikelRepository.findAll()).willReturn(Arrays.asList(artikel1Entity, artikel2Entity));
+
+		val expectedArtikel1 = beispielArtikel1();
+		val expectedArtikel2 = beispielArtikel2();
+
+		assertThat(//
+				sucheService.findByNameLike("  "), //
+				containsInAnyOrder(expectedArtikel1, expectedArtikel2));
+
+		then(artikelKategorieRepository).shouldHaveNoInteractions();
+		then(artikelRepository).should().findAll();
+		then(artikelRepository).shouldHaveNoMoreInteractions();
+		then(artikelVarianteRepository).shouldHaveNoInteractions();
+	}
+
+	@Test
+	@DisplayName("alle vorhandene Artikel mit Teil des Names zurueckliefern")
+	void alle_vorhandene_Artikel_mit_Teil_des_Names_zurueckliefern() {
+
+		val artikel1Entity = beispielArtikel1Entity();
+		val artikel2Entity = beispielArtikel2Entity();
+
+		given(artikelRepository.findByNameContainingIgnoreCase("rti"))
+				.willReturn(Arrays.asList(artikel1Entity, artikel2Entity));
+
+		val expectedArtikel1 = beispielArtikel1();
+		val expectedArtikel2 = beispielArtikel2();
+
+		assertThat(//
+				sucheService.findByNameLike("rti"), //
+				containsInAnyOrder(expectedArtikel1, expectedArtikel2));
+
+		then(artikelKategorieRepository).shouldHaveNoInteractions();
+		then(artikelRepository).should().findByNameContainingIgnoreCase("rti");
+		then(artikelRepository).shouldHaveNoMoreInteractions();
+		then(artikelVarianteRepository).shouldHaveNoInteractions();
 	}
 
 	@Test
 	@DisplayName("gesuchtes Artikel zurueckliefern")
 	void gesuchtes_Artikel_zurueckliefern() {
 
-		val artikelKategorieId = randomArtikelKategorieId();
-
-		val artikelId = randomArtikelId();
-		val artikel = artikelMitVarianten(artikelId, artikelKategorieId, "Artikel", "Artikel M", "Artikel XL");
-		val artikelEntity = artikelEntityMitVarianten(artikelId, artikelKategorieId, "Artikel", "Artikel M",
-				"Artikel XL");
+		val artikelId = beispielArtikelId();
+		val artikelEntity = beispielArtikelEntity();
 
 		given(artikelRepository.findById(artikelId.getValue())).willReturn(Optional.of(artikelEntity));
 
-		assertEquals(Optional.of(artikel), sucheService.findArtikel(artikelId));
+		val expectedArtikel = beispielArtikel();
 
+		assertEquals(Optional.of(expectedArtikel), sucheService.findArtikel(artikelId));
+
+		then(artikelKategorieRepository).shouldHaveNoInteractions();
 		then(artikelRepository).should().findById(artikelId.getValue());
 		then(artikelRepository).shouldHaveNoMoreInteractions();
+		then(artikelVarianteRepository).shouldHaveNoInteractions();
 	}
 
-	private ArtikelKategorieId randomArtikelKategorieId() {
-		return new ArtikelKategorieId(UUID.randomUUID());
-	}
+	@Test
+	@DisplayName("gesuchte Artikel Variante zurueckliefern")
+	void gesuchte_Artikel_Variante_zurueckliefern() {
 
-	private ArtikelId randomArtikelId() {
-		return new ArtikelId(UUID.randomUUID());
-	}
+		val artikelVarianteId = beispielArtikelVarianteId();
+		val artikelVarianteEntity = beispielArtikelVarianteEntity();
 
-	private Artikel artikelMitVarianten(//
-			final ArtikelId artikelId, //
-			final ArtikelKategorieId artikelKategorieId, //
-			final String name, //
-			final String... varianten) {
-		val builder = Artikel.builder() //
-				.id(artikelId) //
-				.artikelKategorieId(artikelKategorieId) //
-				.name(name) //
-				.beschreibung("Artikel Beschreibung " + name);
+		given(artikelVarianteRepository.findById(artikelVarianteId.getValue()))
+				.willReturn(Optional.of(artikelVarianteEntity));
 
-		if (varianten != null && varianten.length > 0) {
-			builder.varianten(Stream.of(varianten)//
-					.map(variante -> ArtikelVariante.builder() //
-							.artikelId(artikelId) //
-							.variante(variante) //
-							.norm("Norm " + variante) //
-							.beschreibung("Beschreibung " + variante) //
-							.build())
-					.collect(Collectors.toList()));
-		}
+		val expectedArtikelVariante = beispielArtikelVariante();
 
-		return builder.build();
-	}
+		assertEquals(Optional.of(expectedArtikelVariante), sucheService.findArtikelVariante(artikelVarianteId));
 
-	private ArtikelEntity artikelEntityMitVarianten(//
-			final ArtikelId artikelId, //
-			final ArtikelKategorieId artikelKategorieId, //
-			final String name, //
-			final String... varianten) {
-
-		val builder = ArtikelEntity.builder() //
-				.id(artikelId.getValue()) //
-				.artikelKategorie(artikelKategorieId.getValue()) //
-				.name(name) //
-				.beschreibung("Artikel Beschreibung " + name);
-
-		if (varianten != null && varianten.length > 0) {
-			builder.varianten(Stream.of(varianten)//
-					.map(variante -> ArtikelVarianteEntity.builder() //
-							.artikel(artikelId.getValue()) //
-							.variante(variante) //
-							.norm("Norm " + variante) //
-							.beschreibung("Beschreibung " + variante) //
-							.build())
-					.collect(Collectors.toList()));
-		}
-
-		return builder.build();
+		then(artikelKategorieRepository).shouldHaveNoInteractions();
+		then(artikelRepository).shouldHaveNoInteractions();
+		then(artikelVarianteRepository).should().findById(artikelVarianteId.getValue());
+		then(artikelVarianteRepository).shouldHaveNoMoreInteractions();
 	}
 }

@@ -1,6 +1,6 @@
 # Rest API
 
-Beschreibung der Rest-API für:
+Beschreibung der Rest-API fï¿½r:
 * Angebot
 * Artikel und Artikel-Kategorie
 * Bedarf
@@ -9,7 +9,7 @@ Beschreibung der Rest-API für:
 
 # Angebot
 
-## Übersicht
+## ï¿½bersicht
 
 * Alle aktuelle Angebote laden
 
@@ -23,7 +23,7 @@ Beschreibung der Rest-API für:
 
   `POST /angebot`
 
-* Angebot löschen
+* Angebot lï¿½schen
 
   `DELETE /angebot/{angebotId}`
 
@@ -31,7 +31,7 @@ Beschreibung der Rest-API für:
 
   `POST /angebot/{angebotId}/anfrage`
 
-* Angebot-Anfrage löschen
+* Angebot-Anfrage lï¿½schen
 
   `DELETE /angebot/{angebotId}/anfrage/{anfrageId}`
 
@@ -68,7 +68,7 @@ Liefert alle aktuelle (nicht bediente) Angebote.
       "steril": false,
       "originalverpackt": true,
       "medizinisch": false,
-      "kommentar": "Wir haben 10000 Masken übrig",
+      "kommentar": "Wir haben 10000 Masken ï¿½brig",
       "entfernung": 25014
     },
     ...
@@ -119,7 +119,7 @@ Liefert alle aktuelle (nicht bediente) Angebote, die Personen aus meiner Institu
       "steril": false,
       "originalverpackt": true,
       "medizinisch": false,
-      "kommentar": "Wir haben 10000 Masken übrig",
+      "kommentar": "Wir haben 10000 Masken ï¿½brig",
       "entfernung": 25014
     },
     ...
@@ -156,7 +156,7 @@ Neues Angebot melden.
     "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
     "anzahl": 10000,
     "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
-    "kommentar": "Wir haben 10000 Masken übrig",
+    "kommentar": "Wir haben 10000 Masken ï¿½brig",
     "haltbarkeit": "2022-01-25T21:34:55",
     "steril": false,
     "originalverpackt": true,
@@ -180,7 +180,7 @@ Neues Angebot melden.
     "steril": false,
     "originalverpackt": true,
     "medizinisch": false,
-    "kommentar": "Wir haben 10000 Masken übrig",
+    "kommentar": "Wir haben 10000 Masken ï¿½brig",
     "entfernung": 25014
   }
   ```
@@ -197,9 +197,9 @@ Neues Angebot melden.
 
 * **Sample Call:**
 
-## Angebot löschen
+## Angebot lï¿½schen
 
-Angebot löschen.
+Angebot lï¿½schen.
 
 * **Request:**
 
@@ -272,8 +272,8 @@ Angebot anfragen.
   {
     "id": "5bc4f514-c591-470e-a056-933f3ea00421",
     "angebot": { "..." },
-    "institutionVon": { "..." },
-    "standortVon": { "..." },
+    "institution": { "..." },
+    "standort": { "..." },
     "anzahl": 3000,
     "kommentar": "Wir brauchen 3000 Masken"
     "prozessInstanzId": "...",
@@ -298,9 +298,9 @@ Angebot anfragen.
 
 * **Sample Call:**
 
-## Angebot-Anfrage löschen
+## Angebot-Anfrage lï¿½schen
 
-Angebot-Anfrage löschen.
+Angebot-Anfrage lï¿½schen.
 
 * **Request:**
 
@@ -344,7 +344,7 @@ Angebot-Anfrage löschen.
 
 # Artikel
 
-## Übersicht
+## ï¿½bersicht
 
 * Alle Artikel-Kategorien laden
 
@@ -599,7 +599,7 @@ Ein Artikel lesen.
 
 # Bedarf
 
-## Übersicht
+## ï¿½bersicht
 
 * Alle aktuelle Bedarfe laden
 
@@ -613,7 +613,7 @@ Ein Artikel lesen.
 
   `POST /bedarf`
 
-* Bedarf löschen
+* Bedarf lï¿½schen
 
   `DELETE /bedarf/{bedarfId}`
 
@@ -621,7 +621,7 @@ Ein Artikel lesen.
 
   `POST /bedarf/{bedarfId}/anfrage`
 
-* Bedarf-Anfrage löschen
+* Bedarf-Anfrage lï¿½schen
 
   `DELETE /bedarf/{bedarfId}/anfrage/{anfrageId}`
 
@@ -745,7 +745,7 @@ Neues Bedarf melden.
     "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
     "anzahl": 10000,
     "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
-    "kommentar": "Wir haben 10000 Masken übrig",
+    "kommentar": "Wir haben 10000 Masken ï¿½brig",
     "steril": false,
     "medizinisch": false
   }
@@ -783,9 +783,9 @@ Neues Bedarf melden.
 
 * **Sample Call:**
 
-## Bedarf löschen
+## Bedarf lï¿½schen
 
-Bedarf löschen.
+Bedarf lï¿½schen.
 
 * **Request:**
 
@@ -884,9 +884,9 @@ Bedarf bedienen.
 
 * **Sample Call:**
 
-## Bedarf-Anfrage löschen
+## Bedarf-Anfrage lï¿½schen
 
-Bedarf-Anfrage löschen.
+Bedarf-Anfrage lï¿½schen.
 
 * **Request:**
 
@@ -955,13 +955,13 @@ Liefert alle aktuelle Institutionen.
     {
       "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
       "key": "isar_klinikum",
-      "name":	"ISAR Klinikum®",
+      "name":	"ISAR Klinikumï¿½",
       "typ": "krankenhaus"
     },
     {
       "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
       "key": "arzt_praxis_xyz",
-      "name":	"Arzt Praxis XYZ®",
+      "name":	"Arzt Praxis XYZï¿½",
       "typ": "doktor"
     },
      
@@ -1007,13 +1007,13 @@ Suche nach Institutionen.
     {
       "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
       "key": "isar_klinikum",
-      "name":	"ISAR Klinikum®",
+      "name":	"ISAR Klinikumï¿½",
       "typ": "krankenhaus"
     },
     {
       "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
       "key": "arzt_praxis_xyz",
-      "name":	"Arzt Praxis XYZ®",
+      "name":	"Arzt Praxis XYZï¿½",
       "typ": "doktor"
     },
      
@@ -1058,7 +1058,7 @@ Eine Institution lesen.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
    }
   ```
@@ -1081,7 +1081,7 @@ Eine Institution lesen.
 
 ## Institution hinzufugen (noch nicht umgesetzt)
 
-Eine Institution hinzufügen.
+Eine Institution hinzufï¿½gen.
 
 * **Request:**
 
@@ -1094,7 +1094,7 @@ Eine Institution hinzufügen.
   ```
   {
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
    }
   ```
@@ -1110,7 +1110,7 @@ Eine Institution hinzufügen.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
    }
   ```
@@ -1147,7 +1147,7 @@ Eine Institution aktualisieren.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
   }
   ```
@@ -1163,7 +1163,7 @@ Eine Institution aktualisieren.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
   }
   ```
@@ -1209,7 +1209,7 @@ Institution des angemeldetes Benutzer lesen.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
    }
   ```
@@ -1244,7 +1244,7 @@ Institution des angemeldetes Benutzer aktualisieren.
   ```
   {
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
   }
   ```
@@ -1260,7 +1260,7 @@ Institution des angemeldetes Benutzer aktualisieren.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
   }
   ```
@@ -1305,7 +1305,7 @@ Liefert alle Angebote der Institution von angemeldeten User.
         "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
       },
       "anzahl": 10000,
-      "kommentar": "Wir haben 10000 Masken übrig",
+      "kommentar": "Wir haben 10000 Masken ï¿½brig",
       "standort": "...",
       "haltbarkeit": "2022-01-25T21:34:55",
       "steril": false,
@@ -1425,7 +1425,7 @@ Liefert alle Personen.
    curl -i -H 'Accept: application/json' http://localhost:7000/person
   ```
   
-## Person hinzufügen
+## Person hinzufï¿½gen
 
 Person erstellen.
 

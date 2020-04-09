@@ -90,7 +90,7 @@ public class AngebotAnfrageJpaRepositoryShould {
 		entityManager.flush();
 
 		assertThat(//
-				jpaRepository.findAllByInstitutionVon_Id(meinKrankenhaus.getId()), //
+				jpaRepository.findAllByInstitution_Id(meinKrankenhaus.getId()), //
 				containsInAnyOrder(ersteAnfrage, zweiteAnfrage));
 	}
 
@@ -205,8 +205,8 @@ public class AngebotAnfrageJpaRepositoryShould {
 			AngebotAnfrageStatus status) {
 		return AngebotAnfrageEntity.builder() //
 				.angebot(angebot) //
-				.institutionVon(meinKrankenhaus) //
-				.standortVon(meinStandort) //
+				.institution(meinKrankenhaus) //
+				.standort(meinStandort) //
 				.anzahl(BigDecimal.valueOf(50)) //
 				.kommentar("Bla bla") //
 				.status(status) //
@@ -218,8 +218,8 @@ public class AngebotAnfrageJpaRepositoryShould {
 			BigDecimal anzahl) {
 		return AngebotAnfrageEntity.builder() //
 				.angebot(angebot)//
-				.institutionVon(meinKrankenhaus) //
-				.standortVon(meinStandort) //
+				.institution(meinKrankenhaus) //
+				.standort(meinStandort) //
 				.anzahl(anzahl) //
 				.kommentar("Bla bla") //
 				.status(AngebotAnfrageStatus.Offen) //
@@ -231,8 +231,8 @@ public class AngebotAnfrageJpaRepositoryShould {
 			BigDecimal anzahl) {
 		return AngebotAnfrageEntity.builder() //
 				.angebot(beispielAngebot) //
-				.institutionVon(institutionVon)//
-				.standortVon(meinStandort) //
+				.institution(institutionVon)//
+				.standort(meinStandort) //
 				.anzahl(anzahl) //
 				.kommentar("Bla bla") //
 				.status(AngebotAnfrageStatus.Offen) //

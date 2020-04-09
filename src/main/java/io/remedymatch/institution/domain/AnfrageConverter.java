@@ -9,8 +9,8 @@ class AnfrageConverter {
                 .id(angebotAnfrage.getId().getValue()) //
                 .institutionAn(angebotAnfrage.getAngebot().getInstitution()) //
                 .standortAn(angebotAnfrage.getAngebot().getStandort()) //
-                .institutionVon(angebotAnfrage.getInstitutionVon()) //
-                .standortVon(angebotAnfrage.getStandortVon()) //
+                .institutionVon(angebotAnfrage.getInstitution()) //
+                .standortVon(angebotAnfrage.getStandort()) //
                 .angebotId(angebotAnfrage.getAngebot().getId().getValue()) //
                 .artikelId(angebotAnfrage.getAngebot().getArtikelVariante().getArtikelId().getValue()) //
                 .artikelVarianteId(angebotAnfrage.getAngebot().getArtikelVariante().getId().getValue()) //

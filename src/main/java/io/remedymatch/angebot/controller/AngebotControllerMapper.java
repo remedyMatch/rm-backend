@@ -19,8 +19,8 @@ class AngebotControllerMapper {
 		return AngebotAnfrageRO.builder() //
 				.id(angebotAnfrage.getId().getValue()) //
 				.angebot(mapToAngebotRO(angebotAnfrage.getAngebot())) //
-				.institutionVon(InstitutionMapper.mapToDTO(angebotAnfrage.getInstitutionVon())) //
-				.standortVon(InstitutionStandortMapper.mapToDTO(angebotAnfrage.getStandortVon())) //
+				.institution(InstitutionMapper.mapToDTO(angebotAnfrage.getInstitution())) //
+				.standort(InstitutionStandortMapper.mapToDTO(angebotAnfrage.getStandort())) //
 				.anzahl(angebotAnfrage.getAnzahl()) //
 				.kommentar(angebotAnfrage.getKommentar()) //
 				.prozessInstanzId(angebotAnfrage.getProzessInstanzId()) //

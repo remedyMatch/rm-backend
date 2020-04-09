@@ -42,8 +42,8 @@ public final class AngebotAnfrageTestFixtures {
 		return AngebotAnfrage.builder() //
 				.id(beispielAngebotAnfrageId()) //
 				.angebot(ANGEBOT_ANFRAGE_ANGEBOT) // 
-				.institutionVon(ANGEBOT_ANFRAGE_INSTITUTION) //
-				.standortVon(ANGEBOT_ANFRAGE_STANDORT) //
+				.institution(ANGEBOT_ANFRAGE_INSTITUTION) //
+				.standort(ANGEBOT_ANFRAGE_STANDORT) //
 				.anzahl(ANGEBOT_ANFRAGE_ANZAHL) //
 				.kommentar(ANGEBOT_ANFRAGE_KOMMENTAR) //
 				.prozessInstanzId(ANGEBOT_ANFRAGE_PROZESSINSTANZ_ID) //
@@ -55,8 +55,8 @@ public final class AngebotAnfrageTestFixtures {
 		return AngebotAnfrageEntity.builder() //
 				.id(beispielAngebotAnfrageId().getValue()) //
 				.angebot(ANGEBOT_ANFRAGE_ANGEBOT_ENTITY) //
-				.institutionVon(ANGEBOT_ANFRAGE_INSTITUTION_ENTITY) //
-				.standortVon(ANGEBOT_ANFRAGE_STANDORT_ENTITY) //
+				.institution(ANGEBOT_ANFRAGE_INSTITUTION_ENTITY) //
+				.standort(ANGEBOT_ANFRAGE_STANDORT_ENTITY) //
 				.anzahl(ANGEBOT_ANFRAGE_ANZAHL) //
 				.kommentar(ANGEBOT_ANFRAGE_KOMMENTAR) //
 				.prozessInstanzId(ANGEBOT_ANFRAGE_PROZESSINSTANZ_ID) //

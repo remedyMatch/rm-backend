@@ -30,7 +30,7 @@ public class AngebotAnfrageSucheService {
 
 	@Transactional(readOnly = true)
 	public List<AngebotAnfrage> findAlleAnfragenDerInstitution(final @NotNull @Valid InstitutionId institutionId) {
-		return convertAnfragen(anfrageRepository.findAllByInstitutionVon_Id(institutionId.getValue()));
+		return convertAnfragen(anfrageRepository.findAllByInstitution_Id(institutionId.getValue()));
 	}
 
 	@Transactional(readOnly = true)

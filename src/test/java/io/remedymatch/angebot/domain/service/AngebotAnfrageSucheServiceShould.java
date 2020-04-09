@@ -58,16 +58,16 @@ class AngebotAnfrageSucheServiceShould {
 		val anfrage2 = AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
 		anfrage2.setId(anfrage2Id);
 
-		val anfrageInstitutionId = anfrage1.getInstitutionVon().getId();
+		val anfrageInstitutionId = anfrage1.getInstitution().getId();
 
-		given(anfrageRepository.findAllByInstitutionVon_Id(anfrageInstitutionId.getValue()))
+		given(anfrageRepository.findAllByInstitution_Id(anfrageInstitutionId.getValue()))
 				.willReturn(Arrays.asList(anfrage1Entity, anfrage2Entity));
 
 		assertThat(//
 				anfrageSucheService.findAlleAnfragenDerInstitution(anfrageInstitutionId), //
 				containsInAnyOrder(anfrage1, anfrage2));
 
-		then(anfrageRepository).should().findAllByInstitutionVon_Id(anfrageInstitutionId.getValue());
+		then(anfrageRepository).should().findAllByInstitution_Id(anfrageInstitutionId.getValue());
 		then(anfrageRepository).shouldHaveNoMoreInteractions();
 	}
 

@@ -83,8 +83,8 @@ public class AngebotService {
 
 		var anfrage = anfrageRepository.save(AngebotAnfrageEntity.builder() //
 				.angebot(angebot) //
-				.institutionVon(userInstitution) //
-				.standortVon(getUserInstitutionStandort(userInstitution, standortId)) //
+				.institution(userInstitution) //
+				.standort(getUserInstitutionStandort(userInstitution, standortId)) //
 				.anzahl(anzahl) //
 				.kommentar(kommentar) //
 				.status(AngebotAnfrageStatus.Offen) //
@@ -193,7 +193,7 @@ public class AngebotService {
 
 		val anfrage = getOffeneAnfrage(angebotId, angebotAnfrageId);
 
-		if (!userService.isUserContextInstitution(new InstitutionId(anfrage.getInstitutionVon().getId()))) {
+		if (!userService.isUserContextInstitution(new InstitutionId(anfrage.getInstitution().getId()))) {
 			throw new OperationNotAlloudException(
 					String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_VON_USER_INSTITUTION, angebotId.getValue()));
 		}

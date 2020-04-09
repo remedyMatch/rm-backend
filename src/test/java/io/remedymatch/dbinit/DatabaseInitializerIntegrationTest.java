@@ -7,6 +7,8 @@ import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +29,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = {"dbinit"})
+@Disabled
 @Tag("InMemory")
 @Tag("SpringBoot")
 public class DatabaseInitializerIntegrationTest {

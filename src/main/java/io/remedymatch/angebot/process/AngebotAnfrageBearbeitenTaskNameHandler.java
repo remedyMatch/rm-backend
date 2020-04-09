@@ -44,7 +44,7 @@ public class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibung
 		val artikel = getArtikel(artikelVariante.getArtikelId());
 
 		return String.format(beschreibungTemplate, //
-				anfrage.getInstitutionVon().getName(), //
+				anfrage.getInstitution().getName(), //
 				angebot.getAnzahl(), //
 				artikel.getName(), //
 				artikelVariante.getVariante());

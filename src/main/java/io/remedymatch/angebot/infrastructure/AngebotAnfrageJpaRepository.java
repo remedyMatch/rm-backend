@@ -15,7 +15,7 @@ public interface AngebotAnfrageJpaRepository extends JpaRepository<AngebotAnfrag
 
 	List<AngebotAnfrageEntity> findAllByAngebot_Institution_Id(final UUID institutionId);
 	
-	List<AngebotAnfrageEntity> findAllByInstitutionVon_Id(final UUID institutionId);
+	List<AngebotAnfrageEntity> findAllByInstitution_Id(final UUID institutionId);
 
 	default Optional<AngebotAnfrageEntity> findByAngebotIdAndAnfrageIdAndStatusOffen(//
 			final UUID angebotId, //

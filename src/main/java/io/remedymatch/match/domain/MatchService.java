@@ -48,8 +48,8 @@ public class MatchService {
     public Match matchAusAngebotErstellen(AngebotAnfrage angebotAnfrage) {
         val match = new Match();
 
-        match.setInstitutionAn(angebotAnfrage.getInstitutionVon());
-        match.setStandortAn(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandortVon()));
+        match.setInstitutionVon(angebotAnfrage.getInstitution());
+        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandort()));
         match.setAnfrageId(angebotAnfrage.getId().getValue());
         match.setAritkelId(angebotAnfrage.getAngebot().getArtikelVariante().getArtikelId().getValue());
         match.setAritkelVarianteId(angebotAnfrage.getAngebot().getArtikelVariante().getId().getValue());
@@ -57,8 +57,8 @@ public class MatchService {
         match.setAnfrageTyp("Angebot");
         match.setKommentar("");
 
-        match.setInstitutionVon(angebotAnfrage.getAngebot().getInstitution());
-        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getAngebot().getStandort()));
+        match.setInstitutionAn(angebotAnfrage.getAngebot().getInstitution());
+        match.setStandortAn(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getAngebot().getStandort()));
 
         match.setStandortVon(matchStandortRepository.add(match.getStandortVon()));
         match.setStandortAn(matchStandortRepository.add(match.getStandortAn()));

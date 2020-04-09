@@ -23,8 +23,8 @@ final class AngebotAnfrageEntityConverter {
 		return AngebotAnfrage.builder() //
 				.id(new AngebotAnfrageId(entity.getId())) //
 				.angebot(AngebotEntityConverter.convertAngebot(entity.getAngebot())) //
-				.institutionVon(InstitutionEntityConverter.convert(entity.getInstitutionVon())) //
-				.standortVon(InstitutionStandortEntityConverter.convert(entity.getStandortVon())) //
+				.institution(InstitutionEntityConverter.convert(entity.getInstitution())) //
+				.standort(InstitutionStandortEntityConverter.convert(entity.getStandort())) //
 				.anzahl(entity.getAnzahl()) //
 				.kommentar(entity.getKommentar()) //
 				.prozessInstanzId(entity.getProzessInstanzId()) //

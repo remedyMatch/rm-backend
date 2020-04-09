@@ -27,11 +27,11 @@ class AngebotAnfrageRO {
 
 	@NotNull
 	@Valid
-	private InstitutionDTO institutionVon;
+	private InstitutionDTO institution;
 
 	@NotNull
 	@Valid
-	private InstitutionStandortDTO standortVon;
+	private InstitutionStandortDTO standort;
 
 	@NotNull
 	@Positive

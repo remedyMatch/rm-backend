@@ -24,8 +24,8 @@ import lombok.AllArgsConstructor;
 @Transactional
 class AngebotAnfrageProzessService {
 
-	private final static ProzessKey PROZESS_KEY = new ProzessKey("angebot_anfrage_prozess");
-	private final static MessageKey ANFRAGE_STORNIEREN_MESSAGE = new MessageKey("angebot_anfrage_stornieren");
+	final static ProzessKey PROZESS_KEY = new ProzessKey("angebot_anfrage_prozess");
+	final static MessageKey ANFRAGE_STORNIEREN_MESSAGE = new MessageKey("angebot_anfrage_stornieren");
 
 	private final EngineClient engineClient;
 
@@ -35,7 +35,7 @@ class AngebotAnfrageProzessService {
 			final @NotNull @Valid InstitutionId angebotInstitutionId) {
 		return engineClient.prozessStarten(//
 				PROZESS_KEY, //
-				new BusinessKey(anfrageId.toString()), //
+				new BusinessKey(anfrageId.getValue()), //
 				Variables.createVariables()//
 						.putValue("prozessKey", PROZESS_KEY.getValue()) //
 						.putValue("angebotId", angebotId.getValue()) //

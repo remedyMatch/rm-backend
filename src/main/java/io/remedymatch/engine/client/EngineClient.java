@@ -37,7 +37,7 @@ public class EngineClient {
 			final @NotNull @Valid Map<String, Object> variables) {
 
 		val request = ProzessStartRequest.builder().prozessKey(prozessKey.getValue()).variables(variables)
-				.businessKey(businessKey.getValue()).build();
+				.businessKey(businessKey.getValue().toString()).build();
 
 		val restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate

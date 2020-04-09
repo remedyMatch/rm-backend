@@ -129,7 +129,7 @@ public class BedarfService {
 		variables.put("institution", bedarf.get().getInstitution().getId().getValue().toString());
 		variables.put("objektId", anfrage.getId().getValue().toString());
 
-		val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, new BusinessKey(anfrage.getId().getValue().toString()),
+		val prozessInstanzId = engineClient.prozessStarten(PROZESS_KEY, new BusinessKey(anfrage.getId().getValue()),
 				variables);
 		anfrage.setProzessInstanzId(prozessInstanzId.getValue());
 		return bedarfAnfrageRepository.update(anfrage);

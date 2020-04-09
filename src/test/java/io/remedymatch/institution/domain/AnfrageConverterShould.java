@@ -14,6 +14,7 @@ import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageConverterFixtures;
 import io.remedymatch.bedarf.domain.service.BedarfConverterFixtures;
+import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("AngebotAnfrageEntityConverter soll")
@@ -36,19 +37,20 @@ public class AnfrageConverterShould {
 	}
 
 	private Anfrage anfrageAusAngebot() {
+		val angebotAnfrage = AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
 		return Anfrage.builder() //
-				.id(AngebotAnfrageTestFixtures.beispielAngebotAnfrageId().getValue()) //
+				.id(angebotAnfrage.getId().getValue()) //
 				.angebotId(AngebotTestFixtures.ANGEBOT_ID.getValue()) //
 				.artikelId(AngebotTestFixtures.ANGEBOT_ARTIKEL_VARIANTE.getArtikelId().getValue())//
 				.artikelVarianteId(AngebotTestFixtures.ANGEBOT_ARTIKEL_VARIANTE.getId().getValue())//
 				.institutionAn(AngebotTestFixtures.ANGEBOT_INSTITUTION) //
 				.standortAn(AngebotTestFixtures.ANGEBOT_STANDORT) //
-				.institutionVon(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_INSTITUTION) //
-				.standortVon(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_STANDORT) //
-				.anzahl(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_ANZAHL) //
-				.kommentar(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_KOMMENTAR) //
-				.prozessInstanzId(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_PROZESSINSTANZ_ID) //
-				.status(AngebotAnfrageTestFixtures.ANGEBOT_ANFRAGE_STATUS.toString()) //
+				.institutionVon(angebotAnfrage.getInstitution()) //
+				.standortVon(angebotAnfrage.getStandort()) //
+				.anzahl(angebotAnfrage.getAnzahl()) //
+				.kommentar(angebotAnfrage.getKommentar()) //
+				.prozessInstanzId(angebotAnfrage.getProzessInstanzId()) //
+				.status(angebotAnfrage.getStatus().toString()) //
 				.build();
 	}
 

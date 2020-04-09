@@ -98,7 +98,7 @@ public class BedarfAnlageService {
 
 		anfrage.setProzessInstanzId(engineClient.prozessStarten(//
 				PROZESS_KEY, //
-				new BusinessKey(anfrageId.toString()), //
+				new BusinessKey(anfrageId), //
 				Variables.createVariables()//
 						.putValue("institution", bedarf.getInstitution().getId().toString()) //
 						.putValue("objektId", anfrageId.toString())).getValue());

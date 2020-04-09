@@ -52,7 +52,7 @@ public class AngebotExternalTaskClient {
                     variables.put("anfrageTyp", MatchProzessConstants.ANFRAGE_TYP_ANGEBOT);
                     variables.put("anfrageId", anfrageId);
 
-                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, new BusinessKey(anfrageId), variables);
+                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, new BusinessKey(UUID.fromString(anfrageId)), variables);
                     externalTaskService.complete(externalTask, variables);
 
                 }).open();

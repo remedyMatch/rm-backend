@@ -41,7 +41,7 @@ public final class AngebotTestFixtures {
 	public static final boolean ANGEBOT_ORIGINALVERPACKT = true;
 	public static final boolean ANGEBOT_MEDIZINISCH = true;
 	public static final String ANGEBOT_KOMMENTAR = "Kommentar";
-	public static final boolean ANGEBOT_BEDIENT = true;
+	public static final boolean ANGEBOT_BEDIENT = false;
 	public static final AngebotAnfrageId ANGEBOT_ANFRAGE_ID = new AngebotAnfrageId(UUID.randomUUID());
 	public static final AngebotAnfrage ANGEBOT_ANFRAGE = AngebotAnfrage.builder().id(ANGEBOT_ANFRAGE_ID).build();
 	public static final AngebotAnfrageEntity ANGEBOT_ANFRAGE_ENTITY = AngebotAnfrageEntity.builder()

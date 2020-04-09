@@ -1,8 +1,10 @@
 package io.remedymatch.engine.domain;
 
+import java.util.UUID;
+
 import lombok.Value;
 
 @Value
 public class BusinessKey {
-	private String value;
+	private UUID value;
 }

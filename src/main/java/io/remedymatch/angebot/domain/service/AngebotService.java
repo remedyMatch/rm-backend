@@ -135,7 +135,7 @@ public class AngebotService {
 		if (anfrageAnzahl.compareTo(angebotRest) > 0) {
 			anfrage.setStatus(AngebotAnfrageStatus.Storniert);
 			anfrageRepository.save(anfrage);
-			throw new IllegalArgumentException("Nicht genügend Ware auf Lager");
+			throw new OperationNotAlloudException("Nicht genügend Ware auf Lager");
 		}
 
 		// Angebot angenommen
@@ -146,7 +146,7 @@ public class AngebotService {
 			angebot.setBedient(true);
 			angebot.setRest(BigDecimal.ZERO);
 		} else {
-			angebot.setRest(angebotRest.subtract(angebotRest));
+			angebot.setRest(angebotRest.subtract(anfrageAnzahl));
 		}
 
 		angebotRepository.save(angebot);
@@ -158,20 +158,20 @@ public class AngebotService {
 		return AngebotAnfrageEntityConverter.convertAnfrage(anfrageRepository.save(anfrageEntity));
 	}
 
-	private AngebotEntity getNichtBedienteAngebotDerUserInstitution(final @NotNull @Valid AngebotId angebotId) {
+	AngebotEntity getNichtBedienteAngebotDerUserInstitution(final @NotNull @Valid AngebotId angebotId) {
 		Assert.notNull(angebotId, "AngebotId ist null.");
 
 		val angebot = getNichtBedienteAngebot(angebotId);
 
 		if (!userService.isUserContextInstitution(new InstitutionId(angebot.getInstitution().getId()))) {
-			throw new OperationNotAlloudException(
+			throw new NotUserInstitutionObjectException(
 					String.format(EXCEPTION_MSG_ANGEBOT_NICHT_VON_USER_INSTITUTION, angebotId.getValue()));
 		}
 
 		return angebot;
 	}
 
-	private AngebotEntity getNichtBedienteAngebot(final @NotNull @Valid AngebotId angebotId) {
+	AngebotEntity getNichtBedienteAngebot(final @NotNull @Valid AngebotId angebotId) {
 		Assert.notNull(angebotId, "AngebotId ist null.");
 
 		val angebot = angebotRepository.findById(angebotId.getValue()) //
@@ -185,7 +185,7 @@ public class AngebotService {
 		return angebot;
 	}
 
-	private AngebotAnfrageEntity getOffeneAnfrageDerUserInstitution(//
+	AngebotAnfrageEntity getOffeneAnfrageDerUserInstitution(//
 			final @NotNull @Valid AngebotId angebotId, //
 			final @NotNull @Valid AngebotAnfrageId angebotAnfrageId) {
 		Assert.notNull(angebotId, "AngebotId ist null.");
@@ -194,14 +194,14 @@ public class AngebotService {
 		val anfrage = getOffeneAnfrage(angebotId, angebotAnfrageId);
 
 		if (!userService.isUserContextInstitution(new InstitutionId(anfrage.getInstitution().getId()))) {
-			throw new OperationNotAlloudException(
+			throw new NotUserInstitutionObjectException(
 					String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_VON_USER_INSTITUTION, angebotId.getValue()));
 		}
 
 		return anfrage;
 	}
 
-	private AngebotAnfrageEntity getOffeneAnfrage(//
+	AngebotAnfrageEntity getOffeneAnfrage(//
 			final @NotNull @Valid AngebotId angebotId, //
 			final @NotNull @Valid AngebotAnfrageId angebotAnfrageId) {
 		Assert.notNull(angebotId, "AngebotId ist null.");
@@ -214,7 +214,7 @@ public class AngebotService {
 					angebotId.getValue(), angebotAnfrageId.getValue()));
 		}
 
-		if (AngebotAnfrageStatus.Offen.equals(anfrage.getStatus())) {
+		if (!AngebotAnfrageStatus.Offen.equals(anfrage.getStatus())) {
 			throw new OperationNotAlloudException(
 					String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_GESCHLOSSEN, anfrage.getStatus()));
 		}
@@ -222,7 +222,7 @@ public class AngebotService {
 		return anfrage;
 	}
 
-	private AngebotAnfrageEntity getOffeneAnfrage(//
+	AngebotAnfrageEntity getOffeneAnfrage(//
 			final @NotNull @Valid AngebotAnfrageId angebotAnfrageId) {
 		Assert.notNull(angebotAnfrageId, "AngebotAnfrageId ist null.");
 
@@ -235,7 +235,7 @@ public class AngebotService {
 		return InstitutionEntityConverter.convert(userService.getContextInstitution());
 	}
 
-	private InstitutionStandortEntity getUserInstitutionStandort( //
+	InstitutionStandortEntity getUserInstitutionStandort( //
 			final @NotNull InstitutionEntity userInstitution, //
 			final @NotNull @Valid InstitutionStandortId institutionStandortId) {
 		Assert.notNull(userInstitution, "InstitutionEntity ist null.");

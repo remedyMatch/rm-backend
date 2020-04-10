@@ -9,7 +9,7 @@ import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfId;
-import io.remedymatch.bedarf.domain.service.NeuesBedarf;
+import io.remedymatch.bedarf.domain.model.NeuesBedarf;
 import io.remedymatch.institution.api.InstitutionMapper;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.InstitutionStandortId;
@@ -20,8 +20,8 @@ public class BedarfControllerMapper {
 		return BedarfAnfrageRO.builder() //
 				.id(bedarfAnfrage.getId().getValue()) //
 				.bedarf(mapToBedarfRO(bedarfAnfrage.getBedarf())) //
-				.institutionVon(InstitutionMapper.mapToDTO(bedarfAnfrage.getInstitutionVon())) //
-				.standortVon(InstitutionStandortMapper.mapToDTO(bedarfAnfrage.getStandortVon())) //
+				.institution(InstitutionMapper.mapToDTO(bedarfAnfrage.getInstitution())) //
+				.standort(InstitutionStandortMapper.mapToDTO(bedarfAnfrage.getStandort())) //
 				.anzahl(bedarfAnfrage.getAnzahl()) //
 				.kommentar(bedarfAnfrage.getKommentar()) //
 				.prozessInstanzId(bedarfAnfrage.getProzessInstanzId()) //
@@ -33,7 +33,7 @@ public class BedarfControllerMapper {
 		return bedarfe.stream().map(BedarfControllerMapper::mapToBedarfRO).collect(Collectors.toList());
 	}
 
-	public static BedarfRO mapToBedarfRO(final Bedarf bedarf) {
+	static BedarfRO mapToBedarfRO(final Bedarf bedarf) {
 		return BedarfRO.builder() //
 				.id(bedarf.getId().getValue()) //
 				.artikelId(bedarf.getArtikel().getId().getValue()) //
@@ -51,8 +51,11 @@ public class BedarfControllerMapper {
 
 	static NeuesBedarf mapToNeuesBedarf(final NeuesBedarfRequest neuesBedarfRequest) {
 		return NeuesBedarf.builder() //
-				.artikelId(new ArtikelId(neuesBedarfRequest.getArtikelId())) //
-				.artikelVarianteId(new ArtikelVarianteId(neuesBedarfRequest.getArtikelVarianteId())) //
+				.artikelId(neuesBedarfRequest.getArtikelId() != null ? new ArtikelId(neuesBedarfRequest.getArtikelId())
+						: null) //
+				.artikelVarianteId(neuesBedarfRequest.getArtikelVarianteId() != null
+						? new ArtikelVarianteId(neuesBedarfRequest.getArtikelVarianteId())
+						: null) //
 				.anzahl(neuesBedarfRequest.getAnzahl()) //
 				.standortId(new InstitutionStandortId(neuesBedarfRequest.getStandortId())) //
 				.steril(neuesBedarfRequest.isSteril()) //

@@ -1,4 +1,4 @@
-package io.remedymatch.bedarf.domain.service;
+package io.remedymatch.bedarf.domain.model;
 
 import java.math.BigDecimal;
 
@@ -31,7 +31,6 @@ public class NeuesBedarf {
 	@Positive
 	private BigDecimal anzahl;
 	
-	@NotNull
 	@Valid	
 	private ArtikelId artikelId;
 	

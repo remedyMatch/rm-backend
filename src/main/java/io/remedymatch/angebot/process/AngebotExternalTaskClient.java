@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Component
-public class AngebotExternalTaskClient {
+class AngebotExternalTaskClient {
     private final RmBackendProperties properties;
     private final AngebotService angebotService;
     private final EngineClient engineClient;

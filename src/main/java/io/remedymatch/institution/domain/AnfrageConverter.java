@@ -26,8 +26,8 @@ class AnfrageConverter {
                 .id(bedarfAnfrage.getId().getValue()) //
                 .institutionAn(bedarfAnfrage.getBedarf().getInstitution()) //
                 .standortAn(bedarfAnfrage.getBedarf().getStandort()) //
-                .institutionVon(bedarfAnfrage.getInstitutionVon()) //
-                .standortVon(bedarfAnfrage.getStandortVon()) //
+                .institutionVon(bedarfAnfrage.getInstitution()) //
+                .standortVon(bedarfAnfrage.getStandort()) //
                 .bedarfId(bedarfAnfrage.getBedarf().getId().getValue()) //
                 .anzahl(bedarfAnfrage.getAnzahl()) //
                 .artikelId(bedarfAnfrage.getBedarf().getArtikel().getId().getValue()) //

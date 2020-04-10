@@ -50,12 +50,12 @@ public class BedarfAnfrageEntity {
 	private BedarfEntity bedarf;
 
 	@ManyToOne
-	@JoinColumn(name = "INSTITUTION_VON_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
-	private InstitutionEntity institutionVon;
+	@JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
+	private InstitutionEntity institution;
 
 	@ManyToOne
-	@JoinColumn(name = "STANDORT_VON_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
-	private InstitutionStandortEntity standortVon;
+	@JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
+	private InstitutionStandortEntity standort;
 
 	@Column(name = "ANZAHL", nullable = false, updatable = false)
 	private BigDecimal anzahl;

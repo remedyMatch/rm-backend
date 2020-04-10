@@ -34,6 +34,10 @@ public class MatchEntity {
     @Type(type = "uuid-char")
     @Column(name = "ARTIKEL_ID", nullable = false, updatable = false, length = 36)
     private UUID artikelId;
+    
+    @Type(type = "uuid-char")
+    @Column(name = "ARTIKEL_VARIANTE_ID", nullable = true, updatable = false, length = 36)
+    private UUID artikelVarianteId;
 
     @Column(name = "ANZAHL", nullable = false, updatable = false)
     private BigDecimal anzahl;

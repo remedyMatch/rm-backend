@@ -16,7 +16,7 @@ import io.remedymatch.artikel.domain.model.ArtikelVariante;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfId;
-import io.remedymatch.bedarf.domain.service.NeuesBedarf;
+import io.remedymatch.bedarf.domain.model.NeuesBedarf;
 import io.remedymatch.institution.api.InstitutionStandortDTO;
 import io.remedymatch.institution.domain.Institution;
 import io.remedymatch.institution.domain.InstitutionId;

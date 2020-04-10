@@ -27,15 +27,16 @@ public class MatchService {
         match.setInstitutionAn(bedarfAnfrage.getBedarf().getInstitution());
         match.setStandortAn(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getBedarf().getStandort()));
         match.setAnfrageId(bedarfAnfrage.getId().getValue());
-        match.setAritkelId(bedarfAnfrage.getBedarf().getArtikel().getId().getValue());
-        // FIXME
-        match.setAritkelId(bedarfAnfrage.getBedarf().getArtikelVariante().getId().getValue());
+        match.setArtikelId(bedarfAnfrage.getBedarf().getArtikel().getId().getValue());
+        if (bedarfAnfrage.getBedarf().getArtikelVariante() != null) {
+        	match.setArtikelVarianteId(bedarfAnfrage.getBedarf().getArtikelVariante().getId().getValue());
+        }
         match.setAnzahl(bedarfAnfrage.getAnzahl());
         match.setAnfrageTyp("Bedarf");
         match.setKommentar("");
 
-        match.setInstitutionVon(bedarfAnfrage.getInstitutionVon());
-        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getStandortVon()));
+        match.setInstitutionVon(bedarfAnfrage.getInstitution());
+        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getStandort()));
 
         match.setStandortVon(matchStandortRepository.add(match.getStandortVon()));
         match.setStandortAn(matchStandortRepository.add(match.getStandortAn()));
@@ -51,8 +52,8 @@ public class MatchService {
         match.setInstitutionVon(angebotAnfrage.getInstitution());
         match.setStandortVon(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandort()));
         match.setAnfrageId(angebotAnfrage.getId().getValue());
-        match.setAritkelId(angebotAnfrage.getAngebot().getArtikelVariante().getArtikelId().getValue());
-        match.setAritkelVarianteId(angebotAnfrage.getAngebot().getArtikelVariante().getId().getValue());
+        match.setArtikelId(angebotAnfrage.getAngebot().getArtikelVariante().getArtikelId().getValue());
+        match.setArtikelVarianteId(angebotAnfrage.getAngebot().getArtikelVariante().getId().getValue());
         match.setAnzahl(angebotAnfrage.getAnzahl());
         match.setAnfrageTyp("Angebot");
         match.setKommentar("");

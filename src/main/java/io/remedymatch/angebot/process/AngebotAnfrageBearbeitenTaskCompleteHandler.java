@@ -13,19 +13,19 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Component
-public class AngebotAnfrageBearbeitenTaskCompleteHandler implements TaskCompleteHandler {
+class AngebotAnfrageBearbeitenTaskCompleteHandler implements TaskCompleteHandler {
 
 	private final AngebotService angebotService;
 
 	@Override
 	public String taskKey() {
-		return AnfrageBearbeitenTaskContstants.TASK_KEY;
+		return AngebotAnfrageBearbeitenTaskContstants.TASK_KEY;
 	}
 
 	@Override
 	public void taskPruefen(TaskDTO taskDTO, Map<String, Object> variables) {
 
-		if (!Boolean.parseBoolean(variables.get(AnfrageBearbeitenTaskContstants.ANGENOMMEN).toString())) {
+		if (!Boolean.parseBoolean(variables.get(AngebotAnfrageBearbeitenTaskContstants.ANGENOMMEN).toString())) {
 			return;
 		}
 

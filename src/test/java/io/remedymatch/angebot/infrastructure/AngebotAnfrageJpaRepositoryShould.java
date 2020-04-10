@@ -69,8 +69,8 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@Rollback(true)
 	@Transactional
 	@Test
-	@DisplayName("alle Anfragen fuer InstitutionAn Id zurueckliefern")
-	void alle_Anfragen_fuer_InstitutionAnId_zurueckliefern() {
+	@DisplayName("alle Anfragen der Institution zurueckliefern")
+	void alle_Anfragen_der_Institution_zurueckliefern() {
 		val ersteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(100)));
 		val zweiteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(200)));
 		entityManager.flush();
@@ -83,8 +83,8 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@Rollback(true)
 	@Transactional
 	@Test
-	@DisplayName("alle Anfragen fuer InstitutionVon Id zurueckliefern")
-	void alle_Anfragen_fuer_InstitutionVon_Id_zurueckliefern() {
+	@DisplayName("alle Anfragen der Angebot Institution zurueckliefern")
+	void alle_Anfragen_der_Angebot_Institution_zurueckliefern() {
 		val ersteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
 		val zweiteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
 		entityManager.flush();

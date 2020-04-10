@@ -22,10 +22,8 @@ import lombok.ToString;
 @Builder
 class NeuesBedarfRequest {
 
-	@NotNull
 	private UUID artikelId;
 
-	@NotNull
 	private UUID artikelVarianteId;
 
 	@NotNull

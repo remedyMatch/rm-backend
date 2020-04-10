@@ -16,8 +16,8 @@ import java.util.UUID;
 public class Match {
     private MatchId id;
     private UUID anfrageId;
-    private UUID aritkelId;
-    private UUID aritkelVarianteId;
+    private UUID artikelId;
+    private UUID artikelVarianteId;
     private BigDecimal anzahl;
     private String anfrageTyp;
     private Institution institutionVon;

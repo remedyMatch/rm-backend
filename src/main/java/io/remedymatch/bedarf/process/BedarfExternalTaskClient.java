@@ -20,7 +20,7 @@ import lombok.val;
 
 @AllArgsConstructor
 @Component
-public class BedarfExternalTaskClient {
+class BedarfExternalTaskClient {
     private final RmBackendProperties properties;
     private final BedarfService bedarfService;
     private final EngineClient engineClient;
@@ -36,7 +36,6 @@ public class BedarfExternalTaskClient {
         client.subscribe("bedarfAnfrageAblehnen")
                 .lockDuration(2000)
                 .handler((externalTask, externalTaskService) -> {
-
                     val anfrageId = externalTask.getVariable("objektId").toString();
                     bedarfService.anfrageStornieren(new BedarfAnfrageId(UUID.fromString(anfrageId)));
 
@@ -44,7 +43,6 @@ public class BedarfExternalTaskClient {
 
                     externalTaskService.complete(externalTask);
                 }).open();
-
 
         client.subscribe("bedarfMatchProzessStarten")
                 .lockDuration(2000)
@@ -57,7 +55,6 @@ public class BedarfExternalTaskClient {
                     variables.put("anfrageId", anfrageId);
 
                     engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, new BusinessKey(UUID.fromString(anfrageId)), variables);
-
                     externalTaskService.complete(externalTask, variables);
 
                 }).open();

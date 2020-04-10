@@ -44,18 +44,18 @@ public class BedarfController {
 	@Transactional(readOnly = true)
 	@GetMapping("/suche")
 	public ResponseEntity<List<BedarfRO>> getAlleNichtBedienteBedarfe() {
-		return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.getAlleNichtBedienteBedarfe()));
+		return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.findAlleNichtBedienteBedarfe()));
 	}
 
 	@Transactional(readOnly = true)
 	@GetMapping
 	public ResponseEntity<List<BedarfRO>> getInstituionBedarfe() {
-		return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.getBedarfeDerUserInstitution()));
+		return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.findAlleNichtBedienteBedarfeDerUserInstitution()));
 	}
 
 	@PostMapping
 	public ResponseEntity<BedarfRO> neuesBedarfMelden(@RequestBody @Valid NeuesBedarfRequest neueBedarf) {
-		return ResponseEntity.ok(mapToBedarfRO(bedarfAnlageService.neueBedarfEinstellen(mapToNeuesBedarf(neueBedarf))));
+		return ResponseEntity.ok(mapToBedarfRO(bedarfAnlageService.neuesBedarfEinstellen(mapToNeuesBedarf(neueBedarf))));
 	}
 
 	@DeleteMapping("/{bedarfId}")

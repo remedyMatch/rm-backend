@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
-import io.remedymatch.bedarf.domain.service.BedarfAnfrageRepository;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.geodaten.api.StandortService;
@@ -33,7 +33,7 @@ public class InstitutionService {
 	private final StandortService standortService;
 	private final UserService userService;
 	private final AngebotAnfrageSucheService angebotAnfrageSucheService;
-	private final BedarfAnfrageRepository bedarfAnfrageRepository;
+	private final BedarfAnfrageSucheService bedarfAnfrageSucheService;
 	private final GeoCalcService geoCalcService;
 
 	public Institution userInstitutionLaden() {
@@ -96,7 +96,7 @@ public class InstitutionService {
 		val userInstitutionId = userService.getContextInstitution().getId();
 
 		val angebotAnfragen = angebotAnfrageSucheService.findAlleAnfragenDerInstitution(userInstitutionId);
-		val bedarfAnfragen = bedarfAnfrageRepository.getAnfragenFuerInstitutionVon(userInstitutionId);
+		val bedarfAnfragen = bedarfAnfrageSucheService.findAlleAnfragenDerInstitution(userInstitutionId);
 		val anfragen = angebotAnfragen.stream().map(AnfrageConverter::convert).collect(Collectors.toList());
 		anfragen.addAll(bedarfAnfragen.stream().map(AnfrageConverter::convert).collect(Collectors.toList()));
 
@@ -107,7 +107,7 @@ public class InstitutionService {
 		val userInstitutionId = userService.getContextInstitution().getId();
 
 		val angebotAnfragen = angebotAnfrageSucheService.findAlleAnfragenDerAngebotInstitution(userInstitutionId);
-		val bedarfAnfragen = bedarfAnfrageRepository.getAnfragenFuerInstitutionAn(userInstitutionId);
+		val bedarfAnfragen = bedarfAnfrageSucheService.findAlleAnfragenDerBedarfInstitution(userInstitutionId);
 		val anfragen = angebotAnfragen.stream().map(AnfrageConverter::convert).collect(Collectors.toList());
 		anfragen.addAll(bedarfAnfragen.stream().map(AnfrageConverter::convert).collect(Collectors.toList()));
 

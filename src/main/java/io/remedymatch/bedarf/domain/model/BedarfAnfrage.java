@@ -35,11 +35,11 @@ public class BedarfAnfrage {
 
 	@NotNull
 	@Valid
-	private Institution institutionVon;
+	private Institution institution;
 
 	@NotNull
 	@Valid
-	private InstitutionStandort standortVon;
+	private InstitutionStandort standort;
 
 	@NotNull
 	@Positive

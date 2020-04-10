@@ -1,37 +1,38 @@
 package io.remedymatch.bedarf.domain.service;
 
-import static io.remedymatch.bedarf.domain.service.BedarfAnfrageConverterFixtures.beispielBedarfAnfrage;
-import static io.remedymatch.bedarf.domain.service.BedarfAnfrageConverterFixtures.beispielBedarfAnfrageEntity;
+import static io.remedymatch.bedarf.domain.service.BedarfAnfrageTestFixtures.beispielBedarfAnfrage;
+import static io.remedymatch.bedarf.domain.service.BedarfAnfrageTestFixtures.beispielBedarfAnfrageEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
-
 @ExtendWith(SpringExtension.class)
 @DisplayName("BedarfAnfrageEntityConverter soll")
-public class BedarfAnfrageEntityConverterShould {
+class BedarfAnfrageEntityConverterShould {
 
 	@Test
-	@DisplayName("Entity in Domain Objekt konvertieren")
-	void entity_in_Domain_Objekt_konvertieren() {
+	@DisplayName("eine leere Liste der Entities in leere Liste der Domain Objekte konvertieren")
+	void eine_leere_Liste_der_Entities_in_leere_Liste_der_Domain_Objekte_konvertieren() {
+		assertEquals(Collections.emptyList(), BedarfAnfrageEntityConverter.convertAnfragen(Collections.emptyList()));
+	}
+
+	@Test
+	@DisplayName("eine Liste der Entities in Liste der Domain Objekte konvertieren")
+	void eine_Liste_der_Entities_in_Liste_der_Domain_Objekte_konvertieren() {
+		assertEquals(Arrays.asList(beispielBedarfAnfrage()),
+				BedarfAnfrageEntityConverter.convertAnfragen(Arrays.asList(beispielBedarfAnfrageEntity())));
+	}
+
+	@Test
+	@DisplayName("eine Entity in ein Domain Objekt konvertieren")
+	void eine_Entity_in_ein_Domain_Objekt_konvertieren() {
 		assertEquals(beispielBedarfAnfrage(),
 				BedarfAnfrageEntityConverter.convertAnfrage(beispielBedarfAnfrageEntity()));
-	}
-
-	@Test
-	@DisplayName("Domain Objekt in Entity konvertieren")
-	void domain_Objekt_in_Entity_konvertieren() {
-		assertEquals(beispielBedarfAnfrageEntity(), BedarfAnfrageEntityConverter.convert(beispielBedarfAnfrage()));
-	}
-
-	@Test
-	@DisplayName("null Domain Objekt in null Entity konvertieren")
-	void null_domain_Objekt_in_Entity_konvertieren() {
-		assertNull(BedarfAnfrageEntityConverter.convert((BedarfAnfrage) null));
 	}
 }

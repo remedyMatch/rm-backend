@@ -23,7 +23,8 @@ class MatchEntityConverter {
                 .status(entity.getStatus())//
                 .anfrageTyp(entity.getAnfrageTyp())
                 .anzahl(entity.getAnzahl())
-                .aritkelId(entity.getArtikelId())
+                .artikelId(entity.getArtikelId())
+                .artikelVarianteId(entity.getArtikelVarianteId())
                 .build();
     }
 
@@ -48,7 +49,8 @@ class MatchEntityConverter {
                 .status(match.getStatus())//
                 .anfrageTyp(match.getAnfrageTyp())
                 .anzahl(match.getAnzahl())
-                .artikelId(match.getAritkelId())
+                .artikelId(match.getArtikelId())
+                .artikelVarianteId(match.getArtikelVarianteId())
                 .build();
     }
 }

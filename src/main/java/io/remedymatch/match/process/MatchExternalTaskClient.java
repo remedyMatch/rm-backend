@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
-import io.remedymatch.bedarf.domain.service.BedarfAnfrageRepository;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.match.api.MatchProzessConstants;
 import io.remedymatch.match.domain.Match;
@@ -32,8 +32,8 @@ public class MatchExternalTaskClient {
 	private final RmBackendProperties properties;
 	private final MatchRepository matchRepository;
 	private final MatchService matchService;
-	private final BedarfAnfrageRepository bedarfAnfrageRepository;
 	private final AngebotAnfrageSucheService angebotAnfrageSucheService;
+	private final BedarfAnfrageSucheService bedarfAnfrageSucheService;
 	private final EngineClient engineClient;
 
 	@PostConstruct
@@ -90,7 +90,7 @@ public class MatchExternalTaskClient {
 
 		if (anfrageTyp.equals(MatchProzessConstants.ANFRAGE_TYP_BEDARF)) {
 			match = matchService.matchAusBedarfErstellen(
-					bedarfAnfrageRepository.get(new BedarfAnfrageId(UUID.fromString(anfrageId))).get());
+					bedarfAnfrageSucheService.findAnfrage(new BedarfAnfrageId(UUID.fromString(anfrageId))).get());
 
 		} else {
 			match = matchService.matchAusAngebotErstellen(

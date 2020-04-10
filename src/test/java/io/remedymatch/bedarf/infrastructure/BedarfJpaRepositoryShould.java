@@ -70,6 +70,20 @@ public class BedarfJpaRepositoryShould {
 				jpaRepository.findAllByDeletedFalseAndBedientFalse(), //
 				containsInAnyOrder(ersteBedarf, zweiteBedarf));
 	}
+	
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("alle nicht bediente Bedarfe einer Institution zurueckliefern")
+	void alle_nicht_bediente_Bedarfe_einer_Institution_zurueckliefern() {
+		BedarfEntity ersteBedarf = persist(bedarf(BigDecimal.valueOf(100)));
+		BedarfEntity zweiteBedarf = persist(bedarf(BigDecimal.valueOf(200)));
+		entityManager.flush();
+
+		assertThat(//
+				jpaRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(meinKrankenhaus.getId()), //
+				containsInAnyOrder(ersteBedarf, zweiteBedarf));
+	}
 
 	/* help methods */
 

@@ -1,7 +1,10 @@
 package io.remedymatch.bedarf.process;
 
-public class BedarfAnfrageBearbeitenTaskContstants {
-    public static String ANGENOMMEN = "angenommen";
-    public static String ANZAHL = "anzahl";
-    public static String TASK_KEY = "bedarf_anfrage_prozess_beantworten";
+class BedarfAnfrageBearbeitenTaskContstants {
+	private BedarfAnfrageBearbeitenTaskContstants() {
+	}
+
+	static String ANGENOMMEN = "angenommen";
+	static String ANZAHL = "anzahl";
+	static String TASK_KEY = "bedarf_anfrage_prozess_beantworten";
 }

@@ -12,8 +12,8 @@ import io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures;
 import io.remedymatch.angebot.domain.service.AngebotTestFixtures;
 import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
-import io.remedymatch.bedarf.domain.service.BedarfAnfrageConverterFixtures;
-import io.remedymatch.bedarf.domain.service.BedarfConverterFixtures;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageTestFixtures;
+import io.remedymatch.bedarf.domain.service.BedarfTestFixtures;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
@@ -55,23 +55,24 @@ public class AnfrageConverterShould {
 	}
 
 	private BedarfAnfrage bedarfAnfrage() {
-		return BedarfAnfrageConverterFixtures.beispielBedarfAnfrage();
+		return BedarfAnfrageTestFixtures.beispielBedarfAnfrage();
 	}
 
 	private Anfrage bedarfAusAngebot() {
+		val bedarfAnfrage = BedarfAnfrageTestFixtures.beispielBedarfAnfrage();
 		return Anfrage.builder() //
-				.id(BedarfAnfrageConverterFixtures.BEDARF_ANFRAGE_ID.getValue()) //
-				.bedarfId(BedarfConverterFixtures.BEDARF_ID.getValue()) //
+				.id(bedarfAnfrage.getId().getValue()) //
+				.bedarfId(BedarfTestFixtures.BEDARF_ID.getValue()) //
 				.artikelId(ArtikelTestFixtures.ARTIKEL_ID.getValue())//
 				.artikelVarianteId(ArtikelTestFixtures.ARTIKEL_VARIANTE_1_ID.getValue())//
-				.institutionAn(BedarfConverterFixtures.INSTITUTION) //
-				.standortAn(BedarfConverterFixtures.STANDORT) //
-				.institutionVon(BedarfAnfrageConverterFixtures.INSTITUTION_VON) //
-				.standortVon(BedarfAnfrageConverterFixtures.STANDORT_VON) //
-				.anzahl(BedarfAnfrageConverterFixtures.ANZAHL) //
-				.kommentar(BedarfAnfrageConverterFixtures.KOMMENTAR) //
-				.prozessInstanzId(BedarfAnfrageConverterFixtures.PROZESSINSTANZ_ID) //
-				.status(BedarfAnfrageConverterFixtures.STATUS.toString()) //
+				.institutionAn(BedarfTestFixtures.BEDARF_INSTITUTION) //
+				.standortAn(BedarfTestFixtures.BEDARF_STANDORT) //
+				.institutionVon(bedarfAnfrage.getInstitution()) //
+				.standortVon(bedarfAnfrage.getStandort()) //
+				.anzahl(bedarfAnfrage.getAnzahl()) //
+				.kommentar(bedarfAnfrage.getKommentar()) //
+				.prozessInstanzId(bedarfAnfrage.getProzessInstanzId()) //
+				.status(bedarfAnfrage.getStatus().toString()) //
 				.build();
 	}
 }

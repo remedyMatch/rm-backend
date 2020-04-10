@@ -34,7 +34,6 @@ public class BedarfRO {
 	@Valid
 	private UUID artikelId;
 
-	@NotNull
 	@Valid
 	private UUID artikelVarianteId;
 
@@ -63,5 +62,4 @@ public class BedarfRO {
 	@NotNull
 	@Positive
 	private BigDecimal entfernung;
-
 }

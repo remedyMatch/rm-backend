@@ -32,7 +32,7 @@ import lombok.val;
 @Validated
 @Transactional
 public class AngebotAnlageService {
-	private static final String EXCEPTION_MSG_ARTIKEL_NICHT_GEFUNDEN = "Artikel mit diesem Id nicht gefunden. (Id: %s)";
+	private static final String EXCEPTION_MSG_ARTIKEL_VARIANTE_NICHT_GEFUNDEN = "ArtikelVariante mit diesem Id nicht gefunden. (Id: %s)";
 
 	private static final String EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION = "Standort gehoert nicht der Institution des angemeldetes Benutzers. (Id: %s)";
 
@@ -73,7 +73,7 @@ public class AngebotAnlageService {
 
 		return artikelSucheService.findArtikelVariante(artikelVarianteId).map(ArtikelEntityConverter::convertVariante) //
 				.orElseThrow(() -> new ObjectNotFoundException(
-						String.format(EXCEPTION_MSG_ARTIKEL_NICHT_GEFUNDEN, artikelVarianteId.getValue())));
+						String.format(EXCEPTION_MSG_ARTIKEL_VARIANTE_NICHT_GEFUNDEN, artikelVarianteId.getValue())));
 	}
 
 	private InstitutionEntity getUserInstitution() {

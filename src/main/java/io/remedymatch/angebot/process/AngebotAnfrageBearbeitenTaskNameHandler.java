@@ -19,14 +19,16 @@ import lombok.val;
 
 @AllArgsConstructor
 @Component
-public class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler {
+class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler {
+
+	private static final String BESCHREIBUNG_TEMPLATE_MIT_ARTIKEL_VARIANTE = "%s: Anfrage zu Bedarf von %d %s - %s";
 
 	private final ArtikelSucheService artikelSucheService;
 	private final AngebotAnfrageSucheService anfrageSucheService;
 
 	@Override
 	public String taskKey() {
-		return AnfrageBearbeitenTaskContstants.TASK_KEY;
+		return AngebotAnfrageBearbeitenTaskContstants.TASK_KEY;
 	}
 
 	@Override
@@ -36,14 +38,12 @@ public class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibung
 
 	private String formatBeschreibungstext(final @NotNull AngebotAnfrageId anfrageId) {
 
-		val beschreibungTemplate = "%s: Anfrage zu Angebot von %d %s - %s";
-
 		val anfrage = getAnfrage(anfrageId);
 		val angebot = anfrage.getAngebot();
 		val artikelVariante = angebot.getArtikelVariante();
 		val artikel = getArtikel(artikelVariante.getArtikelId());
 
-		return String.format(beschreibungTemplate, //
+		return String.format(BESCHREIBUNG_TEMPLATE_MIT_ARTIKEL_VARIANTE, //
 				anfrage.getInstitution().getName(), //
 				angebot.getAnzahl(), //
 				artikel.getName(), //

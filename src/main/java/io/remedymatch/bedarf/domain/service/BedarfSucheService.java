@@ -26,15 +26,15 @@ public class BedarfSucheService {
 	private final GeoCalcService geoCalcService;
 
 	@Transactional(readOnly = true)
-	public List<Bedarf> getAlleNichtBedienteBedarfe() {
+	public List<Bedarf> findAlleNichtBedienteBedarfe() {
 		return mitEntfernung(bedarfRepository.findAllByDeletedFalseAndBedientFalse());
 	}
 
 	@Transactional(readOnly = true)
-	public List<Bedarf> getBedarfeDerUserInstitution() {
+	public List<Bedarf> findAlleNichtBedienteBedarfeDerUserInstitution() {
 		val userInstitution = userService.getContextInstitution();
 		return mitEntfernung(
-				bedarfRepository.findAllByDeletedFalseAndInstitution_Id(userInstitution.getId().getValue()));
+				bedarfRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userInstitution.getId().getValue()));
 	}
 
 	private List<Bedarf> mitEntfernung(final List<BedarfEntity> bedarfe) {
@@ -42,7 +42,7 @@ public class BedarfSucheService {
 	}
 
 	private Bedarf mitEntfernung(final BedarfEntity bedarf) {
-		val convertedBedarf = BedarfEntityConverter.convert(bedarf);
+		val convertedBedarf = BedarfEntityConverter.convertBedarf(bedarf);
 		convertedBedarf.setEntfernung(geoCalcService.berechneUserDistanzInKilometer(convertedBedarf.getStandort()));
 		return convertedBedarf;
 	}

@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   backend:
-    image: remedymatch/backend:develop
+    image: remedymatch/backend:latest
     ports:
       - 8081:8081
     environment:

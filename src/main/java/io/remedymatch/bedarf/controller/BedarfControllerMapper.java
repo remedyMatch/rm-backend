@@ -15,6 +15,9 @@ import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 
 class BedarfControllerMapper {
+	private BedarfControllerMapper() {
+
+	}
 
 	static BedarfAnfrageRO mapToAnfrageRO(final BedarfAnfrage bedarfAnfrage) {
 		return BedarfAnfrageRO.builder() //

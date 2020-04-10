@@ -10,6 +10,9 @@ import io.remedymatch.artikel.domain.model.ArtikelKategorie;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
 
 public class ArtikelControllerMapper {
+	private ArtikelControllerMapper() {
+
+	}
 
 	public static List<ArtikelKategorieRO> mapKategorienToRO(final List<ArtikelKategorie> kategorien) {
 		return kategorien.stream().map(ArtikelControllerMapper::mapKategorieToRO).collect(Collectors.toList());
@@ -22,7 +25,7 @@ public class ArtikelControllerMapper {
 				.icon(kategorie.getIcon()) //
 				.build();
 	}
-	
+
 	public static List<ArtikelRO> mapArtikelToRO(final List<Artikel> artikel) {
 		return artikel.stream().map(ArtikelControllerMapper::mapArtikelToRO).collect(Collectors.toList());
 	}

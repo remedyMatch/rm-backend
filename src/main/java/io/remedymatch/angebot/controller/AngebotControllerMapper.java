@@ -14,6 +14,9 @@ import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 
 class AngebotControllerMapper {
+	private AngebotControllerMapper() {
+
+	}
 
 	static AngebotAnfrageRO mapToAnfrageRO(final AngebotAnfrage angebotAnfrage) {
 		return AngebotAnfrageRO.builder() //

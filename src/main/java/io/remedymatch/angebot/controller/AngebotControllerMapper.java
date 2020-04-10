@@ -61,10 +61,6 @@ class AngebotControllerMapper {
 				.build();
 	}
 
-	static AngebotId maptToAngebotId(final String angebotId) {
-		return maptToAngebotId(UUID.fromString(angebotId));
-	}
-
 	static AngebotId maptToAngebotId(final UUID angebotId) {
 		return new AngebotId(angebotId);
 	}

@@ -30,7 +30,7 @@ import io.remedymatch.institution.domain.InstitutionStandortId;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("AngebotMapper soll")
-public class AngebotControllerMapperShould {
+class AngebotControllerMapperShould {
 
 	private static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
 	private static final BigDecimal ANGEBOT_ANZAHL = BigDecimal.valueOf(120.0);

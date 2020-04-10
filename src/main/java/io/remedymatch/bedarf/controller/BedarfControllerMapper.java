@@ -14,7 +14,7 @@ import io.remedymatch.institution.api.InstitutionMapper;
 import io.remedymatch.institution.api.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.InstitutionStandortId;
 
-public class BedarfControllerMapper {
+class BedarfControllerMapper {
 
 	static BedarfAnfrageRO mapToAnfrageRO(final BedarfAnfrage bedarfAnfrage) {
 		return BedarfAnfrageRO.builder() //
@@ -62,10 +62,6 @@ public class BedarfControllerMapper {
 				.medizinisch(neuesBedarfRequest.isMedizinisch()) //
 				.kommentar(neuesBedarfRequest.getKommentar()) //
 				.build();
-	}
-
-	static BedarfId maptToBedarfId(final String bedarfId) {
-		return maptToBedarfId(UUID.fromString(bedarfId));
 	}
 
 	static BedarfId maptToBedarfId(final UUID bedarfId) {

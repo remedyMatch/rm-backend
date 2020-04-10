@@ -52,10 +52,6 @@ public class ArtikelControllerMapper {
 				.build();
 	}
 
-	static ArtikelId maptToArtikelId(final String artikelId) {
-		return maptToArtikelId(UUID.fromString(artikelId));
-	}
-
 	static ArtikelId maptToArtikelId(final UUID artikelId) {
 		return new ArtikelId(artikelId);
 	}

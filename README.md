@@ -13,6 +13,7 @@ Um sowohl Frontend als auch Backend lokal lauffähig zu bekommen, müssen die fo
 Repositories geklont werden.
 
 * rm-gateway
+* rm-auth
 * rm-engine
 * rm-backend
 * rm-frontend
@@ -21,27 +22,14 @@ Alle Repositories sind zu finden unter https://github.com/remedyMatch .
 
 ### Gateway
 
-* `docker-compose up` auf top level Ebene (wo auch die Datei docker-compose.yml liegt)
 * Applikation starten (Klasse `GatewayApplication`)
-* http://localhost:8090/auth/ aufrufen
-* KeyCloak konfigurieren
-    * Administration Console --> mit den credentials aus `docker-compose.yml` einloggen
-    * Clients --> Create
-    * Client ID: spring-cloud-gateway-client
-    * Clients --> spring-cloud-gateway-client
-        * Valid Redirect URIs: *
-        * Advanced Settings --> Access Token Lifespan: 1 Days
-        * Save
-    * Groups --> New
-        * Name: beliebig --> save
-    * Users --> View all users --> admin user anklicken --> Groups -->
-     Available Groups --> View all groups --> angelegte Gruppe auswählen --> Join
-    * Clients --> spring-cloud-gateway-client
-        * Tab Mappers --> Create
-            * Name: GroupMapper
-            * Mapper Type: Group Membership
-            * Token Claim Name: groups
-            * Save
+
+### Auth
+
+* `docker-compose up` im Project-Root ausführen (Stammverzeichnis wo auch die Datei docker-compose.yml liegt)
+* Alle bisherigen manuellen Settings sind in _conf/rmio.realm.json_ hinterlegt. 
+* _conf/rmio.realm.json_ wird beim Startup importiert und legt den Realm _rmio_ mit all seinen Settings an.
+* Die Credentials für den Emailversand sind *nicht* hinterlegt. Diese bitte bei den Verantwortlichen erfragen.
 
 ### Engine
 

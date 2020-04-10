@@ -1,0 +1,22 @@
+version: '3.3'
+
+services:
+  backend:
+    image: remedymatch/backend:develop
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/backend?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_DATBASE_PLATFORM=org.hibernate.dialect.MySQL8Dialect
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://auth:8080/auth/realms/rmio
+      - IO_REMEDYMATCH_BACKEND_ENGINE_URL=http://engine:8085/engine
+      - IO_REMEDYMATCH_BACKEND_GEOCODERSERVICEAPIKEY=2831cf619102d5
+    networks:
+      - rm
+networks:
+  rm:
+    driver: overlay

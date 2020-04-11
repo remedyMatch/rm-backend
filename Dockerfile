@@ -17,4 +17,8 @@ RUN set -eux; \
 	apt-get install -y --no-install-recommends redir curl; \
 	rm -rf /var/lib/apt/lists/*
 
+ADD docker/entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+
 CMD ["java","-jar","/app/spring-boot-application.jar"]

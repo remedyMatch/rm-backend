@@ -14,7 +14,7 @@ COPY --from=build /home/gradle/src/build/resources/main/* /app/
 
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends redir; \
+	apt-get install -y --no-install-recommends redir curl; \
 	rm -rf /var/lib/apt/lists/*
 
 CMD ["java","-jar","/app/spring-boot-application.jar"]

@@ -1,8 +1,14 @@
 package io.remedymatch.dbinit;
 
-import java.util.Locale;
-import java.util.UUID;
-
+import com.github.javafaker.Faker;
+import io.remedymatch.artikel.infrastructure.*;
+import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
+import io.remedymatch.person.infrastructure.PersonEntity;
+import io.remedymatch.person.infrastructure.PersonJpaRepository;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -11,20 +17,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.javafaker.Faker;
-
-import io.remedymatch.artikel.infrastructure.ArtikelEntity;
-import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
-import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
-import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
-import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
-import io.remedymatch.institution.domain.InstitutionTyp;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
-import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
-import io.remedymatch.person.infrastructure.PersonEntity;
-import io.remedymatch.person.infrastructure.PersonJpaRepository;
-import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Locale;
+import java.util.UUID;
 
 /**
  * TODO Test-Code nicht für Produktion
@@ -70,8 +64,13 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	 */
 
 	private void createInstitutionenUndPersonen() {
-		createInstitutionen();
-		createPersonen();
+		if (institutionRepository.count() <= 0) {
+			createInstitutionen();
+		}
+
+		if(personRepository.count() <= 0) {
+			createPersonen();
+		}
 	}
 
 	private void createInstitutionen() {
@@ -175,12 +174,14 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	 */
 
 	private void createKategorienUndArtikel() {
-		createBehelfsmaskeArtikel();
-		createDesinfektionArtikel();
-		createHygieneArtikel();
-		createProbeentnahmeArtikel();
-		createSchutzkleidungArtikel();
-		createSchutzmaskenArtikel();
+		if (artikelRepository.count() <= 0 && artikelKategorieRepository.count() <= 0) {
+			createBehelfsmaskeArtikel();
+			createDesinfektionArtikel();
+			createHygieneArtikel();
+			createProbeentnahmeArtikel();
+			createSchutzkleidungArtikel();
+			createSchutzmaskenArtikel();
+		}
 	}
 
 	/*

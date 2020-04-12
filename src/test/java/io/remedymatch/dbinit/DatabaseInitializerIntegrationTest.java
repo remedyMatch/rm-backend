@@ -41,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = {"dbinit"})
+@ActiveProfiles(profiles = {"dbinit", "test"})
 @Tag("InMemory")
 @Tag("SpringBoot")
 public class DatabaseInitializerIntegrationTest {

@@ -22,8 +22,8 @@ class AngebotControllerMapper {
 		return AngebotAnfrageRO.builder() //
 				.id(angebotAnfrage.getId().getValue()) //
 				.angebot(mapToAngebotRO(angebotAnfrage.getAngebot())) //
-				.institution(InstitutionMapper.mapToDTO(angebotAnfrage.getInstitution())) //
-				.standort(InstitutionStandortMapper.mapToDTO(angebotAnfrage.getStandort())) //
+				.institution(InstitutionMapper.mapToInstitutionRO(angebotAnfrage.getInstitution())) //
+				.standort(InstitutionStandortMapper.mapToStandortRO(angebotAnfrage.getStandort())) //
 				.anzahl(angebotAnfrage.getAnzahl()) //
 				.kommentar(angebotAnfrage.getKommentar()) //
 				.prozessInstanzId(angebotAnfrage.getProzessInstanzId()) //
@@ -42,7 +42,7 @@ class AngebotControllerMapper {
 				.anzahl(angebot.getAnzahl()) //
 				.rest(angebot.getRest()) //
 				.institutionId(angebot.getInstitution().getId().getValue()) //
-				.standort(InstitutionStandortMapper.mapToDTO(angebot.getStandort())) //
+				.standort(InstitutionStandortMapper.mapToStandortRO(angebot.getStandort())) //
 				.haltbarkeit(angebot.getHaltbarkeit()).medizinisch(angebot.isMedizinisch()).steril(angebot.isSteril()) //
 				.originalverpackt(angebot.isOriginalverpackt()) //
 				.medizinisch(angebot.isMedizinisch()) //

@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
-import io.remedymatch.institution.api.InstitutionDTO;
-import io.remedymatch.institution.api.InstitutionStandortDTO;
+import io.remedymatch.institution.api.InstitutionRO;
+import io.remedymatch.institution.api.InstitutionStandortRO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,11 +27,11 @@ class AngebotAnfrageRO {
 
 	@NotNull
 	@Valid
-	private InstitutionDTO institution;
+	private InstitutionRO institution;
 
 	@NotNull
 	@Valid
-	private InstitutionStandortDTO standort;
+	private InstitutionStandortRO standort;
 
 	@NotNull
 	@Positive

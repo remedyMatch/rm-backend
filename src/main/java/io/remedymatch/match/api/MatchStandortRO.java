@@ -3,6 +3,7 @@ package io.remedymatch.match.api;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Builder;
@@ -10,26 +11,29 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MatchStandortDTO {
+public class MatchStandortRO {
 
     private UUID id;
 
 	@NotNull
 	private UUID institutionStandortId;
 	
-    @NotNull
+    @NotBlank
     private String name;
     
-    @NotNull
+    @NotBlank
+    private String strasse;
+    
+    @NotBlank
+    private String hausnummer;
+    
+    @NotBlank
     private String plz;
 
-    @NotNull
+    @NotBlank
     private String ort;
 
-    @NotNull
-    private String strasse;
-
-    @NotNull
+    @NotBlank
     private String land;
 
     private BigDecimal longitude;

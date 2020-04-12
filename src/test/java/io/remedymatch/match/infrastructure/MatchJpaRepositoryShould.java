@@ -115,9 +115,10 @@ public class MatchJpaRepositoryShould {
         return MatchStandortEntity.builder() //
                 .institutionStandortId(UUID.randomUUID()) //
                 .name("Mein Standort") //
+                .strasse("Strasse") //
+                .hausnummer("10.") //
                 .plz("PLZ") //
                 .ort("Ort") //
-                .strasse("Strasse") //
                 .land("Land") //
                 .build();
     }

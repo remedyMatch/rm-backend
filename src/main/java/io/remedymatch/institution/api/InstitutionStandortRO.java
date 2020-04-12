@@ -3,31 +3,33 @@ package io.remedymatch.institution.api;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class InstitutionStandortDTO {
-
+public class InstitutionStandortRO {
 
     private UUID id;
 
-    @NotNull
+    @NotBlank
     private String name;
+    
+    @NotBlank
+    private String strasse;
+    
+    @NotBlank
+    private String hausnummer;
 
-    @NotNull
+    @NotBlank
     private String plz;
 
-    @NotNull
+    @NotBlank
     private String ort;
 
-    @NotNull
-    private String strasse;
-
-    @NotNull
+    @NotBlank
     private String land;
 
     private BigDecimal longitude;

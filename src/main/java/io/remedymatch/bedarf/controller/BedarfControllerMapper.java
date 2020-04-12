@@ -23,8 +23,8 @@ class BedarfControllerMapper {
 		return BedarfAnfrageRO.builder() //
 				.id(bedarfAnfrage.getId().getValue()) //
 				.bedarf(mapToBedarfRO(bedarfAnfrage.getBedarf())) //
-				.institution(InstitutionMapper.mapToDTO(bedarfAnfrage.getInstitution())) //
-				.standort(InstitutionStandortMapper.mapToDTO(bedarfAnfrage.getStandort())) //
+				.institution(InstitutionMapper.mapToInstitutionRO(bedarfAnfrage.getInstitution())) //
+				.standort(InstitutionStandortMapper.mapToStandortRO(bedarfAnfrage.getStandort())) //
 				.anzahl(bedarfAnfrage.getAnzahl()) //
 				.kommentar(bedarfAnfrage.getKommentar()) //
 				.prozessInstanzId(bedarfAnfrage.getProzessInstanzId()) //
@@ -44,7 +44,7 @@ class BedarfControllerMapper {
 				.anzahl(bedarf.getAnzahl()) //
 				.rest(bedarf.getRest()) //
 				.institutionId(bedarf.getInstitution().getId().getValue()) //
-				.standort(InstitutionStandortMapper.mapToDTO(bedarf.getStandort())) //
+				.standort(InstitutionStandortMapper.mapToStandortRO(bedarf.getStandort())) //
 				.steril(bedarf.isSteril()) //
 				.medizinisch(bedarf.isMedizinisch()) //
 				.kommentar(bedarf.getKommentar()) //

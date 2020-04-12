@@ -6,10 +6,10 @@ class AnfrageMapper {
     static AnfrageDTO mapToDTO(Anfrage anfrage) {
         return AnfrageDTO.builder() //
                 .id(anfrage.getId()) //
-                .institutionAn(InstitutionMapper.mapToDTO(anfrage.getInstitutionAn())) //
-                .standortAn(InstitutionStandortMapper.mapToDTO(anfrage.getStandortAn())) //
-                .institutionVon(InstitutionMapper.mapToDTO(anfrage.getInstitutionVon())) //
-                .standortVon(InstitutionStandortMapper.mapToDTO(anfrage.getStandortVon())) //
+                .institutionAn(InstitutionMapper.mapToInstitutionRO(anfrage.getInstitutionAn())) //
+                .standortAn(InstitutionStandortMapper.mapToStandortRO(anfrage.getStandortAn())) //
+                .institutionVon(InstitutionMapper.mapToInstitutionRO(anfrage.getInstitutionVon())) //
+                .standortVon(InstitutionStandortMapper.mapToStandortRO(anfrage.getStandortVon())) //
                 .angebotId(anfrage.getAngebotId()) //
                 .bedarfId(anfrage.getBedarfId()) //
                 .anzahl(anfrage.getAnzahl()) //

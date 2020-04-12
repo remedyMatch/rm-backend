@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class InstitutionDTO {
+public class InstitutionRO {
 
     private UUID id;
 
@@ -25,7 +25,7 @@ public class InstitutionDTO {
     @NotNull
     private InstitutionTyp typ;
 
-    private InstitutionStandortDTO hauptstandort;
+    private InstitutionStandortRO hauptstandort;
     @Builder.Default
-    private List<InstitutionStandortDTO> standorte = new ArrayList<>();
+    private List<InstitutionStandortRO> standorte = new ArrayList<>();
 }

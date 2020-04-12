@@ -16,3 +16,6 @@
 		|_.__/  \__,_| \___||_|\_\ \___||_| |_| \__,_|
 
  RemedyMatch - backend
+ 
+ :: Spring Boot ::    ${spring-boot.formatted-version}
+ 

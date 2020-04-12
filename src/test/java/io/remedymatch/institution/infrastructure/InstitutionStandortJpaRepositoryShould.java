@@ -56,9 +56,10 @@ public class InstitutionStandortJpaRepositoryShould {
 	private InstitutionStandortEntity standort() {
 		return InstitutionStandortEntity.builder() //
 				.name("Mein Standort") //
+				.strasse("Strasse") //
+				.hausnummer("10a") //
 				.plz("PLZ") //
 				.ort("Ort") //
-				.strasse("Strasse") //
 				.land("Land") //
 				.build();
 	}

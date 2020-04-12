@@ -14,9 +14,9 @@ public class AnfrageDTO {
 
     private String kommentar;
 
-    private InstitutionDTO institutionVon;
+    private InstitutionRO institutionVon;
 
-    private InstitutionDTO institutionAn;
+    private InstitutionRO institutionAn;
 
     private UUID bedarfId;
 
@@ -24,9 +24,9 @@ public class AnfrageDTO {
 
     private UUID artikelId;
 
-    private InstitutionStandortDTO standortAn;
+    private InstitutionStandortRO standortAn;
 
-    private InstitutionStandortDTO standortVon;
+    private InstitutionStandortRO standortVon;
 
     private BigDecimal entfernung;
 

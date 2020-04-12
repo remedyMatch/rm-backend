@@ -1,6 +1,6 @@
 package io.remedymatch.institution.api;
 
-import static io.remedymatch.institution.api.InstitutionMapper.mapToDTO;
+import static io.remedymatch.institution.api.InstitutionMapper.*;
 import static io.remedymatch.institution.api.InstitutionStandortMapper.mapToStandort;
 import static io.remedymatch.institution.api.InstitutionStandortMapper.mapToStandortId;
 
@@ -33,6 +33,11 @@ import lombok.val;
 public class InstitutionController {
 	private final InstitutionService institutionService;
 
+	@GetMapping
+	public ResponseEntity<InstitutionRO> institutionLaden() {
+		return ResponseEntity.ok(mapToInstitutionRO(institutionService.userInstitutionLaden()));
+	}
+	
 	@PutMapping
 	public ResponseEntity<Void> update(@RequestBody InstitutionUpdateRequest institutionUpdate) {
 		try {
@@ -50,21 +55,21 @@ public class InstitutionController {
 	}
 
 	@PutMapping("/hauptstandort")
-	public ResponseEntity<InstitutionDTO> updateHauptstandort(@RequestBody @Valid InstitutionStandortDTO standort) {
+	public ResponseEntity<InstitutionRO> updateHauptstandort(@RequestBody @Valid InstitutionStandortRO standort) {
 		return ResponseEntity
-				.ok(mapToDTO(institutionService.userInstitutionHauptstandortAktualisieren(mapToStandort(standort))));
+				.ok(mapToInstitutionRO(institutionService.userInstitutionHauptstandortAktualisieren(mapToStandort(standort))));
 	}
 
 	@PostMapping("/standort")
-	public ResponseEntity<InstitutionDTO> standortHinzufuegen(@RequestBody @Valid InstitutionStandortDTO standort) {
+	public ResponseEntity<InstitutionRO> standortHinzufuegen(@RequestBody @Valid InstitutionStandortRO standort) {
 		return ResponseEntity
-				.ok(mapToDTO(institutionService.userInstitutionStandortHinzufuegen(mapToStandort(standort))));
+				.ok(mapToInstitutionRO(institutionService.userInstitutionStandortHinzufuegen(mapToStandort(standort))));
 	}
 
 	@DeleteMapping("/standort/{standortId}")
-	public ResponseEntity<InstitutionDTO> standortEntfernen(@PathVariable("standortId") String standortId) {
+	public ResponseEntity<InstitutionRO> standortEntfernen(@PathVariable("standortId") String standortId) {
 		return ResponseEntity
-				.ok(mapToDTO(institutionService.userInstitutionStandortEntfernen(mapToStandortId(standortId))));
+				.ok(mapToInstitutionRO(institutionService.userInstitutionStandortEntfernen(mapToStandortId(standortId))));
 	}
 
 	@GetMapping("/typ")
@@ -75,8 +80,8 @@ public class InstitutionController {
 	}
 
 	@GetMapping("/assigned")
-	public ResponseEntity<InstitutionDTO> institutionLaden() {
-		return ResponseEntity.ok(mapToDTO(institutionService.userInstitutionLaden()));
+	public ResponseEntity<InstitutionRO> meineInstitutionLaden() {
+		return institutionLaden();
 	}
 
 	@GetMapping("/anfragen/gestellt")

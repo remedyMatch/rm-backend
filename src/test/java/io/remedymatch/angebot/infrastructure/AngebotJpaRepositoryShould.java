@@ -101,9 +101,10 @@ public class AngebotJpaRepositoryShould {
 	private InstitutionStandortEntity meinStandort() {
 		return InstitutionStandortEntity.builder() //
 				.name("Mein Standort") //
+				.strasse("Strasse") //
+				.hausnummer("10a") //
 				.plz("PLZ") //
 				.ort("Ort") //
-				.strasse("Strasse") //
 				.land("Land") //
 				.build();
 	}

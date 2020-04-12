@@ -1,6 +1,6 @@
 package io.remedymatch.match.api;
 
-import io.remedymatch.institution.api.InstitutionDTO;
+import io.remedymatch.institution.api.InstitutionRO;
 import io.remedymatch.match.domain.MatchStatus;
 import lombok.Builder;
 import lombok.Data;
@@ -14,13 +14,13 @@ public class MatchDTO {
 
     private UUID id;
 
-    private InstitutionDTO institutionVon;
+    private InstitutionRO institutionVon;
 
-    private MatchStandortDTO standortVon;
+    private MatchStandortRO standortVon;
 
-    private MatchStandortDTO standortAn;
+    private MatchStandortRO standortAn;
 
-    private InstitutionDTO institutionAn;
+    private InstitutionRO institutionAn;
 
     private String kommentar;
 

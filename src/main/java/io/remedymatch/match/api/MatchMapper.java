@@ -15,8 +15,8 @@ class MatchMapper {
                 .status(match.getStatus()) //
                 .standortAn(MatchStandortMapper.mapToDTO(match.getStandortAn())) //
                 .standortVon(MatchStandortMapper.mapToDTO(match.getStandortVon())) //
-                .institutionVon(InstitutionMapper.mapToDTO(match.getInstitutionVon())) //
-                .institutionAn(InstitutionMapper.mapToDTO(match.getInstitutionAn())) //
+                .institutionVon(InstitutionMapper.mapToInstitutionRO(match.getInstitutionVon())) //
+                .institutionAn(InstitutionMapper.mapToInstitutionRO(match.getInstitutionAn())) //
                 .kommentar(match.getKommentar()) //
                 .prozessInstanzId(match.getProzessInstanzId()) //
                 .entfernung(match.getEntfernung()) //

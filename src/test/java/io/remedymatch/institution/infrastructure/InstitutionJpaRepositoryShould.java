@@ -81,9 +81,10 @@ public class InstitutionJpaRepositoryShould {
 	private InstitutionStandortEntity standort(final String name) {
 		return InstitutionStandortEntity.builder() //
 				.name(name) //
+				.strasse("Strasse") //
+				.hausnummer("10a") //
 				.plz("PLZ") //
 				.ort("Ort") //
-				.strasse("Strasse") //
 				.land("Land") //
 				.build();
 	}

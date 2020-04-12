@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import io.remedymatch.institution.api.InstitutionStandortDTO;
+import io.remedymatch.institution.api.InstitutionStandortRO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -38,7 +38,7 @@ public class AngebotRO {
 
 	@NotNull
 	@Valid
-	private InstitutionStandortDTO standort;
+	private InstitutionStandortRO standort;
 	
 	@NotNull
 	private LocalDateTime haltbarkeit;

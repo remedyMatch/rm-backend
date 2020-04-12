@@ -11,10 +11,11 @@ class MatchStandortMapper {
 		return MatchStandort.builder() //
 				.institutionStandortId(standort.getId().getValue()) //
 				.name(standort.getName()) //
+				.strasse(standort.getStrasse()) //
+				.hausnummer(standort.getHausnummer()) //
 				.land(standort.getLand()) //
 				.ort(standort.getOrt()) //
 				.plz(standort.getPlz()) //
-				.strasse(standort.getStrasse()) //
 				.longitude(standort.getLongitude()) //
 				.latitude(standort.getLatitude()) //
 				.build();

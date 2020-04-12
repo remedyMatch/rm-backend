@@ -117,7 +117,7 @@ public class InstitutionService {
 	/* help methods */
 
 	private InstitutionStandort standortSpeichern(final InstitutionStandort standort) {
-		var longlatList = standortService.findePointsByAdressString(standort.getAdresse());
+		var longlatList = standortService.findePointsByAdressString(formatAdresse(standort));
 
 		if (longlatList == null || longlatList.size() == 0) {
 			throw new IllegalArgumentException("Die Adresse konnte nicht aufgelöst werden");
@@ -127,6 +127,15 @@ public class InstitutionService {
 		standort.setLongitude(BigDecimal.valueOf(longlatList.get(0).getLongitude()));
 
 		return institutionStandortRepository.update(standort);
+	}
+	
+	private String formatAdresse(final InstitutionStandort standort) {
+		return String.format("%s %s, %s %s, %s", //
+				standort.getStrasse(), //
+				standort.getHausnummer(), //
+				standort.getPlz(), //
+				standort.getOrt(), //
+				standort.getLand());
 	}
 
 	private List<Anfrage> mitEntfernung(final List<Anfrage> anfragen) {

@@ -58,9 +58,10 @@ public class MatchStandortJpaRepositoryShould {
 		return MatchStandortEntity.builder() //
 				.institutionStandortId(UUID.randomUUID()) //
 				.name("Mein Standort") //
+				.strasse("Strasse") //
+				.hausnummer("10a") //
 				.plz("PLZ") //
 				.ort("Ort") //
-				.strasse("Strasse") //
 				.land("Land") //
 				.build();
 	}

@@ -21,8 +21,8 @@ import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
-import io.remedymatch.institution.api.InstitutionDTO;
-import io.remedymatch.institution.api.InstitutionStandortDTO;
+import io.remedymatch.institution.api.InstitutionRO;
+import io.remedymatch.institution.api.InstitutionStandortRO;
 import io.remedymatch.institution.domain.Institution;
 import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.institution.domain.InstitutionStandort;
@@ -40,7 +40,7 @@ class AngebotControllerMapperShould {
 	private static final InstitutionId ANGEBOT_INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 	private static final Institution ANGEBOT_INSTITUTION = Institution.builder().id(ANGEBOT_INSTITUTION_ID).build();
 	private static final InstitutionStandortId ANGEBOT_STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
-	private static final InstitutionStandortDTO ANGEBOT_STANDORT_DTO = InstitutionStandortDTO.builder()
+	private static final InstitutionStandortRO ANGEBOT_STANDORT_DTO = InstitutionStandortRO.builder()
 			.id(ANGEBOT_STANDORT_ID.getValue()).build();
 	private static final InstitutionStandort ANGEBOT_STANDORT = InstitutionStandort.builder().id(ANGEBOT_STANDORT_ID)
 			.build();
@@ -54,10 +54,10 @@ class AngebotControllerMapperShould {
 	private static final AngebotAnfrageId ANFRAGE_ID = new AngebotAnfrageId(UUID.randomUUID());
 	private static final InstitutionId ANFRAGE_INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 	private static final Institution ANFRAGE_INSTITUTION = Institution.builder().id(ANFRAGE_INSTITUTION_ID).build();
-	private static final InstitutionDTO ANFRAGE_INSTITUTION_DTO = InstitutionDTO.builder()
+	private static final InstitutionRO ANFRAGE_INSTITUTION_DTO = InstitutionRO.builder()
 			.id(ANFRAGE_INSTITUTION_ID.getValue()).build();
 	private static final InstitutionStandortId ANFRAGE_STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
-	private static final InstitutionStandortDTO ANFRAGE_STANDORT_DTO = InstitutionStandortDTO.builder()
+	private static final InstitutionStandortRO ANFRAGE_STANDORT_DTO = InstitutionStandortRO.builder()
 			.id(ANFRAGE_STANDORT_ID.getValue()).build();
 	private static final InstitutionStandort ANFRAGE_STANDORT = InstitutionStandort.builder().id(ANFRAGE_STANDORT_ID)
 			.build();

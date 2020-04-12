@@ -12,3 +12,5 @@
  
  RemedyMatch - Backend - Test
  
+ :: Spring Boot ::    ${spring-boot.formatted-version}
+ 

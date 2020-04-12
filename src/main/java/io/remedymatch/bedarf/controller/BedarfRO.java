@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import io.remedymatch.institution.api.InstitutionStandortDTO;
+import io.remedymatch.institution.api.InstitutionStandortRO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -50,7 +50,7 @@ public class BedarfRO {
 
 	@NotNull
 	@Valid
-	private InstitutionStandortDTO standort;
+	private InstitutionStandortRO standort;
 
 	private boolean steril;
 

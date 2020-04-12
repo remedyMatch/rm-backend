@@ -191,7 +191,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	 */
 
 	private static final boolean MEDIZINISCH_AUSWAEHLBAR = true;
-	private static final boolean MEDIZINISCH_NICHT_AUSWAEHLBAR = true;
+	private static final boolean MEDIZINISCH_NICHT_AUSWAEHLBAR = false;
 
 	private void createBehelfsmaskeArtikel() {
 

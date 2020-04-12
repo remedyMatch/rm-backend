@@ -5,29 +5,33 @@ import io.remedymatch.person.domain.PersonId;
 
 class PersonMapper {
 
-	static PersonDTO mapToDTO(Person person) {
+	static PersonRO mapToPersonRO(Person person) {
 		if (person == null) {
 			return null;
 		}
 
-		return PersonDTO.builder() //
+		return PersonRO.builder() //
 				.id(person.getId().getValue()) //
+				.username(person.getUsername()) //
 				.vorname(person.getVorname()) //
 				.nachname(person.getNachname()) //
+				.email(person.getEmail()) //
 				.telefon(person.getTelefon()) //
 				.build();
 	}
 
-	static Person mapToPerson(PersonDTO dto) {
-		if (dto == null) {
+	static Person mapToPerson(PersonRO ro) {
+		if (ro == null) {
 			return null;
 		}
 
 		return Person.builder() //
-				.id(new PersonId(dto.getId())) //
-				.vorname(dto.getVorname()) //
-				.nachname(dto.getNachname()) //
-				.telefon(dto.getTelefon()) //
+				.id(new PersonId(ro.getId())) //
+				.username(ro.getUsername()) //
+				.vorname(ro.getVorname()) //
+				.nachname(ro.getNachname()) //
+				.email(ro.getEmail()) //
+				.telefon(ro.getTelefon()) //
 				.build();
 	}
 }

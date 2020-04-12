@@ -14,6 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -48,6 +49,9 @@ public class PersonEntity {
     @Column(name = "NACHNAME", nullable = true, updatable = true, length = 64)
     private String nachname;
 
+    @Column(name = "EMAIL", nullable = true, updatable = true, length = 32)
+    private String email;
+
     @Column(name = "TELEFON", nullable = true, updatable = true, length = 32)
     private String telefon;
 
@@ -55,4 +59,9 @@ public class PersonEntity {
     @Type(type = "uuid-char")
     @JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionEntity institution;
+    
+    @ManyToOne
+    @Type(type = "uuid-char")
+    @JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = false, updatable = true)
+	private InstitutionStandortEntity standort;
 }

@@ -1,6 +1,7 @@
 package io.remedymatch.person.domain;
 
 import io.remedymatch.institution.domain.InstitutionEntityConverter;
+import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonEntity.PersonEntityBuilder;
 
@@ -16,8 +17,10 @@ class PersonEntityConverter {
 				.username(entity.getUsername()) //
 				.vorname(entity.getVorname()) //
 				.nachname(entity.getNachname()) //
+				.email(entity.getEmail()) //
 				.telefon(entity.getTelefon()) //
 				.institution(InstitutionEntityConverter.convert(entity.getInstitution())) //
+				.standort(InstitutionStandortEntityConverter.convert(entity.getStandort())) //
 				.build();
 	}
 
@@ -31,11 +34,14 @@ class PersonEntityConverter {
 			builder.id(person.getId().getValue());
 		}
 
-		return builder.username(person.getUsername()) //
+		return builder //
+				.username(person.getUsername()) //
 				.vorname(person.getVorname()) //
 				.nachname(person.getNachname()) //
+				.email(person.getEmail()) //
 				.telefon(person.getTelefon()) //
 				.institution(InstitutionEntityConverter.convert(person.getInstitution())) //
+				.standort(InstitutionStandortEntityConverter.convert(person.getStandort())) //
 				.build();
 	}
 }

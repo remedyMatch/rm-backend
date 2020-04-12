@@ -1,14 +1,8 @@
 package io.remedymatch.dbinit;
 
-import com.github.javafaker.Faker;
-import io.remedymatch.artikel.infrastructure.*;
-import io.remedymatch.institution.domain.InstitutionTyp;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
-import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
-import io.remedymatch.person.infrastructure.PersonEntity;
-import io.remedymatch.person.infrastructure.PersonJpaRepository;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import java.util.Locale;
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -17,8 +11,18 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Locale;
-import java.util.UUID;
+import com.github.javafaker.Faker;
+
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
+import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * TODO Test-Code nicht für Produktion
@@ -27,8 +31,6 @@ import java.util.UUID;
 @Profile("dbinit")
 @Slf4j
 public class DatabaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
-	@Autowired
-	private PersonJpaRepository personRepository;
 
 	@Autowired
 	private InstitutionJpaRepository institutionRepository;
@@ -66,10 +68,6 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	private void createInstitutionenUndPersonen() {
 		if (institutionRepository.count() <= 0) {
 			createInstitutionen();
-		}
-
-		if(personRepository.count() <= 0) {
-			createPersonen();
 		}
 	}
 
@@ -137,38 +135,6 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 		institutionRepository.save(entity);
 	}
 
-	private void createPersonen() {
-
-		for (InstitutionEntity institution : institutionRepository.findAll()) {
-			/*
-			 * QuickFix: Beim Initialisieren ist der Institutions-Typ der Institution
-			 * null..hier fliegt dann waehrend der initialisierung eine NPE.
-			 */
-			if (institution.getTyp() == null) {
-				continue;
-			}
-			switch (institution.getTyp()) {
-			case Krankenhaus:
-			case Lieferant:
-			case Andere:
-				createPerson(institution);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-	private void createPerson(InstitutionEntity institution) {
-		var personName = faker.name();
-
-		var person = PersonEntity.builder() //
-				.institution(institution).vorname(personName.firstName()).nachname(personName.lastName()) //
-				.username(personName.username()).telefon(faker.phoneNumber().phoneNumber()) //
-				.build();
-		personRepository.save(person);
-	}
-
 	/*
 	 * Artikel -> Kategorien / Artikel / Varianten
 	 */
@@ -196,7 +162,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	private void createBehelfsmaskeArtikel() {
 
 		val kategorieId = createKategorie("Behelfs-Maske", null);
-		
+
 		var artikel = createArtikel(kategorieId, //
 				"Mund-Nasen-Schutz", //
 				"Hohe Flüssigkeitsresistenz • Gute Atmungsaktivität • Innen- und Außenflächen sind eindeutig gekennzeichnet");
@@ -246,7 +212,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	private void createDesinfektionArtikel() {
 
 		val kategorieId = createKategorie("Desinfektion", null);
-		
+
 		var artikel = createArtikel(kategorieId, //
 				"Handdesinfektion viruzid", //
 				"Handdesinfektion viruzid");
@@ -305,7 +271,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	private void createHygieneArtikel() {
 
 		val kategorieId = createKategorie("Hygiene", null);
-		
+
 		var artikel = createArtikel(kategorieId, //
 				"Einweg-Sitzbezüge", //
 				"Einweg-Sitzbezüge");
@@ -346,7 +312,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	private void createProbeentnahmeArtikel() {
 
 		val kategorieId = createKategorie("Probenentnahme", null);
-		
+
 		var artikel = createArtikel(kategorieId, //
 				"Abstrichtupfer", //
 				"Abstrichtupfer");
@@ -482,7 +448,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	private void createSchutzmaskenArtikel() {
 
 		val kategorieId = createKategorie("Schutzmasken", null);
-		
+
 		var artikel = createArtikel(kategorieId, //
 				"FFP2",
 				"Atemschutzgerät \"N95\" gemäß FDA Klasse II, unter 21 CFR 878.4040, und CDC NIOSH, oder \"FFP2\" gemäß EN 149 Verordnung 2016/425 Kategorie III oder gleichwertige Normen");
@@ -491,7 +457,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 				"Atmungsaktives Design, das nicht gegen den Mund zusammenfällt (z.B. Entenschnabel, becherförmig)Ausgestattet mit Ausatemventil • Versehen mit einer Metallplatte an der Nasenspitze • Kann wiederverwendbar (aus robustem Material, das gereinigt und desinfiziert werden kann) oder Einwegartikel sein", //
 				"Atemschutzgerät \"N95\" gemäß FDA Klasse II, unter 21 CFR 878.4040, und CDC NIOSH, oder \"FFP2\" gemäß EN 149 Verordnung 2016/425 Kategorie III oder gleichwertige Normen", //
 				MEDIZINISCH_AUSWAEHLBAR);
-		
+
 		artikel = createArtikel(kategorieId, //
 				"FFP3", //
 				"ausgestattet mit Ausatemventil");

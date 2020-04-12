@@ -7,10 +7,11 @@ import java.util.UUID;
 
 @Data
 @Builder
-class PersonDTO {
+class PersonRO {
     private UUID id;
-    private String userName;
+    private String username;
     private String vorname;
     private String nachname;
+    private String email;
     private String telefon;
 }

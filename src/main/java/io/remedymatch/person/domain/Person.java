@@ -1,6 +1,7 @@
 package io.remedymatch.person.domain;
 
 import io.remedymatch.institution.domain.Institution;
+import io.remedymatch.institution.domain.InstitutionStandort;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -21,6 +22,8 @@ public class Person {
 	private String username;
 	private String vorname;
 	private String nachname;
+	private String email;
 	private String telefon;
 	private Institution institution;
+	private InstitutionStandort standort;
 }

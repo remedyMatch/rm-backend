@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionId;
 import io.remedymatch.person.domain.Person;
 import io.remedymatch.person.domain.PersonId;
 
@@ -22,32 +20,31 @@ public class PersonMapperShould {
 	private static final String USERNAME = "username";
 	private static final String VORNAME = "Vorname";
 	private static final String NACHNAME = "Nachname";
+	private static final String EMAIL = "EMail";
 	private static final String TELEFON = "012345";
-
-	private static final InstitutionId INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 
 	@Test
 	@DisplayName("DTO in Domain Objekt konvertieren")
 	void dto_in_Domain_Objekt_konvertieren() {
-		assertEquals(personOhneUsernameAndInstitution(), PersonMapper.mapToPerson(personDTO()));
+		assertEquals(person(), PersonMapper.mapToPerson(personRO()));
 	}
 
 	@Test
 	@DisplayName("null DTO in null Domain Objekt konvertieren")
 	void null_dto_in_null_Domain_Objekt_konvertieren() {
-		assertNull(PersonMapper.mapToPerson((PersonDTO) null));
+		assertNull(PersonMapper.mapToPerson((PersonRO) null));
 	}
 
 	@Test
 	@DisplayName("Domain Objekt in DTO konvertieren")
 	void domain_Objekt_in_DTO_konvertieren() {
-		assertEquals(personDTO(), PersonMapper.mapToDTO(person()));
+		assertEquals(personRO(), PersonMapper.mapToPersonRO(person()));
 	}
 
 	@Test
 	@DisplayName("null Domain Objekt in null DTO konvertieren")
 	void null_domain_Objekt_in_DTO_konvertieren() {
-		assertNull(PersonMapper.mapToDTO((Person) null));
+		assertNull(PersonMapper.mapToPersonRO((Person) null));
 	}
 
 	private Person person() {
@@ -56,32 +53,19 @@ public class PersonMapperShould {
 				.username(USERNAME) //
 				.vorname(VORNAME) //
 				.nachname(NACHNAME) //
-				.telefon(TELEFON) //
-				.institution(institution()) //
-				.build();
-	}
-
-	private Person personOhneUsernameAndInstitution() {
-		return Person.builder() //
-				.id(PERSON_ID)//
-				.vorname(VORNAME) //
-				.nachname(NACHNAME) //
+				.email(EMAIL) //
 				.telefon(TELEFON) //
 				.build();
 	}
 
-	private PersonDTO personDTO() {
-		return PersonDTO.builder() //
+	private PersonRO personRO() {
+		return PersonRO.builder() //
 				.id(PERSON_ID.getValue())//
+				.username(USERNAME) //
 				.vorname(VORNAME) //
 				.nachname(NACHNAME) //
+				.email(EMAIL) //
 				.telefon(TELEFON) //
-				.build();
-	}
-
-	private Institution institution() {
-		return Institution.builder() //
-				.id(INSTITUTION_ID) //
 				.build();
 	}
 }

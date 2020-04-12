@@ -10,9 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionId;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.domain.InstitutionTestFixtures;
 import io.remedymatch.person.infrastructure.PersonEntity;
 
 @ExtendWith(SpringExtension.class)
@@ -22,9 +20,8 @@ public class PersonEntityConverterShould {
 	private static final String USERNAME = "username";
 	private static final String VORNAME = "Vorname";
 	private static final String NACHNAME = "Nachname";
+	private static final String EMAIL = "email@email.local";
 	private static final String TELEFON = "012345";
-
-	private static final InstitutionId INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 
 	@Test
 	@DisplayName("Entity in Domain Objekt konvertieren")
@@ -55,8 +52,10 @@ public class PersonEntityConverterShould {
 				.id(PERSON_ID).username(USERNAME) //
 				.vorname(VORNAME) //
 				.nachname(NACHNAME) //
+				.email(EMAIL) //
 				.telefon(TELEFON) //
-				.institution(institution()) //
+				.institution(InstitutionTestFixtures.beispielInstitution())//
+				.standort(InstitutionTestFixtures.beispielHaupstandort())//
 				.build();
 	}
 
@@ -65,20 +64,10 @@ public class PersonEntityConverterShould {
 				.id(PERSON_ID.getValue()).username(USERNAME) //
 				.vorname(VORNAME) //
 				.nachname(NACHNAME) //
+				.email(EMAIL) //
 				.telefon(TELEFON) //
-				.institution(institutionEntity()) //
-				.build();
-	}
-
-	private Institution institution() {
-		return Institution.builder() //
-				.id(INSTITUTION_ID) //
-				.build();
-	}
-
-	private InstitutionEntity institutionEntity() {
-		return InstitutionEntity.builder() //
-				.id(INSTITUTION_ID.getValue()) //
+				.institution(InstitutionTestFixtures.beispielInstitutionEntity())//
+				.standort(InstitutionTestFixtures.beispielHaupstandortEntity())//
 				.build();
 	}
 }

@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.TestApplication;
 import io.remedymatch.institution.domain.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
@@ -43,8 +44,9 @@ public class PersonJpaRepositoryShould {
 	@Test
 	@DisplayName("ein Person anhand username lesen")
 	void eine_Person_anhand_Username_lesen() {
-		val meinKrankenhaus = persist(institution());
-		val ich = persist(person("ich", meinKrankenhaus));
+		val meinStandort = persist(standort());
+		val meinKrankenhaus = persist(institution(meinStandort));
+		val ich = persist(person("ich", meinKrankenhaus, meinStandort));
 		entityManager.flush();
 
 		assertEquals(Optional.of(ich), jpaRepository.findByUsername("ich"));
@@ -57,21 +59,34 @@ public class PersonJpaRepositoryShould {
 		return entity;
 	}
 
-	private InstitutionEntity institution() {
+	private InstitutionEntity institution(final InstitutionStandortEntity standort) {
 		return InstitutionEntity.builder() //
 				.name("Mein Krankenhaus") //
 				.institutionKey("mein-krankehnaus") //
 				.typ(InstitutionTyp.Krankenhaus) //
+				.hauptstandort(standort) //
 				.build();
 	}
-	
-	private PersonEntity person(final String username, final InstitutionEntity institution) {
+
+	private InstitutionStandortEntity standort() {
+		return InstitutionStandortEntity.builder() //
+				.name("Mein Standort") //
+				.plz("PLZ") //
+				.ort("Ort") //
+				.strasse("Strasse") //
+				.land("Land") //
+				.build();
+	}
+
+	private PersonEntity person(final String username, final InstitutionEntity institution,
+			final InstitutionStandortEntity standort) {
 		return PersonEntity.builder() //
 				.username(username) //
 				.vorname("Vorname") //
 				.nachname("Nachname") //
 				.telefon("08106112233") //
 				.institution(institution) //
+				.standort(standort) //
 				.build();
 	}
 }

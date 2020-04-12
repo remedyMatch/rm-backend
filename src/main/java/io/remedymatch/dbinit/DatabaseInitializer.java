@@ -1,6 +1,5 @@
 package io.remedymatch.dbinit;
 
-import java.util.Locale;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,16 +10,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.javafaker.Faker;
-
 import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
-import io.remedymatch.institution.domain.InstitutionTyp;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
-import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,15 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 public class DatabaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
 	@Autowired
-	private InstitutionJpaRepository institutionRepository;
-
-	@Autowired
 	private ArtikelKategorieJpaRepository artikelKategorieRepository;
 
 	@Autowired
 	private ArtikelJpaRepository artikelRepository;
-
-	private Faker faker = new Faker(new Locale("de"));
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -52,87 +41,11 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 	public void initTestdaten() {
 
 		try {
-			createInstitutionenUndPersonen();
-
 			createKategorienUndArtikel();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			log.error("Fehler beim Erstellen des initialen Datenbestandes", ex);
 		}
-	}
-
-	/*
-	 * Personen iund Institutionen
-	 */
-
-	private void createInstitutionenUndPersonen() {
-		if (institutionRepository.count() <= 0) {
-			createInstitutionen();
-		}
-	}
-
-	private void createInstitutionen() {
-		// Krankenhäuser
-		createInstitution("institution1", "Paracelsus Klinik München", InstitutionTyp.Krankenhaus);
-		createInstitution("institution2", "Arabella-Klinik GmbH", InstitutionTyp.Krankenhaus);
-		createInstitution("institution3", "München Klinik Bogenhausen", InstitutionTyp.Krankenhaus);
-		createInstitution("institution4", "Städtisches Klinikum München GmbH", InstitutionTyp.Krankenhaus);
-		createInstitution("institution5", "Klinik Dr. Schreiber GmbH", InstitutionTyp.Krankenhaus);
-		createInstitution("institution6", "Immanuel Krankenhaus Berlin - Standort Buch", InstitutionTyp.Krankenhaus);
-		createInstitution("institution7", "Bundeswehrkrankenhaus Berlin", InstitutionTyp.Krankenhaus);
-		createInstitution("institution8", "Helios Klinikum Berlin-Buch", InstitutionTyp.Krankenhaus);
-		createInstitution("institution9", "Charitee - Universitätsmedizin Berlin", InstitutionTyp.Krankenhaus);
-		createInstitution("institution10", "Deutsches Herzzentrum Berlin", InstitutionTyp.Krankenhaus);
-		createInstitution("institution11", "DRK Kliniken Berlin Mitte", InstitutionTyp.Krankenhaus);
-		createInstitution("institution12", "Wilhelmsburger Krankenhaus Groö-Sand", InstitutionTyp.Krankenhaus);
-		createInstitution("institution13", "Universitätsklinikum Hamburg-Eppendorf", InstitutionTyp.Krankenhaus);
-		createInstitution("institution14", "Sankt Gertrauden-Krankenhaus GmbH", InstitutionTyp.Krankenhaus);
-		createInstitution("institution15", "St.Joseph Krankenhaus", InstitutionTyp.Krankenhaus);
-		createInstitution("institution16", "Heinrich Sengelmann Krankenhaus", InstitutionTyp.Krankenhaus);
-		createInstitution("institution17", "Krankenhaus Reinbek St. Adolf-Stift GmbH", InstitutionTyp.Krankenhaus);
-		createInstitution("institution18", "Asklepios Westklinikum Hamburg GmbH", InstitutionTyp.Krankenhaus);
-		createInstitution("institution19", "Elbe Klinikum Buxtehude", InstitutionTyp.Krankenhaus);
-		createInstitution("institution20", "Asklepios Klinik Nord, Heidberg", InstitutionTyp.Krankenhaus);
-		createInstitution("institution21", "Klinik Charlottenhaus", InstitutionTyp.Krankenhaus);
-		createInstitution("institution22", "Diakonie-Klinikum Stuttgart", InstitutionTyp.Krankenhaus);
-		createInstitution("institution23", "Krankenhaus vom Roten Kreuz Bad Cannstatt GmbH",
-				InstitutionTyp.Krankenhaus);
-		createInstitution("institution24", "Marienhospital Stuttgart", InstitutionTyp.Krankenhaus);
-
-		// Ärzte
-		createInstitution("institution25", "Dr. Thoams Meier", InstitutionTyp.Arzt);
-		createInstitution("institution26", "Prof. Dr. Hohenstett", InstitutionTyp.Arzt);
-		createInstitution("institution27", "Dr. Hans Keller", InstitutionTyp.Arzt);
-		createInstitution("institution28", "Gemeinschaftspraxis Jaeger", InstitutionTyp.Arzt);
-
-		// Hersteller
-		createInstitution("institution29", "MediTech", InstitutionTyp.Lieferant);
-		createInstitution("institution30", "CareTextil", InstitutionTyp.Lieferant);
-		createInstitution("institution31", "HopitalServices", InstitutionTyp.Lieferant);
-
-		// Firmen und andere
-		createInstitution("institution32", "Gebauedereinigung Stettner", InstitutionTyp.Andere);
-		createInstitution("institution33", "Gebauedesanierung Rieger", InstitutionTyp.Andere);
-		createInstitution("institution34", "Lackiererei Müller", InstitutionTyp.Andere);
-		for (int i = 0; i < 100; i++) {
-			String name = faker.company().name();
-			createInstitution("other" + i, name, InstitutionTyp.Andere);
-		}
-
-		// Privatpersonen
-		for (int i = 0; i < 500; i++) {
-			String name = faker.name().fullName();
-			createInstitution("private" + i, name, InstitutionTyp.Privat);
-		}
-	}
-
-	private void createInstitution(String key, String name, InstitutionTyp type) {
-		var entity = InstitutionEntity.builder() //
-				.institutionKey(key) //
-				.name(name) //
-				.typ(type) //
-				.build();
-		institutionRepository.save(entity);
 	}
 
 	/*

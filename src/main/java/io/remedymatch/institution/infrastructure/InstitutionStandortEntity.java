@@ -43,7 +43,7 @@ public class InstitutionStandortEntity {
     @Column(name = "STRASSE", nullable = false, updatable = true, length = 64)
     private String strasse;
     
-    @Column(name = "HAUSNUMMER", nullable = false, updatable = true, length = 16)
+    @Column(name = "HAUSNUMMER", nullable = true, updatable = true, length = 16)
     private String hausnummer;
 
     @Column(name = "PLZ", nullable = false, updatable = true, length = 8)

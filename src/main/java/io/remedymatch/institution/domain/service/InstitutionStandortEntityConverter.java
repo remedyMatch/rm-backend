@@ -28,6 +28,7 @@ public final class InstitutionStandortEntityConverter {
 				.plz(entity.getPlz()) //
 				.ort(entity.getOrt()) //
 				.strasse(entity.getStrasse())//
+				.hausnummer(entity.getHausnummer())//
 				.land(entity.getLand()) //
 				.longitude(entity.getLongitude()) //
 				.latitude(entity.getLatitude()) //
@@ -49,6 +50,7 @@ public final class InstitutionStandortEntityConverter {
 				.plz(institutionStandort.getPlz()) //
 				.ort(institutionStandort.getOrt()) //
 				.strasse(institutionStandort.getStrasse())//
+				.hausnummer(institutionStandort.getHausnummer())//
 				.land(institutionStandort.getLand()) //
 				.longitude(institutionStandort.getLongitude()) //
 				.latitude(institutionStandort.getLatitude()) // ;

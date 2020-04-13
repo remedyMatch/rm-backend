@@ -2,6 +2,7 @@ package io.remedymatch.institution.controller;
 
 import static io.remedymatch.institution.controller.InstitutionMapper.mapToInstitutionRO;
 import static io.remedymatch.institution.controller.InstitutionStandortMapper.mapToNeuesStandort;
+import static io.remedymatch.institution.controller.InstitutionStandortMapper.mapToStandortId;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +24,7 @@ import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.domain.service.InstitutionService;
+import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -33,10 +35,11 @@ import lombok.val;
 public class InstitutionController {
 
 	private final InstitutionService institutionService;
+	private final UserService UserService;
 
 	@GetMapping
 	public ResponseEntity<InstitutionRO> institutionLaden() {
-		return ResponseEntity.ok(mapToInstitutionRO(institutionService.userInstitutionLaden()));
+		return ResponseEntity.ok(mapToInstitutionRO(UserService.getContextInstitution()));
 	}
 
 	@PutMapping
@@ -44,7 +47,8 @@ public class InstitutionController {
 		try {
 			institutionService.userInstitutionAktualisieren(//
 					institutionUpdate.getName(), //
-					institutionUpdate.getTyp());
+					institutionUpdate.getTyp(), //
+					mapToStandortId(institutionUpdate.getHauptstandortId()));
 		} catch (ObjectNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		} catch (NotUserInstitutionObjectException e) {
@@ -57,9 +61,9 @@ public class InstitutionController {
 	@PutMapping("/hauptstandort")
 	public ResponseEntity<InstitutionRO> updateHauptstandort(
 			@RequestBody @Valid NeuesInstitutionStandortRequest neuesStandort) {
-		
+
 		// XXX sollte weg sein nachdem der RegistrierungFreigabe Prozess fertig ist...
-		
+
 		return ResponseEntity.ok(mapToInstitutionRO(
 				institutionService.userInstitutionHauptstandortHinzufuegen(mapToNeuesStandort(neuesStandort))));
 	}

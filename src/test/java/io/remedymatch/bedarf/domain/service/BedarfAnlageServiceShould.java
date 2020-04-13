@@ -77,6 +77,40 @@ class BedarfAnlageServiceShould {
 	}
 	
 	@Test
+	@DisplayName("Fehler werfen wenn Artikel und ArtikelVariante nicht zusammen passen")
+	void fehler_werfen_wenn_Artikel_und_ArtikelVariante_nicht_zusammen_passen() {
+
+		val artikelId = new ArtikelId(UUID.randomUUID());
+		
+		val artikelVarianteId = beispielArtikelVarianteId();
+		val artikelVariante = beispielArtikelVariante();
+		
+		val anzahl = BigDecimal.valueOf(100);
+		val steril = true;
+		val medizinisch = true;
+		val kommentar = "Neues Bedarf";
+
+		val userInstitution = beispielUserContextInstitution();
+		val userStandort = beispielUserContextAnderesStandort();
+		
+		val neuesBedarf = NeuesBedarf.builder() //
+				.artikelId(artikelId) //
+				.artikelVarianteId(artikelVarianteId) //
+				.anzahl(anzahl) //
+				.standortId(userStandort.getId()) //
+				.steril(steril) //
+				.medizinisch(medizinisch) //
+				.kommentar(kommentar) //
+				.build();
+
+		given(userService.getContextInstitution()).willReturn(userInstitution);
+		given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
+		
+		assertThrows(OperationNotAlloudException.class, //
+				() -> bedarfAnlageService.neuesBedarfEinstellen(neuesBedarf));
+	}
+	
+	@Test
 	@DisplayName("Fehler werfen bei nicht existierentem Artikel")
 	void fehler_werfen_bei_Bearbeitung_von_nicht_existierendem_Artikel() {
 		assertThrows(ObjectNotFoundException.class, //
@@ -89,7 +123,7 @@ class BedarfAnlageServiceShould {
 		assertThrows(ObjectNotFoundException.class, //
 				() -> bedarfAnlageService.getArtikelVariante(new ArtikelVarianteId(UUID.randomUUID())));
 	}
-
+	
 	@Test
 	@DisplayName("Fehler werfen wenn der Standort nicht in UserContext Institution gefunden wird")
 	void fehler_werfen_wenn_der_Standort_nicht_in_UserContext_Institution_gefunden_wird() {
@@ -143,7 +177,7 @@ class BedarfAnlageServiceShould {
 				.kommentar(kommentar) //
 				.build();
 
-		val neueBedarf = NeuesBedarf.builder() //
+		val neuesBedarf = NeuesBedarf.builder() //
 				.artikelId(artikelId) //
 				.anzahl(anzahl) //
 				.standortId(userStandort.getId()) //
@@ -172,7 +206,7 @@ class BedarfAnlageServiceShould {
 				.entfernung(entfernung) //
 				.build();
 
-		assertEquals(expectedBedarf, bedarfAnlageService.neuesBedarfEinstellen(neueBedarf));
+		assertEquals(expectedBedarf, bedarfAnlageService.neuesBedarfEinstellen(neuesBedarf));
 
 		then(bedarfRepository).should().save(bedarfEntityOhneId);
 		then(bedarfRepository).shouldHaveNoMoreInteractions();

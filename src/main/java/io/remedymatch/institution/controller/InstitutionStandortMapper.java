@@ -47,10 +47,6 @@ public final class InstitutionStandortMapper {
 				.build();
 	}
 
-	static InstitutionStandortId mapToStandortId(final String standortId) {
-		return mapToStandortId(UUID.fromString(standortId));
-	}
-
 	static InstitutionStandortId mapToStandortId(final UUID standortId) {
 		return new InstitutionStandortId(standortId);
 	}

@@ -25,6 +25,7 @@ class InstitutionStandortMapperShould {
 	public static final String STANDORT_PLZ = "Standort PLZ";
 	public static final String STANDORT_ORT = "Standort Ort";
 	public static final String STANDORT_STRASSE = "Standort Strasse";
+	public static final String STANDORT_HAUSNUMMER = "Standort 10a";
 	public static final String STANDORT_LAND = "Standort Land";
 	public static final BigDecimal STANDORT_LONGITUDE = BigDecimal.valueOf(1000);
 	public static final BigDecimal STANDORT_LATITUDE = BigDecimal.valueOf(2000);
@@ -67,6 +68,7 @@ class InstitutionStandortMapperShould {
 				.plz(STANDORT_PLZ) //
 				.ort(STANDORT_ORT) //
 				.strasse(STANDORT_STRASSE) //
+				.strasse(STANDORT_HAUSNUMMER) //
 				.land(STANDORT_LAND) //
 				.longitude(STANDORT_LONGITUDE) //
 				.latitude(STANDORT_LATITUDE) //
@@ -80,6 +82,7 @@ class InstitutionStandortMapperShould {
 				.plz(STANDORT_PLZ) //
 				.ort(STANDORT_ORT) //
 				.strasse(STANDORT_STRASSE) //
+				.strasse(STANDORT_HAUSNUMMER) //
 				.land(STANDORT_LAND) //
 				.longitude(STANDORT_LONGITUDE) //
 				.latitude(STANDORT_LATITUDE) //
@@ -92,6 +95,7 @@ class InstitutionStandortMapperShould {
 				.plz(STANDORT_PLZ) //
 				.ort(STANDORT_ORT) //
 				.strasse(STANDORT_STRASSE) //
+				.strasse(STANDORT_HAUSNUMMER) //
 				.land(STANDORT_LAND) //
 				.build();
 	}
@@ -102,6 +106,7 @@ class InstitutionStandortMapperShould {
 				.plz(STANDORT_PLZ) //
 				.ort(STANDORT_ORT) //
 				.strasse(STANDORT_STRASSE) //
+				.strasse(STANDORT_HAUSNUMMER) //
 				.land(STANDORT_LAND) //
 				.build();
 	}

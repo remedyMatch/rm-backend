@@ -29,6 +29,6 @@ class InstitutionUpdateRequest {
 	@NotNull
 	private InstitutionTyp typ;
 
-	@NotNull
+//	@NotNull
 	private UUID hauptstandortId;
 }

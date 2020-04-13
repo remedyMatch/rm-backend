@@ -54,6 +54,7 @@ public final class InstitutionTestFixtures {
 	public static final String HAUPTSTANDORT_PLZ = "Hauptstandort PLZ";
 	public static final String HAUPTSTANDORT_ORT = "Hauptstandort Ort";
 	public static final String HAUPTSTANDORT_STRASSE = "Hauptstandort Strasse";
+	public static final String HAUPTSTANDORT_HAUSNUMMER = "Hauptstandort 10a";
 	public static final String HAUPTSTANDORT_LAND = "Hauptstandort Land";
 	public static final BigDecimal HAUPTSTANDORT_LONGITUDE = BigDecimal.valueOf(1234);
 	public static final BigDecimal HAUPTSTANDORT_LATITUDE = BigDecimal.valueOf(5678);
@@ -63,6 +64,7 @@ public final class InstitutionTestFixtures {
 	public static final String STANDORT_1_PLZ = "Standort 1 PLZ";
 	public static final String STANDORT_1_ORT = "Standort 1 Ort";
 	public static final String STANDORT_1_STRASSE = "Standort 1 Strasse";
+	public static final String STANDORT_1_HAUSNUMMER = "Hauptstandort 1 11c";
 	public static final String STANDORT_1_LAND = "Standort 1 Land";
 	public static final BigDecimal STANDORT_1_LONGITUDE = BigDecimal.valueOf(1000);
 	public static final BigDecimal STANDORT_1_LATITUDE = BigDecimal.valueOf(2000);
@@ -72,6 +74,7 @@ public final class InstitutionTestFixtures {
 	public static final String STANDORT_2_PLZ = "Standort 2 PLZ";
 	public static final String STANDORT_2_ORT = "Standort 2 Ort";
 	public static final String STANDORT_2_STRASSE = "Standort 2 Strasse";
+	public static final String STANDORT_2_HAUSNUMMER = "Standort 2 22b";
 	public static final String STANDORT_2_LAND = "Standort 2 Land";
 	public static final BigDecimal STANDORT_2_LONGITUDE = BigDecimal.valueOf(9999);
 	public static final BigDecimal STANDORT_2_LATITUDE = BigDecimal.valueOf(8888);
@@ -87,6 +90,7 @@ public final class InstitutionTestFixtures {
 				.plz(HAUPTSTANDORT_PLZ) //
 				.ort(HAUPTSTANDORT_ORT) //
 				.strasse(HAUPTSTANDORT_STRASSE) //
+				.hausnummer(HAUPTSTANDORT_HAUSNUMMER) //
 				.land(HAUPTSTANDORT_LAND) //
 				.longitude(HAUPTSTANDORT_LONGITUDE) //
 				.latitude(HAUPTSTANDORT_LATITUDE) //
@@ -100,6 +104,7 @@ public final class InstitutionTestFixtures {
 				.plz(HAUPTSTANDORT_PLZ) //
 				.ort(HAUPTSTANDORT_ORT) //
 				.strasse(HAUPTSTANDORT_STRASSE) //
+				.hausnummer(HAUPTSTANDORT_HAUSNUMMER) //
 				.land(HAUPTSTANDORT_LAND) //
 				.longitude(HAUPTSTANDORT_LONGITUDE) //
 				.latitude(HAUPTSTANDORT_LATITUDE) //
@@ -117,6 +122,7 @@ public final class InstitutionTestFixtures {
 				.plz(STANDORT_1_PLZ) //
 				.ort(STANDORT_1_ORT) //
 				.strasse(STANDORT_1_STRASSE) //
+				.hausnummer(STANDORT_1_HAUSNUMMER) //
 				.land(STANDORT_1_LAND) //
 				.longitude(STANDORT_1_LONGITUDE) //
 				.latitude(STANDORT_1_LATITUDE) //
@@ -130,6 +136,7 @@ public final class InstitutionTestFixtures {
 				.plz(STANDORT_1_PLZ) //
 				.ort(STANDORT_1_ORT) //
 				.strasse(STANDORT_1_STRASSE) //
+				.hausnummer(STANDORT_1_HAUSNUMMER) //
 				.land(STANDORT_1_LAND) //
 				.longitude(STANDORT_1_LONGITUDE) //
 				.latitude(STANDORT_1_LATITUDE) //
@@ -147,6 +154,7 @@ public final class InstitutionTestFixtures {
 				.plz(STANDORT_2_PLZ) //
 				.ort(STANDORT_2_ORT) //
 				.strasse(STANDORT_2_STRASSE) //
+				.hausnummer(STANDORT_2_HAUSNUMMER) //
 				.land(STANDORT_2_LAND) //
 				.longitude(STANDORT_2_LONGITUDE) //
 				.latitude(STANDORT_2_LATITUDE) //
@@ -160,6 +168,7 @@ public final class InstitutionTestFixtures {
 				.plz(STANDORT_2_PLZ) //
 				.ort(STANDORT_2_ORT) //
 				.strasse(STANDORT_2_STRASSE) //
+				.hausnummer(STANDORT_2_HAUSNUMMER) //
 				.land(STANDORT_2_LAND) //
 				.longitude(STANDORT_2_LONGITUDE) //
 				.latitude(STANDORT_2_LATITUDE) //
@@ -176,6 +185,7 @@ public final class InstitutionTestFixtures {
 	public static final String INSTITUTION_1_HAUPTSTANDORT_PLZ = "Institution 1 Hauptstandort PLZ";
 	public static final String INSTITUTION_1_HAUPTSTANDORT_ORT = "Institution 1 Hauptstandort Ort";
 	public static final String INSTITUTION_1_HAUPTSTANDORT_STRASSE = "Institution 1 Hauptstandort Strasse";
+	public static final String INSTITUTION_1_HAUPTSTANDORT_HAUSNUMMER = "Institution 1 Hauptstandort 69d";
 	public static final String INSTITUTION_1_HAUPTSTANDORT_LAND = "Institution 1 Hauptstandort Land";
 	public static final BigDecimal INSTITUTION_1_HAUPTSTANDORT_LONGITUDE = BigDecimal.valueOf(126456);
 	public static final BigDecimal INSTITUTION_1_HAUPTSTANDORT_LATITUDE = BigDecimal.valueOf(484165);
@@ -216,6 +226,7 @@ public final class InstitutionTestFixtures {
 				.plz(INSTITUTION_1_HAUPTSTANDORT_PLZ) //
 				.ort(INSTITUTION_1_HAUPTSTANDORT_ORT) //
 				.strasse(INSTITUTION_1_HAUPTSTANDORT_STRASSE) //
+				.hausnummer(INSTITUTION_1_HAUPTSTANDORT_HAUSNUMMER) //
 				.land(INSTITUTION_1_HAUPTSTANDORT_LAND) //
 				.longitude(INSTITUTION_1_HAUPTSTANDORT_LONGITUDE) //
 				.latitude(INSTITUTION_1_HAUPTSTANDORT_LATITUDE) //
@@ -229,6 +240,7 @@ public final class InstitutionTestFixtures {
 				.plz(INSTITUTION_1_HAUPTSTANDORT_PLZ) //
 				.ort(INSTITUTION_1_HAUPTSTANDORT_ORT) //
 				.strasse(INSTITUTION_1_HAUPTSTANDORT_STRASSE) //
+				.hausnummer(INSTITUTION_1_HAUPTSTANDORT_HAUSNUMMER) //
 				.land(INSTITUTION_1_HAUPTSTANDORT_LAND) //
 				.longitude(INSTITUTION_1_HAUPTSTANDORT_LONGITUDE) //
 				.latitude(INSTITUTION_1_HAUPTSTANDORT_LATITUDE) //

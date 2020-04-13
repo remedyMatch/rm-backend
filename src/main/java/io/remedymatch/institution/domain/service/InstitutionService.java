@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -36,15 +37,18 @@ public class InstitutionService {
 	private final StandortService standortService;
 	private final UserService userService;
 
-	@Transactional(readOnly = true)
-	public Institution userInstitutionLaden() {
-		return userService.getContextInstitution();
-	}
-
-	public Institution userInstitutionAktualisieren(final @NotBlank String name, final @NotNull InstitutionTyp typ) {
+	public Institution userInstitutionAktualisieren(//
+			final String neueName, //
+			final InstitutionTyp neuesTyp, //
+			final InstitutionStandortId neuesHauptstandortId) {
 		val userInstitution = getUserInstitution();
-		userInstitution.setName(name);
-		userInstitution.setTyp(typ);
+		if (StringUtils.isNotBlank(neueName)) {
+			userInstitution.setName(neueName);
+		}
+		if (neuesTyp != null) {
+			userInstitution.setTyp(neuesTyp);
+		}
+		// FIXME Hauptstandort noch...
 
 		return updateInstitution(userInstitution);
 	}

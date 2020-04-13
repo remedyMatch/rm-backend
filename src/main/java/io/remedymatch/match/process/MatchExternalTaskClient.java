@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.camunda.bpm.client.task.ExternalTask;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ import lombok.val;
 
 @AllArgsConstructor
 @Component
+@Profile("!disableexternaltasks")
 public class MatchExternalTaskClient {
 	private final RmBackendProperties properties;
 	private final MatchRepository matchRepository;

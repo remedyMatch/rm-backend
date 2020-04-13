@@ -30,6 +30,5 @@ public class RmBackendProperties {
     @NotNull
     @NotBlank
     private String geocoderServiceApiKey;
-
 }
 

@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
@@ -20,6 +21,7 @@ import lombok.val;
 
 @AllArgsConstructor
 @Component
+@Profile("!disableexternaltasks")
 class BedarfExternalTaskClient {
     private final RmBackendProperties properties;
     private final BedarfService bedarfService;

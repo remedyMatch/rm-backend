@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Component
+@Profile("!disableexternaltasks")
 class AngebotExternalTaskClient {
     private final RmBackendProperties properties;
     private final AngebotService angebotService;

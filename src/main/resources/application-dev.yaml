@@ -1,0 +1,34 @@
+spring:
+  profiles: dev
+  security:    oauth2:      resourceserver:        jwt:          issuer-uri: http://localhost:8008/auth/realms/rmio
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/backend?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+#      ddl-auto: create-drop
+#      ddl-auto: create
+      ddl-auto: update
+      generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+        
+remedy:
+  security:
+    disabled:
+      true
+
+io:
+  remedymatch:
+    backend:
+      engineUrl: http://localhost:8085/engine
+      geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
+      geocoderServiceApiKey: code
+        

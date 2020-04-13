@@ -34,7 +34,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -178,6 +181,29 @@ public class DatabaseInitializerIntegrationTest {
         assertThat(bedarfAnfragen).hasSize(bedarfAnfragenCountNachErstemDbInit);
         assertThat(matches).hasSize(matchCountNachErstemDbInit);
         assertThat(matchStandorte).hasSize(matchStandorteCountNachErstemDbInit);
+    }
+
+    @Test
+    @Transactional
+    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "testUser")
+    public void esSolltenKeineDoppeltenArtikelVariantenAngelegtWerden() {
+        databaseInitializer.onApplicationEvent(Mockito.mock(ContextRefreshedEvent.class));
+
+        queryAllRepositories();
+        final List<ArtikelEntity> alleArtikel = artikelJpaRepository.findAll();
+        final Map<String, Integer> sameVariantsByArtikelIdAndVariantenName = new HashMap<>();
+        for (final ArtikelEntity artikel : alleArtikel) {
+            for (final ArtikelVarianteEntity variante : artikel.getVarianten()) {
+                final String key = variante.getArtikel().toString() + "_" + variante.getVariante();
+                sameVariantsByArtikelIdAndVariantenName.putIfAbsent(key, 0);
+                sameVariantsByArtikelIdAndVariantenName.put(key, sameVariantsByArtikelIdAndVariantenName.get(key) + 1);
+            }
+        }
+        for (final Integer variantCount : sameVariantsByArtikelIdAndVariantenName.values()) {
+            // Hat ein Artikel mehrere Varianten mit dem selben Namen, kann der Anwender in der GUI nicht mehr unterscheiden.
+            // TODO unique constraint in DB
+            assertThat(variantCount).isEqualTo(1);
+        }
     }
 
 

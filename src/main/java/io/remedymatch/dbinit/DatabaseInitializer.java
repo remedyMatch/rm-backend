@@ -1,7 +1,8 @@
 package io.remedymatch.dbinit;
 
-import java.util.UUID;
-
+import io.remedymatch.artikel.infrastructure.*;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -10,13 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.remedymatch.artikel.infrastructure.ArtikelEntity;
-import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
-import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
-import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
-import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
-import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import java.util.UUID;
 
 /**
  * TODO Test-Code nicht für Produktion
@@ -31,6 +26,9 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 
 	@Autowired
 	private ArtikelJpaRepository artikelRepository;
+
+	@Autowired
+	private ArtikelVarianteJpaRepository artikelVarianteRepository;
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -253,12 +251,6 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 				"", //
 				"Kittel Gr. M", //
 				MEDIZINISCH_AUSWAEHLBAR);
-
-		addVariante(artikel, //
-				"M", //
-				"", //
-				"Kittel Gr. M", //
-				MEDIZINISCH_AUSWAEHLBAR);
 		addVariante(artikel, //
 				"L", //
 				"", //
@@ -400,19 +392,19 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 				.build());
 	}
 
-	private ArtikelEntity addVariante(//
-			final ArtikelEntity artikel, //
-			final String variante, //
-			final String norm, //
-			final String beschreibung, //
-			final boolean medizinischAuswaehlbar) {
-		artikel.getVarianten().add(ArtikelVarianteEntity.builder() //
+	private ArtikelVarianteEntity addVariante(//
+											  final ArtikelEntity artikel, //
+											  final String variante, //
+											  final String norm, //
+											  final String beschreibung, //
+											  final boolean medizinischAuswaehlbar) {
+		ArtikelVarianteEntity artikelVariante = ArtikelVarianteEntity.builder() //
 				.artikel(artikel.getId()) //
 				.variante(variante) //
 				.norm(StringUtils.stripToNull(norm)) //
 				.beschreibung(beschreibung) //
 				.medizinischAuswaehlbar(medizinischAuswaehlbar) //
-				.build());
-		return artikelRepository.save(artikel);
+				.build();
+		return artikelVarianteRepository.save(artikelVariante);
 	}
 }

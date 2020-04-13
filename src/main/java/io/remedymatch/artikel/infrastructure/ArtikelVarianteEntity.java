@@ -28,7 +28,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 @Entity(name = "ArtikelVariante")
-@Table(name = "RM_ARTIKEL_VARIANTE", uniqueConstraints={@UniqueConstraint(columnNames = {"ARTIKEL_UUID" , "VARIANTE"})})
+@Table(name = "RM_ARTIKEL_VARIANTE", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "ARTIKEL_UUID", "VARIANTE" }) })
 public class ArtikelVarianteEntity {
 
 	@Id

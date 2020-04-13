@@ -86,4 +86,4 @@ konfigurieren (rechts oben die Kombobox neben dem "Run"- und "Debug"-Button.)
 
 # Geocoding
 
-siehe [GECODING.md](GECODING.md)
+siehe [GECODING.md](https://github.com/remedyMatch/rm-backend/blob/master/GEOCODING.md)

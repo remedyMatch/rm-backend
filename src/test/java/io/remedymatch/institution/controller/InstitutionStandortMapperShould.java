@@ -57,7 +57,7 @@ class InstitutionStandortMapperShould {
 
 	@Test
 	@DisplayName("UUID in StandortId konvertieren")
-	void uuid_in_BedarfId_konvertieren() {
+	void uuid_in_StandortId_konvertieren() {
 		assertEquals(STANDORT_ID, InstitutionStandortMapper.mapToStandortId(STANDORT_ID.getValue()));
 	}
 

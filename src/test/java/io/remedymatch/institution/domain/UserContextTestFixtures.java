@@ -34,7 +34,7 @@ public final class UserContextTestFixtures {
 				.institutionKey(USER_CONTEXT_INSTITUTION_KEY) //
 				.typ(USER_CONTEXT_INSTITUTION_TYP) //
 				.hauptstandort(beispielUserContextHauptstandort()) //
-				.standorte(new ArrayList<>(Arrays.asList(beispielUserContextAnderesStandort()))) //
+				.standorte(new ArrayList<>(Arrays.asList(beispielUserContextHauptstandort(), beispielUserContextAnderesStandort()))) //
 				.build();
 	}
 
@@ -45,7 +45,7 @@ public final class UserContextTestFixtures {
 				.institutionKey(USER_CONTEXT_INSTITUTION_KEY) //
 				.typ(USER_CONTEXT_INSTITUTION_TYP) //
 				.hauptstandort(beispielUserContextHauptstandortEntity()) //
-				.standorte(new ArrayList<>(Arrays.asList(beispielUserContextAnderesStandortEntity()))) //
+				.standorte(new ArrayList<>(Arrays.asList(beispielUserContextHauptstandortEntity(), beispielUserContextAnderesStandortEntity()))) //
 				.build();
 	}
 

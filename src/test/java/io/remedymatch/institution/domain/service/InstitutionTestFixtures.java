@@ -34,7 +34,7 @@ public final class InstitutionTestFixtures {
 				.institutionKey(INSTITUTION_KEY) //
 				.typ(INSTITUTION_TYP) //
 				.hauptstandort(beispielHaupstandort()) //
-				.standorte(new ArrayList<>(Arrays.asList(beispielStandort1(), beispielStandort2()))) //
+				.standorte(new ArrayList<>(Arrays.asList(beispielHaupstandort(), beispielStandort1(), beispielStandort2()))) //
 				.build();
 	}
 
@@ -45,7 +45,7 @@ public final class InstitutionTestFixtures {
 				.institutionKey(INSTITUTION_KEY) //
 				.typ(INSTITUTION_TYP) //
 				.hauptstandort(beispielHaupstandortEntity()) //
-				.standorte(new ArrayList<>(Arrays.asList(beispielStandort1Entity(), beispielStandort2Entity()))) //
+				.standorte(new ArrayList<>(Arrays.asList(beispielHaupstandortEntity(), beispielStandort1Entity(), beispielStandort2Entity()))) //
 				.build();
 	}
 	

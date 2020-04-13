@@ -2,7 +2,6 @@ package io.remedymatch.institution.controller;
 
 import static io.remedymatch.institution.controller.InstitutionMapper.mapToInstitutionRO;
 import static io.remedymatch.institution.controller.InstitutionStandortMapper.mapToNeuesStandort;
-import static io.remedymatch.institution.controller.InstitutionStandortMapper.mapToStandortId;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,10 +44,7 @@ public class InstitutionController {
 	@PutMapping
 	public ResponseEntity<Void> update(@RequestBody @Valid @NotNull InstitutionUpdateRequest institutionUpdate) {
 		try {
-			institutionService.userInstitutionAktualisieren(//
-					institutionUpdate.getName(), //
-					institutionUpdate.getTyp(), //
-					mapToStandortId(institutionUpdate.getHauptstandortId()));
+			institutionService.userInstitutionAktualisieren(InstitutionMapper.mapToUpdate(institutionUpdate));
 		} catch (ObjectNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		} catch (NotUserInstitutionObjectException e) {

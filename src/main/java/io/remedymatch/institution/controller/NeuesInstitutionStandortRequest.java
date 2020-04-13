@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class NeuesInstitutionStandortRequest {
+class NeuesInstitutionStandortRequest {
 
 	@NotBlank
 	private String name;

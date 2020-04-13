@@ -253,12 +253,6 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 				"", //
 				"Kittel Gr. M", //
 				MEDIZINISCH_AUSWAEHLBAR);
-
-		addVariante(artikel, //
-				"M", //
-				"", //
-				"Kittel Gr. M", //
-				MEDIZINISCH_AUSWAEHLBAR);
 		addVariante(artikel, //
 				"L", //
 				"", //

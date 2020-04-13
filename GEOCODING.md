@@ -5,7 +5,7 @@ Um Distanzen zwischen Standorten zu bestimmten, greifen wir im Backend auf die F
 LocationIQ zurück. Das heisst, wir schicken Anfragen aus dem Backend an das REST-Interface von LocationIQ und
 finden so z.B. die Geokoordinaten von eingegeben Standorten und speichern diese intern beim Standort. Da so jedem
 Standort in der Datenbank ein Geokoordinaten-Paar zugeordnet ist, können wir die Distanzen zwischen Standorten
-berechnen.
+berechnen (Berechnung siehe: GeoCalc#distanzBerechnen).
 
 ## Code
 
@@ -17,8 +17,8 @@ Das Geocoding-Interface heißt Geocoder und bietet vier Funktionen an:
 Paracelsus Klinik Hamburg, ...)
 
 Implementiert wird das Geocoder-Interface derzeit vom LocationIQGeocoderClient, welcher bisher ausschliesslich
-im StandortService verwendet wird. Die tatsächliche Kommunikation zwischen Backend und LocationIQ-Rest-API
-wird in genannter Implementierung mithilfe eines RestTemplates durchgeführt.
+im StandortService verwendet wird. Die tatsächliche Kommunikation zwischen Backend und [LocationIQ-Rest-API](https://locationiq.com/docs)
+ wird in genannter Implementierung mithilfe eines RestTemplates durchgeführt.
 
 ## Endpunkte
 

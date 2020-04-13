@@ -83,3 +83,7 @@ navigieren. IntelliJ sollte diese Klasse nun korrekt, als Spring Boot applicatio
 registrieren und einen entsprechenden "Play-Button" anzeigen, mit welchem man die Applikation
 starten kann. Falls dies nicht der Fall ist, kann man die Run Configuration auch manuell 
 konfigurieren (rechts oben die Kombobox neben dem "Run"- und "Debug"-Button.)
+
+# Geocoding
+
+siehe [GECODING.md](https://github.com/remedyMatch/rm-backend/blob/master/GEOCODING.md)

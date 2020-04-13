@@ -15,7 +15,7 @@ import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.engine.domain.MessageKey;
 import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.engine.domain.ProzessKey;
-import io.remedymatch.institution.domain.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionId;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

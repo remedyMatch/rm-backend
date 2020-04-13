@@ -21,12 +21,12 @@ import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
-import io.remedymatch.institution.api.InstitutionRO;
-import io.remedymatch.institution.api.InstitutionStandortRO;
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionId;
-import io.remedymatch.institution.domain.InstitutionStandort;
-import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.controller.InstitutionRO;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("AngebotMapper soll")
@@ -79,7 +79,7 @@ class AngebotControllerMapperShould {
 	}
 
 	@Test
-	@DisplayName("Angebot Domain Objekt in DTO konvertieren")
+	@DisplayName("Angebot Domain Objekt in RO konvertieren")
 	void angebot_domain_Objekt_in_RO_konvertieren() {
 		assertEquals(angebotRO(), AngebotControllerMapper.mapToAngebotRO(angebot()));
 	}

@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.institution.domain.InstitutionStandort;
-import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("MatchStandortMapper soll")

@@ -1,7 +1,7 @@
 package io.remedymatch.person.domain;
 
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

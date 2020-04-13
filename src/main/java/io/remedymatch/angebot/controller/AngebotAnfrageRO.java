@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
-import io.remedymatch.institution.api.InstitutionRO;
-import io.remedymatch.institution.api.InstitutionStandortRO;
+import io.remedymatch.institution.controller.InstitutionRO;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
 import lombok.Builder;
 import lombok.Data;
 

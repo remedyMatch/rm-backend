@@ -1,7 +1,7 @@
 package io.remedymatch.person.domain;
 
-import io.remedymatch.institution.domain.InstitutionEntityConverter;
-import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
+import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
+import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonEntity.PersonEntityBuilder;
 
@@ -19,8 +19,8 @@ class PersonEntityConverter {
 				.nachname(entity.getNachname()) //
 				.email(entity.getEmail()) //
 				.telefon(entity.getTelefon()) //
-				.institution(InstitutionEntityConverter.convert(entity.getInstitution())) //
-				.standort(InstitutionStandortEntityConverter.convert(entity.getStandort())) //
+				.institution(InstitutionEntityConverter.convertInstitution(entity.getInstitution())) //
+				.standort(InstitutionStandortEntityConverter.convertStandort(entity.getStandort())) //
 				.build();
 	}
 
@@ -40,8 +40,8 @@ class PersonEntityConverter {
 				.nachname(person.getNachname()) //
 				.email(person.getEmail()) //
 				.telefon(person.getTelefon()) //
-				.institution(InstitutionEntityConverter.convert(person.getInstitution())) //
-				.standort(InstitutionStandortEntityConverter.convert(person.getStandort())) //
+				.institution(InstitutionEntityConverter.convertInstitution(person.getInstitution())) //
+				.standort(InstitutionStandortEntityConverter.convertStandort(person.getStandort())) //
 				.build();
 	}
 }

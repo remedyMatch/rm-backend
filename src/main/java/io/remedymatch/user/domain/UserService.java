@@ -2,8 +2,8 @@ package io.remedymatch.user.domain;
 
 import org.springframework.stereotype.Service;
 
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionId;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.person.domain.Person;
 import io.remedymatch.person.domain.PersonRepository;
 import io.remedymatch.web.UserProvider;

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
-import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.match.domain.MatchStandort;
 import io.remedymatch.shared.GeoCalc;
 import io.remedymatch.user.domain.UserService;

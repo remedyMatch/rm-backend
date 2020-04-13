@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.match.domain.MatchStandort;
 import lombok.val;
 

@@ -22,9 +22,9 @@ import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.institution.domain.InstitutionEntityConverter;
-import io.remedymatch.institution.domain.InstitutionId;
-import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
+import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.user.domain.UserService;
@@ -232,7 +232,7 @@ public class BedarfService {
 	}
 
 	private InstitutionEntity getUserInstitution() {
-		return InstitutionEntityConverter.convert(userService.getContextInstitution());
+		return InstitutionEntityConverter.convertInstitution(userService.getContextInstitution());
 	}
 
 	InstitutionStandortEntity getUserInstitutionStandort( //

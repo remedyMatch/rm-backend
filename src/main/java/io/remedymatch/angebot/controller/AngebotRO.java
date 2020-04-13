@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import io.remedymatch.institution.api.InstitutionStandortRO;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -28,18 +28,18 @@ public class AngebotRO {
 	@NotNull
 	@Positive
 	private BigDecimal anzahl;
-	
+
 	@NotNull
 	@PositiveOrZero
 	private BigDecimal rest;
-	
+
 	@NotNull
 	private UUID institutionId;
 
 	@NotNull
 	@Valid
 	private InstitutionStandortRO standort;
-	
+
 	@NotNull
 	private LocalDateTime haltbarkeit;
 
@@ -48,7 +48,7 @@ public class AngebotRO {
 	private boolean originalverpackt;
 
 	private boolean medizinisch;
-	
+
 	@NotBlank
 	private String kommentar;
 

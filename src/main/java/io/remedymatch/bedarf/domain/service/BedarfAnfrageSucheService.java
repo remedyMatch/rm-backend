@@ -16,7 +16,7 @@ import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.infrastructure.BedarfAnfrageJpaRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.institution.domain.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionId;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

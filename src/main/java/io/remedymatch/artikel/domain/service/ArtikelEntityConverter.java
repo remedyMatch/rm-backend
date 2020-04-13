@@ -11,7 +11,7 @@ import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 
-public class ArtikelEntityConverter {
+public final class ArtikelEntityConverter {
 	private ArtikelEntityConverter() {
 	}
 

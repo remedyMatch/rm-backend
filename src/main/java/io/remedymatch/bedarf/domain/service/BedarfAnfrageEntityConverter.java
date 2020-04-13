@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.infrastructure.BedarfAnfrageEntity;
-import io.remedymatch.institution.domain.InstitutionEntityConverter;
-import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
+import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
+import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 
 final class BedarfAnfrageEntityConverter {
 
@@ -23,8 +23,8 @@ final class BedarfAnfrageEntityConverter {
 		return BedarfAnfrage.builder() //
 				.id(new BedarfAnfrageId(entity.getId())) //
 				.bedarf(BedarfEntityConverter.convertBedarf(entity.getBedarf())) //
-				.institution(InstitutionEntityConverter.convert(entity.getInstitution())) //
-				.standort(InstitutionStandortEntityConverter.convert(entity.getStandort())) //
+				.institution(InstitutionEntityConverter.convertInstitution(entity.getInstitution())) //
+				.standort(InstitutionStandortEntityConverter.convertStandort(entity.getStandort())) //
 				.anzahl(entity.getAnzahl()) //
 				.kommentar(entity.getKommentar()) //
 				.prozessInstanzId(entity.getProzessInstanzId()) //

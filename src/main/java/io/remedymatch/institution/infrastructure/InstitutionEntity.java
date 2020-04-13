@@ -22,7 +22,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.util.Assert;
 
-import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.domain.model.InstitutionTyp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -78,5 +78,9 @@ public class InstitutionEntity {
 		}
 
 		return standorte.stream().filter(standort -> standortId.equals(standort.getId())).findAny();
+	}
+	
+	public void addStandort(final InstitutionStandortEntity standort) {
+		this.standorte.add(standort);
 	}
 }

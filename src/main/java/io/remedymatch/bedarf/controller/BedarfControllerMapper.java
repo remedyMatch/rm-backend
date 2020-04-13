@@ -10,9 +10,9 @@ import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.domain.model.NeuesBedarf;
-import io.remedymatch.institution.api.InstitutionMapper;
-import io.remedymatch.institution.api.InstitutionStandortMapper;
-import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.controller.InstitutionMapper;
+import io.remedymatch.institution.controller.InstitutionStandortMapper;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 
 class BedarfControllerMapper {
 	private BedarfControllerMapper() {

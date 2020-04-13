@@ -12,8 +12,8 @@ import javax.validation.constraints.PositiveOrZero;
 
 import io.remedymatch.artikel.domain.model.Artikel;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -1,7 +1,7 @@
 package io.remedymatch.match.infrastructure;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.match.domain.MatchStatus;
 import org.junit.jupiter.api.BeforeEach;

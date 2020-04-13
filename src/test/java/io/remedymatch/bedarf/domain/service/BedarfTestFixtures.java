@@ -6,14 +6,11 @@ import java.util.UUID;
 
 import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.bedarf.domain.model.Bedarf;
-import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
-import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.model.BedarfId;
-import io.remedymatch.bedarf.infrastructure.BedarfAnfrageEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionStandort;
 import io.remedymatch.institution.domain.InstitutionTestFixtures;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 
@@ -32,10 +29,8 @@ public final class BedarfTestFixtures {
 	public static final boolean BEDARF_MEDIZINISCH = true;
 	public static final String BEDARF_KOMMENTAR = "Kommentar";
 	public static final boolean BEDARF_BEDIENT = false;
-	public static final BedarfAnfrageId BEDARF_ANFRAGE_ID = new BedarfAnfrageId(UUID.randomUUID());
-	public static final BedarfAnfrage BEDARF_ANFRAGE = BedarfAnfrage.builder().id(BEDARF_ANFRAGE_ID).build();
-	public static final BedarfAnfrageEntity BEDARF_ANFRAGE_ENTITY = BedarfAnfrageEntity.builder()
-			.id(BEDARF_ANFRAGE_ID.getValue()).build();
+
+	private static final BedarfId BEDARF_OHNE_ANFRAGEN_ID = new BedarfId(UUID.randomUUID());
 
 	public static BedarfId beispielBedarfId() {
 		return BEDARF_ID;
@@ -54,7 +49,7 @@ public final class BedarfTestFixtures {
 				.medizinisch(BEDARF_MEDIZINISCH) //
 				.kommentar(BEDARF_KOMMENTAR) //
 				.bedient(BEDARF_BEDIENT) //
-				.anfragen(Arrays.asList(BEDARF_ANFRAGE)) //
+				.anfragen(Arrays.asList(BedarfAnfrageTestFixtures.beispielBedarfAnfrage())) //
 				.build();
 	}
 
@@ -71,7 +66,39 @@ public final class BedarfTestFixtures {
 				.medizinisch(BEDARF_MEDIZINISCH) //
 				.kommentar(BEDARF_KOMMENTAR) //
 				.bedient(BEDARF_BEDIENT) //
-				.anfragen(Arrays.asList(BEDARF_ANFRAGE_ENTITY)) //
+				.anfragen(Arrays.asList(BedarfAnfrageTestFixtures.beispielBedarfAnfrageEntity())) //
+				.build();
+	}
+
+	static Bedarf beispielBedarfOhneAnfragen() {
+		return Bedarf.builder() //
+				.id(BEDARF_OHNE_ANFRAGEN_ID) //
+				.artikel(ArtikelTestFixtures.beispielArtikel()) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante1()) //
+				.anzahl(BEDARF_ANZAHL) //
+				.rest(BEDARF_REST) //
+				.institution(BEDARF_INSTITUTION) //
+				.standort(BEDARF_STANDORT) //
+				.steril(BEDARF_STERIL) //
+				.medizinisch(BEDARF_MEDIZINISCH) //
+				.kommentar(BEDARF_KOMMENTAR) //
+				.bedient(BEDARF_BEDIENT) //
+				.build();
+	}
+
+	static BedarfEntity beispielBedarfOhneAnfragenEntity() {
+		return BedarfEntity.builder() //
+				.id(BEDARF_OHNE_ANFRAGEN_ID.getValue()) //
+				.artikel(ArtikelTestFixtures.beispielArtikelEntity()) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante1Entity()) //
+				.anzahl(BEDARF_ANZAHL) //
+				.rest(BEDARF_REST) //
+				.institution(BEDARF_INSTITUTION_ENTITY) //
+				.standort(BEDARF_STANDORT_ENTITY) //
+				.steril(BEDARF_STERIL) //
+				.medizinisch(BEDARF_MEDIZINISCH) //
+				.kommentar(BEDARF_KOMMENTAR) //
+				.bedient(BEDARF_BEDIENT) //
 				.build();
 	}
 }

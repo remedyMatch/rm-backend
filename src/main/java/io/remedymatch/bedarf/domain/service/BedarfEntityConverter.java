@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
+import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
+import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 import io.remedymatch.artikel.domain.service.ArtikelEntityConverter;
-import io.remedymatch.institution.domain.InstitutionEntityConverter;
-import io.remedymatch.institution.domain.InstitutionStandortEntityConverter;
 
 final class BedarfEntityConverter {
 
@@ -33,8 +33,8 @@ final class BedarfEntityConverter {
 				.artikelVariante(entity.getArtikelVariante() != null
 						? ArtikelEntityConverter.convertVariante(entity.getArtikelVariante())
 						: null) //
-				.institution(InstitutionEntityConverter.convert(entity.getInstitution()))//
-				.standort(InstitutionStandortEntityConverter.convert(entity.getStandort())).steril(entity.isSteril()) //
+				.institution(InstitutionEntityConverter.convertInstitution(entity.getInstitution()))//
+				.standort(InstitutionStandortEntityConverter.convertStandort(entity.getStandort())).steril(entity.isSteril()) //
 				.medizinisch(entity.isMedizinisch()) //
 				.kommentar(entity.getKommentar()) //
 				.bedient(entity.isBedient()) //

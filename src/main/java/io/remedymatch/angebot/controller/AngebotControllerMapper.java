@@ -9,9 +9,9 @@ import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
-import io.remedymatch.institution.api.InstitutionMapper;
-import io.remedymatch.institution.api.InstitutionStandortMapper;
-import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.controller.InstitutionMapper;
+import io.remedymatch.institution.controller.InstitutionStandortMapper;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 
 class AngebotControllerMapper {
 	private AngebotControllerMapper() {

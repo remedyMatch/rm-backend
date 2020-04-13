@@ -16,7 +16,7 @@ import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.institution.domain.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionId;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

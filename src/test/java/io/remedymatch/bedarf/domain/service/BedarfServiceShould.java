@@ -34,8 +34,8 @@ import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.engine.domain.ProzessInstanzId;
-import io.remedymatch.institution.domain.InstitutionStandortId;
 import io.remedymatch.institution.domain.InstitutionTestFixtures;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.user.domain.UserService;
 import lombok.val;
 

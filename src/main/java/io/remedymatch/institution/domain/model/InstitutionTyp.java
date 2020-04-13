@@ -1,4 +1,4 @@
-package io.remedymatch.institution.domain;
+package io.remedymatch.institution.domain.model;
 
 public enum InstitutionTyp {
     Krankenhaus,

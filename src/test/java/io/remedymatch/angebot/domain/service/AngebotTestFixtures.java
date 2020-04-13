@@ -7,17 +7,14 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import io.remedymatch.angebot.domain.model.Angebot;
-import io.remedymatch.angebot.domain.model.AngebotAnfrage;
-import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.model.AngebotId;
-import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
 import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionStandort;
 import io.remedymatch.institution.domain.InstitutionTestFixtures;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 
@@ -28,7 +25,8 @@ public final class AngebotTestFixtures {
 
 	public static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
 	public static final ArtikelVariante ANGEBOT_ARTIKEL_VARIANTE = ArtikelTestFixtures.beispielArtikelVariante();
-	public static final ArtikelVarianteEntity ANGEBOT_ARTIKEL_VARIANTE_ENTITY = ArtikelTestFixtures.beispielArtikelVarianteEntity();
+	public static final ArtikelVarianteEntity ANGEBOT_ARTIKEL_VARIANTE_ENTITY = ArtikelTestFixtures
+			.beispielArtikelVarianteEntity();
 	public static final BigDecimal ANGEBOT_ANZAHL = BigDecimal.valueOf(120.0);
 	public static final BigDecimal ANGEBOT_REST = BigDecimal.valueOf(120.0);
 	public static final Institution ANGEBOT_INSTITUTION = InstitutionTestFixtures.beispielInstitution();
@@ -43,10 +41,8 @@ public final class AngebotTestFixtures {
 	public static final boolean ANGEBOT_MEDIZINISCH = true;
 	public static final String ANGEBOT_KOMMENTAR = "Kommentar";
 	public static final boolean ANGEBOT_BEDIENT = false;
-	public static final AngebotAnfrageId ANGEBOT_ANFRAGE_ID = new AngebotAnfrageId(UUID.randomUUID());
-	public static final AngebotAnfrage ANGEBOT_ANFRAGE = AngebotAnfrage.builder().id(ANGEBOT_ANFRAGE_ID).build();
-	public static final AngebotAnfrageEntity ANGEBOT_ANFRAGE_ENTITY = AngebotAnfrageEntity.builder()
-			.id(ANGEBOT_ANFRAGE_ID.getValue()).build();
+
+	private static final AngebotId ANGEBOT_OHNE_ANFRAGEN_ID = new AngebotId(UUID.randomUUID());
 
 	public static AngebotId beispielAngebotId() {
 		return ANGEBOT_ID;
@@ -66,7 +62,7 @@ public final class AngebotTestFixtures {
 				.medizinisch(ANGEBOT_MEDIZINISCH) //
 				.kommentar(ANGEBOT_KOMMENTAR) //
 				.bedient(ANGEBOT_BEDIENT) //
-				.anfragen(new ArrayList<>(Arrays.asList(ANGEBOT_ANFRAGE))) //
+				.anfragen(new ArrayList<>(Arrays.asList(AngebotAnfrageTestFixtures.beispielAngebotAnfrage()))) //
 				.build();
 	}
 
@@ -84,7 +80,41 @@ public final class AngebotTestFixtures {
 				.medizinisch(ANGEBOT_MEDIZINISCH) //
 				.kommentar(ANGEBOT_KOMMENTAR) //
 				.bedient(ANGEBOT_BEDIENT) //
-				.anfragen(new ArrayList<>(Arrays.asList(ANGEBOT_ANFRAGE_ENTITY))) //
+				.anfragen(new ArrayList<>(Arrays.asList(AngebotAnfrageTestFixtures.beispielAngebotAnfrageEntity()))) //
+				.build();
+	}
+
+	static Angebot beispielAngebotOhneAnfragen() {
+		return Angebot.builder() //
+				.id(ANGEBOT_OHNE_ANFRAGEN_ID) //
+				.artikelVariante(ANGEBOT_ARTIKEL_VARIANTE) //
+				.anzahl(ANGEBOT_ANZAHL) //
+				.rest(ANGEBOT_REST) //
+				.institution(ANGEBOT_INSTITUTION) //
+				.standort(ANGEBOT_STANDORT) //
+				.haltbarkeit(ANGEBOT_HALTBARKEIT) //
+				.steril(ANGEBOT_STERIL) //
+				.originalverpackt(ANGEBOT_ORIGINALVERPACKT) //
+				.medizinisch(ANGEBOT_MEDIZINISCH) //
+				.kommentar(ANGEBOT_KOMMENTAR) //
+				.bedient(ANGEBOT_BEDIENT) //
+				.build();
+	}
+
+	static AngebotEntity beispielAngebotOhneAnfragenEntity() {
+		return AngebotEntity.builder() //
+				.id(ANGEBOT_OHNE_ANFRAGEN_ID.getValue()) //
+				.artikelVariante(ANGEBOT_ARTIKEL_VARIANTE_ENTITY) //
+				.anzahl(ANGEBOT_ANZAHL) //
+				.rest(ANGEBOT_REST) //
+				.institution(ANGEBOT_INSTITUTION_ENTITY) //
+				.standort(ANGEBOT_STANDORT_ENTITY) //
+				.haltbarkeit(ANGEBOT_HALTBARKEIT) //
+				.steril(ANGEBOT_STERIL) //
+				.originalverpackt(ANGEBOT_ORIGINALVERPACKT) //
+				.medizinisch(ANGEBOT_MEDIZINISCH) //
+				.kommentar(ANGEBOT_KOMMENTAR) //
+				.bedient(ANGEBOT_BEDIENT) //
 				.build();
 	}
 }

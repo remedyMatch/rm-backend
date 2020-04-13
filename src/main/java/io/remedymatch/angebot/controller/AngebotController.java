@@ -28,7 +28,7 @@ import io.remedymatch.angebot.domain.service.AngebotService;
 import io.remedymatch.angebot.domain.service.AngebotSucheService;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -54,7 +54,7 @@ public class AngebotController {
 	}
 
 	@PostMapping
-	public ResponseEntity<AngebotRO> neueAngebotEinstellen(@RequestBody @Valid NeuesAngebotRequest neueAngebot) {
+	public ResponseEntity<AngebotRO> neueAngebotEinstellen(@RequestBody @NotNull @Valid NeuesAngebotRequest neueAngebot) {
 		return ResponseEntity
 				.ok(mapToAngebotRO(angebotAnlageService.neueAngebotEinstellen(mapToNeueAngebot(neueAngebot))));
 	}

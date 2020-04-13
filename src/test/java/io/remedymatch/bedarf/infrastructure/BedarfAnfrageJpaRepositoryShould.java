@@ -27,7 +27,7 @@ import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
-import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import lombok.val;

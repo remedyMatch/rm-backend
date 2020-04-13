@@ -1,10 +1,6 @@
-package io.remedymatch.institution.domain;
+package io.remedymatch.institution.domain.model;
 
-import java.math.BigDecimal;
-
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,11 +17,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class InstitutionStandort {
-	@NotNull
-	@Valid
-	private InstitutionStandortId id;
-
+public class NeuesInstitutionStandort {
 	@NotBlank
 	private String name;
 
@@ -43,7 +35,4 @@ public class InstitutionStandort {
 
 	@NotBlank
 	private String land;
-	
-	private BigDecimal longitude;
-	private BigDecimal latitude;
 }

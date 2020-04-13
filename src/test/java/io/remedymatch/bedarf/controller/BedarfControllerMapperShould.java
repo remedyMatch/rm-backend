@@ -22,12 +22,12 @@ import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.domain.model.NeuesBedarf;
-import io.remedymatch.institution.api.InstitutionRO;
-import io.remedymatch.institution.api.InstitutionStandortRO;
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionId;
-import io.remedymatch.institution.domain.InstitutionStandort;
-import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.controller.InstitutionRO;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("BedarfMapper soll")

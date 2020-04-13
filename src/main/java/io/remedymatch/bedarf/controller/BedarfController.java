@@ -28,7 +28,7 @@ import io.remedymatch.bedarf.domain.service.BedarfService;
 import io.remedymatch.bedarf.domain.service.BedarfSucheService;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.institution.domain.InstitutionStandortId;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import lombok.AllArgsConstructor;
 
 @RestController

@@ -7,7 +7,7 @@ import io.remedymatch.artikel.domain.model.ArtikelKategorie;
 import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
 
-class ArtikelKategorieEntityConverter {
+final class ArtikelKategorieEntityConverter {
 	private ArtikelKategorieEntityConverter() {
 
 	}

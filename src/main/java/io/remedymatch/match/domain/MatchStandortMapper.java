@@ -1,6 +1,6 @@
 package io.remedymatch.match.domain;
 
-import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 
 class MatchStandortMapper {
 	static MatchStandort mapToMatchStandort(InstitutionStandort standort) {

@@ -24,7 +24,7 @@ public final class BedarfAnfrageTestFixtures {
 	public static BedarfAnfrage beispielBedarfAnfrage() {
 		return BedarfAnfrage.builder() //
 				.id(beispielBedarfAnfrageId()) //
-				.bedarf(BedarfTestFixtures.beispielBedarf()) //
+				.bedarf(BedarfTestFixtures.beispielBedarfOhneAnfragen()) //
 				.institution(InstitutionTestFixtures.beispielInstitution()) //
 				.standort(InstitutionTestFixtures.beispielHaupstandort()) //
 				.anzahl(BEDARF_ANFRAGE_ANZAHL) //
@@ -37,7 +37,7 @@ public final class BedarfAnfrageTestFixtures {
 	public static BedarfAnfrageEntity beispielBedarfAnfrageEntity() {
 		return BedarfAnfrageEntity.builder() //
 				.id(beispielBedarfAnfrageId().getValue()) //
-				.bedarf(BedarfTestFixtures.beispielBedarfEntity()) //
+				.bedarf(BedarfTestFixtures.beispielBedarfOhneAnfragenEntity()) //
 				.institution(InstitutionTestFixtures.beispielInstitutionEntity()) //
 				.standort(InstitutionTestFixtures.beispielHaupstandortEntity()) //
 				.anzahl(BEDARF_ANFRAGE_ANZAHL) //

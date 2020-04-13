@@ -1,6 +1,6 @@
 package io.remedymatch.shared;
 
-import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.match.domain.MatchStandort;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;

@@ -1,8 +1,6 @@
 package io.remedymatch.web;
 
-
 import java.io.IOException;
-import java.util.Optional;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,8 +14,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionRepository;
+import io.remedymatch.institution.domain.service.InstitutionSucheService;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import io.remedymatch.person.domain.Person;
 import io.remedymatch.person.domain.PersonRepository;
 import lombok.AllArgsConstructor;
@@ -29,36 +28,39 @@ import lombok.val;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserCreationFilter implements Filter {
 
-    private final PersonRepository personRepository;
-    private final InstitutionRepository institutionRepository;
+	private final PersonRepository personRepository;
+	private final InstitutionSucheService institutionSucheService;
+	private final InstitutionJpaRepository institutionJpaRepository;
 
-    private final UserProvider userNameProvider;
-    private final InstitutionKeyProvider institutionKeyProvider;
+	private final UserProvider userNameProvider;
+	private final InstitutionKeyProvider institutionKeyProvider;
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        this.insertNewUser();
-        chain.doFilter(request, response);
-    }
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+		this.insertNewUser();
+		chain.doFilter(request, response);
+	}
 
-    @Transactional
-    protected synchronized void insertNewUser() {
-        val person = personRepository.findByUsername(userNameProvider.getUserName());
+	@Transactional
+	protected synchronized void insertNewUser() {
+		val person = personRepository.findByUsername(userNameProvider.getUserName());
 
-        if (person.isEmpty()) {
+		if (person.isEmpty()) {
+			// XXX sollte weg gehen nachdem der RegistrierungFreigabe Prozess fertig ist
+			var institution = institutionSucheService.findByInstitutionKey(institutionKeyProvider.getInstitutionKey());
 
-            var institution = institutionRepository.findByInstitutionKey(institutionKeyProvider.getInstitutionKey());
+			if (institution.isEmpty()) {
+				val newInstitution = new InstitutionEntity();
+				newInstitution.setInstitutionKey(institutionKeyProvider.getInstitutionKey());
+				institutionJpaRepository.save(newInstitution);
+				institution = institutionSucheService.findByInstitutionKey(institutionKeyProvider.getInstitutionKey());
+			}
 
-            if (institution.isEmpty()) {
-                val newInstitution = new Institution();
-                newInstitution.setInstitutionKey(institutionKeyProvider.getInstitutionKey());
-                institution = Optional.of(institutionRepository.add(newInstitution));
-            }
-
-            val newPerson = new Person();
-            newPerson.setInstitution(institution.get());
-            newPerson.setUsername(userNameProvider.getUserName());
-            personRepository.add(newPerson);
-        }
-    }
+			val newPerson = new Person();
+			newPerson.setInstitution(institution.get());
+			newPerson.setUsername(userNameProvider.getUserName());
+			personRepository.add(newPerson);
+		}
+	}
 }

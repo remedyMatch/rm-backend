@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.remedymatch.TestApplication;
 import io.remedymatch.WithMockJWT;
-import io.remedymatch.geodaten.api.StandortService;
+import io.remedymatch.geodaten.domain.StandortService;
 import io.remedymatch.geodaten.geocoding.domain.Adresse;
 import io.remedymatch.geodaten.geocoding.domain.Point;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Response;

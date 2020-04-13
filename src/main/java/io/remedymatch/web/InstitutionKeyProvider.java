@@ -6,9 +6,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InstitutionKeyProvider {
+class InstitutionKeyProvider {
 
-    public String getInstitutionKey(){
+    String getInstitutionKey(){
         Jwt jwt  = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var groups =  (JSONArray) jwt.getClaims().get("groups");
         var group = groups.stream().map(Object::toString).filter(this::validateGroup).findFirst().get();

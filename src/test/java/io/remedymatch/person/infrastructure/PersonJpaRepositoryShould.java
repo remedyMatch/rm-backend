@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import lombok.val;

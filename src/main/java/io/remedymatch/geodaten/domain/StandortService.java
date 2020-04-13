@@ -1,4 +1,4 @@
-package io.remedymatch.geodaten.api;
+package io.remedymatch.geodaten.domain;
 
 import io.remedymatch.geodaten.geocoding.Geocoder;
 import io.remedymatch.geodaten.geocoding.domain.Adresse;

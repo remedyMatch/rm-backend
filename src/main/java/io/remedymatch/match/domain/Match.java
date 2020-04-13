@@ -1,10 +1,11 @@
 package io.remedymatch.match.domain;
 
-import io.remedymatch.institution.domain.Institution;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import io.remedymatch.institution.domain.model.Institution;
 
 @Getter
 @Setter

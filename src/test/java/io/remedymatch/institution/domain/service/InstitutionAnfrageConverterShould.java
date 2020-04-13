@@ -1,6 +1,8 @@
-package io.remedymatch.institution.domain;
+package io.remedymatch.institution.domain.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,42 +11,44 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures;
-import io.remedymatch.angebot.domain.service.AngebotTestFixtures;
-import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageTestFixtures;
-import io.remedymatch.bedarf.domain.service.BedarfTestFixtures;
+import io.remedymatch.institution.domain.model.InstitutionAnfrage;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
-@DisplayName("AngebotAnfrageEntityConverter soll")
-public class AnfrageConverterShould {
+@DisplayName("InstitutionAnfrageConverter soll")
+public class InstitutionAnfrageConverterShould {
 
 	@Test
 	@DisplayName("AngebotAnfrage in Anfrage konvertieren")
-	void angebotAnfrage_in_Anfrage_konvertieren() {
-		assertEquals(anfrageAusAngebot(), AnfrageConverter.convert(angebotAnfrage()));
+	void angebotAnfragen_in_Anfragen_konvertieren() {
+		assertEquals(Arrays.asList(anfrageAusAngebot()),
+				InstitutionAnfrageConverter.convertAngebotAnfragen(Arrays.asList(angebotAnfrage())));
 	}
 
 	@Test
 	@DisplayName("BedarfAnfrage in Anfrage konvertieren")
-	void bedarfAnfrage_in_Anfrage_konvertieren() {
-		assertEquals(bedarfAusAngebot(), AnfrageConverter.convert(bedarfAnfrage()));
+	void bedarfAnfragen_in_Anfragen_konvertieren() {
+		assertEquals(Arrays.asList(bedarfAusAngebot()),
+				InstitutionAnfrageConverter.convertBedarfAnfragen(Arrays.asList(bedarfAnfrage())));
 	}
 
 	private AngebotAnfrage angebotAnfrage() {
 		return AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
 	}
 
-	private Anfrage anfrageAusAngebot() {
+	private InstitutionAnfrage anfrageAusAngebot() {
 		val angebotAnfrage = AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
-		return Anfrage.builder() //
+		val angebot = angebotAnfrage.getAngebot();
+
+		return InstitutionAnfrage.builder() //
 				.id(angebotAnfrage.getId().getValue()) //
-				.angebotId(AngebotTestFixtures.ANGEBOT_ID.getValue()) //
-				.artikelId(AngebotTestFixtures.ANGEBOT_ARTIKEL_VARIANTE.getArtikelId().getValue())//
-				.artikelVarianteId(AngebotTestFixtures.ANGEBOT_ARTIKEL_VARIANTE.getId().getValue())//
-				.institutionAn(AngebotTestFixtures.ANGEBOT_INSTITUTION) //
-				.standortAn(AngebotTestFixtures.ANGEBOT_STANDORT) //
+				.angebotId(angebot.getId().getValue()) //
+				.artikelId(angebot.getArtikelVariante().getArtikelId())//
+				.artikelVarianteId(angebot.getArtikelVariante().getId())//
+				.institutionAn(angebot.getInstitution()) //
+				.standortAn(angebot.getStandort()) //
 				.institutionVon(angebotAnfrage.getInstitution()) //
 				.standortVon(angebotAnfrage.getStandort()) //
 				.anzahl(angebotAnfrage.getAnzahl()) //
@@ -58,15 +62,17 @@ public class AnfrageConverterShould {
 		return BedarfAnfrageTestFixtures.beispielBedarfAnfrage();
 	}
 
-	private Anfrage bedarfAusAngebot() {
+	private InstitutionAnfrage bedarfAusAngebot() {
 		val bedarfAnfrage = BedarfAnfrageTestFixtures.beispielBedarfAnfrage();
-		return Anfrage.builder() //
+		val bedarf = bedarfAnfrage.getBedarf();
+
+		return InstitutionAnfrage.builder() //
 				.id(bedarfAnfrage.getId().getValue()) //
-				.bedarfId(BedarfTestFixtures.BEDARF_ID.getValue()) //
-				.artikelId(ArtikelTestFixtures.ARTIKEL_ID.getValue())//
-				.artikelVarianteId(ArtikelTestFixtures.ARTIKEL_VARIANTE_1_ID.getValue())//
-				.institutionAn(BedarfTestFixtures.BEDARF_INSTITUTION) //
-				.standortAn(BedarfTestFixtures.BEDARF_STANDORT) //
+				.bedarfId(bedarf.getId().getValue()) //
+				.artikelId(bedarf.getArtikel().getId())//
+				.artikelVarianteId(bedarf.getArtikelVariante().getId())//
+				.institutionAn(bedarf.getInstitution()) //
+				.standortAn(bedarf.getStandort()) //
 				.institutionVon(bedarfAnfrage.getInstitution()) //
 				.standortVon(bedarfAnfrage.getStandort()) //
 				.anzahl(bedarfAnfrage.getAnzahl()) //

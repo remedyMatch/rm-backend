@@ -62,6 +62,6 @@ public class PersonEntity {
     
     @ManyToOne
     @Type(type = "uuid-char")
-    @JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = false, updatable = true)
+    @JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = true, updatable = true)
 	private InstitutionStandortEntity standort;
 }

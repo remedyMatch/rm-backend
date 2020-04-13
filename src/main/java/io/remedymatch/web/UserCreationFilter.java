@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import io.remedymatch.institution.domain.service.InstitutionSucheService;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
+import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
 import io.remedymatch.person.domain.Person;
 import io.remedymatch.person.domain.PersonRepository;
 import lombok.AllArgsConstructor;

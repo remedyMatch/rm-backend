@@ -101,7 +101,9 @@ public class LocationIQGeocoderClient implements Geocoder {
         }
         final ResponseEntity<Response[]> responseEntity = restTemplate.getForEntity(url, Response[].class);
         if (responseEntity.getStatusCode() != HttpStatus.OK) {
-            throw new RuntimeException(responseEntity.getStatusCode().name());
+            // make the application work even if geocoder is not configured properly
+            return List.of();
+            //throw new RuntimeException(responseEntity.getStatusCode().name());
         }
         final Response[] gefundeneResponses = responseEntity.getBody();
         if (gefundeneResponses == null || gefundeneResponses.length <= 0) {

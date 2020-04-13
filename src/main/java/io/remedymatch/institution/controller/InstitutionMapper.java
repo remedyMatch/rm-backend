@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionUpdate;
 
 public final class InstitutionMapper {
 
@@ -22,7 +23,17 @@ public final class InstitutionMapper {
 				.build();
 	}
 
-	static InstitutionId maptToInstitutionId(final UUID institutionId) {
+	static InstitutionUpdate mapToUpdate(final InstitutionUpdateRequest institutionUpdateRequest) {
+		return InstitutionUpdate.builder()//
+				.neueName(institutionUpdateRequest.getName()) //
+				.neuesTyp(institutionUpdateRequest.getTyp()) //
+				.neuesHauptstandortId(institutionUpdateRequest.getHauptstandortId() != null
+						? InstitutionStandortMapper.mapToStandortId(institutionUpdateRequest.getHauptstandortId())
+						: null) //
+				.build();
+	}
+
+	static InstitutionId mapToInstitutionId(final UUID institutionId) {
 		return new InstitutionId(institutionId);
 	}
 }

@@ -22,7 +22,7 @@ import io.remedymatch.institution.domain.model.InstitutionStandortId;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("InstitutionAnfrageControllerMapper soll")
-public class InstitutionAnfrageControllerMapperShould {
+class InstitutionAnfrageControllerMapperShould {
 
 	private static final UUID ANFRAGE_ID = UUID.randomUUID();
 	private static final String KOMMENTAR = "Kommentar";

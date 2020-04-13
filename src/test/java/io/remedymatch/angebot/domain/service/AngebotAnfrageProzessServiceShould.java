@@ -18,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.engine.domain.ProzessInstanzId;
-import io.remedymatch.institution.domain.InstitutionTestFixtures;
+import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)

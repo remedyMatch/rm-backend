@@ -1,7 +1,7 @@
 package io.remedymatch.institution.domain.service;
 
-import static io.remedymatch.institution.domain.InstitutionTestFixtures.beispielInstitution;
-import static io.remedymatch.institution.domain.InstitutionTestFixtures.beispielInstitutionEntity;
+import static io.remedymatch.institution.domain.service.InstitutionTestFixtures.beispielInstitution;
+import static io.remedymatch.institution.domain.service.InstitutionTestFixtures.beispielInstitutionEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("InstitutionEntityConverter soll")
-public class InstitutionEntityConverterShould {
+class InstitutionEntityConverterShould {
 
 	@Test
 	@DisplayName("eine Entity in ein Domain Objekt konvertieren")

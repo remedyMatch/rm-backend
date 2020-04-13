@@ -80,25 +80,25 @@ class BedarfControllerMapperShould {
 	}
 
 	@Test
-	@DisplayName("Bedarf Domain Objekt in DTO konvertieren")
+	@DisplayName("Bedarf Domain Objekt in RO konvertieren")
 	void bedarf_domain_Objekt_in_RO_konvertieren() {
 		assertEquals(bedarfRO(), BedarfControllerMapper.mapToBedarfRO(bedarf()));
 	}
 
 	@Test
-	@DisplayName("NeueBedarf konvertieren koennen")
-	void neueBedarf_konvertieren_koennen() {
+	@DisplayName("NeuesBedarf konvertieren koennen")
+	void neuesBedarf_konvertieren_koennen() {
 		assertEquals(neuesBedarf(), BedarfControllerMapper.mapToNeuesBedarf(neuesBedarfRequest()));
 	}
 
 	@Test
 	@DisplayName("UUID in BedarfId konvertieren")
 	void uuid_in_BedarfId_konvertieren() {
-		assertEquals(BEDARF_ID, BedarfControllerMapper.maptToBedarfId(BEDARF_ID.getValue()));
+		assertEquals(BEDARF_ID, BedarfControllerMapper.mapToBedarfId(BEDARF_ID.getValue()));
 	}
 
 	@Test
-	@DisplayName("BedarfAnfrage Domain Objekt in DTO konvertieren")
+	@DisplayName("BedarfAnfrage Domain Objekt in RO konvertieren")
 	void bedarf_Anfrage_domain_Objekt_in_RO_konvertieren() {
 		assertEquals(anfrageRO(), BedarfControllerMapper.mapToAnfrageRO(anfrage()));
 	}

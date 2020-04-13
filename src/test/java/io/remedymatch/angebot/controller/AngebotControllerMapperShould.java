@@ -93,7 +93,7 @@ class AngebotControllerMapperShould {
 	@Test
 	@DisplayName("UUID in AngebotId konvertieren")
 	void uuid_in_AngebotId_konvertieren() {
-		assertEquals(ANGEBOT_ID, AngebotControllerMapper.maptToAngebotId(ANGEBOT_ID.getValue()));
+		assertEquals(ANGEBOT_ID, AngebotControllerMapper.mapToAngebotId(ANGEBOT_ID.getValue()));
 	}
 
 	@Test

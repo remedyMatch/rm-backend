@@ -7,7 +7,7 @@ import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
-import io.remedymatch.institution.domain.InstitutionTestFixtures;
+import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 
 public final class AngebotAnfrageTestFixtures {
 	private AngebotAnfrageTestFixtures() {

@@ -16,7 +16,7 @@ final class InstitutionAnfrageConverter {
 		return angebotAnfragen.stream().map(InstitutionAnfrageConverter::convertAngebotAnfrage).collect(Collectors.toList());
 	}
 
-	private static InstitutionAnfrage convertAngebotAnfrage(AngebotAnfrage angebotAnfrage) {
+	static InstitutionAnfrage convertAngebotAnfrage(AngebotAnfrage angebotAnfrage) {
 		return InstitutionAnfrage.builder() //
 				.id(angebotAnfrage.getId().getValue()) //
 				.angebotId(angebotAnfrage.getAngebot().getId().getValue()) //
@@ -37,7 +37,7 @@ final class InstitutionAnfrageConverter {
 		return bedarfAnfragen.stream().map(InstitutionAnfrageConverter::convertBedarfAnfrage).collect(Collectors.toList());
 	}
 
-	private static InstitutionAnfrage convertBedarfAnfrage(final BedarfAnfrage bedarfAnfrage) {
+	static InstitutionAnfrage convertBedarfAnfrage(final BedarfAnfrage bedarfAnfrage) {
 		return InstitutionAnfrage.builder() //
 				.id(bedarfAnfrage.getId().getValue()) //
 				.bedarfId(bedarfAnfrage.getBedarf().getId().getValue()) //

@@ -1,4 +1,4 @@
-package io.remedymatch.institution.domain;
+package io.remedymatch.institution.domain.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

@@ -29,8 +29,8 @@ public class InstitutionAnfragenSucheService {
 	private final GeoCalcService geoCalcService;
 
 	@Transactional(readOnly = true)
-	public List<InstitutionAnfrage> getGestellteUserInstitutionAnfragen() {
-		val userInstitutionId = userService.getContextInstitution().getId();
+	public List<InstitutionAnfrage> findAlleGestellteUserInstitutionAnfragen() {
+		val userInstitutionId = userService.getContextInstitutionId();
 
 		List<InstitutionAnfrage> anfragen = new ArrayList<>();
 		anfragen.addAll(
@@ -42,8 +42,8 @@ public class InstitutionAnfragenSucheService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<InstitutionAnfrage> getErhalteneUserInstitutionAnfragen() {
-		val userInstitutionId = userService.getContextInstitution().getId();
+	public List<InstitutionAnfrage> findAlleErhalteneUserInstitutionAnfragen() {
+		val userInstitutionId = userService.getContextInstitutionId();
 
 		List<InstitutionAnfrage> anfragen = new ArrayList<>();
 		anfragen.addAll(convertAngebotAnfragen(

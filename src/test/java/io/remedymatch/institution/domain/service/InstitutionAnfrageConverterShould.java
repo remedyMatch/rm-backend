@@ -18,7 +18,7 @@ import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("InstitutionAnfrageConverter soll")
-public class InstitutionAnfrageConverterShould {
+class InstitutionAnfrageConverterShould {
 
 	@Test
 	@DisplayName("AngebotAnfrage in Anfrage konvertieren")

@@ -26,13 +26,13 @@ public class InstitutionAnfrageController {
 	@GetMapping("/gestellt")
 	public ResponseEntity<List<InstitutionAnfrageRO>> gestellteAnfragen() {
 		return ResponseEntity
-				.ok(mapToAnfragenRO(institutionAnfragenSucheService.getGestellteUserInstitutionAnfragen()));
+				.ok(mapToAnfragenRO(institutionAnfragenSucheService.findAlleGestellteUserInstitutionAnfragen()));
 	}
 
 	@Transactional(readOnly = true)
 	@GetMapping("/erhalten")
 	public ResponseEntity<List<InstitutionAnfrageRO>> erhalteneAnfragen() {
 		return ResponseEntity
-				.ok(mapToAnfragenRO(institutionAnfragenSucheService.getErhalteneUserInstitutionAnfragen()));
+				.ok(mapToAnfragenRO(institutionAnfragenSucheService.findAlleErhalteneUserInstitutionAnfragen()));
 	}
 }

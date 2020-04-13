@@ -8,9 +8,9 @@ import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
-import io.remedymatch.institution.domain.InstitutionTestFixtures;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
+import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 

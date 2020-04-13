@@ -63,7 +63,7 @@ public class AngebotController {
 	public ResponseEntity<Void> angebotLoeschen(//
 			@PathVariable("angebotId") @NotNull UUID angebotId) {
 		try {
-			angebotService.angebotDerUserInstitutionLoeschen(AngebotControllerMapper.maptToAngebotId(angebotId));
+			angebotService.angebotDerUserInstitutionLoeschen(AngebotControllerMapper.mapToAngebotId(angebotId));
 		} catch (ObjectNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		} catch (NotUserInstitutionObjectException e) {
@@ -78,7 +78,7 @@ public class AngebotController {
 			@PathVariable("angebotId") @NotNull UUID angebotId, //
 			@RequestBody @Valid AngebotAnfragenRequest request) {
 		return ResponseEntity.ok(mapToAnfrageRO(angebotService.angebotAnfrageErstellen(//
-				AngebotControllerMapper.maptToAngebotId(angebotId), //
+				AngebotControllerMapper.mapToAngebotId(angebotId), //
 				new InstitutionStandortId(request.getStandortId()), //
 				request.getKommentar(), //
 				request.getAnzahl())));
@@ -90,7 +90,7 @@ public class AngebotController {
 			@PathVariable("anfrageId") @NotNull UUID anfrageId) {
 		try {
 			angebotService.angebotAnfrageDerUserInstitutionLoeschen(//
-					AngebotControllerMapper.maptToAngebotId(angebotId), //
+					AngebotControllerMapper.mapToAngebotId(angebotId), //
 					new AngebotAnfrageId(anfrageId));
 		} catch (ObjectNotFoundException e) {
 			return ResponseEntity.notFound().build();

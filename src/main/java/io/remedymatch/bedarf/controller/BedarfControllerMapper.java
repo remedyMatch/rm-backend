@@ -67,7 +67,7 @@ class BedarfControllerMapper {
 				.build();
 	}
 
-	static BedarfId maptToBedarfId(final UUID bedarfId) {
+	static BedarfId mapToBedarfId(final UUID bedarfId) {
 		return new BedarfId(bedarfId);
 	}
 }

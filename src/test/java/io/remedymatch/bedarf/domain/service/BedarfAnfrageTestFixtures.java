@@ -7,7 +7,7 @@ import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
 import io.remedymatch.bedarf.infrastructure.BedarfAnfrageEntity;
-import io.remedymatch.institution.domain.InstitutionTestFixtures;
+import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 
 public final class BedarfAnfrageTestFixtures {
 

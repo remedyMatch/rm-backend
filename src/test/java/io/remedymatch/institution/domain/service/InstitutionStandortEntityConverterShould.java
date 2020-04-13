@@ -1,11 +1,11 @@
 package io.remedymatch.institution.domain.service;
 
-import static io.remedymatch.institution.domain.InstitutionTestFixtures.beispielHaupstandort;
-import static io.remedymatch.institution.domain.InstitutionTestFixtures.beispielHaupstandortEntity;
-import static io.remedymatch.institution.domain.InstitutionTestFixtures.beispielStandort1;
-import static io.remedymatch.institution.domain.InstitutionTestFixtures.beispielStandort1Entity;
-import static io.remedymatch.institution.domain.InstitutionTestFixtures.beispielStandort2;
-import static io.remedymatch.institution.domain.InstitutionTestFixtures.beispielStandort2Entity;
+import static io.remedymatch.institution.domain.service.InstitutionTestFixtures.beispielHaupstandort;
+import static io.remedymatch.institution.domain.service.InstitutionTestFixtures.beispielHaupstandortEntity;
+import static io.remedymatch.institution.domain.service.InstitutionTestFixtures.beispielStandort1;
+import static io.remedymatch.institution.domain.service.InstitutionTestFixtures.beispielStandort1Entity;
+import static io.remedymatch.institution.domain.service.InstitutionTestFixtures.beispielStandort2;
+import static io.remedymatch.institution.domain.service.InstitutionTestFixtures.beispielStandort2Entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -22,7 +22,7 @@ import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("InstitutionStandortEntityConverter soll")
-public class InstitutionStandortEntityConverterShould {
+class InstitutionStandortEntityConverterShould {
 
 	/*
 	 * Entities -> Domain Objekte

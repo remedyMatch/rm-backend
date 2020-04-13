@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.institution.domain.InstitutionTestFixtures;
+import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.person.infrastructure.PersonEntity;
 
 @ExtendWith(SpringExtension.class)

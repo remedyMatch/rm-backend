@@ -62,7 +62,7 @@ public class BedarfController {
 	public ResponseEntity<Void> bedarfLoeschen(//
 			@PathVariable("bedarfId") @NotNull UUID bedarfId) {
 		try {
-			bedarfService.bedarfDerUserInstitutionLoeschen(BedarfControllerMapper.maptToBedarfId(bedarfId));
+			bedarfService.bedarfDerUserInstitutionLoeschen(BedarfControllerMapper.mapToBedarfId(bedarfId));
 		} catch (ObjectNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		} catch (NotUserInstitutionObjectException e) {
@@ -77,7 +77,7 @@ public class BedarfController {
 			@PathVariable("bedarfId") @NotNull UUID bedarfId, //
 			@RequestBody @Valid BedarfBedienenRequest request) {
 		return ResponseEntity.ok(mapToAnfrageRO(bedarfService.bedarfAnfrageErstellen(//
-				BedarfControllerMapper.maptToBedarfId(bedarfId), //
+				BedarfControllerMapper.mapToBedarfId(bedarfId), //
 				new InstitutionStandortId(request.getStandortId()), //
 				request.getKommentar(), //
 				request.getAnzahl())));
@@ -89,7 +89,7 @@ public class BedarfController {
 			@PathVariable("anfrageId") @NotNull UUID anfrageId) {
 		try {
 			bedarfService.bedarfAnfrageDerUserInstitutionLoeschen(//
-					BedarfControllerMapper.maptToBedarfId(bedarfId), //
+					BedarfControllerMapper.mapToBedarfId(bedarfId), //
 					new BedarfAnfrageId(anfrageId));
 		} catch (ObjectNotFoundException e) {
 			return ResponseEntity.notFound().build();

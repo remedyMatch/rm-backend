@@ -12,9 +12,9 @@ import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
 import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
-import io.remedymatch.institution.domain.InstitutionTestFixtures;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
+import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 

@@ -1,8 +1,6 @@
 package io.remedymatch.bedarf.domain.service;
 
-import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVariante;
 import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.*;
-import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVarianteId;
 import static io.remedymatch.bedarf.domain.service.BedarfTestFixtures.beispielBedarfId;
 import static io.remedymatch.institution.domain.UserContextTestFixtures.beispielUserContextAnderesStandort;
 import static io.remedymatch.institution.domain.UserContextTestFixtures.beispielUserContextAnderesStandortEntity;
@@ -38,8 +36,8 @@ import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.institution.domain.InstitutionTestFixtures;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
+import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.user.domain.UserService;
 import lombok.val;
 

@@ -64,7 +64,7 @@ class AngebotControllerMapper {
 				.build();
 	}
 
-	static AngebotId maptToAngebotId(final UUID angebotId) {
+	static AngebotId mapToAngebotId(final UUID angebotId) {
 		return new AngebotId(angebotId);
 	}
 }

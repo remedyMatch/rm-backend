@@ -8,7 +8,6 @@ import static org.mockito.BDDMockito.then;
 
 import java.util.Optional;
 
-import org.aspectj.weaver.ast.IExprVisitor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -49,12 +48,13 @@ class InstitutionSucheServiceShould {
 
 		val expectedInstitution = beispielInstitution();
 
-		assertEquals(Optional.of(expectedInstitution), institutionSucheService.findInstitution(expectedInstitution.getId()));
+		assertEquals(Optional.of(expectedInstitution),
+				institutionSucheService.findInstitution(expectedInstitution.getId()));
 
 		then(institutionRepository).should().findById(institutionId);
 		then(institutionRepository).shouldHaveNoMoreInteractions();
 	}
-	
+
 	@Test
 	@DisplayName("gesuchte Institution fuer InstitutionKey finden")
 	void gesuchte_Institution_fuer_InstitutionKey_finden() {

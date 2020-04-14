@@ -36,6 +36,7 @@ public class KeycloakService {
 	public List<RegistrierterUser> findFreigegebeneUsers() {
 
 		return keycloakGruppeUsers(KEYCLOAK_GRUPPE_FREIGEGEBEN).stream() //
+				.filter(user -> isInStatus(user, KEYCLOAK_USER_STATUS_FREIGEGEBEN)) //
 				.map(KeycloakUserConverter::convert) //
 				.collect(Collectors.toList());
 	}
@@ -47,7 +48,7 @@ public class KeycloakService {
 
 		user.setEnabled(true);
 		user.setGroups(Arrays.asList(KEYCLOAK_GRUPPE_USER));
-//		updateStatus(user, KEYCLOAK_USER_STATUS_AKTIVIERT);
+		updateStatus(user, KEYCLOAK_USER_STATUS_AKTIVIERT);
 
 		userResource.update(user);
 	}

@@ -13,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
-import io.remedymatch.person.domain.service.PersonEntityConverter;
 import io.remedymatch.person.infrastructure.PersonEntity;
 
 @ExtendWith(SpringExtension.class)

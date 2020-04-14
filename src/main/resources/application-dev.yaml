@@ -37,8 +37,11 @@ io:
       user:
         realm: rmio
       client:
-        realm: master
-        username: admin
-        password: admin
+        realm: rmio
+        username: rm_backend_user
+        password: rm_backend_user_password
+#        realm: master
+#        username: admin
+#        password: admin
         clientId: admin-cli
         clientSecret: admin

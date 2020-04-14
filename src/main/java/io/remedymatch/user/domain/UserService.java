@@ -7,7 +7,7 @@ import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.service.PersonRepository;
-import io.remedymatch.web.UserProvider;
+import io.remedymatch.usercontext.UserProvider;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

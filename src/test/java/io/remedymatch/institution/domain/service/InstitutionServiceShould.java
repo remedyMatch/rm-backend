@@ -119,15 +119,15 @@ class InstitutionServiceShould {
 		val userInstitution = UserContextTestFixtures.beispielUserContextInstitution();
 
 		val institutionMitNeuemTyp = UserContextTestFixtures.beispielUserContextInstitution();
-		institutionMitNeuemTyp.setTyp(InstitutionTyp.Krankenhaus);
+		institutionMitNeuemTyp.setTyp(InstitutionTyp.KRANKENHAUS);
 		val institutionEntityMitNeuemTyp = UserContextTestFixtures.beispielUserContextInstitutionEntity();
-		institutionEntityMitNeuemTyp.setTyp(InstitutionTyp.Krankenhaus);
+		institutionEntityMitNeuemTyp.setTyp(InstitutionTyp.KRANKENHAUS);
 		
 		given(userService.getContextInstitution()).willReturn(userInstitution);
 		given(institutionRepository.save(institutionEntityMitNeuemTyp)).willReturn(institutionEntityMitNeuemTyp);
 
 		assertEquals(institutionMitNeuemTyp, institutionService.userInstitutionAktualisieren(
-				InstitutionUpdate.builder().neuesTyp(InstitutionTyp.Krankenhaus).build()));
+				InstitutionUpdate.builder().neuesTyp(InstitutionTyp.KRANKENHAUS).build()));
 
 		then(userService).should().getContextInstitution();
 		then(userService).shouldHaveNoMoreInteractions();

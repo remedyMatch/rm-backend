@@ -26,7 +26,7 @@ class InstitutionMapperShould {
 	public static final InstitutionId INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 	public static final String INSTITUTION_NAME = "Institution Name";
 	public static final String INSTITUTION_KEY = "institutionKey";
-	public static final InstitutionTyp INSTITUTION_TYP = InstitutionTyp.Krankenhaus;
+	public static final InstitutionTyp INSTITUTION_TYP = InstitutionTyp.KRANKENHAUS;
 
 	public static final InstitutionStandortId STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
 	public static final String STANDORT_NAME = "Standort Name";

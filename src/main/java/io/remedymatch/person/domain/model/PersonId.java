@@ -1,4 +1,4 @@
-package io.remedymatch.person.domain;
+package io.remedymatch.person.domain.model;
 
 import java.util.UUID;
 

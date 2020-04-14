@@ -145,7 +145,7 @@ public class AngebotAnfrageJpaRepositoryShould {
 		return InstitutionEntity.builder() //
 				.institutionKey("mein_krankenhaus") //
 				.name("Mein Krankenhaus") //
-				.typ(InstitutionTyp.Krankenhaus) //
+				.typ(InstitutionTyp.KRANKENHAUS) //
 				.build();
 	}
 

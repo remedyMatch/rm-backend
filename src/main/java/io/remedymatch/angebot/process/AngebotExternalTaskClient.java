@@ -1,27 +1,29 @@
 package io.remedymatch.angebot.process;
 
-import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
-import io.remedymatch.angebot.domain.service.AngebotService;
-import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.engine.domain.BusinessKey;
-import io.remedymatch.match.api.MatchProzessConstants;
-import io.remedymatch.properties.RmBackendProperties;
-import lombok.AllArgsConstructor;
-import lombok.val;
+import java.util.HashMap;
+import java.util.UUID;
+
+import javax.annotation.PostConstruct;
+
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.UUID;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.service.AngebotService;
+import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.engine.domain.BusinessKey;
+import io.remedymatch.match.api.MatchProzessConstants;
+import io.remedymatch.properties.EngineProperties;
+import lombok.AllArgsConstructor;
+import lombok.val;
 
 @AllArgsConstructor
 @Component
 @Profile("!disableexternaltasks")
 class AngebotExternalTaskClient {
-    private final RmBackendProperties properties;
+    private final EngineProperties properties;
     private final AngebotService angebotService;
     private final EngineClient engineClient;
 
@@ -29,7 +31,7 @@ class AngebotExternalTaskClient {
     public void doSubscribe() {
 
         ExternalTaskClient client = ExternalTaskClient.create()
-                .baseUrl(properties.getEngineUrl() + "/rest")
+                .baseUrl(properties.getUrl() + "/rest")
                 .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000))
                 .build();
 

@@ -3,9 +3,9 @@ package io.remedymatch.institution.controller;
 import static io.remedymatch.institution.controller.InstitutionMapper.mapToInstitutionRO;
 import static io.remedymatch.institution.controller.InstitutionStandortMapper.mapToNeuesStandort;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -25,7 +25,6 @@ import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.domain.service.InstitutionService;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
-import lombok.val;
 
 @RestController
 @AllArgsConstructor
@@ -73,9 +72,8 @@ public class InstitutionController {
 
 	@GetMapping("/typ")
 	public ResponseEntity<List<String>> typenLaden() {
-		val typen = Arrays.asList(InstitutionTyp.Krankenhaus, InstitutionTyp.Arzt, InstitutionTyp.Lieferant,
-				InstitutionTyp.Privat, InstitutionTyp.Andere);
-		return ResponseEntity.ok(typen.stream().map(InstitutionTyp::toString).collect(Collectors.toList()));
+		return ResponseEntity
+				.ok(Stream.of(InstitutionTyp.values()).map(InstitutionTyp::toString).collect(Collectors.toList()));
 	}
 
 	// ist das gleiche wie pures GET

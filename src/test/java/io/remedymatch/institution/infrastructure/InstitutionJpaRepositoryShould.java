@@ -74,7 +74,7 @@ public class InstitutionJpaRepositoryShould {
 		return InstitutionEntity.builder() //
 				.name("Mein Krankenhaus") //
 				.institutionKey(institutionKey) //
-				.typ(InstitutionTyp.Krankenhaus) //
+				.typ(InstitutionTyp.KRANKENHAUS) //
 				.build();
 	}
 	

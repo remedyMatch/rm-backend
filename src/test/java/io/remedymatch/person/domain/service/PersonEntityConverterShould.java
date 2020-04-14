@@ -1,4 +1,4 @@
-package io.remedymatch.person.domain;
+package io.remedymatch.person.domain.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -11,6 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonId;
+import io.remedymatch.person.domain.service.PersonEntityConverter;
 import io.remedymatch.person.infrastructure.PersonEntity;
 
 @ExtendWith(SpringExtension.class)

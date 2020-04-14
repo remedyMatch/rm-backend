@@ -1,7 +1,9 @@
-package io.remedymatch.person.domain;
+package io.remedymatch.person.domain.service;
 
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonEntity.PersonEntityBuilder;
 

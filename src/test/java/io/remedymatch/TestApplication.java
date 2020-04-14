@@ -1,6 +1,6 @@
 package io.remedymatch;
 
-import io.remedymatch.properties.RmBackendProperties;
+import io.remedymatch.properties.GeodatenProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
-@EnableConfigurationProperties(value = RmBackendProperties.class)
+@EnableConfigurationProperties(value = GeodatenProperties.class)
 public class TestApplication {
 
 	public static void main(String[] args) {

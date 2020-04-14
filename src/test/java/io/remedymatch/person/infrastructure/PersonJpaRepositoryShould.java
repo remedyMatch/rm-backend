@@ -63,7 +63,7 @@ public class PersonJpaRepositoryShould {
 		return InstitutionEntity.builder() //
 				.name("Mein Krankenhaus") //
 				.institutionKey("mein-krankehnaus") //
-				.typ(InstitutionTyp.Krankenhaus) //
+				.typ(InstitutionTyp.KRANKENHAUS) //
 				.hauptstandort(standort) //
 				.build();
 	}

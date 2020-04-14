@@ -107,7 +107,7 @@ public class MatchJpaRepositoryShould {
         return InstitutionEntity.builder() //
                 .institutionKey("mein_krankenhaus") //
                 .name("Mein Krankenhaus") //
-                .typ(InstitutionTyp.Krankenhaus) //
+                .typ(InstitutionTyp.KRANKENHAUS) //
                 .build();
     }
 

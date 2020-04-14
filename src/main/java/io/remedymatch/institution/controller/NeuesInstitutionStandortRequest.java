@@ -25,8 +25,7 @@ class NeuesInstitutionStandortRequest {
 	@NotBlank
 	private String strasse;
 
-	// TODO: Rausbauen, sobald UI Hausnummer hat
-//	@NotBlank
+	@NotBlank
 	private String hausnummer;
 
 	@NotBlank

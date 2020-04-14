@@ -27,8 +27,16 @@ remedy:
 
 io:
   remedymatch:
-    backend:
-      engineUrl: http://localhost:8085/engine
+    engine: 
+      url: http://localhost:8085/engine
+    geodaten:
       geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
-      geocoderServiceApiKey: code
+      geocoderServiceApiKey: einsetzen
+    keycloak:
+      url: http://localhost:8008/auth
+      realm: master
+      username: admin
+      password: admin
+      clientId: admin-cli
+      clientSecret: admin
         

@@ -14,7 +14,7 @@ import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.model.InstitutionAnfrage;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -23,7 +23,7 @@ import lombok.val;
 @Service
 public class InstitutionAnfragenSucheService {
 
-	private final UserService userService;
+	private final UserContextService userService;
 	private final AngebotAnfrageSucheService angebotAnfrageSucheService;
 	private final BedarfAnfrageSucheService bedarfAnfrageSucheService;
 	private final GeoCalcService geoCalcService;

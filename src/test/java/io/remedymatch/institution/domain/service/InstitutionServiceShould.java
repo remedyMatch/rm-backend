@@ -24,7 +24,6 @@ import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.geodaten.domain.StandortService;
 import io.remedymatch.geodaten.geocoding.domain.Point;
-import io.remedymatch.institution.domain.UserContextTestFixtures;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
@@ -37,14 +36,15 @@ import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
+import io.remedymatch.usercontext.UserContextTestFixtures;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { //
 		InstitutionService.class, //
-		UserService.class, //
+		UserContextService.class, //
 		InstitutionJpaRepository.class, //
 		InstitutionStandortJpaRepository.class, //
 		StandortService.class //
@@ -57,7 +57,7 @@ class InstitutionServiceShould {
 	private InstitutionService institutionService;
 
 	@MockBean
-	private UserService userService;
+	private UserContextService userService;
 
 	@MockBean
 	private InstitutionJpaRepository institutionRepository;

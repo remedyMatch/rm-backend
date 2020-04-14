@@ -36,7 +36,7 @@ import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
@@ -45,7 +45,7 @@ import lombok.val;
 		AngebotService.class, //
 		AngebotJpaRepository.class, //
 		AngebotAnfrageJpaRepository.class, //
-		UserService.class, //
+		UserContextService.class, //
 		AngebotAnfrageProzessService.class //
 })
 @Tag("Spring")
@@ -61,7 +61,7 @@ class AngebotServiceShould {
 	private AngebotAnfrageJpaRepository anfrageRepository;
 
 	@MockBean
-	private UserService userService;
+	private UserContextService userService;
 
 	@MockBean
 	private AngebotAnfrageProzessService anfrageProzessService;

@@ -23,7 +23,7 @@ import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.domain.service.InstitutionService;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -33,7 +33,7 @@ import lombok.AllArgsConstructor;
 public class InstitutionController {
 
 	private final InstitutionService institutionService;
-	private final UserService UserService;
+	private final UserContextService UserService;
 
 	@GetMapping
 	public ResponseEntity<InstitutionRO> institutionLaden() {

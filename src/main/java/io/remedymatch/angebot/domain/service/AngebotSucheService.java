@@ -11,7 +11,7 @@ import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -22,7 +22,7 @@ public class AngebotSucheService {
 
 	private final AngebotJpaRepository angebotRepository;
 	
-	private final UserService userService;
+	private final UserContextService userService;
 	private final GeoCalcService geoCalcService;
 
 	@Transactional(readOnly = true)

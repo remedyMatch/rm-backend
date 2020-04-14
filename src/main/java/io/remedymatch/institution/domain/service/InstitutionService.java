@@ -23,7 +23,7 @@ import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class InstitutionService {
 	private final InstitutionJpaRepository institutionRepository;
 	private final InstitutionStandortJpaRepository institutionStandortRepository;
 	private final StandortService standortService;
-	private final UserService userService;
+	private final UserContextService userService;
 
 	public Institution institutionAnlegen(final @NotNull @Valid NeueInstitution neueInstitution) {
 		

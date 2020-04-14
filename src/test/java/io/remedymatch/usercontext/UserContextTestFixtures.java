@@ -1,4 +1,4 @@
-package io.remedymatch.institution.domain;
+package io.remedymatch.usercontext;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,10 +12,50 @@ import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonId;
+import io.remedymatch.person.infrastructure.PersonEntity;
 
 public final class UserContextTestFixtures {
 	private UserContextTestFixtures() {
 
+	}
+
+	private static final PersonId USER_CONTEXT_PERSON_ID = new PersonId(UUID.randomUUID());
+	private static final String USER_CONTEXT_USERNAME = "usercontext_username";
+	private static final String USER_CONTEXT_VORNAME = "UserContext Vorname";
+	private static final String USER_CONTEXT_NACHNAME = "UserContext Nachname";
+	private static final String USER_CONTEXT_EMAIL = "email@email.local";
+	private static final String USER_CONTEXT_ELEFON = "01234566777";
+
+	public final static PersonId beispielUserContextPersonId() {
+		return USER_CONTEXT_PERSON_ID;
+	}
+
+	public final static Person beispielUserContextPerson() {
+		return Person.builder() //
+				.id(beispielUserContextPersonId()) //
+				.username(USER_CONTEXT_USERNAME) //
+				.vorname(USER_CONTEXT_VORNAME) //
+				.nachname(USER_CONTEXT_NACHNAME) //
+				.email(USER_CONTEXT_EMAIL) //
+				.telefon(USER_CONTEXT_ELEFON) //
+				.institution(beispielUserContextInstitution())//
+				.standort(beispielUserContextHauptstandort())//
+				.build();
+	}
+
+	public final static PersonEntity beispielUserContextPersonEntity() {
+		return PersonEntity.builder() //
+				.id(beispielUserContextPersonId().getValue()) //
+				.username(USER_CONTEXT_USERNAME) //
+				.vorname(USER_CONTEXT_VORNAME) //
+				.nachname(USER_CONTEXT_NACHNAME) //
+				.email(USER_CONTEXT_EMAIL) //
+				.telefon(USER_CONTEXT_ELEFON) //
+				.institution(beispielUserContextInstitutionEntity())//
+				.standort(beispielUserContextHauptstandortEntity())//
+				.build();
 	}
 
 	public static final InstitutionId USER_CONTEXT_INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
@@ -34,7 +74,8 @@ public final class UserContextTestFixtures {
 				.institutionKey(USER_CONTEXT_INSTITUTION_KEY) //
 				.typ(USER_CONTEXT_INSTITUTION_TYP) //
 				.hauptstandort(beispielUserContextHauptstandort()) //
-				.standorte(new ArrayList<>(Arrays.asList(beispielUserContextHauptstandort(), beispielUserContextAnderesStandort()))) //
+				.standorte(new ArrayList<>(
+						Arrays.asList(beispielUserContextHauptstandort(), beispielUserContextAnderesStandort()))) //
 				.build();
 	}
 
@@ -45,7 +86,8 @@ public final class UserContextTestFixtures {
 				.institutionKey(USER_CONTEXT_INSTITUTION_KEY) //
 				.typ(USER_CONTEXT_INSTITUTION_TYP) //
 				.hauptstandort(beispielUserContextHauptstandortEntity()) //
-				.standorte(new ArrayList<>(Arrays.asList(beispielUserContextHauptstandortEntity(), beispielUserContextAnderesStandortEntity()))) //
+				.standorte(new ArrayList<>(Arrays.asList(beispielUserContextHauptstandortEntity(),
+						beispielUserContextAnderesStandortEntity()))) //
 				.build();
 	}
 

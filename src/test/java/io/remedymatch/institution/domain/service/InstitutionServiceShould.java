@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -87,6 +88,12 @@ class InstitutionServiceShould {
 				() -> institutionService.userInstitutionAktualisieren(new InstitutionUpdate()));
 	}
 
+	@Test
+	@Disabled
+	@DisplayName("Neue Institution anlegen")
+	void neue_Institution_anlegen() {
+	}
+	
 	@Test
 	@DisplayName("Name der Institution aktualisieren")
 	void name_der_Institution_aktualisieren() {

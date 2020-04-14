@@ -1,7 +1,8 @@
 package io.remedymatch.registrierung.keycloak;
 
+import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_GRUPPE_FREIGEGEBEN;
+import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_ATTRIBUT_STATUS;
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.*;
-import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_STATUS_FREIGEGEBEN;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +13,8 @@ import javax.validation.Valid;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.GroupsResource;
+import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -32,8 +35,7 @@ public class KeycloakService {
 
 	public List<RegistrierterUser> findFreigegebeneUsers() {
 
-		return keycloakUsers().list().stream() //
-				.filter(user -> isInStatus(user, KEYCLOAK_USER_STATUS_FREIGEGEBEN)) //
+		return keycloakGruppeUsers(KEYCLOAK_GRUPPE_FREIGEGEBEN).stream() //
 				.map(KeycloakUserConverter::convert) //
 				.collect(Collectors.toList());
 	}
@@ -42,15 +44,29 @@ public class KeycloakService {
 			final @NotNull @Valid KeycloakUserId userId) {
 		UserResource userResource = keycloakUsers().get(userId.getValue());
 		UserRepresentation user = userResource.toRepresentation();
-		
+
 		user.setEnabled(true);
-		updateStatus(user, KEYCLOAK_USER_STATUS_AKTIVIERT);
+		user.setGroups(Arrays.asList(KEYCLOAK_GRUPPE_USER));
+//		updateStatus(user, KEYCLOAK_USER_STATUS_AKTIVIERT);
 
 		userResource.update(user);
 	}
 
+	private List<UserRepresentation> keycloakGruppeUsers(final String gruppe) {
+		return keycloakGroups().group(keycloakGroups().groups(gruppe, 0, 1).stream().findFirst().get().getId())
+				.members();
+	}
+
+	private GroupsResource keycloakGroups() {
+		return getUserRealm().groups();
+	}
+
 	private UsersResource keycloakUsers() {
-		return getKeycloak().realm(properties.getUser().getRealm()).users();
+		return getUserRealm().users();
+	}
+
+	private RealmResource getUserRealm() {
+		return getKeycloak().realm(properties.getUser().getRealm());
 	}
 
 	private Keycloak getKeycloak() {

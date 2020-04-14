@@ -12,6 +12,6 @@ public class UserProvider {
 
     public String getUserName() {
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return jwt.getClaims().get("upn").toString();
+        return jwt.getClaims().get("username").toString();
     }
 }

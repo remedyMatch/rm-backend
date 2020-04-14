@@ -4,6 +4,10 @@ class KeycloakAttribute {
 	private KeycloakAttribute() {
 	}
 
+	static final String KEYCLOAK_GRUPPE_FREIGEGEBEN = "freigegeben";
+	static final String KEYCLOAK_GRUPPE_USER = "user";
+	
+	
 	static final String KEYCLOAK_USER_ATTRIBUT_COMPANY = "company";
 	static final String KEYCLOAK_USER_ATTRIBUT_COMPANY_TYPE = "company-type";
 

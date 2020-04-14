@@ -33,10 +33,12 @@ io:
       geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
       geocoderServiceApiKey: einsetzen
     keycloak:
-      url: http://localhost:8008/auth
-      realm: master
-      username: admin
-      password: admin
-      clientId: admin-cli
-      clientSecret: admin
-        
+      serverUrl: http://localhost:8008/auth
+      user:
+        realm: rmio
+      client:
+        realm: master
+        username: admin
+        password: admin
+        clientId: admin-cli
+        clientSecret: admin

@@ -20,25 +20,47 @@ public class KeycloakProperties {
 
 	@NotNull
 	@NotBlank
-	private String url;
+	private String serverUrl;
 
 	@NotNull
-	@NotBlank
-	private String realm;
+	private User user;
 
 	@NotNull
-	@NotBlank
-	private String username;
+	private Client client;
+	
+	@Getter
+	@Setter
+	@Validated
+	public static class User 
+	{
+		@NotNull
+		@NotBlank
+		private String realm;
+	}
+	
+	@Getter
+	@Setter
+	@Validated
+	public static class Client 
+	{
+		@NotNull
+		@NotBlank
+		private String realm;
 
-	@NotNull
-	@NotBlank
-	private String password;
+		@NotNull
+		@NotBlank
+		private String username;
 
-	@NotNull
-	@NotBlank
-	private String clientId;
+		@NotNull
+		@NotBlank
+		private String password;
 
-	@NotNull
-	@NotBlank
-	private String clientSecret;
+		@NotNull
+		@NotBlank
+		private String clientId;
+
+		@NotNull
+		@NotBlank
+		private String clientSecret;
+	}
 }

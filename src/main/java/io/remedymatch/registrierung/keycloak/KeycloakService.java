@@ -50,17 +50,17 @@ public class KeycloakService {
 	}
 
 	private UsersResource keycloakUsers() {
-		return getKeycloak().realm(properties.getRealm()).users();
+		return getKeycloak().realm(properties.getUser().getRealm()).users();
 	}
 
 	private Keycloak getKeycloak() {
 		return KeycloakBuilder.builder() //
-				.serverUrl(properties.getUrl()) //
-				.realm(properties.getRealm()) //
-				.username(properties.getUsername()) //
-				.password(properties.getPassword()) //
-				.clientId(properties.getClientId()) //
-				.clientSecret(properties.getClientSecret()) //
+				.serverUrl(properties.getServerUrl()) //
+				.realm(properties.getClient().getRealm()) //
+				.username(properties.getClient().getUsername()) //
+				.password(properties.getClient().getPassword()) //
+				.clientId(properties.getClient().getClientId()) //
+				.clientSecret(properties.getClient().getClientSecret()) //
 				.resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()) //
 				.build();
 	}

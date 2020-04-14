@@ -40,8 +40,5 @@ io:
         realm: rmio
         username: rm_backend_user
         password: rm_backend_user_password
-#        realm: master
-#        username: admin
-#        password: admin
         clientId: admin-cli
         clientSecret: admin

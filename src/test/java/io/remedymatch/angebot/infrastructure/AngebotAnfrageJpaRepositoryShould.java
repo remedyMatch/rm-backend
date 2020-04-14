@@ -36,7 +36,7 @@ import lombok.val;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("AngebotAnfrageJpaRepository soll")
@@ -145,7 +145,7 @@ public class AngebotAnfrageJpaRepositoryShould {
 		return InstitutionEntity.builder() //
 				.institutionKey("mein_krankenhaus") //
 				.name("Mein Krankenhaus") //
-				.typ(InstitutionTyp.Krankenhaus) //
+				.typ(InstitutionTyp.KRANKENHAUS) //
 				.build();
 	}
 

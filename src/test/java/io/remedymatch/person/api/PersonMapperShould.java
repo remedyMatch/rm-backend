@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.person.domain.Person;
-import io.remedymatch.person.domain.PersonId;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonId;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("PersonMapper soll")

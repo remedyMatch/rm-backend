@@ -1,5 +1,6 @@
-package io.remedymatch.person.domain;
+package io.remedymatch.person.domain.service;
 
+import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -7,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import static io.remedymatch.person.domain.service.PersonEntityConverter.convert;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static io.remedymatch.person.domain.PersonEntityConverter.convert;
 
 @Repository
 @AllArgsConstructor

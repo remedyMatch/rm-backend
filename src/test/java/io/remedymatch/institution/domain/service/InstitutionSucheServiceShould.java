@@ -38,8 +38,26 @@ class InstitutionSucheServiceShould {
 	private InstitutionJpaRepository institutionRepository;
 
 	@Test
-	@DisplayName("gesuchte Institution finden")
-	void gesuchte_Institution_finden() {
+	@DisplayName("gesuchte Institution fuer InstitutionId finden")
+	void gesuchte_Institution_fuer_InstitutionId_finden() {
+
+		val institutionEntity = beispielInstitutionEntity();
+		val institutionId = institutionEntity.getId();
+
+		given(institutionRepository.findById(institutionId)).willReturn(Optional.of(institutionEntity));
+
+		val expectedInstitution = beispielInstitution();
+
+		assertEquals(Optional.of(expectedInstitution),
+				institutionSucheService.findInstitution(expectedInstitution.getId()));
+
+		then(institutionRepository).should().findById(institutionId);
+		then(institutionRepository).shouldHaveNoMoreInteractions();
+	}
+
+	@Test
+	@DisplayName("gesuchte Institution fuer InstitutionKey finden")
+	void gesuchte_Institution_fuer_InstitutionKey_finden() {
 
 		val institutionEntity = beispielInstitutionEntity();
 		val institutionKey = institutionEntity.getInstitutionKey();

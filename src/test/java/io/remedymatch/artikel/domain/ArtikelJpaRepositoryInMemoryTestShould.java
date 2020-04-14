@@ -22,7 +22,7 @@ import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Tag("SpringBoot")
 public class ArtikelJpaRepositoryInMemoryTestShould {

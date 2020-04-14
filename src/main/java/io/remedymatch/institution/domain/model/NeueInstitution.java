@@ -1,6 +1,8 @@
 package io.remedymatch.institution.domain.model;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,22 +19,18 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class NeuesInstitutionStandort {
+public class NeueInstitution {
+
 	@NotBlank
 	private String name;
 
 	@NotBlank
-	private String strasse;
+	private String institutionKey;
 
-	@NotBlank
-	private String hausnummer;
+	@NotNull
+	private InstitutionTyp typ;
 
-	@NotBlank
-	private String plz;
-
-	@NotBlank
-	private String ort;
-
-	@NotBlank
-	private String land;
+	@Valid
+	@NotNull
+	private NeuesInstitutionStandort hauptstandort;
 }

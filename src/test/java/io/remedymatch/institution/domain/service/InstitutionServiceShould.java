@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,11 +25,15 @@ import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.geodaten.domain.StandortService;
 import io.remedymatch.geodaten.geocoding.domain.Point;
 import io.remedymatch.institution.domain.UserContextTestFixtures;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.domain.model.InstitutionUpdate;
+import io.remedymatch.institution.domain.model.NeueInstitution;
 import io.remedymatch.institution.domain.model.NeuesInstitutionStandort;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
@@ -88,6 +93,116 @@ class InstitutionServiceShould {
 	}
 
 	@Test
+	@Disabled
+	@DisplayName("Neue Institution anlegen")
+	void neue_Institution_anlegen() {
+
+		val institutionName = "Meine neue Institution";
+		val institutionKey = "meine_neue_institution";
+		val institutionTyp = InstitutionTyp.LIEFERANT;
+
+		val standortName = "Mein Hauptstandort";
+		val standortPlz = "85050";
+		val standortOrt = "Irgendwo in Bayern";
+		val standortStrasse = "Eine Strasse";
+		val standortHausnummer = "10";
+		val standortLand = "Deutschland";
+
+		val addresse = "Eine Strasse 10, 85050 Irgendwo in Bayern, Deutschland";
+
+		val neuesStandort = NeuesInstitutionStandort.builder()//
+				.name(standortName) //
+				.plz(standortPlz) //
+				.ort(standortOrt) //
+				.strasse(standortStrasse) //
+				.hausnummer(standortHausnummer) //
+				.land(standortLand) //
+				.build();
+		val neuesHauptstandortId = new InstitutionStandortId(UUID.randomUUID());
+
+		val longitude = 100.0;
+		val latitude = 500.0;
+		val neuesHauptstandortEntityOhneId = InstitutionStandortEntity.builder()//
+				.name(standortName) //
+				.plz(standortPlz) //
+				.ort(standortOrt) //
+				.strasse(standortStrasse) //
+				.hausnummer(standortHausnummer) //
+				.land(standortLand) //
+				.longitude(BigDecimal.valueOf(longitude)) //
+				.latitude(BigDecimal.valueOf(latitude)) //
+				.build();
+		val neuesHauptstandortEntity = InstitutionStandortEntity.builder()//
+				.id(neuesHauptstandortId.getValue()) //
+				.name(standortName) //
+				.plz(standortPlz) //
+				.ort(standortOrt) //
+				.strasse(standortStrasse) //
+				.hausnummer(standortHausnummer) //
+				.land(standortLand) //
+				.longitude(BigDecimal.valueOf(longitude)) //
+				.latitude(BigDecimal.valueOf(latitude)) //
+				.build();
+		val neuesHauptstandort = InstitutionStandort.builder()//
+				.id(neuesHauptstandortId) //
+				.name(standortName) //
+				.plz(standortPlz) //
+				.ort(standortOrt) //
+				.strasse(standortStrasse) //
+				.hausnummer(standortHausnummer) //
+				.land(standortLand) //
+				.longitude(BigDecimal.valueOf(longitude)) //
+				.latitude(BigDecimal.valueOf(latitude)) //
+				.build();
+
+		val neueInstitution = NeueInstitution.builder()//
+				.name(institutionName) //
+				.institutionKey(institutionKey) //
+				.typ(institutionTyp) //
+				.hauptstandort(neuesStandort) //
+				.build();
+		val neueInstitutionId = new InstitutionId(UUID.randomUUID());
+
+		val neueInstitutionMitHauptstandortEntityOhneId = InstitutionEntity.builder() //
+				.name(institutionName) //
+				.institutionKey(institutionKey) //
+				.typ(institutionTyp) //
+				.hauptstandort(neuesHauptstandortEntity) //
+				.build();
+		val neueInstitutionMitHauptstandortEntity = InstitutionEntity.builder() //
+				.id(neueInstitutionId.getValue()) //
+				.name(institutionName) //
+				.institutionKey(institutionKey) //
+				.typ(institutionTyp) //
+				.hauptstandort(neuesHauptstandortEntity) //
+				.build();
+
+		val neueInstitutionMitHauptstandort = Institution.builder() //
+				.id(neueInstitutionId) //
+				.name(institutionName) //
+				.institutionKey(institutionKey) //
+				.typ(institutionTyp) //
+				.hauptstandort(neuesHauptstandort) //
+				.build();
+
+		given(institutionStandortRepository.save(neuesHauptstandortEntityOhneId)).willReturn(neuesHauptstandortEntity);
+		given(institutionRepository.save(neueInstitutionMitHauptstandortEntityOhneId))
+				.willReturn(neueInstitutionMitHauptstandortEntity);
+		given(standortService.findePointsByAdressString(addresse))
+				.willReturn(Arrays.asList(new Point(latitude, longitude)));
+
+		assertEquals(neueInstitutionMitHauptstandort, institutionService.institutionAnlegen(neueInstitution));
+
+		then(userService).shouldHaveNoInteractions();
+		then(institutionRepository).should().save(neueInstitutionMitHauptstandortEntityOhneId);
+		then(institutionRepository).shouldHaveNoMoreInteractions();
+		then(institutionStandortRepository).should().save(neuesHauptstandortEntityOhneId);
+		then(institutionStandortRepository).shouldHaveNoMoreInteractions();
+		then(standortService).should().findePointsByAdressString(addresse);
+		then(standortService).shouldHaveNoMoreInteractions();
+	}
+
+	@Test
 	@DisplayName("Name der Institution aktualisieren")
 	void name_der_Institution_aktualisieren() {
 
@@ -97,12 +212,12 @@ class InstitutionServiceShould {
 		institutionMitNeuemName.setName("Neue Name");
 		val institutionEntityMitNeuemName = UserContextTestFixtures.beispielUserContextInstitutionEntity();
 		institutionEntityMitNeuemName.setName("Neue Name");
-		
+
 		given(userService.getContextInstitution()).willReturn(userInstitution);
 		given(institutionRepository.save(institutionEntityMitNeuemName)).willReturn(institutionEntityMitNeuemName);
 
-		assertEquals(institutionMitNeuemName, institutionService.userInstitutionAktualisieren(
-				InstitutionUpdate.builder().neueName("Neue Name").build()));
+		assertEquals(institutionMitNeuemName, institutionService
+				.userInstitutionAktualisieren(InstitutionUpdate.builder().neueName("Neue Name").build()));
 
 		then(userService).should().getContextInstitution();
 		then(userService).shouldHaveNoMoreInteractions();
@@ -115,19 +230,19 @@ class InstitutionServiceShould {
 	@Test
 	@DisplayName("Typ der Institution aktualisieren")
 	void typ_der_Institution_aktualisieren() {
-		
+
 		val userInstitution = UserContextTestFixtures.beispielUserContextInstitution();
 
 		val institutionMitNeuemTyp = UserContextTestFixtures.beispielUserContextInstitution();
-		institutionMitNeuemTyp.setTyp(InstitutionTyp.Krankenhaus);
+		institutionMitNeuemTyp.setTyp(InstitutionTyp.KRANKENHAUS);
 		val institutionEntityMitNeuemTyp = UserContextTestFixtures.beispielUserContextInstitutionEntity();
-		institutionEntityMitNeuemTyp.setTyp(InstitutionTyp.Krankenhaus);
-		
+		institutionEntityMitNeuemTyp.setTyp(InstitutionTyp.KRANKENHAUS);
+
 		given(userService.getContextInstitution()).willReturn(userInstitution);
 		given(institutionRepository.save(institutionEntityMitNeuemTyp)).willReturn(institutionEntityMitNeuemTyp);
 
 		assertEquals(institutionMitNeuemTyp, institutionService.userInstitutionAktualisieren(
-				InstitutionUpdate.builder().neuesTyp(InstitutionTyp.Krankenhaus).build()));
+				InstitutionUpdate.builder().neuesTyp(InstitutionTyp.KRANKENHAUS).build()));
 
 		then(userService).should().getContextInstitution();
 		then(userService).shouldHaveNoMoreInteractions();
@@ -158,7 +273,8 @@ class InstitutionServiceShould {
 		institutionEntityMitNeuemHauptstandort.addStandort(anderesStandortEntity);
 
 		given(userService.getContextInstitution()).willReturn(userInstitution);
-		given(institutionRepository.save(institutionEntityMitNeuemHauptstandort)).willReturn(institutionEntityMitNeuemHauptstandort);
+		given(institutionRepository.save(institutionEntityMitNeuemHauptstandort))
+				.willReturn(institutionEntityMitNeuemHauptstandort);
 
 		assertEquals(institutionMitNeuemHauptstandort, institutionService.userInstitutionAktualisieren(
 				InstitutionUpdate.builder().neuesHauptstandortId(anderesStandortId).build()));

@@ -8,7 +8,7 @@ import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.AdressQuery;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.KoordinatenQuery;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Query;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Response;
-import io.remedymatch.properties.RmBackendProperties;
+import io.remedymatch.properties.GeodatenProperties;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +34,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class LocationIQGeocoderClient implements Geocoder {
 
     private final RestTemplate restTemplate;
-    private final RmBackendProperties properties;
+    private final GeodatenProperties properties;
 
     @Override
     public List<Point> findePointsByAdressString(@NonNull String adressString) {

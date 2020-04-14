@@ -1,9 +1,11 @@
 package io.remedymatch.institution.domain.model;
 
 public enum InstitutionTyp {
-    Krankenhaus,
-    Arzt,
-    Lieferant,
-    Privat,
-    Andere
+	ANDERE,
+	ARZT,
+	GEWERBE_UND_INDUSTRIE,
+    KRANKENHAUS,
+    LIEFERANT,
+    PFLEGEDIENST,
+    PRIVAT
 }

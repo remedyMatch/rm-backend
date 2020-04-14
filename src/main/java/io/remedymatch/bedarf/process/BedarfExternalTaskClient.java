@@ -15,7 +15,7 @@ import io.remedymatch.bedarf.domain.service.BedarfService;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.match.api.MatchProzessConstants;
-import io.remedymatch.properties.RmBackendProperties;
+import io.remedymatch.properties.EngineProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -23,7 +23,7 @@ import lombok.val;
 @Component
 @Profile("!disableexternaltasks")
 class BedarfExternalTaskClient {
-    private final RmBackendProperties properties;
+    private final EngineProperties  properties;
     private final BedarfService bedarfService;
     private final EngineClient engineClient;
 
@@ -31,7 +31,7 @@ class BedarfExternalTaskClient {
     public void doSubscribe() {
 
         ExternalTaskClient client = ExternalTaskClient.create()
-                .baseUrl(properties.getEngineUrl() + "/rest")
+                .baseUrl(properties.getUrl() + "/rest")
                 .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000))
                 .build();
 

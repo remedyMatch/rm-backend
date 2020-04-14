@@ -13,7 +13,7 @@ import io.remedymatch.TestApplication;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Tag("SpringBoot")
 public class ArtikelIntegrationTest {

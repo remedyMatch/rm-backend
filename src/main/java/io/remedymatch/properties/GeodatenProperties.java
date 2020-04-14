@@ -14,15 +14,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Validated
-@ConfigurationProperties(prefix = "io.remedymatch.backend")
-public class RmBackendProperties {
-    /**
-     * Enthält das Passwort für die Datasource.
-     */
-    @NotNull
-    @NotBlank
-    private String engineUrl;
-
+@ConfigurationProperties(prefix = "io.remedymatch.geodaten")
+public class GeodatenProperties {
     @NotNull
     @NotBlank
     private String geocoderServiceBaseUrl;

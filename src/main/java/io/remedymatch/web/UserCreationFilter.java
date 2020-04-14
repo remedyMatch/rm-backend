@@ -18,8 +18,8 @@ import io.remedymatch.institution.domain.service.InstitutionSucheService;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
-import io.remedymatch.person.domain.Person;
-import io.remedymatch.person.domain.PersonRepository;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.service.PersonRepository;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -30,11 +30,11 @@ import lombok.val;
 public class UserCreationFilter implements Filter {
 
 	private final PersonRepository personRepository;
-	private final InstitutionSucheService institutionSucheService;
-	private final InstitutionJpaRepository institutionJpaRepository;
+//	private final InstitutionSucheService institutionSucheService;
+//	private final InstitutionJpaRepository institutionJpaRepository;
 
 	private final UserProvider userNameProvider;
-	private final InstitutionKeyProvider institutionKeyProvider;
+//	private final InstitutionKeyProvider institutionKeyProvider;
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -48,20 +48,21 @@ public class UserCreationFilter implements Filter {
 		val person = personRepository.findByUsername(userNameProvider.getUserName());
 
 		if (person.isEmpty()) {
-			// XXX sollte weg gehen nachdem der RegistrierungFreigabe Prozess fertig ist
-			var institution = institutionSucheService.findByInstitutionKey(institutionKeyProvider.getInstitutionKey());
-
-			if (institution.isEmpty()) {
-				val newInstitution = new InstitutionEntity();
-				newInstitution.setInstitutionKey(institutionKeyProvider.getInstitutionKey());
-				institutionJpaRepository.save(newInstitution);
-				institution = institutionSucheService.findByInstitutionKey(institutionKeyProvider.getInstitutionKey());
-			}
-
-			val newPerson = new Person();
-			newPerson.setInstitution(institution.get());
-			newPerson.setUsername(userNameProvider.getUserName());
-			personRepository.add(newPerson);
+			throw new IllegalArgumentException("Not Supported anymore");
+//			// XXX sollte weg gehen nachdem der RegistrierungFreigabe Prozess fertig ist
+//			var institution = institutionSucheService.findByInstitutionKey(institutionKeyProvider.getInstitutionKey());
+//
+//			if (institution.isEmpty()) {
+//				val newInstitution = new InstitutionEntity();
+//				newInstitution.setInstitutionKey(institutionKeyProvider.getInstitutionKey());
+//				institutionJpaRepository.save(newInstitution);
+//				institution = institutionSucheService.findByInstitutionKey(institutionKeyProvider.getInstitutionKey());
+//			}
+//
+//			val newPerson = new Person();
+//			newPerson.setInstitution(institution.get());
+//			newPerson.setUsername(userNameProvider.getUserName());
+//			personRepository.add(newPerson);
 		}
 	}
 }

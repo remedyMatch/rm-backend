@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
-import io.remedymatch.person.domain.Person;
-import io.remedymatch.person.domain.PersonRepository;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.service.PersonRepository;
 import io.remedymatch.web.UserProvider;
 import lombok.AllArgsConstructor;
 

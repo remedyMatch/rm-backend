@@ -21,7 +21,7 @@ public final class UserContextTestFixtures {
 	public static final InstitutionId USER_CONTEXT_INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 	public static final String USER_CONTEXT_INSTITUTION_NAME = "UserContext Institution Name";
 	public static final String USER_CONTEXT_INSTITUTION_KEY = "userContextInstitutionKey";
-	public static final InstitutionTyp USER_CONTEXT_INSTITUTION_TYP = InstitutionTyp.Privat;
+	public static final InstitutionTyp USER_CONTEXT_INSTITUTION_TYP = InstitutionTyp.PRIVAT;
 
 	public static InstitutionId beispielUserContextInstitutionId() {
 		return USER_CONTEXT_INSTITUTION_ID;

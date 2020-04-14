@@ -23,7 +23,7 @@ import io.remedymatch.match.domain.MatchId;
 import io.remedymatch.match.domain.MatchRepository;
 import io.remedymatch.match.domain.MatchService;
 import io.remedymatch.match.domain.MatchStatus;
-import io.remedymatch.properties.RmBackendProperties;
+import io.remedymatch.properties.EngineProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -31,7 +31,7 @@ import lombok.val;
 @Component
 @Profile("!disableexternaltasks")
 public class MatchExternalTaskClient {
-	private final RmBackendProperties properties;
+	private final EngineProperties properties;
 	private final MatchRepository matchRepository;
 	private final MatchService matchService;
 	private final AngebotAnfrageSucheService angebotAnfrageSucheService;
@@ -41,7 +41,7 @@ public class MatchExternalTaskClient {
 	@PostConstruct
 	public void doSubscribe() {
 
-		ExternalTaskClient client = ExternalTaskClient.create().baseUrl(properties.getEngineUrl() + "/rest")
+		ExternalTaskClient client = ExternalTaskClient.create().baseUrl(properties.getUrl() + "/rest")
 				.backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000)).build();
 
 		client.subscribe("auslieferungBestaetigung").lockDuration(2000).handler((externalTask, externalTaskService) -> {

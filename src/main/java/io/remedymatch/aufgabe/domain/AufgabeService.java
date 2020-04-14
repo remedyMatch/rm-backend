@@ -4,7 +4,7 @@ import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
 import io.remedymatch.engine.TaskDTO;
 import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.person.domain.Person;
+import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.user.domain.UserService;
 import lombok.AllArgsConstructor;
 import lombok.val;

@@ -1,16 +1,16 @@
 package io.remedymatch;
 
-import io.remedymatch.properties.GeodatenProperties;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.test.context.TestPropertySource;
+
+import io.remedymatch.properties.GeodatenProperties;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @EnableConfigurationProperties(value = GeodatenProperties.class)
+@TestPropertySource(properties = "app.scheduling.enable=false")
 public class TestApplication {
 
 	public static void main(String[] args) {

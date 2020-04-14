@@ -32,10 +32,12 @@ io:
       geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
       geocoderServiceApiKey: code
     keycloak:
-      url: https://localhost:8008/auth
-      realm: rmio
-      username: admin
-      password: admin
-      clientId: admin-cli
-      clientSecret: egal
-      
+      serverUrl: http://localhost:8008/auth
+      user:
+        realm: rmio
+      client:
+        realm: rmio
+        username: rm_backend_user
+        password: rm_backend_user_password
+        clientId: admin-cli
+        clientSecret: admin

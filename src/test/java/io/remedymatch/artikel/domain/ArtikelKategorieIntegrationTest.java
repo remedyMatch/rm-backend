@@ -31,7 +31,7 @@ import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Disabled
 @Tag("SpringBoot")

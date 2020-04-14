@@ -2,6 +2,7 @@ package io.remedymatch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import io.remedymatch.properties.EngineProperties;
 import io.remedymatch.properties.GeodatenProperties;
 import io.remedymatch.properties.KeycloakProperties;
 
+@ConditionalOnProperty(value = "app.scheduling.enable", havingValue = "true", matchIfMissing = true)
 @SpringBootApplication
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableConfigurationProperties({ EngineProperties.class, GeodatenProperties.class, KeycloakProperties.class })

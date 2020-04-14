@@ -46,13 +46,15 @@ class RegistrierungUebernahmeService {
 
 	private NeueInstitution createNeueInstitution(final RegistrierterUser registrierterUser) {
 		val institutionTyp = convertToInstitutionTyp(registrierterUser.getInstitutionTyp());
+		val institutionName = createInstitutionName(registrierterUser, institutionTyp);
+		val institutionKey = createInstitutionKey(registrierterUser, institutionTyp);
 
 		return NeueInstitution.builder() //
-				.name(createInstitutionName(registrierterUser, institutionTyp)) //
-				.institutionKey(createInstitutionKey(registrierterUser, institutionTyp)) //
+				.name(institutionName) //
+				.institutionKey(institutionKey) //
 				.typ(institutionTyp) //
 				.hauptstandort(NeuesInstitutionStandort.builder() //
-						.name(registrierterUser.getInstitutionName()) //
+						.name(institutionName) //
 						.strasse(registrierterUser.getStrasse()) //
 						.hausnummer(registrierterUser.getHausnummer()) //
 						.plz(registrierterUser.getPlz()) //

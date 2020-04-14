@@ -44,6 +44,9 @@ public class InstitutionService {
 	private final UserService userService;
 
 	public Institution institutionAnlegen(final @NotNull @Valid NeueInstitution neueInstitution) {
+		
+		log.debug("Lege neue Institution an: " + neueInstitution);
+		
 		val hauptstandort = standortErstellen(neueInstitution.getHauptstandort());
 		return updateInstitution(InstitutionEntity.builder() //
 				.name(neueInstitution.getName()) //
@@ -55,6 +58,9 @@ public class InstitutionService {
 	}
 
 	public Institution userInstitutionAktualisieren(final @NotNull @Valid InstitutionUpdate update) {
+		
+		log.debug("Aktualisiere User Institution: " + update);
+		
 		if (StringUtils.isBlank(update.getNeueName()) && update.getNeuesTyp() == null
 				&& update.getNeuesHauptstandortId() == null) {
 			throw new OperationNotAlloudException(EXCEPTION_MSG_UPDATE_OHNE_DATEN);
@@ -76,6 +82,9 @@ public class InstitutionService {
 
 	public Institution userInstitutionHauptstandortHinzufuegen(
 			final @NotNull @Valid NeuesInstitutionStandort neuesStandort) {
+		
+		log.debug("Setze neues Hauptstandort in User Institution: " + neuesStandort);
+		
 		val userInstitution = getUserInstitution();
 		val standort = standortErstellen(neuesStandort);
 		userInstitution.addStandort(standort);
@@ -86,6 +95,9 @@ public class InstitutionService {
 
 	public Institution userInstitutionStandortHinzufuegen(
 			final @NotNull @Valid NeuesInstitutionStandort neuesStandort) {
+
+		log.debug("Setze neues Standort in User Institution: " + neuesStandort);
+		
 		val userInstitution = getUserInstitution();
 		userInstitution.getStandorte().add(standortErstellen(neuesStandort));
 

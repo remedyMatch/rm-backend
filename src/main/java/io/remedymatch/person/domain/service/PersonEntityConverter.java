@@ -7,6 +7,9 @@ import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.person.infrastructure.PersonEntity;
 
 class PersonEntityConverter {
+	private PersonEntityConverter() {
+		
+	}
 
 	static Person convert(final PersonEntity entity) {
 		return Person.builder()//

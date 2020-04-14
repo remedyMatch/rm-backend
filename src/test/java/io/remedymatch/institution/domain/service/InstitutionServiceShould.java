@@ -93,7 +93,6 @@ class InstitutionServiceShould {
 	}
 
 	@Test
-	@Disabled
 	@DisplayName("Neue Institution anlegen")
 	void neue_Institution_anlegen() {
 
@@ -168,6 +167,7 @@ class InstitutionServiceShould {
 				.institutionKey(institutionKey) //
 				.typ(institutionTyp) //
 				.hauptstandort(neuesHauptstandortEntity) //
+				.standorte(Arrays.asList(neuesHauptstandortEntity)) //
 				.build();
 		val neueInstitutionMitHauptstandortEntity = InstitutionEntity.builder() //
 				.id(neueInstitutionId.getValue()) //
@@ -175,6 +175,7 @@ class InstitutionServiceShould {
 				.institutionKey(institutionKey) //
 				.typ(institutionTyp) //
 				.hauptstandort(neuesHauptstandortEntity) //
+				.standorte(Arrays.asList(neuesHauptstandortEntity)) //
 				.build();
 
 		val neueInstitutionMitHauptstandort = Institution.builder() //
@@ -183,6 +184,7 @@ class InstitutionServiceShould {
 				.institutionKey(institutionKey) //
 				.typ(institutionTyp) //
 				.hauptstandort(neuesHauptstandort) //
+				.standorte(Arrays.asList(neuesHauptstandort)) //
 				.build();
 
 		given(institutionStandortRepository.save(neuesHauptstandortEntityOhneId)).willReturn(neuesHauptstandortEntity);

@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,13 +29,15 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@Validated
 @RequestMapping("/institution")
+@Validated
+@Transactional
 public class InstitutionController {
 
 	private final InstitutionService institutionService;
 	private final UserContextService UserService;
 
+	@Transactional(readOnly = true)
 	@GetMapping
 	public ResponseEntity<InstitutionRO> institutionLaden() {
 		return ResponseEntity.ok(mapToInstitutionRO(UserService.getContextInstitution()));
@@ -70,6 +73,7 @@ public class InstitutionController {
 				institutionService.userInstitutionStandortHinzufuegen(mapToNeuesStandort(neuesStandort))));
 	}
 
+	@Transactional(readOnly = true)
 	@GetMapping("/typ")
 	public ResponseEntity<List<String>> typenLaden() {
 		return ResponseEntity

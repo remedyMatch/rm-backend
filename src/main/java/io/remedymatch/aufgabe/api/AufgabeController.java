@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.remedymatch.aufgabe.domain.AufgabeService;
 import io.remedymatch.engine.TaskDTO;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -21,7 +21,7 @@ import lombok.val;
 @RequestMapping("/aufgabe")
 public class AufgabeController {
 
-	private final UserService userService;
+	private final UserContextService userService;
 	private final AufgabeService aufgabeService;
 
 	@GetMapping

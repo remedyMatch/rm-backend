@@ -21,7 +21,7 @@ public final class InstitutionTestFixtures {
 	public static final InstitutionId INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 	public static final String INSTITUTION_NAME = "Institution Name";
 	public static final String INSTITUTION_KEY = "institutionKey";
-	public static final InstitutionTyp INSTITUTION_TYP = InstitutionTyp.Krankenhaus;
+	public static final InstitutionTyp INSTITUTION_TYP = InstitutionTyp.KRANKENHAUS;
 
 	public static InstitutionId beispielInstitutionId() {
 		return INSTITUTION_ID;
@@ -178,7 +178,7 @@ public final class InstitutionTestFixtures {
 	public static final InstitutionId INSTITUTION_1_ID = new InstitutionId(UUID.randomUUID());
 	public static final String INSTITUTION_1_NAME = "Institution 1 Name";
 	public static final String INSTITUTION_1_KEY = "institution1Key";
-	public static final InstitutionTyp INSTITUTION_1_TYP = InstitutionTyp.Arzt;
+	public static final InstitutionTyp INSTITUTION_1_TYP = InstitutionTyp.ARZT;
 	
 	public static final InstitutionStandortId INSTITUTION_1_HAUPTSTANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
 	public static final String INSTITUTION_1_HAUPTSTANDORT_NAME = "Institution 1 Hauptstandort Name";

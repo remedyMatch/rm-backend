@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.process;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
@@ -21,7 +22,7 @@ import lombok.val;
 @Component
 class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler {
 
-	private static final String BESCHREIBUNG_TEMPLATE_MIT_ARTIKEL_VARIANTE = "%s: Anfrage zu Bedarf von %d %s - %s";
+	private static final String BESCHREIBUNG_TEMPLATE_MIT_ARTIKEL_VARIANTE = "%s: Anfrage zu Angebot von %s %s - %s";
 
 	private final ArtikelSucheService artikelSucheService;
 	private final AngebotAnfrageSucheService anfrageSucheService;
@@ -45,7 +46,7 @@ class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler
 
 		return String.format(BESCHREIBUNG_TEMPLATE_MIT_ARTIKEL_VARIANTE, //
 				anfrage.getInstitution().getName(), //
-				angebot.getAnzahl(), //
+				formatAnzahl(angebot.getAnzahl()), //
 				artikel.getName(), //
 				artikelVariante.getVariante());
 
@@ -57,5 +58,14 @@ class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler
 
 	private Artikel getArtikel(final ArtikelId artikelId) {
 		return artikelSucheService.getArtikelOrElseThrow(artikelId);
+	}
+
+	private String formatAnzahl(final @NotNull BigDecimal anzahl) {
+		double doubleValue = anzahl.doubleValue();
+		if (doubleValue == (long) doubleValue) {
+			return String.format("%d", (long) doubleValue);
+		}
+
+		return String.format("%s", doubleValue);
 	}
 }

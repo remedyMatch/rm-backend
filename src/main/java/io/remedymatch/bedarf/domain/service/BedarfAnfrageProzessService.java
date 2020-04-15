@@ -42,8 +42,8 @@ class BedarfAnfrageProzessService {
 						.putValue("anfrageId", anfrageId.getValue()) //
 						// XXX wozu Institution
 						.putValue("bedarfInstitutionId", bedarfInstitutionId.getValue()) //
-						.putValue("institution", bedarfInstitutionId.toString()) //
-						.putValue("objektId", anfrageId.toString()));
+						.putValue("institution", bedarfInstitutionId.getValue()) //
+						.putValue("objektId", anfrageId.getValue()));
 	}
 
 	void prozesseStornieren(final @NotNull @Valid BedarfId bedarfId) {

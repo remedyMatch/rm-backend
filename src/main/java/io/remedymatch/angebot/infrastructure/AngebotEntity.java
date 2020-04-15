@@ -2,18 +2,14 @@ package io.remedymatch.angebot.infrastructure;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -86,8 +82,4 @@ public class AngebotEntity {
 
 	@Column(name = "DELETED", nullable = true, updatable = true)
 	private boolean deleted;
-
-	@OneToMany(fetch = FetchType.LAZY)
-	@Builder.Default
-	private List<AngebotAnfrageEntity> anfragen = new ArrayList<>();
 }

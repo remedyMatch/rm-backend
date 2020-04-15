@@ -11,7 +11,7 @@ import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -22,7 +22,7 @@ public class BedarfSucheService {
 
 	private final BedarfJpaRepository bedarfRepository;
 	
-	private final UserService userService;
+	private final UserContextService userService;
 	private final GeoCalcService geoCalcService;
 
 	@Transactional(readOnly = true)

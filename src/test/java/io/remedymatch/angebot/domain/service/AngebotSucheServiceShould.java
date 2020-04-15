@@ -27,8 +27,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.institution.domain.UserContextTestFixtures;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
+import io.remedymatch.usercontext.UserContextTestFixtures;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
@@ -36,7 +36,7 @@ import lombok.val;
 @ContextConfiguration(classes = { //
 		AngebotSucheService.class, //
 		AngebotJpaRepository.class, //
-		UserService.class, //
+		UserContextService.class, //
 		GeoCalcService.class //
 })
 @Tag("Spring")
@@ -50,7 +50,7 @@ class AngebotSucheServiceShould {
 	private AngebotJpaRepository angebotRepository;
 
 	@MockBean
-	private UserService userService;
+	private UserContextService userService;
 
 	@MockBean
 	private GeoCalcService geoCalcService;

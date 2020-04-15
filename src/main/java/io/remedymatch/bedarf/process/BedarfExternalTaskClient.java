@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
@@ -14,14 +15,15 @@ import io.remedymatch.bedarf.domain.service.BedarfService;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.match.api.MatchProzessConstants;
-import io.remedymatch.properties.RmBackendProperties;
+import io.remedymatch.properties.EngineProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
 @AllArgsConstructor
 @Component
+@Profile("!disableexternaltasks")
 class BedarfExternalTaskClient {
-    private final RmBackendProperties properties;
+    private final EngineProperties  properties;
     private final BedarfService bedarfService;
     private final EngineClient engineClient;
 
@@ -29,7 +31,7 @@ class BedarfExternalTaskClient {
     public void doSubscribe() {
 
         ExternalTaskClient client = ExternalTaskClient.create()
-                .baseUrl(properties.getEngineUrl() + "/rest")
+                .baseUrl(properties.getUrl() + "/rest")
                 .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000))
                 .build();
 

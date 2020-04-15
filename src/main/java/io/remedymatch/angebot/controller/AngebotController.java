@@ -35,6 +35,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @RequestMapping("/angebot")
 @Validated
+@Transactional
 public class AngebotController {
 
 	private final AngebotSucheService angebotSucheService;

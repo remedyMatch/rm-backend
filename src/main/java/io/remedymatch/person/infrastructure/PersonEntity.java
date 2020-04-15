@@ -49,7 +49,7 @@ public class PersonEntity {
     @Column(name = "NACHNAME", nullable = true, updatable = true, length = 64)
     private String nachname;
 
-    @Column(name = "EMAIL", nullable = true, updatable = true, length = 32)
+    @Column(name = "EMAIL", nullable = true, updatable = true, length = 64)
     private String email;
 
     @Column(name = "TELEFON", nullable = true, updatable = true, length = 32)

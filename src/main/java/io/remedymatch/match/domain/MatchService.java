@@ -3,7 +3,7 @@ package io.remedymatch.match.domain;
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
     private final MatchStandortRepository matchStandortRepository;
-    private final UserService userService;
+    private final UserContextService userService;
     private final GeoCalcService geoCalcService;
 
     @Transactional

@@ -29,7 +29,7 @@ import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInA
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("BedarfJpaRepository InMemory Test soll")
@@ -96,7 +96,7 @@ public class BedarfJpaRepositoryShould {
 		return InstitutionEntity.builder() //
 				.institutionKey("mein_krankenhaus") //
 				.name("Mein Krankenhaus") //
-				.typ(InstitutionTyp.Krankenhaus) //
+				.typ(InstitutionTyp.KRANKENHAUS) //
 				.build();
 	}
 

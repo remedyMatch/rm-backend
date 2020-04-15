@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.match.domain.MatchStandort;
 import io.remedymatch.shared.GeoCalc;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 @Validated
 public class GeoCalcService {
 
-	private final UserService userService;
+	private final UserContextService userService;
 
 	public BigDecimal berechneUserDistanzInKilometer(//
 			final InstitutionStandort standortNach) {

@@ -2,10 +2,10 @@ package io.remedymatch.bedarf.domain.service;
 
 import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.*;
 import static io.remedymatch.bedarf.domain.service.BedarfTestFixtures.beispielBedarfId;
-import static io.remedymatch.institution.domain.UserContextTestFixtures.beispielUserContextAnderesStandort;
-import static io.remedymatch.institution.domain.UserContextTestFixtures.beispielUserContextAnderesStandortEntity;
-import static io.remedymatch.institution.domain.UserContextTestFixtures.beispielUserContextInstitution;
-import static io.remedymatch.institution.domain.UserContextTestFixtures.beispielUserContextInstitutionEntity;
+import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextAnderesStandort;
+import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextAnderesStandortEntity;
+import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextInstitution;
+import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextInstitutionEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
@@ -38,7 +38,7 @@ import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
@@ -46,7 +46,7 @@ import lombok.val;
 @ContextConfiguration(classes = { //
 		BedarfAnlageService.class, //
 		BedarfJpaRepository.class, //
-		UserService.class, //
+		UserContextService.class, //
 		ArtikelSucheService.class, //
 		GeoCalcService.class, //
 })
@@ -61,7 +61,7 @@ class BedarfAnlageServiceShould {
 	private BedarfJpaRepository bedarfRepository;
 
 	@MockBean
-	private UserService userService;
+	private UserContextService userService;
 
 	@MockBean
 	private ArtikelSucheService artikelSucheService;

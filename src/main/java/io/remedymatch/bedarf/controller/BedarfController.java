@@ -35,6 +35,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @RequestMapping("/bedarf")
 @Validated
+@Transactional
 public class BedarfController {
 
 	private final BedarfSucheService bedarfSucheService;

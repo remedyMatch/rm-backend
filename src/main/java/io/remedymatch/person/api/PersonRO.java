@@ -1,17 +1,42 @@
 package io.remedymatch.person.api;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.UUID;
 
-@Data
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Builder
 class PersonRO {
-    private UUID id;
-    private String username;
-    private String vorname;
-    private String nachname;
-    private String email;
-    private String telefon;
+
+	@NotNull
+	private UUID id;
+
+	@NotBlank
+	private String username;
+
+	@NotBlank
+	private String vorname;
+
+	@NotBlank
+	private String nachname;
+
+	@NotBlank
+	private String email;
+
+	@NotBlank
+	private String telefon;
 }

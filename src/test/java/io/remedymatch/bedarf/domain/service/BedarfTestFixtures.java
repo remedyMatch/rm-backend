@@ -1,7 +1,6 @@
 package io.remedymatch.bedarf.domain.service;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.UUID;
 
 import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
@@ -49,7 +48,6 @@ public final class BedarfTestFixtures {
 				.medizinisch(BEDARF_MEDIZINISCH) //
 				.kommentar(BEDARF_KOMMENTAR) //
 				.bedient(BEDARF_BEDIENT) //
-				.anfragen(Arrays.asList(BedarfAnfrageTestFixtures.beispielBedarfAnfrage())) //
 				.build();
 	}
 
@@ -66,7 +64,6 @@ public final class BedarfTestFixtures {
 				.medizinisch(BEDARF_MEDIZINISCH) //
 				.kommentar(BEDARF_KOMMENTAR) //
 				.bedient(BEDARF_BEDIENT) //
-				.anfragen(Arrays.asList(BedarfAnfrageTestFixtures.beispielBedarfAnfrageEntity())) //
 				.build();
 	}
 

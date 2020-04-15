@@ -10,6 +10,8 @@ public final class InstitutionEntityConverter {
 	}
 
 	public static Institution convertInstitution(final InstitutionEntity entity) {
+		if (entity == null) return null;
+		
 		return Institution.builder() //
 				.id(new InstitutionId(entity.getId())) //
 				.name(entity.getName()) //

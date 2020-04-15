@@ -1,7 +1,7 @@
 package io.remedymatch.person.api;
 
-import io.remedymatch.person.domain.Person;
-import io.remedymatch.person.domain.PersonId;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonId;
 
 class PersonMapper {
 

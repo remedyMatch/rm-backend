@@ -23,7 +23,7 @@ import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -38,7 +38,7 @@ public class AngebotAnlageService {
 
 	private final AngebotJpaRepository angebotRepository;
 
-	private final UserService userService;
+	private final UserContextService userService;
 	private final ArtikelSucheService artikelSucheService;
 	private final GeoCalcService geoCalcService;
 

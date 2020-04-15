@@ -3,14 +3,15 @@ package io.remedymatch.institution.controller;
 import static io.remedymatch.institution.controller.InstitutionMapper.mapToInstitutionRO;
 import static io.remedymatch.institution.controller.InstitutionStandortMapper.mapToNeuesStandort;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,19 +24,20 @@ import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.domain.service.InstitutionService;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
-import lombok.val;
 
 @RestController
 @AllArgsConstructor
-@Validated
 @RequestMapping("/institution")
+@Validated
+@Transactional
 public class InstitutionController {
 
 	private final InstitutionService institutionService;
-	private final UserService UserService;
+	private final UserContextService UserService;
 
+	@Transactional(readOnly = true)
 	@GetMapping
 	public ResponseEntity<InstitutionRO> institutionLaden() {
 		return ResponseEntity.ok(mapToInstitutionRO(UserService.getContextInstitution()));
@@ -71,11 +73,11 @@ public class InstitutionController {
 				institutionService.userInstitutionStandortHinzufuegen(mapToNeuesStandort(neuesStandort))));
 	}
 
+	@Transactional(readOnly = true)
 	@GetMapping("/typ")
 	public ResponseEntity<List<String>> typenLaden() {
-		val typen = Arrays.asList(InstitutionTyp.Krankenhaus, InstitutionTyp.Arzt, InstitutionTyp.Lieferant,
-				InstitutionTyp.Privat, InstitutionTyp.Andere);
-		return ResponseEntity.ok(typen.stream().map(InstitutionTyp::toString).collect(Collectors.toList()));
+		return ResponseEntity
+				.ok(Stream.of(InstitutionTyp.values()).map(InstitutionTyp::toString).collect(Collectors.toList()));
 	}
 
 	// ist das gleiche wie pures GET

@@ -25,16 +25,16 @@ import io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageTestFixtures;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.institution.domain.UserContextTestFixtures;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
+import io.remedymatch.usercontext.UserContextTestFixtures;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { //
 		InstitutionAnfragenSucheService.class, //
-		UserService.class, //
+		UserContextService.class, //
 		AngebotAnfrageSucheService.class, //
 		BedarfAnfrageSucheService.class, //
 		GeoCalcService.class //
@@ -47,7 +47,7 @@ class InstitutionAnfragenSucheServiceShould {
 	private InstitutionAnfragenSucheService anfragenSucheService;
 
 	@MockBean
-	private UserService userService;
+	private UserContextService userService;
 
 	@MockBean
 	private AngebotAnfrageSucheService angebotAnfrageSucheService;

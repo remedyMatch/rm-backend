@@ -1,8 +1,6 @@
 package io.remedymatch.bedarf.domain.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -68,8 +66,4 @@ public class Bedarf {
 
 	@Positive
 	private transient BigDecimal entfernung;
-
-	@Valid
-	@Builder.Default
-	private List<BedarfAnfrage> anfragen = new ArrayList<>();
 }

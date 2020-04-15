@@ -42,7 +42,7 @@ class BedarfAnfrageProzessService {
 						.putValue("anfrageId", anfrageId.getValue()) //
 						// XXX wozu Institution
 						.putValue("bedarfInstitutionId", bedarfInstitutionId.getValue()) //
-						.putValue("institution", bedarfInstitutionId.toString()) //
+						.putValue("institution", bedarfInstitutionId.getValue()) //
 						.putValue("objektId", anfrageId.toString()));
 	}
 

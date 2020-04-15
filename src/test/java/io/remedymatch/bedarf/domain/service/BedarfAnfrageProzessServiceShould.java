@@ -57,5 +57,4 @@ class BedarfAnfrageProzessServiceShould {
 		then(engineClient).should().prozessStarten(eq(BedarfAnfrageProzessService.PROZESS_KEY), eq(businessKey), anyMap());
 		then(engineClient).shouldHaveNoMoreInteractions();
 	}
-
 }

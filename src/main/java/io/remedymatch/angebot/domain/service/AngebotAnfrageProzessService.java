@@ -42,7 +42,7 @@ class AngebotAnfrageProzessService {
 						.putValue("anfrageId", anfrageId.getValue()) //
 						// XXX wozu Institution
 						.putValue("angebotInstitutionId", angebotInstitutionId.getValue()) //
-						.putValue("institution", angebotInstitutionId.toString()) //
+						.putValue("institution", angebotInstitutionId.getValue()) //
 						.putValue("objektId", anfrageId.toString()));
 	}
 

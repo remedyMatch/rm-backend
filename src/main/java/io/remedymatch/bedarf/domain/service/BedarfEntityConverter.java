@@ -38,7 +38,6 @@ final class BedarfEntityConverter {
 				.medizinisch(entity.isMedizinisch()) //
 				.kommentar(entity.getKommentar()) //
 				.bedient(entity.isBedient()) //
-				.anfragen(BedarfAnfrageEntityConverter.convertAnfragen(entity.getAnfragen())) //
 				.build();
 	}
 }

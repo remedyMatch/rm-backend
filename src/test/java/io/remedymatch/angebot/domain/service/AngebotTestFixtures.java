@@ -2,8 +2,6 @@ package io.remedymatch.angebot.domain.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.UUID;
 
 import io.remedymatch.angebot.domain.model.Angebot;
@@ -62,7 +60,6 @@ public final class AngebotTestFixtures {
 				.medizinisch(ANGEBOT_MEDIZINISCH) //
 				.kommentar(ANGEBOT_KOMMENTAR) //
 				.bedient(ANGEBOT_BEDIENT) //
-				.anfragen(new ArrayList<>(Arrays.asList(AngebotAnfrageTestFixtures.beispielAngebotAnfrage()))) //
 				.build();
 	}
 
@@ -80,7 +77,6 @@ public final class AngebotTestFixtures {
 				.medizinisch(ANGEBOT_MEDIZINISCH) //
 				.kommentar(ANGEBOT_KOMMENTAR) //
 				.bedient(ANGEBOT_BEDIENT) //
-				.anfragen(new ArrayList<>(Arrays.asList(AngebotAnfrageTestFixtures.beispielAngebotAnfrageEntity()))) //
 				.build();
 	}
 

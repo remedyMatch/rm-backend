@@ -2,8 +2,6 @@ package io.remedymatch.angebot.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -69,8 +67,4 @@ public class Angebot {
 
 	@Positive
 	private transient BigDecimal entfernung;
-
-	@Valid
-	@Builder.Default
-	private List<AngebotAnfrage> anfragen = new ArrayList<>();
 }

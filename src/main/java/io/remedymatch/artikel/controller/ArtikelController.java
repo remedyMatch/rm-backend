@@ -2,7 +2,7 @@ package io.remedymatch.artikel.controller;
 
 import static io.remedymatch.artikel.controller.ArtikelControllerMapper.mapArtikelToRO;
 import static io.remedymatch.artikel.controller.ArtikelControllerMapper.mapKategorienToRO;
-import static io.remedymatch.artikel.controller.ArtikelControllerMapper.maptToArtikelId;
+import static io.remedymatch.artikel.controller.ArtikelControllerMapper.mapToArtikelId;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,7 +56,7 @@ public class ArtikelController {
 	@Transactional(readOnly = true)
 	@GetMapping("/{articleId}")
 	public @ResponseBody ResponseEntity<ArtikelRO> getArtikel(@PathVariable("articleId") @NotNull UUID articleId) {
-		val artikel = artikelSucheService.findArtikel(maptToArtikelId(articleId));
+		val artikel = artikelSucheService.findArtikel(mapToArtikelId(articleId));
 		if (artikel.isPresent()) {
 			return ResponseEntity.ok(mapArtikelToRO(artikel.get()));
 		}

@@ -76,7 +76,7 @@ public class ArtikelControllerMapperShould {
 	@Test
 	@DisplayName("UUID in ArtikelId konvertieren")
 	void uuid_in_AngebotId_konvertieren() {
-		assertEquals(ARTIKEL_ID, ArtikelControllerMapper.maptToArtikelId(ARTIKEL_ID.getValue()));
+		assertEquals(ARTIKEL_ID, ArtikelControllerMapper.mapToArtikelId(ARTIKEL_ID.getValue()));
 	}
 
 	@Test

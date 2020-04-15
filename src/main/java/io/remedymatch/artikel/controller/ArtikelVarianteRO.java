@@ -26,6 +26,8 @@ public class ArtikelVarianteRO {
 	@NotNull
 	private UUID id;
 
+	private Integer sort;
+
 	@NotNull
 	@Valid
 	private UUID artikelId;

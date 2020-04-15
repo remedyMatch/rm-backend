@@ -9,6 +9,8 @@ import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelKategorie;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
 
+import static java.util.Comparator.*;
+
 public class ArtikelControllerMapper {
 	private ArtikelControllerMapper() {
 
@@ -41,12 +43,17 @@ public class ArtikelControllerMapper {
 	}
 
 	public static List<ArtikelVarianteRO> mapVariantenToRO(final List<ArtikelVariante> varianten) {
-		return varianten.stream().map(ArtikelControllerMapper::mapVarianteToRO).collect(Collectors.toList());
+		return varianten.stream()
+				.map(ArtikelControllerMapper::mapVarianteToRO)
+				.sorted(comparing(ArtikelVarianteRO::getSort, nullsLast(naturalOrder()))
+						.thenComparing(ArtikelVarianteRO::getVariante, nullsLast(naturalOrder())))
+				.collect(Collectors.toList());
 	}
 
 	public static ArtikelVarianteRO mapVarianteToRO(final ArtikelVariante variante) {
 		return ArtikelVarianteRO.builder() //
 				.id(variante.getId().getValue()) //
+				.sort(variante.getSort())
 				.artikelId(variante.getArtikelId().getValue()) //
 				.variante(variante.getVariante()) //
 				.norm(variante.getNorm()) //
@@ -55,7 +62,7 @@ public class ArtikelControllerMapper {
 				.build();
 	}
 
-	static ArtikelId maptToArtikelId(final UUID artikelId) {
+	static ArtikelId mapToArtikelId(final UUID artikelId) {
 		return new ArtikelId(artikelId);
 	}
 }

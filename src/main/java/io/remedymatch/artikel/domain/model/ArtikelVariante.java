@@ -27,6 +27,8 @@ public class ArtikelVariante {
     @NotNull
     @Valid
     private ArtikelId artikelId;
+
+    private Integer sort;
     
     @NotBlank
     private String variante;

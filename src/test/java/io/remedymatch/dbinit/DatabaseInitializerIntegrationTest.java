@@ -207,7 +207,6 @@ public class DatabaseInitializerIntegrationTest {
         artikelVarianteRepository.save(artikelVarianteEntity);
     }
 
-
     private void queryAllRepositories() {
         artikel = artikelJpaRepository.findAll();
         kategorien = artikelKategorieJpaRepository.findAll();

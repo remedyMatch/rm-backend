@@ -1,15 +1,13 @@
 package io.remedymatch.artikel.domain.service;
 
+import io.remedymatch.artikel.domain.model.*;
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.remedymatch.artikel.domain.model.Artikel;
-import io.remedymatch.artikel.domain.model.ArtikelId;
-import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
-import io.remedymatch.artikel.domain.model.ArtikelVariante;
-import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
-import io.remedymatch.artikel.infrastructure.ArtikelEntity;
-import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
+import static java.util.Comparator.*;
 
 public final class ArtikelEntityConverter {
 	private ArtikelEntityConverter() {
@@ -40,12 +38,17 @@ public final class ArtikelEntityConverter {
 	}
 
 	static List<ArtikelVariante> convertVarianten(final List<ArtikelVarianteEntity> entities) {
-		return entities.stream().map(ArtikelEntityConverter::convertVariante).collect(Collectors.toList());
+		return entities.stream()
+				.map(ArtikelEntityConverter::convertVariante)
+				.sorted(comparing(ArtikelVariante::getSort, nullsLast(naturalOrder()))
+						.thenComparing(ArtikelVariante::getVariante, nullsLast(naturalOrder())))
+				.collect(Collectors.toList());
 	}
 
 	public static ArtikelVariante convertVariante(final ArtikelVarianteEntity entity) {
 		return ArtikelVariante.builder() //
 				.id(new ArtikelVarianteId(entity.getId())) //
+				.sort(entity.getSort())
 				.artikelId(new ArtikelId(entity.getArtikel())) //
 				.variante(entity.getVariante()) //
 				.norm(entity.getNorm()) //
@@ -55,7 +58,9 @@ public final class ArtikelEntityConverter {
 	}
 
 	static List<ArtikelVarianteEntity> convertVarianteEntities(final List<ArtikelVariante> varianten) {
-		return varianten.stream().map(ArtikelEntityConverter::convertVariante).collect(Collectors.toList());
+		return varianten.stream()
+				.map(ArtikelEntityConverter::convertVariante)
+				.collect(Collectors.toList());
 	}
 
 	public static ArtikelVarianteEntity convertVariante(final ArtikelVariante variante) {

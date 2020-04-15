@@ -7,9 +7,7 @@ import java.util.UUID;
 import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
-import io.remedymatch.artikel.domain.model.ArtikelVariante;
 import io.remedymatch.artikel.domain.service.ArtikelTestFixtures;
-import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
@@ -22,9 +20,6 @@ public final class AngebotTestFixtures {
 	}
 
 	public static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
-	public static final ArtikelVariante ANGEBOT_ARTIKEL_VARIANTE = ArtikelTestFixtures.beispielArtikelVariante();
-	public static final ArtikelVarianteEntity ANGEBOT_ARTIKEL_VARIANTE_ENTITY = ArtikelTestFixtures
-			.beispielArtikelVarianteEntity();
 	public static final BigDecimal ANGEBOT_ANZAHL = BigDecimal.valueOf(120.0);
 	public static final BigDecimal ANGEBOT_REST = BigDecimal.valueOf(120.0);
 	public static final Institution ANGEBOT_INSTITUTION = InstitutionTestFixtures.beispielInstitution();
@@ -49,7 +44,7 @@ public final class AngebotTestFixtures {
 	public static Angebot beispielAngebot() {
 		return Angebot.builder() //
 				.id(beispielAngebotId()) //
-				.artikelVariante(ANGEBOT_ARTIKEL_VARIANTE) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante()) //
 				.anzahl(ANGEBOT_ANZAHL) //
 				.rest(ANGEBOT_REST) //
 				.institution(ANGEBOT_INSTITUTION) //
@@ -66,7 +61,7 @@ public final class AngebotTestFixtures {
 	public static AngebotEntity beispielAngebotEntity() {
 		return AngebotEntity.builder() //
 				.id(beispielAngebotId().getValue()) //
-				.artikelVariante(ANGEBOT_ARTIKEL_VARIANTE_ENTITY) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVarianteEntity()) //
 				.anzahl(ANGEBOT_ANZAHL) //
 				.rest(ANGEBOT_REST) //
 				.institution(ANGEBOT_INSTITUTION_ENTITY) //
@@ -83,7 +78,7 @@ public final class AngebotTestFixtures {
 	static Angebot beispielAngebotOhneAnfragen() {
 		return Angebot.builder() //
 				.id(ANGEBOT_OHNE_ANFRAGEN_ID) //
-				.artikelVariante(ANGEBOT_ARTIKEL_VARIANTE) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante()) //
 				.anzahl(ANGEBOT_ANZAHL) //
 				.rest(ANGEBOT_REST) //
 				.institution(ANGEBOT_INSTITUTION) //
@@ -100,7 +95,7 @@ public final class AngebotTestFixtures {
 	static AngebotEntity beispielAngebotOhneAnfragenEntity() {
 		return AngebotEntity.builder() //
 				.id(ANGEBOT_OHNE_ANFRAGEN_ID.getValue()) //
-				.artikelVariante(ANGEBOT_ARTIKEL_VARIANTE_ENTITY) //
+				.artikelVariante(ArtikelTestFixtures.beispielArtikelVarianteEntity()) //
 				.anzahl(ANGEBOT_ANZAHL) //
 				.rest(ANGEBOT_REST) //
 				.institution(ANGEBOT_INSTITUTION_ENTITY) //

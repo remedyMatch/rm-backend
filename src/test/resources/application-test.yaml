@@ -15,7 +15,7 @@ spring:
       generate-ddl: true
     properties:
       hibernate:
-        show_sql: true
+        show_sql: false
         use_sql_comments: true
         format_sql: true
         

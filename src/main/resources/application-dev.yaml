@@ -19,6 +19,11 @@ spring:
         show_sql: true
         use_sql_comments: true
         format_sql: true
+
+logging:
+  level:
+    root: INFO
+    io.remedymatch: DEBUG
         
 remedy:
   security:

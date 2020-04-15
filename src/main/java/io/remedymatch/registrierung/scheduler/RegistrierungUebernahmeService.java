@@ -67,28 +67,28 @@ class RegistrierungUebernahmeService {
 	private String createInstitutionName( //
 			final RegistrierterUser registrierterUser, //
 			final InstitutionTyp institutionTyp) {
-		if (!InstitutionTyp.PRIVAT.equals(institutionTyp)) {
-			return trimToEmpty(registrierterUser.getInstitutionName());
+		if (InstitutionTyp.PRIVAT.equals(institutionTyp)) {
+			return String.format("%s %s", //
+					trimToEmpty(registrierterUser.getVorname()), //
+					trimToEmpty(registrierterUser.getNachname()));
 		}
 
-		return String.format("Privat %s %s", //
-				trimToEmpty(registrierterUser.getVorname()), //
-				trimToEmpty(registrierterUser.getNachname()));
+		return trimToEmpty(registrierterUser.getInstitutionName());
 	}
 
 	private String createInstitutionKey( //
 			final RegistrierterUser registrierterUser, //
 			final InstitutionTyp institutionTyp) {
-		if (!InstitutionTyp.PRIVAT.equals(institutionTyp)) {
-			return String.format("%s__%s", //
+		if (InstitutionTyp.PRIVAT.equals(institutionTyp)) {
+			return StringUtils.join(//
 					lowerCase(institutionTyp.name()), //
-					replace(lowerCase(trimToEmpty(registrierterUser.getInstitutionName())), "\\s+", "_"));
+					"__", //
+					replace(lowerCase(trimToEmpty(registrierterUser.getUsername())), "\\s+", "_"));
 		}
 
-		return StringUtils.join(//
+		return String.format("%s__%s", //
 				lowerCase(institutionTyp.name()), //
-				"__", //
-				replace(lowerCase(trimToEmpty(registrierterUser.getUsername())), "\\s+", "_"));
+				replace(lowerCase(trimToEmpty(registrierterUser.getInstitutionName())), "\\s+", "_"));
 	}
 
 	private InstitutionTyp convertToInstitutionTyp(final String institutionTyp) {

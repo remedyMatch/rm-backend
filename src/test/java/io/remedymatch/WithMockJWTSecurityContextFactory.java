@@ -20,8 +20,8 @@ public class WithMockJWTSecurityContextFactory implements WithSecurityContextFac
 	@Override
 	public SecurityContext createSecurityContext(WithMockJWT annotation) {
 		var claims = new HashMap<String, Object>();
-		if (annotation.subClaim() != null) {
-			claims.put("sub", annotation.subClaim());
+		if (annotation.usernameClaim() != null) {
+			claims.put("username", annotation.usernameClaim());
 		}
 
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();

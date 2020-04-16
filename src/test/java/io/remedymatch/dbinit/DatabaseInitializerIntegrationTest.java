@@ -88,7 +88,7 @@ public class DatabaseInitializerIntegrationTest {
 
     @Test
     @Transactional
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "testUser")
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
     public void kategorienUndArtikelSolltenAngelegtWerden() {
 
         queryAllRepositories();
@@ -126,7 +126,7 @@ public class DatabaseInitializerIntegrationTest {
 
     @Test
     @Transactional
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "testUser")
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
     public void kategorienUndArtikelSolltenNichtAngelegtWerdenWennBereitsVorhanden() {
 
         queryAllRepositories();
@@ -182,7 +182,7 @@ public class DatabaseInitializerIntegrationTest {
 
     @Test
     @Transactional
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "testUser")
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
     public void esSolltenKeineDoppeltenArtikelVariantenAngelegtWerden() {
         databaseInitializer.onApplicationEvent(Mockito.mock(ContextRefreshedEvent.class));
 

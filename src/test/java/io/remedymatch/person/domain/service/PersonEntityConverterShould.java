@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("PersonEntityConverter soll")
-public class PersonEntityConverterShould {
+class PersonEntityConverterShould {
 	
 	@Test
 	@DisplayName("eine Entity in ein Domain Objekt konvertieren")

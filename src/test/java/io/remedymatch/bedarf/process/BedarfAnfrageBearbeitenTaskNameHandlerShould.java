@@ -85,8 +85,8 @@ public class BedarfAnfrageBearbeitenTaskNameHandlerShould {
 	}
 
 	@Test
-	@DisplayName("fuer Task ein Beschreibungstext ohne ArtikelVariante zurueckliefern")
-	void fuer_Task_ein_Beschreibungstext_ohne_ArtikelVariante_zurueckliefern() {
+	@DisplayName("fuer Task ein Beschreibungstext mit Anzahl als Ganzzahl ohne ArtikelVariante zurueckliefern")
+	void fuer_Task_ein_Beschreibungstext_ohne_mit_Anzahl_als_Ganzzahl_ArtikelVariante_zurueckliefern() {
 
 		val institutionName = "Mein Krankenhaus";
 		val bedarfAnzahl = BigDecimal.valueOf(522);
@@ -115,6 +115,42 @@ public class BedarfAnfrageBearbeitenTaskNameHandlerShould {
 		given(anfrageSucheService.getAnfrageOrElseThrow(anfrageId)).willReturn(anfrage);
 
 		assertEquals("Mein Krankenhaus: Anfrage zu Bedarf von 522 Kittel", taskNameHandler.beschreibung(task));
+
+		then(anfrageSucheService).should().getAnfrageOrElseThrow(anfrageId);
+		then(anfrageSucheService).shouldHaveNoMoreInteractions();
+	}
+	
+	@Test
+	@DisplayName("fuer Task ein Beschreibungstext mit Anzahl als Dezimalzahl ohne ArtikelVariante zurueckliefern")
+	void fuer_Task_ein_Beschreibungstext_mit_Anzahl_als_Dezimalzahl_ohne_ArtikelVariante_zurueckliefern() {
+
+		val institutionName = "Mein Krankenhaus";
+		val bedarfAnzahl = BigDecimal.valueOf(123.45);
+		val artikelName = "Kittel";
+
+		val anfrage = BedarfAnfrageTestFixtures.beispielBedarfAnfrage();
+		val anfrageId = anfrage.getId();
+		anfrage.getInstitution().setName(institutionName);
+
+		val bedarf = anfrage.getBedarf();
+		bedarf.setAnzahl(bedarfAnzahl);
+		bedarf.setArtikelVariante(null);
+		val artikel = bedarf.getArtikel();
+		artikel.setName(artikelName);
+
+		val task = TaskDTO.builder() //
+				.taskId("egal") //
+				.prozessInstanceId("egal") //
+				.institution("egal") //
+				.objektId(anfrageId.getValue().toString()) //
+				.displayName("egal") //
+				.taskKey("egal") //
+				.taskName("egal") //
+				.build();
+
+		given(anfrageSucheService.getAnfrageOrElseThrow(anfrageId)).willReturn(anfrage);
+
+		assertEquals("Mein Krankenhaus: Anfrage zu Bedarf von 123,45 Kittel", taskNameHandler.beschreibung(task));
 
 		then(anfrageSucheService).should().getAnfrageOrElseThrow(anfrageId);
 		then(anfrageSucheService).shouldHaveNoMoreInteractions();

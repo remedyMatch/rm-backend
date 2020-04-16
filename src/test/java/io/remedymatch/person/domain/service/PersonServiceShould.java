@@ -41,7 +41,7 @@ import lombok.val;
 })
 @Tag("Spring")
 @DisplayName("PersonService soll")
-public class PersonServiceShould {
+class PersonServiceShould {
 
 	@Autowired
 	private PersonService personService;

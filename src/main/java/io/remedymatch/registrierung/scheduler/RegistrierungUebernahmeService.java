@@ -1,12 +1,12 @@
 package io.remedymatch.registrierung.scheduler;
 
 import static org.apache.commons.lang3.StringUtils.lowerCase;
-import static org.apache.commons.lang3.StringUtils.replace;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,15 +80,14 @@ class RegistrierungUebernahmeService {
 			final RegistrierterUser registrierterUser, //
 			final InstitutionTyp institutionTyp) {
 		if (InstitutionTyp.PRIVAT.equals(institutionTyp)) {
-			return StringUtils.join(//
+			return String.format("%s__%s", //
 					lowerCase(institutionTyp.name()), //
-					"__", //
-					replace(lowerCase(trimToEmpty(registrierterUser.getUsername())), "\\s+", "_"));
+					RegExUtils.replaceAll(lowerCase(trimToEmpty(registrierterUser.getUsername())), "\\s+", "_"));
 		}
 
 		return String.format("%s__%s", //
 				lowerCase(institutionTyp.name()), //
-				replace(lowerCase(trimToEmpty(registrierterUser.getInstitutionName())), "\\s+", "_"));
+				RegExUtils.replaceAll(lowerCase(trimToEmpty(registrierterUser.getInstitutionName())), "\\s+", "_"));
 	}
 
 	private InstitutionTyp convertToInstitutionTyp(final String institutionTyp) {

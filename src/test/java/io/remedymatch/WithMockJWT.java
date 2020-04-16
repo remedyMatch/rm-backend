@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Documented
 @WithSecurityContext(factory = WithMockJWTSecurityContextFactory.class)
 public @interface WithMockJWT {
-    String subClaim() default "";
+    String usernameClaim() default "";
     String [] groupsClaim() default {};
     String credentials() default "";
 }

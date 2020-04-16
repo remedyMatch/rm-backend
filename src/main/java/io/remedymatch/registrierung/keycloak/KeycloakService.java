@@ -14,9 +14,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.GroupsResource;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
@@ -46,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 public class KeycloakService {
 
 	private final KeycloakProperties properties;
+	private final Keycloak keycloak;
 
 	public List<RegistrierterUser> findFreigegebeneUsers() {
 
@@ -64,11 +63,10 @@ public class KeycloakService {
 		updateStatus(user, KEYCLOAK_USER_STATUS_AKTIVIERT);
 
 		userResource.update(user);
-		
+
 		try {
 			userGruppeAufUserSetzen(userId);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			log.error("Es war nicht möglich die Gruppe von 'fregegeben' auf 'user' zu setzen.", e);
 		}
 	}
@@ -87,19 +85,7 @@ public class KeycloakService {
 	}
 
 	private RealmResource getUserRealm() {
-		return getKeycloak().realm(properties.getUser().getRealm());
-	}
-
-	private Keycloak getKeycloak() {
-		return KeycloakBuilder.builder() //
-				.serverUrl(properties.getServerUrl()) //
-				.realm(properties.getClient().getRealm()) //
-				.username(properties.getClient().getUsername()) //
-				.password(properties.getClient().getPassword()) //
-				.clientId(properties.getClient().getClientId()) //
-				.clientSecret(properties.getClient().getClientSecret()) //
-				.resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()) //
-				.build();
+		return keycloak.realm(properties.getUser().getRealm());
 	}
 
 	private boolean isInStatus(final UserRepresentation user, final String status) {
@@ -136,9 +122,6 @@ public class KeycloakService {
 	private void removeGruppeFromUser(final String keycloakUserId, final String keycloakGroupId) {
 		RestTemplate restTemplate = new RestTemplate();
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + getKeycloak().tokenManager().getAccessTokenString());
-
 		log.info(String.format("Removing Gruppe %s from User %s.", keycloakGroupId, keycloakUserId));
 
 		ResponseEntity<Void> response = restTemplate.exchange(//
@@ -166,7 +149,7 @@ public class KeycloakService {
 
 	private HttpHeaders getHeaderMitToken() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + getKeycloak().tokenManager().getAccessTokenString());
+		headers.set("Authorization", "Bearer " + keycloak.tokenManager().getAccessTokenString());
 
 		return headers;
 	}

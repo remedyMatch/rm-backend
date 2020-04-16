@@ -1,6 +1,7 @@
 package io.remedymatch.angebot.process;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
@@ -66,6 +67,9 @@ class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler
 			return String.format("%d", (long) doubleValue);
 		}
 
-		return String.format("%s", doubleValue);
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+		df.setMinimumFractionDigits(2);
+		return df.format(anzahl);
 	}
 }

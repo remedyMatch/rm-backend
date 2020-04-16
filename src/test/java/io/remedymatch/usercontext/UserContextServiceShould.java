@@ -28,7 +28,7 @@ import lombok.val;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { //
 		UserContextService.class, //
-		UserProvider.class, //
+		UserContextProvider.class, //
 		PersonSucheService.class //
 })
 @Tag("Spring")
@@ -39,7 +39,7 @@ public class UserContextServiceShould {
 	private UserContextService userContextService;
 
 	@MockBean
-	private UserProvider userProviced;
+	private UserContextProvider userProviced;
 
 	@MockBean
 	private PersonSucheService personSucheService;

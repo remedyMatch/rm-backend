@@ -54,8 +54,8 @@ public class AngebotAnfrageBearbeitenTaskNameHandlerShould {
 	}
 
 	@Test
-	@DisplayName("fuer Task ein Beschreibungstext zurueckliefern")
-	void fuer_Task_ein_Beschreibungstext_zurueckliefern() {
+	@DisplayName("fuer Task ein Beschreibungstext mit Anzahl als Ganzzahl zurueckliefern")
+	void fuer_Task_ein_Beschreibungstext_mit_Anzahl_als_Ganzzahl_zurueckliefern() {
 
 		val institutionName = "Mein Krankenhaus";
 		val angebotAnzahl = BigDecimal.valueOf(125);
@@ -90,6 +90,50 @@ public class AngebotAnfrageBearbeitenTaskNameHandlerShould {
 		given(artikelSucheService.getArtikelOrElseThrow(artikelId)).willReturn(artikel);
 
 		assertEquals("Mein Krankenhaus: Anfrage zu Angebot von 125 Kittel - S", taskNameHandler.beschreibung(task));
+
+		then(anfrageSucheService).should().getAnfrageOrElseThrow(anfrageId);
+		then(anfrageSucheService).shouldHaveNoMoreInteractions();
+		then(artikelSucheService).should().getArtikelOrElseThrow(artikelId);
+		then(artikelSucheService).shouldHaveNoMoreInteractions();
+	}
+	
+	@Test
+	@DisplayName("fuer Task ein Beschreibungstext mit Anzahl als Dezimalzahl zurueckliefern")
+	void fuer_Task_ein_Beschreibungstext_mit_Anzahl_als_Dezimalzahl_zurueckliefern() {
+
+		val institutionName = "Mein Krankenhaus";
+		val angebotAnzahl = BigDecimal.valueOf(9000.50);
+		val artikelName = "Kittel";
+		val artikelVarianteName = "S";
+
+		val anfrage = AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
+		val anfrageId = anfrage.getId();
+		anfrage.getInstitution().setName(institutionName);
+
+		val angebot = anfrage.getAngebot();
+		angebot.setAnzahl(angebotAnzahl);
+		val artikelVariante = angebot.getArtikelVariante();
+		val artikelId = artikelVariante.getArtikelId();
+		artikelVariante.setVariante(artikelVarianteName);
+
+		val artikel = ArtikelTestFixtures.beispielArtikel();
+		artikel.setId(artikelId);
+		artikel.setName(artikelName);
+
+		val task = TaskDTO.builder() //
+				.taskId("egal") //
+				.prozessInstanceId("egal") //
+				.institution("egal") //
+				.objektId(anfrageId.getValue().toString()) //
+				.displayName("egal") //
+				.taskKey("egal") //
+				.taskName("egal") //
+				.build();
+
+		given(anfrageSucheService.getAnfrageOrElseThrow(anfrageId)).willReturn(anfrage);
+		given(artikelSucheService.getArtikelOrElseThrow(artikelId)).willReturn(artikel);
+
+		assertEquals("Mein Krankenhaus: Anfrage zu Angebot von 9.000,50 Kittel - S", taskNameHandler.beschreibung(task));
 
 		then(anfrageSucheService).should().getAnfrageOrElseThrow(anfrageId);
 		then(anfrageSucheService).shouldHaveNoMoreInteractions();

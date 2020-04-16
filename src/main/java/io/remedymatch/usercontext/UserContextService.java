@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service
 public class UserContextService {
-	private final UserProvider userProvider;
+	private final UserContextProvider userProvider;
 	private final PersonSucheService personSucheService;
 
 	@Transactional(readOnly = true)

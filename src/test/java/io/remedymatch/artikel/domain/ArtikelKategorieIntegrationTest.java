@@ -60,7 +60,7 @@ public class ArtikelKategorieIntegrationTest {
     }
 
     @Test
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "myUsername")
     public void shouldReadAlleKategorien() throws Exception {
         artikelKategorieRepository.save(ArtikelKategorieEntity.builder().name("sample").build());
         mockMvc.perform(get("/artikelkategorie")

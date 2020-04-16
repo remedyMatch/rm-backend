@@ -8,9 +8,13 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Component
-public class UserProvider {
-	public String getUserName() {
-		Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return jwt.getClaims().get("username").toString();
+class UserContextProvider {
+	
+	String getUserName() {
+		return getJwt().getClaim("username");
+	}
+
+	private Jwt getJwt() {
+		return (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 }

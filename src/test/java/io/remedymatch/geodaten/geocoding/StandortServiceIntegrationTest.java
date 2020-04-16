@@ -59,7 +59,7 @@ public class StandortServiceIntegrationTest {
     }
 
     @Test
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "testUser")
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
     public void unstrukturierteAdressSucheSollteErgebnisseLiefern() {
 
         final String queryString = "Hüttenhospital Dortmund";
@@ -70,7 +70,7 @@ public class StandortServiceIntegrationTest {
     }
 
     @Test
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "testUser")
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
     public void strukturierteAdressSucheSollteErgebnisseLiefern() {
 
         final Adresse adresse = new Adresse();
@@ -83,7 +83,7 @@ public class StandortServiceIntegrationTest {
     }
 
     @Test
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "testUser")
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
     public void sucheNachVorschlaegenSollteErgebnisseLiefern() {
 
         final String standort = "Hüttenhospital Dortmund";
@@ -94,7 +94,7 @@ public class StandortServiceIntegrationTest {
     }
 
     @Test
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "testUser")
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
     public void sucheNachAdresseViaKoordinatenSollteEinErgebnisLiefern() {
 
         final Point point = new Point(51.4807647, 7.50986959582075);

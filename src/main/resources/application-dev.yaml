@@ -33,7 +33,7 @@ remedy:
 io:
   remedymatch:
     engine: 
-      url: http://localhost:8008/engine
+      url: http://localhost:8085/engine
     geodaten:
       geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
       geocoderServiceApiKey: einsetzen

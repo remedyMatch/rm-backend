@@ -1,7 +1,9 @@
 package io.remedymatch.usercontext;
 
-import static org.junit.Assert.assertEquals;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,6 @@ public class UserContextProviderShould {
 	@WithMockJWT(usernameClaim = "myUsername")
 	public void username_aus_JWT_zurueckliefern() {
 
-		assertEquals("myUsername", userProvide.getUserName());
+		assertEquals(myUsername, userProvide.getUserName());
 	}
 }

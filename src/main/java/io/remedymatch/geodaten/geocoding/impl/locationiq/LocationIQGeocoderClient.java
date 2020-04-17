@@ -11,12 +11,12 @@ import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Response;
 import io.remedymatch.properties.GeodatenProperties;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -30,7 +30,6 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGL
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Component
-@Profile("prod")
 @RequiredArgsConstructor
 public class LocationIQGeocoderClient implements Geocoder {
 

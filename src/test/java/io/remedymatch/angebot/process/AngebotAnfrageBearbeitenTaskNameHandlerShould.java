@@ -6,7 +6,6 @@ import static org.mockito.BDDMockito.then;
 
 import java.math.BigDecimal;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -97,9 +96,8 @@ public class AngebotAnfrageBearbeitenTaskNameHandlerShould {
 		then(artikelSucheService).should().getArtikelOrElseThrow(artikelId);
 		then(artikelSucheService).shouldHaveNoMoreInteractions();
 	}
-	
+
 	@Test
-	@Disabled
 	@DisplayName("fuer Task ein Beschreibungstext mit Anzahl als Dezimalzahl zurueckliefern")
 	void fuer_Task_ein_Beschreibungstext_mit_Anzahl_als_Dezimalzahl_zurueckliefern() {
 
@@ -135,7 +133,8 @@ public class AngebotAnfrageBearbeitenTaskNameHandlerShould {
 		given(anfrageSucheService.getAnfrageOrElseThrow(anfrageId)).willReturn(anfrage);
 		given(artikelSucheService.getArtikelOrElseThrow(artikelId)).willReturn(artikel);
 
-		assertEquals("Mein Krankenhaus: Anfrage zu Angebot von 9.000,50 Kittel - S", taskNameHandler.beschreibung(task));
+		assertEquals("Mein Krankenhaus: Anfrage zu Angebot von 9.000,50 Kittel - S",
+				taskNameHandler.beschreibung(task));
 
 		then(anfrageSucheService).should().getAnfrageOrElseThrow(anfrageId);
 		then(anfrageSucheService).shouldHaveNoMoreInteractions();

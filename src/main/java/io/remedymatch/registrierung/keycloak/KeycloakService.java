@@ -14,7 +14,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.GroupsResource;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
@@ -44,7 +46,6 @@ import lombok.extern.slf4j.Slf4j;
 public class KeycloakService {
 
 	private final KeycloakProperties properties;
-	private final Keycloak keycloak;
 
 	public List<RegistrierterUser> findFreigegebeneUsers() {
 
@@ -85,7 +86,7 @@ public class KeycloakService {
 	}
 
 	private RealmResource getUserRealm() {
-		return keycloak.realm(properties.getUser().getRealm());
+		return getKeycloak().realm(properties.getUser().getRealm());
 	}
 
 	private boolean isInStatus(final UserRepresentation user, final String status) {
@@ -149,7 +150,7 @@ public class KeycloakService {
 
 	private HttpHeaders getHeaderMitToken() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + keycloak.tokenManager().getAccessTokenString());
+		headers.set("Authorization", "Bearer " + getKeycloak().tokenManager().getAccessTokenString());
 
 		return headers;
 	}
@@ -160,5 +161,17 @@ public class KeycloakService {
 				.path("/users/").path(keycloakUserId) //
 				.path("/groups/").path(keycloakGroupId) //
 				.build().toUri();
+	}
+	
+	private Keycloak getKeycloak() {
+		return KeycloakBuilder.builder() //
+				.serverUrl(properties.getServerUrl()) //
+				.realm(properties.getClient().getRealm()) //
+				.username(properties.getClient().getUsername()) //
+				.password(properties.getClient().getPassword()) //
+				.clientId(properties.getClient().getClientId()) //
+				.clientSecret(properties.getClient().getClientSecret()) //
+				.resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()) //
+				.build();
 	}
 }

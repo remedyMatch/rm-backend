@@ -6,7 +6,6 @@ import static org.mockito.BDDMockito.then;
 
 import java.math.BigDecimal;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -120,9 +119,8 @@ public class BedarfAnfrageBearbeitenTaskNameHandlerShould {
 		then(anfrageSucheService).should().getAnfrageOrElseThrow(anfrageId);
 		then(anfrageSucheService).shouldHaveNoMoreInteractions();
 	}
-	
+
 	@Test
-	@Disabled
 	@DisplayName("fuer Task ein Beschreibungstext mit Anzahl als Dezimalzahl ohne ArtikelVariante zurueckliefern")
 	void fuer_Task_ein_Beschreibungstext_mit_Anzahl_als_Dezimalzahl_ohne_ArtikelVariante_zurueckliefern() {
 

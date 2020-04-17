@@ -2,13 +2,12 @@ package io.remedymatch.geodaten.geocoding.impl.locationiq.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@JsonDeserialize(builder = Response.ResponseBuilder.class)
 @Getter
 @Setter
 @Builder
@@ -27,8 +26,4 @@ public class Response {
     private String clazz;
     private String type;
     private String importance;
-
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class ResponseBuilder {
-    }
 }

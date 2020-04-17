@@ -19,22 +19,26 @@ Alle Repositories sind zu finden unter https://github.com/remedyMatch .
 
 Da rm-stack mit lokalem backend gestartet werden soll, muss in rm-stack folgendes angepasst werden:
 
-* `nginx.conf`
-** In  `location /remedy/` auf internes backend switchen
+#### nginx.conf anpassen
+* In  `location /remedy/` auf internes backend switchen
 
-  ```
+```
     location /remedy/ {
 #        proxy_pass          http://backend:8081/remedy/;
 #        for local development
         proxy_pass          http://host.docker.internal:8081/remedy/;
         ...
   }
-  ```
+```
+__ACHTUNG: host.docker.internal funktioniert nur unter MacOS!__ Unter Windows/Linux
+kann der Befehl `docker network inspect bridge` verwendet werden, um die IP-Adresse
+des docker hosts herauszufinden (in der Regel 172.17.0.1). host.docker.internal dann
+durch diese IP ersetzen.
 
-* `docker-compose.yml`
-** In `reverseproxy` depends on backend auskommentieren
+#### docker-compose.yml anpassen
+* In `reverseproxy` depends on backend auskommentieren
 
-  ```
+```
   reverseproxy:
     build: .
     ports:
@@ -44,15 +48,15 @@ Da rm-stack mit lokalem backend gestartet werden soll, muss in rm-stack folgende
 #      - backend
       - engine
       - frontend
-  ```
+```
 
-** Der `backend` service komplett auskommentieren
+* Den `backend` service komplett auskommentieren
 
-  ```
+```
 #  backend:
 #    image: remedymatch/backend:latest
 # ...
-  ```
+```
 
 ### Backend
 

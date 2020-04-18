@@ -27,6 +27,7 @@ import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -93,6 +94,7 @@ public class BedarfService {
 
 		anfrage.setProzessInstanzId(anfrageProzessService.prozessStarten(//
 				bedarfId, //
+				new PersonId(bedarf.getCreatedBy()), //
 				new BedarfAnfrageId(anfrageId), //
 				new InstitutionId(bedarf.getInstitution().getId())).getValue());
 

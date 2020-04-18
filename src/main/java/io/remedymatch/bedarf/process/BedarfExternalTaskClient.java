@@ -56,7 +56,10 @@ class BedarfExternalTaskClient {
                     variables.put("anfrageTyp", MatchProzessConstants.ANFRAGE_TYP_BEDARF);
                     variables.put("anfrageId", anfrageId);
 
-                    engineClient.prozessStarten(MatchProzessConstants.PROZESS_KEY, new BusinessKey(UUID.fromString(anfrageId)), variables);
+                    engineClient.prozessStarten( //
+                    		MatchProzessConstants.PROZESS_KEY, //
+                    		new BusinessKey(UUID.fromString(anfrageId)), //
+                    		variables);
                     externalTaskService.complete(externalTask, variables);
 
                 }).open();

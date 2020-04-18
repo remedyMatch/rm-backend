@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.camunda.bpm.engine.variable.VariableMap;
+import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +23,8 @@ import io.remedymatch.engine.domain.ProzessKey;
 import io.remedymatch.engine.request.MessageKorrelierenRequest;
 import io.remedymatch.engine.request.ProzessStartRequest;
 import io.remedymatch.engine.request.TaskAbschliessenRequest;
+import io.remedymatch.person.domain.model.PersonId;
+import io.remedymatch.person.domain.service.PersonSucheService;
 import io.remedymatch.properties.EngineProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -30,19 +34,50 @@ import lombok.val;
 @Validated
 public class EngineClient {
 
-	private final EngineProperties properties;
+	static final String ENGINE_VARIABLE_BENACHRICHTIGUNG_AN_NAME = "benachrichtigungAnName";
+	static final String ENGINE_VARIABLE_BENACHRICHTIGUNG_AN_EMAIL = "benachrichtigungAnEmail";
 
+	private final EngineProperties properties;
+	private final PersonSucheService personSucheService;
+
+	public ProzessInstanzId prozessStarten(//
+			final @NotNull @Valid ProzessKey prozessKey, //
+			final @NotNull @Valid BusinessKey businessKey, //
+			final @NotNull @Valid PersonId benachrichtingungAnPerson, //
+			final @NotNull @Valid Map<String, Object> variables) {
+
+		val person = personSucheService.getPersonOrElseThrow(benachrichtingungAnPerson);
+
+		VariableMap prozessVariables = Variables.createVariables();
+		prozessVariables.putAll(variables);
+		prozessVariables.putValue(ENGINE_VARIABLE_BENACHRICHTIGUNG_AN_EMAIL, person.getEmail());
+		prozessVariables.putValue(ENGINE_VARIABLE_BENACHRICHTIGUNG_AN_NAME,
+				person.getVorname() + " " + person.getNachname());
+
+		return prozessStarten(ProzessStartRequest.builder() //
+				.prozessKey(prozessKey.getValue()) //
+				.businessKey(businessKey.getValue().toString()) //
+				.variables(prozessVariables) //
+				.build());
+	}
+	
 	public ProzessInstanzId prozessStarten(//
 			final @NotNull @Valid ProzessKey prozessKey, //
 			final @NotNull @Valid BusinessKey businessKey, //
 			final @NotNull @Valid Map<String, Object> variables) {
 
-		val request = ProzessStartRequest.builder().prozessKey(prozessKey.getValue()).variables(variables)
-				.businessKey(businessKey.getValue().toString()).build();
+		return prozessStarten(ProzessStartRequest.builder() //
+				.prozessKey(prozessKey.getValue()) //
+				.businessKey(businessKey.getValue().toString()) //
+				.variables(variables) //
+				.build());
+	}
+
+	private ProzessInstanzId prozessStarten(final @NotNull @Valid ProzessStartRequest request) {
 
 		val restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.postForEntity(properties.getRemedyRestApiUrl() + "/prozess/start/",
-				request, String.class);
+		ResponseEntity<String> response = restTemplate
+				.postForEntity(properties.getRemedyRestApiUrl() + "/prozess/start/", request, String.class);
 
 		if (response.getStatusCode().isError()) {
 			throw new RuntimeException("Beim Starten des Prozesses ist etwas fehlgeschlagen");

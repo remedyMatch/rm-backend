@@ -12,8 +12,14 @@ import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.person.domain.model.PersonId;
 
 public final class BedarfTestFixtures {
+	private BedarfTestFixtures() {
+
+	}
+
+	public static final PersonId BEDARF_STELLER = new PersonId(UUID.randomUUID());
 
 	public static final BedarfId BEDARF_ID = new BedarfId(UUID.randomUUID());
 	public static final BigDecimal BEDARF_ANZAHL = BigDecimal.valueOf(120.0);
@@ -28,8 +34,6 @@ public final class BedarfTestFixtures {
 	public static final boolean BEDARF_MEDIZINISCH = true;
 	public static final String BEDARF_KOMMENTAR = "Kommentar";
 	public static final boolean BEDARF_BEDIENT = false;
-
-	private static final BedarfId BEDARF_OHNE_ANFRAGEN_ID = new BedarfId(UUID.randomUUID());
 
 	public static BedarfId beispielBedarfId() {
 		return BEDARF_ID;
@@ -66,26 +70,11 @@ public final class BedarfTestFixtures {
 				.bedient(BEDARF_BEDIENT) //
 				.build();
 	}
-
-	static Bedarf beispielBedarfOhneAnfragen() {
-		return Bedarf.builder() //
-				.id(BEDARF_OHNE_ANFRAGEN_ID) //
-				.artikel(ArtikelTestFixtures.beispielArtikel()) //
-				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante1()) //
-				.anzahl(BEDARF_ANZAHL) //
-				.rest(BEDARF_REST) //
-				.institution(BEDARF_INSTITUTION) //
-				.standort(BEDARF_STANDORT) //
-				.steril(BEDARF_STERIL) //
-				.medizinisch(BEDARF_MEDIZINISCH) //
-				.kommentar(BEDARF_KOMMENTAR) //
-				.bedient(BEDARF_BEDIENT) //
-				.build();
-	}
-
-	static BedarfEntity beispielBedarfOhneAnfragenEntity() {
+	
+	public static BedarfEntity beispielBedarfEntityMitBedarfSteller() {
 		return BedarfEntity.builder() //
-				.id(BEDARF_OHNE_ANFRAGEN_ID.getValue()) //
+				.createdBy(BEDARF_STELLER.getValue()) //
+				.id(beispielBedarfId().getValue()) //
 				.artikel(ArtikelTestFixtures.beispielArtikelEntity()) //
 				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante1Entity()) //
 				.anzahl(BEDARF_ANZAHL) //

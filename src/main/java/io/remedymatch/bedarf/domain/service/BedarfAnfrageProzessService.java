@@ -16,6 +16,7 @@ import io.remedymatch.engine.domain.MessageKey;
 import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.engine.domain.ProzessKey;
 import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.person.domain.model.PersonId;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -31,11 +32,13 @@ class BedarfAnfrageProzessService {
 
 	ProzessInstanzId prozessStarten(//
 			final @NotNull @Valid BedarfId bedarfId, //
+			final @NotNull @Valid PersonId bedarfSteller, //
 			final @NotNull @Valid BedarfAnfrageId anfrageId, //
 			final @NotNull @Valid InstitutionId bedarfInstitutionId) {
 		return engineClient.prozessStarten(//
 				PROZESS_KEY, //
 				new BusinessKey(anfrageId.getValue()), //
+				bedarfSteller, //
 				Variables.createVariables()//
 						.putValue("prozessKey", PROZESS_KEY.getValue()) //
 						.putValue("bedarfId", bedarfId.getValue()) //

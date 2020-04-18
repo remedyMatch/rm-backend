@@ -36,6 +36,7 @@ import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
 
@@ -214,6 +215,7 @@ class BedarfServiceShould {
 
 		val bedarf = anfrage.getBedarf();
 		val bedarfEntity = anfrageEntity.getBedarf();
+		val bedarfSteller = new PersonId(bedarfEntity.getCreatedBy());
 		val bedarfId = bedarf.getId();
 		val bedarfInstitutionId = bedarf.getInstitution().getId();
 
@@ -230,7 +232,7 @@ class BedarfServiceShould {
 
 		given(bedarfRepository.findById(bedarfId.getValue())).willReturn(Optional.of(bedarfEntity));
 		given(userService.getContextInstitution()).willReturn(institution);
-		given(anfrageProzessService.prozessStarten(bedarfId, anfrageId, bedarfInstitutionId))
+		given(anfrageProzessService.prozessStarten(bedarfId, bedarfSteller, anfrageId, bedarfInstitutionId))
 				.willReturn(prozessInstanzId);
 		given(anfrageRepository.save(neueAnfrageEntity)).willReturn(anfrageEntity);
 		given(anfrageRepository.save(anfrageEntity)).willReturn(anfrageEntity);
@@ -248,7 +250,7 @@ class BedarfServiceShould {
 		then(anfrageRepository).shouldHaveNoMoreInteractions();
 		then(userService).should().getContextInstitution();
 		then(userService).shouldHaveNoMoreInteractions();
-		then(anfrageProzessService).should().prozessStarten(bedarfId, anfrageId, bedarfInstitutionId);
+		then(anfrageProzessService).should().prozessStarten(bedarfId, bedarfSteller, anfrageId, bedarfInstitutionId);
 		then(anfrageProzessService).shouldHaveNoMoreInteractions();
 	}
 

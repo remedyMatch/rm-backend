@@ -63,6 +63,24 @@ public class UserContextServiceShould {
 	}
 
 	@Test
+	@DisplayName("Context PersonId zurueckliefern")
+	void context_PersonId_zurueckliefern() {
+
+		val username = "sample_username";
+		val userContextPerson = beispielUserContextPerson();
+
+		given(userProviced.getUserName()).willReturn(username);
+		given(personSucheService.findByUsername(username)).willReturn(Optional.of(userContextPerson));
+
+		assertEquals(userContextPerson.getId(), userContextService.getContextUserId());
+
+		then(userProviced).should().getUserName();
+		then(userProviced).shouldHaveNoMoreInteractions();
+		then(personSucheService).should().findByUsername(username);
+		then(personSucheService).shouldHaveNoMoreInteractions();
+	}
+	
+	@Test
 	@DisplayName("Context Institution zurueckliefern")
 	void context_Institution_zurueckliefern() {
 
@@ -81,7 +99,7 @@ public class UserContextServiceShould {
 	}
 
 	@Test
-	@DisplayName("Context Institution zurueckliefern")
+	@DisplayName("Context InstitutionId zurueckliefern")
 	void context_InstitutionId_zurueckliefern() {
 
 		val username = "sample_username";

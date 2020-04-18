@@ -2,7 +2,9 @@ package io.remedymatch.person.domain.service;
 
 import static io.remedymatch.person.domain.service.PersonTestFixtures.beispielPerson;
 import static io.remedymatch.person.domain.service.PersonTestFixtures.beispielPersonEntity;
+import static io.remedymatch.person.domain.service.PersonTestFixtures.beispielPersonId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -18,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
 import lombok.val;
 
@@ -36,6 +39,46 @@ class PersonSucheServiceShould {
 
 	@MockBean
 	private PersonJpaRepository personRepository;
+
+	@Test
+	@DisplayName("gesuchte Person finden")
+	void gesuchtes_Artikel_finden() {
+
+		val personId = beispielPersonId();
+		val personEntity = beispielPersonEntity();
+
+		given(personRepository.findById(personId.getValue())).willReturn(Optional.of(personEntity));
+
+		val expectedPerson = beispielPerson();
+
+		assertEquals(Optional.of(expectedPerson), personSucheService.findPerson(personId));
+
+		then(personRepository).should().findById(personId.getValue());
+		then(personRepository).shouldHaveNoMoreInteractions();
+	}
+
+	@Test
+	@DisplayName("eine ObjectNotFoundException werfen wenn gesuchte Person nicht existiert")
+	void eine_ObjectNotFoundException_werfen_wenn_gesuchtes_Artikel_nicht_existiert() {
+		assertThrows(ObjectNotFoundException.class, () -> personSucheService.getPersonOrElseThrow(beispielPersonId()));
+	}
+
+	@Test
+	@DisplayName("gesuchte Person zurueckliefern")
+	void gesuchte_Person_zurueckliefern() {
+
+		val personId = beispielPersonId();
+		val personEntity = beispielPersonEntity();
+
+		given(personRepository.findById(personId.getValue())).willReturn(Optional.of(personEntity));
+
+		val expectedPerson = beispielPerson();
+
+		assertEquals(expectedPerson, personSucheService.getPersonOrElseThrow(personId));
+
+		then(personRepository).should().findById(personId.getValue());
+		then(personRepository).shouldHaveNoMoreInteractions();
+	}
 
 	@Test
 	@DisplayName("gesuchte Person fuer Username finden")

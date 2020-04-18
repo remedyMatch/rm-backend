@@ -27,7 +27,7 @@ public final class AngebotAnfrageTestFixtures {
 	public static AngebotAnfrage beispielAngebotAnfrage() {
 		return AngebotAnfrage.builder() //
 				.id(beispielAngebotAnfrageId()) //
-				.angebot(AngebotTestFixtures.beispielAngebotOhneAnfragen()) //
+				.angebot(AngebotTestFixtures.beispielAngebot()) //
 				.institution(InstitutionTestFixtures.beispielInstitution()) //
 				.standort(InstitutionTestFixtures.beispielHaupstandort()) //
 				.anzahl(ANGEBOT_ANFRAGE_ANZAHL) //
@@ -40,7 +40,7 @@ public final class AngebotAnfrageTestFixtures {
 	static AngebotAnfrageEntity beispielAngebotAnfrageEntity() {
 		return AngebotAnfrageEntity.builder() //
 				.id(beispielAngebotAnfrageId().getValue()) //
-				.angebot(AngebotTestFixtures.beispielAngebotOhneAnfragenEntity()) //
+				.angebot(AngebotTestFixtures.beispielAngebotEntityMitAngebotSteller()) //
 				.institution(InstitutionTestFixtures.beispielInstitutionEntity()) //
 				.standort(InstitutionTestFixtures.beispielHaupstandortEntity()) //
 				.anzahl(ANGEBOT_ANFRAGE_ANZAHL) //

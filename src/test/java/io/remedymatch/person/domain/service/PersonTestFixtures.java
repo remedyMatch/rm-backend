@@ -7,7 +7,7 @@ import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.person.infrastructure.PersonEntity;
 
-final class PersonTestFixtures {
+public final class PersonTestFixtures {
 	private PersonTestFixtures() {
 		
 	}
@@ -19,11 +19,11 @@ final class PersonTestFixtures {
 	private static final String EMAIL = "email@email.local";
 	private static final String TELEFON = "012345";
 
-	final static PersonId beispielPersonId() {
+	public final static PersonId beispielPersonId() {
 		return PERSON_ID;
 	}
 
-	final static Person beispielPerson() {
+	public final static Person beispielPerson() {
 		return Person.builder() //
 				.id(beispielPersonId()) //
 				.username(USERNAME) //

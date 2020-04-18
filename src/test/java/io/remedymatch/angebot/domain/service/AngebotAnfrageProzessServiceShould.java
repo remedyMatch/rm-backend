@@ -19,6 +19,7 @@ import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.person.domain.service.PersonTestFixtures;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
@@ -43,18 +44,19 @@ class AngebotAnfrageProzessServiceShould {
 
 		val angebotId = AngebotTestFixtures.beispielAngebotId();
 		val anfrageId = AngebotAnfrageTestFixtures.beispielAngebotAnfrageId();
+		val personId = PersonTestFixtures.beispielPersonId();
 		val angebotInstitutionId = InstitutionTestFixtures.beispielInstitutionId();
 
 		val businessKey = new BusinessKey(anfrageId.getValue());
 		val expectedProzessInstanzId = new ProzessInstanzId("egal");
 
-		given(engineClient.prozessStarten(eq(AngebotAnfrageProzessService.PROZESS_KEY), eq(businessKey), anyMap()))
+		given(engineClient.prozessStarten(eq(AngebotAnfrageProzessService.PROZESS_KEY), eq(businessKey), eq(personId), anyMap()))
 				.willReturn(expectedProzessInstanzId);
 
 		assertEquals(expectedProzessInstanzId,
-				anfrageProzessService.prozessStarten(angebotId, anfrageId, angebotInstitutionId));
+				anfrageProzessService.prozessStarten(angebotId, personId, anfrageId, angebotInstitutionId));
 
-		then(engineClient).should().prozessStarten(eq(AngebotAnfrageProzessService.PROZESS_KEY), eq(businessKey), anyMap());
+		then(engineClient).should().prozessStarten(eq(AngebotAnfrageProzessService.PROZESS_KEY), eq(businessKey), eq(personId), anyMap());
 		then(engineClient).shouldHaveNoMoreInteractions();
 	}
 

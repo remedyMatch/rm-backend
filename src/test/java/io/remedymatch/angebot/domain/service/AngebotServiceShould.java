@@ -36,6 +36,7 @@ import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
 
@@ -214,6 +215,7 @@ class AngebotServiceShould {
 
 		val angebot = anfrage.getAngebot();
 		val angebotEntity = anfrageEntity.getAngebot();
+		val angebotSteller = new PersonId(angebotEntity.getCreatedBy());
 		val angebotId = angebot.getId();
 		val angebotInstitutionId = angebot.getInstitution().getId();
 
@@ -230,7 +232,7 @@ class AngebotServiceShould {
 
 		given(angebotRepository.findById(angebotId.getValue())).willReturn(Optional.of(angebotEntity));
 		given(userService.getContextInstitution()).willReturn(institution);
-		given(anfrageProzessService.prozessStarten(angebotId, anfrageId, angebotInstitutionId))
+		given(anfrageProzessService.prozessStarten(angebotId, angebotSteller, anfrageId, angebotInstitutionId))
 				.willReturn(prozessInstanzId);
 		given(anfrageRepository.save(neueAnfrageEntity)).willReturn(anfrageEntity);
 		given(anfrageRepository.save(anfrageEntity)).willReturn(anfrageEntity);
@@ -248,7 +250,7 @@ class AngebotServiceShould {
 		then(anfrageRepository).shouldHaveNoMoreInteractions();
 		then(userService).should().getContextInstitution();
 		then(userService).shouldHaveNoMoreInteractions();
-		then(anfrageProzessService).should().prozessStarten(angebotId, anfrageId, angebotInstitutionId);
+		then(anfrageProzessService).should().prozessStarten(angebotId, angebotSteller, anfrageId, angebotInstitutionId);
 		then(anfrageProzessService).shouldHaveNoMoreInteractions();
 	}
 

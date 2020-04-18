@@ -13,12 +13,15 @@ import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.person.domain.model.PersonId;
 
 public final class AngebotTestFixtures {
 	private AngebotTestFixtures() {
 
 	}
 
+	public static final PersonId ANGEBOT_STELLER = new PersonId(UUID.randomUUID());
+	
 	public static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
 	public static final BigDecimal ANGEBOT_ANZAHL = BigDecimal.valueOf(120.0);
 	public static final BigDecimal ANGEBOT_REST = BigDecimal.valueOf(120.0);
@@ -34,8 +37,6 @@ public final class AngebotTestFixtures {
 	public static final boolean ANGEBOT_MEDIZINISCH = true;
 	public static final String ANGEBOT_KOMMENTAR = "Kommentar";
 	public static final boolean ANGEBOT_BEDIENT = false;
-
-	private static final AngebotId ANGEBOT_OHNE_ANFRAGEN_ID = new AngebotId(UUID.randomUUID());
 
 	public static AngebotId beispielAngebotId() {
 		return ANGEBOT_ID;
@@ -74,27 +75,11 @@ public final class AngebotTestFixtures {
 				.bedient(ANGEBOT_BEDIENT) //
 				.build();
 	}
-
-	static Angebot beispielAngebotOhneAnfragen() {
-		return Angebot.builder() //
-				.id(ANGEBOT_OHNE_ANFRAGEN_ID) //
-				.artikelVariante(ArtikelTestFixtures.beispielArtikelVariante()) //
-				.anzahl(ANGEBOT_ANZAHL) //
-				.rest(ANGEBOT_REST) //
-				.institution(ANGEBOT_INSTITUTION) //
-				.standort(ANGEBOT_STANDORT) //
-				.haltbarkeit(ANGEBOT_HALTBARKEIT) //
-				.steril(ANGEBOT_STERIL) //
-				.originalverpackt(ANGEBOT_ORIGINALVERPACKT) //
-				.medizinisch(ANGEBOT_MEDIZINISCH) //
-				.kommentar(ANGEBOT_KOMMENTAR) //
-				.bedient(ANGEBOT_BEDIENT) //
-				.build();
-	}
-
-	static AngebotEntity beispielAngebotOhneAnfragenEntity() {
+	
+	public static AngebotEntity beispielAngebotEntityMitAngebotSteller() {
 		return AngebotEntity.builder() //
-				.id(ANGEBOT_OHNE_ANFRAGEN_ID.getValue()) //
+				.createdBy(ANGEBOT_STELLER.getValue()) //
+				.id(beispielAngebotId().getValue()) //
 				.artikelVariante(ArtikelTestFixtures.beispielArtikelVarianteEntity()) //
 				.anzahl(ANGEBOT_ANZAHL) //
 				.rest(ANGEBOT_REST) //

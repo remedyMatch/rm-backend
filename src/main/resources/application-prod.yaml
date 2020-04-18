@@ -1,5 +1,6 @@
 spring:
-  profiles: prod
+  profiles:
+    include: prod, geo
   security:
     oauth2:
       resourceserver:
@@ -33,9 +34,6 @@ io:
   remedymatch:
     engine: 
       url: einsetzen
-    geodaten:
-      geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
-      geocoderServiceApiKey: einsetzen
     keycloak:
       serverUrl: einsetzen
       user:

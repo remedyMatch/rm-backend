@@ -1,6 +1,10 @@
 spring:
   profiles: dev
-  security:    oauth2:      resourceserver:        jwt:          issuer-uri: http://localhost:8008/auth/realms/rmio
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8008/auth/realms/rmio
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/backend?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
@@ -34,9 +38,6 @@ io:
   remedymatch:
     engine: 
       url: http://localhost:8085/engine
-    geodaten:
-      geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
-      geocoderServiceApiKey: einsetzen
     keycloak:
       serverUrl: http://localhost:8008/auth
       user:

@@ -18,24 +18,25 @@ import org.hibernate.annotations.Type;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.shared.infrastructure.Auditable;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Builder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity(name = "Angebot")
 @Table(name = "RM_ANGEBOT")
-public class AngebotEntity {
+public class AngebotEntity extends Auditable {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")

@@ -100,7 +100,7 @@ class PersonServiceShould {
 
 		val personId = new PersonId(UUID.randomUUID());
 
-		val personEntityOhneId = PersonEntity.builder() //
+		PersonEntity personEntityOhneId = PersonEntity.builder() //
 				.username(username) //
 				.vorname(vorname) //
 				.nachname(nachname) //
@@ -108,7 +108,7 @@ class PersonServiceShould {
 				.telefon(telefon) //
 				.institution(institutionEntity).standort(institutionStandortEntity) //
 				.build();
-		val personEntity = PersonEntity.builder() //
+		PersonEntity personEntity = PersonEntity.builder() //
 				.id(personId.getValue()) //
 				.username(username) //
 				.vorname(vorname) //

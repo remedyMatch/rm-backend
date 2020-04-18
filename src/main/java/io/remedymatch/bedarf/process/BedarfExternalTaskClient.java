@@ -31,7 +31,7 @@ class BedarfExternalTaskClient {
     public void doSubscribe() {
 
         ExternalTaskClient client = ExternalTaskClient.create()
-                .baseUrl(properties.getUrl() + "/rest")
+                .baseUrl(properties.getExternalTaskUrl())
                 .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000))
                 .build();
 

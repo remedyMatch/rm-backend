@@ -41,7 +41,7 @@ public class MatchExternalTaskClient {
 	@PostConstruct
 	public void doSubscribe() {
 
-		ExternalTaskClient client = ExternalTaskClient.create().baseUrl(properties.getUrl() + "/rest")
+		ExternalTaskClient client = ExternalTaskClient.create().baseUrl(properties.getExternalTaskUrl())
 				.backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000)).build();
 
 		client.subscribe("auslieferungBestaetigung").lockDuration(2000).handler((externalTask, externalTaskService) -> {

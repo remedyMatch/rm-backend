@@ -18,24 +18,25 @@ import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.shared.infrastructure.Auditable;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Builder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity(name = "Bedarf")
 @Table(name = "RM_BEDARF")
-public class BedarfEntity {
+public class BedarfEntity extends Auditable {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")

@@ -13,7 +13,7 @@ class UserContextProvider {
 	String getUserName() {
 		return getJwt().getClaim("username");
 	}
-
+	
 	private Jwt getJwt() {
 		return (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}

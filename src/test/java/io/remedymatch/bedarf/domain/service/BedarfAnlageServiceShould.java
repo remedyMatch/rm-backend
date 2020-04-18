@@ -152,7 +152,7 @@ class BedarfAnlageServiceShould {
 		val userStandort = beispielUserContextAnderesStandort();
 		val userStandortEntity = beispielUserContextAnderesStandortEntity();
 
-		val bedarfEntityOhneId = BedarfEntity.builder() //
+		BedarfEntity bedarfEntityOhneId = BedarfEntity.builder() //
 				.artikel(artikelEntity) //
 				.anzahl(anzahl) //
 				.rest(anzahl) //
@@ -165,7 +165,7 @@ class BedarfAnlageServiceShould {
 
 		val bedarfId = beispielBedarfId();
 
-		val bedarfEntityMitId = BedarfEntity.builder() //
+		BedarfEntity bedarfEntityMitId = BedarfEntity.builder() //
 				.id(bedarfId.getValue()) //
 				.artikel(artikelEntity) //
 				.anzahl(anzahl) //
@@ -242,7 +242,7 @@ class BedarfAnlageServiceShould {
 		val userStandort = beispielUserContextAnderesStandort();
 		val userStandortEntity = beispielUserContextAnderesStandortEntity();
 
-		val bedarfEntityOhneId = BedarfEntity.builder() //
+		BedarfEntity bedarfEntityOhneId = BedarfEntity.builder() //
 				.artikel(artikelEntity) //
 				.artikelVariante(artikelVarianteEntity) //
 				.anzahl(anzahl) //
@@ -256,7 +256,7 @@ class BedarfAnlageServiceShould {
 
 		val bedarfId = beispielBedarfId();
 
-		val bedarfEntityMitId = BedarfEntity.builder() //
+		BedarfEntity bedarfEntityMitId = BedarfEntity.builder() //
 				.id(bedarfId.getValue()) //
 				.artikel(artikelEntity) //
 				.artikelVariante(artikelVarianteEntity) //

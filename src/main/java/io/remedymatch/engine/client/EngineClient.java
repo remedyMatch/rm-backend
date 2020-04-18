@@ -41,7 +41,7 @@ public class EngineClient {
 				.businessKey(businessKey.getValue().toString()).build();
 
 		val restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.postForEntity(properties.getUrl() + "/restapi/prozess/start/",
+		ResponseEntity<String> response = restTemplate.postForEntity(properties.getRemedyRestApiUrl() + "/prozess/start/",
 				request, String.class);
 
 		if (response.getStatusCode().isError()) {
@@ -54,7 +54,7 @@ public class EngineClient {
 	public TaskDTO ladeTask(String taskId, String institutionId) {
 		val restTemplate = new RestTemplate();
 		ResponseEntity<TaskDTO> taskResponse = restTemplate.getForEntity(
-				properties.getUrl() + "/restapi/task/" + institutionId + "/" + taskId, TaskDTO.class);
+				properties.getRemedyRestApiUrl() + "/task/" + institutionId + "/" + taskId, TaskDTO.class);
 
 		if (taskResponse.getStatusCode().isError()) {
 			throw new RuntimeException("Beim laden des Task ist etwas fehlgeschlagen");
@@ -67,7 +67,7 @@ public class EngineClient {
 	public List<TaskDTO> ladeAlleTask(String institutionId) {
 		val restTemplate = new RestTemplate();
 		ResponseEntity<TaskDTO[]> taskResponse = restTemplate
-				.getForEntity(properties.getUrl() + "/restapi/task/institution/" + institutionId, TaskDTO[].class);
+				.getForEntity(properties.getRemedyRestApiUrl() + "/task/institution/" + institutionId, TaskDTO[].class);
 		if (taskResponse.getStatusCode().isError()) {
 			throw new RuntimeException("Beim laden der Task ist etwas fehlgeschlagen");
 		}
@@ -79,7 +79,7 @@ public class EngineClient {
 
 		val request = TaskAbschliessenRequest.builder().variables(variables).build();
 		val restTemplate = new RestTemplate();
-		ResponseEntity<Void> response = restTemplate.postForEntity(properties.getUrl() + "/restapi/task/" + task,
+		ResponseEntity<Void> response = restTemplate.postForEntity(properties.getRemedyRestApiUrl() + "/task/" + task,
 				request, Void.class);
 
 		if (response.getStatusCode().isError()) {
@@ -99,7 +99,7 @@ public class EngineClient {
 				.build();
 
 		ResponseEntity<Void> response = new RestTemplate()
-				.postForEntity(properties.getUrl() + "/restapi/message/korrelieren/", request, Void.class);
+				.postForEntity(properties.getRemedyRestApiUrl() + "/message/korrelieren/", request, Void.class);
 
 		if (response.getStatusCode().isError()) {
 			throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
@@ -114,7 +114,7 @@ public class EngineClient {
 
 		val restTemplate = new RestTemplate();
 		ResponseEntity<Void> response = restTemplate
-				.postForEntity(properties.getUrl() + "/restapi/message/korrelieren/", request, Void.class);
+				.postForEntity(properties.getRemedyRestApiUrl() + "/message/korrelieren/", request, Void.class);
 
 		if (response.getStatusCode().isError()) {
 			throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");

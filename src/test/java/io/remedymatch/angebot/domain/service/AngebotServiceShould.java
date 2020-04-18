@@ -219,7 +219,7 @@ class AngebotServiceShould {
 
 		val prozessInstanzId = new ProzessInstanzId(anfrageEntity.getProzessInstanzId());
 
-		val neueAnfrageEntity = AngebotAnfrageEntity.builder()//
+		AngebotAnfrageEntity neueAnfrageEntity = AngebotAnfrageEntity.builder()//
 				.angebot(angebotEntity) //
 				.institution(institutionEntity) //
 				.standort(standortEntity) //

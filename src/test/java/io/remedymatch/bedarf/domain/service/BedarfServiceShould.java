@@ -219,7 +219,7 @@ class BedarfServiceShould {
 
 		val prozessInstanzId = new ProzessInstanzId(anfrageEntity.getProzessInstanzId());
 
-		val neueAnfrageEntity = BedarfAnfrageEntity.builder()//
+		BedarfAnfrageEntity neueAnfrageEntity = BedarfAnfrageEntity.builder()//
 				.bedarf(bedarfEntity) //
 				.institution(institutionEntity) //
 				.standort(standortEntity) //

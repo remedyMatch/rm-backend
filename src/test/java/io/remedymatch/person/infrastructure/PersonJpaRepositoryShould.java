@@ -27,7 +27,7 @@ import lombok.val;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
+@ActiveProfiles(profiles = { "test", "disableexternaltasks" })
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("PersonJpaRepository InMemory Test soll")
@@ -85,6 +85,7 @@ public class PersonJpaRepositoryShould {
 				.username(username) //
 				.vorname("Vorname") //
 				.nachname("Nachname") //
+				.email("EMail") //
 				.telefon("08106112233") //
 				.institution(institution) //
 				.standort(standort) //

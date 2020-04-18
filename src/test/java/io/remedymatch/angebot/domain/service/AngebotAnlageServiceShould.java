@@ -106,7 +106,7 @@ class AngebotAnlageServiceShould {
 		val userStandort = beispielUserContextAnderesStandort();
 		val userStandortEntity = beispielUserContextAnderesStandortEntity();
 
-		val angebotEntityOhneId = AngebotEntity.builder() //
+		AngebotEntity angebotEntityOhneId = AngebotEntity.builder() //
 				.artikelVariante(artikelVarianteEntity) //
 				.anzahl(anzahl) //
 				.rest(anzahl) //
@@ -121,7 +121,7 @@ class AngebotAnlageServiceShould {
 
 		val angebotId = beispielAngebotId();
 
-		val angebotEntityMitId = AngebotEntity.builder() //
+		AngebotEntity angebotEntityMitId = AngebotEntity.builder() //
 				.id(angebotId.getValue()) //
 				.artikelVariante(artikelVarianteEntity) //
 				.anzahl(anzahl) //

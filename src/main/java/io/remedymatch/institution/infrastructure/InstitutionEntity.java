@@ -23,6 +23,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.util.Assert;
 
 import io.remedymatch.institution.domain.model.InstitutionTyp;
+import io.remedymatch.shared.infrastructure.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -30,17 +31,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Builder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity(name = "Institution")
 @Table(name = "RM_INSTITUTION")
-public class InstitutionEntity {
+public class InstitutionEntity extends Auditable {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")

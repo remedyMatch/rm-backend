@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -121,7 +120,7 @@ class InstitutionServiceShould {
 
 		val longitude = 100.0;
 		val latitude = 500.0;
-		val neuesHauptstandortEntityOhneId = InstitutionStandortEntity.builder()//
+		InstitutionStandortEntity neuesHauptstandortEntityOhneId = InstitutionStandortEntity.builder()//
 				.name(standortName) //
 				.plz(standortPlz) //
 				.ort(standortOrt) //
@@ -131,7 +130,7 @@ class InstitutionServiceShould {
 				.longitude(BigDecimal.valueOf(longitude)) //
 				.latitude(BigDecimal.valueOf(latitude)) //
 				.build();
-		val neuesHauptstandortEntity = InstitutionStandortEntity.builder()//
+		InstitutionStandortEntity neuesHauptstandortEntity = InstitutionStandortEntity.builder()//
 				.id(neuesHauptstandortId.getValue()) //
 				.name(standortName) //
 				.plz(standortPlz) //
@@ -162,14 +161,14 @@ class InstitutionServiceShould {
 				.build();
 		val neueInstitutionId = new InstitutionId(UUID.randomUUID());
 
-		val neueInstitutionMitHauptstandortEntityOhneId = InstitutionEntity.builder() //
+		InstitutionEntity neueInstitutionMitHauptstandortEntityOhneId = InstitutionEntity.builder() //
 				.name(institutionName) //
 				.institutionKey(institutionKey) //
 				.typ(institutionTyp) //
 				.hauptstandort(neuesHauptstandortEntity) //
 				.standorte(Arrays.asList(neuesHauptstandortEntity)) //
 				.build();
-		val neueInstitutionMitHauptstandortEntity = InstitutionEntity.builder() //
+		InstitutionEntity neueInstitutionMitHauptstandortEntity = InstitutionEntity.builder() //
 				.id(neueInstitutionId.getValue()) //
 				.name(institutionName) //
 				.institutionKey(institutionKey) //
@@ -316,7 +315,7 @@ class InstitutionServiceShould {
 
 		val longitude = 100.0;
 		val latitude = 500.0;
-		val neuesHauptstandortEntityOhneId = InstitutionStandortEntity.builder()//
+		InstitutionStandortEntity neuesHauptstandortEntityOhneId = InstitutionStandortEntity.builder()//
 				.name(name) //
 				.plz(plz) //
 				.ort(ort) //
@@ -326,7 +325,7 @@ class InstitutionServiceShould {
 				.longitude(BigDecimal.valueOf(longitude)) //
 				.latitude(BigDecimal.valueOf(latitude)) //
 				.build();
-		val neuesHauptstandortEntity = InstitutionStandortEntity.builder()//
+		InstitutionStandortEntity neuesHauptstandortEntity = InstitutionStandortEntity.builder()//
 				.id(neuesHauptstandortId.getValue()) //
 				.name(name) //
 				.plz(plz) //
@@ -403,7 +402,7 @@ class InstitutionServiceShould {
 
 		val longitude = 100.0;
 		val latitude = 500.0;
-		val neuesStandortEntityOhneId = InstitutionStandortEntity.builder()//
+		InstitutionStandortEntity neuesStandortEntityOhneId = InstitutionStandortEntity.builder()//
 				.name(name) //
 				.plz(plz) //
 				.ort(ort) //
@@ -413,7 +412,7 @@ class InstitutionServiceShould {
 				.longitude(BigDecimal.valueOf(longitude)) //
 				.latitude(BigDecimal.valueOf(latitude)) //
 				.build();
-		val neuesStandortEntity = InstitutionStandortEntity.builder()//
+		InstitutionStandortEntity neuesStandortEntity = InstitutionStandortEntity.builder()//
 				.id(neuesStandortId.getValue()) //
 				.name(name) //
 				.plz(plz) //

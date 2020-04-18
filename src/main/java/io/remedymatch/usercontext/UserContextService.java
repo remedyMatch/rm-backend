@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.person.domain.service.PersonSucheService;
 import lombok.AllArgsConstructor;
 
@@ -18,6 +19,11 @@ public class UserContextService {
 	@Transactional(readOnly = true)
 	public Person getContextUser() {
 		return personSucheService.findByUsername(userProvider.getUserName()).get();
+	}
+	
+	@Transactional(readOnly = true)
+	public PersonId getContextUserId() {
+		return getContextUser().getId();
 	}
 
 	@Transactional(readOnly = true)

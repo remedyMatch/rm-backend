@@ -17,9 +17,16 @@ import javax.validation.constraints.NotNull;
 @ConfigurationProperties(prefix = "io.remedymatch.engine")
 public class EngineProperties {
     /**
-     * Engine-URL
+     * Process Start - URL
      */
     @NotNull
     @NotBlank
-    private String url;
+    private String remedyRestApiUrl;
+
+    /**
+     * ExternalTask - URL
+     */
+    @NotNull
+    @NotBlank
+    private String externalTaskUrl;
 }

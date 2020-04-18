@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
+import io.remedymatch.shared.infrastructure.Auditable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,17 +24,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Builder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity(name = "Artikel")
 @Table(name = "RM_ARTIKEL")
-public class ArtikelEntity {
+public class ArtikelEntity extends Auditable {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -51,7 +53,7 @@ public class ArtikelEntity {
 
 	@Column(name = "BESCHREIBUNG", nullable = false, updatable = true, length = 1024)
 	private String beschreibung;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "artikel")
 	@Builder.Default
 	@Setter(AccessLevel.PACKAGE)

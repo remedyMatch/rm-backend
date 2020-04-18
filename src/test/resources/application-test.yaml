@@ -27,7 +27,8 @@ remedy:
 io:
   remedymatch:
     engine: 
-      url: http://localhost:8085
+      remedyRestApiUrl: http://localhost:8008/engine/remedy
+      externalTaskUrl: http://localhost:8008/engine/rest
     geodaten:
       geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
       geocoderServiceApiKey: code

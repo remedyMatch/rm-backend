@@ -2,12 +2,8 @@ package io.remedymatch.registrierung.keycloak;
 
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_GRUPPE_FREIGEGEBEN;
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_GRUPPE_USER;
-import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_ATTRIBUT_STATUS;
-import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_STATUS_AKTIVIERT;
-import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_STATUS_FREIGEGEBEN;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +46,6 @@ public class KeycloakService {
 	public List<RegistrierterUser> findFreigegebeneUsers() {
 
 		return keycloakGruppeUsers(KEYCLOAK_GRUPPE_FREIGEGEBEN).stream() //
-				.filter(user -> isInStatus(user, KEYCLOAK_USER_STATUS_FREIGEGEBEN)) //
 				.map(KeycloakUserConverter::convert) //
 				.collect(Collectors.toList());
 	}
@@ -61,7 +56,6 @@ public class KeycloakService {
 		UserRepresentation user = userResource.toRepresentation();
 
 		user.setEnabled(true);
-		updateStatus(user, KEYCLOAK_USER_STATUS_AKTIVIERT);
 
 		userResource.update(user);
 
@@ -87,19 +81,6 @@ public class KeycloakService {
 
 	private RealmResource getUserRealm() {
 		return getKeycloak().realm(properties.getUser().getRealm());
-	}
-
-	private boolean isInStatus(final UserRepresentation user, final String status) {
-		return user.getAttributes() != null && user.getAttributes().containsKey(KEYCLOAK_USER_ATTRIBUT_STATUS)
-				&& user.getAttributes().get(KEYCLOAK_USER_ATTRIBUT_STATUS).contains(status);
-	}
-
-	private void updateStatus(final UserRepresentation user, final String status) {
-		updateAttribut(user, KEYCLOAK_USER_ATTRIBUT_STATUS, status);
-	}
-
-	private void updateAttribut(final UserRepresentation user, final String attributKey, final String attributWert) {
-		user.getAttributes().put(attributKey, Arrays.asList(attributWert));
 	}
 
 	private void userGruppeAufUserSetzen(final @NotNull @Valid KeycloakUserId userId) {
@@ -162,7 +143,7 @@ public class KeycloakService {
 				.path("/groups/").path(keycloakGroupId) //
 				.build().toUri();
 	}
-	
+
 	private Keycloak getKeycloak() {
 		return KeycloakBuilder.builder() //
 				.serverUrl(properties.getServerUrl()) //

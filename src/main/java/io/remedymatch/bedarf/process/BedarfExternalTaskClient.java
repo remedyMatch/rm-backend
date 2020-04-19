@@ -23,45 +23,50 @@ import lombok.val;
 @Component
 @Profile("!disableexternaltasks")
 class BedarfExternalTaskClient {
-    private final EngineProperties  properties;
-    private final BedarfService bedarfService;
-    private final EngineClient engineClient;
+	private final EngineProperties properties;
+	private final BedarfService bedarfService;
+	private final EngineClient engineClient;
 
-    @PostConstruct
-    public void doSubscribe() {
+	@PostConstruct
+	public void doSubscribe() {
 
-        ExternalTaskClient client = ExternalTaskClient.create()
-                .baseUrl(properties.getExternalTaskUrl())
-                .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000))
-                .build();
+		ExternalTaskClient client = ExternalTaskClient.create().baseUrl(properties.getExternalTaskUrl())
+				.backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000)).build();
 
-        client.subscribe("bedarfAnfrageAblehnen")
-                .lockDuration(2000)
-                .handler((externalTask, externalTaskService) -> {
-                    val anfrageId = externalTask.getVariable("objektId").toString();
-                    bedarfService.anfrageStornieren(new BedarfAnfrageId(UUID.fromString(anfrageId)));
+		client.subscribe("bedarf_anfrage_ablehnen_topic").lockDuration(2000) //
+				.handler((externalTask, externalTaskService) -> {
 
-                    //hier eventuell E-Mail versand?
+					val anfrageId = externalTask.getVariable("anfrageId").toString();
+					bedarfService.anfrageAbgelehnt(new BedarfAnfrageId(UUID.fromString(anfrageId)));
 
-                    externalTaskService.complete(externalTask);
-                }).open();
+					externalTaskService.complete(externalTask);
+				}).open();
 
-        client.subscribe("bedarfMatchProzessStarten")
-                .lockDuration(2000)
-                .handler((externalTask, externalTaskService) -> {
+		client.subscribe("bedarf_anfrage_stornieren_topic").lockDuration(2000) //
+				.handler((externalTask, externalTaskService) -> {
 
-                    val anfrageId = externalTask.getVariable("objektId").toString();
+					// Vorerst nichts - wurde bereits ueber Service storniert - vielleicht mal
+					// umbauen
 
-                    val variables = new HashMap<String, Object>();
-                    variables.put("anfrageTyp", MatchProzessConstants.ANFRAGE_TYP_BEDARF);
-                    variables.put("anfrageId", anfrageId);
+					externalTaskService.complete(externalTask);
+				}).open();
 
-                    engineClient.prozessStarten( //
-                    		MatchProzessConstants.PROZESS_KEY, //
-                    		new BusinessKey(UUID.fromString(anfrageId)), //
-                    		variables);
-                    externalTaskService.complete(externalTask, variables);
+		client.subscribe("bedarf_anfrage_match_prozess_starten_topic").lockDuration(2000) //
+				.handler((externalTask, externalTaskService) -> {
 
-                }).open();
-    }
+					val anfrageId = externalTask.getVariable("anfrageId").toString();
+
+					val variables = new HashMap<String, Object>();
+					variables.put("anfrageTyp", MatchProzessConstants.ANFRAGE_TYP_BEDARF);
+					variables.put("anfrageId", anfrageId);
+
+					engineClient.prozessStarten( //
+							MatchProzessConstants.PROZESS_KEY, //
+							new BusinessKey(UUID.fromString(anfrageId)), //
+							variables);
+					
+					externalTaskService.complete(externalTask, variables);
+
+				}).open();
+	}
 }

@@ -132,7 +132,7 @@ class BedarfServiceShould {
 		val stornierteAnfrageId = beispielBedarfAnfrageId();
 		val stornierteAnfrageBedarfId = beispielBedarfAnfrage().getBedarf().getId();
 		val stornierteAnfrageEntity = beispielBedarfAnfrageEntity();
-		stornierteAnfrageEntity.setStatus(BedarfAnfrageStatus.Storniert);
+		stornierteAnfrageEntity.setStatus(BedarfAnfrageStatus.STORNIERT);
 
 		given(anfrageRepository.findById(stornierteAnfrageId.getValue()))
 				.willReturn(Optional.of(stornierteAnfrageEntity));
@@ -184,8 +184,8 @@ class BedarfServiceShould {
 		then(bedarfRepository).should().findById(bedarfId.getValue());
 		then(bedarfRepository).should().save(bedarfEntityBedient);
 		then(bedarfRepository).shouldHaveNoMoreInteractions();
-		then(anfrageRepository).should().updateStatus(bedarfId.getValue(), BedarfAnfrageStatus.Offen,
-				BedarfAnfrageStatus.Storniert);
+		then(anfrageRepository).should().updateStatus(bedarfId.getValue(), BedarfAnfrageStatus.OFFEN,
+				BedarfAnfrageStatus.STORNIERT);
 		then(anfrageRepository).shouldHaveNoMoreInteractions();
 		then(userService).should().isUserContextInstitution(bedarfInstitutionId);
 		then(userService).shouldHaveNoMoreInteractions();
@@ -227,7 +227,7 @@ class BedarfServiceShould {
 				.standort(standortEntity) //
 				.anzahl(anzahl) //
 				.kommentar(kommentar) //
-				.status(BedarfAnfrageStatus.Offen) //
+				.status(BedarfAnfrageStatus.OFFEN) //
 				.build();
 
 		given(bedarfRepository.findById(bedarfId.getValue())).willReturn(Optional.of(bedarfEntity));
@@ -255,21 +255,21 @@ class BedarfServiceShould {
 	}
 
 	@Test
-	@DisplayName("Bedarf Anfrage der UserContext Institution loeschen koennen")
-	void anfrage_der_UserContext_Institution_loeschen_koennen() {
+	@DisplayName("Bedarf Anfrage der UserContext Institution stornieren koennen")
+	void anfrage_der_UserContext_Institution_stornieren_koennen() {
 		val anfrageId = beispielBedarfAnfrageId();
 		val anfrage = beispielBedarfAnfrage();
 		val anfrageInstitutionId = anfrage.getInstitution().getId();
 		val anfrageBedarfId = anfrage.getBedarf().getId();
 		val anfrageEntity = beispielBedarfAnfrageEntity();
 		val anfrageEntityStorniert = beispielBedarfAnfrageEntity();
-		anfrageEntityStorniert.setStatus(BedarfAnfrageStatus.Storniert);
+		anfrageEntityStorniert.setStatus(BedarfAnfrageStatus.STORNIERT);
 
 		given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 		given(userService.isUserContextInstitution(anfrageInstitutionId)).willReturn(true);
 		given(anfrageRepository.save(anfrageEntityStorniert)).willReturn(anfrageEntityStorniert);
 
-		bedarfService.bedarfAnfrageDerUserInstitutionLoeschen(anfrageBedarfId, anfrageId);
+		bedarfService.bedarfAnfrageDerUserInstitutionStornieren(anfrageBedarfId, anfrageId);
 
 		then(bedarfRepository).shouldHaveNoInteractions();
 		then(anfrageRepository).should().findById(anfrageId.getValue());
@@ -277,21 +277,21 @@ class BedarfServiceShould {
 		then(anfrageRepository).shouldHaveNoMoreInteractions();
 		then(userService).should().isUserContextInstitution(anfrageInstitutionId);
 		then(userService).shouldHaveNoMoreInteractions();
-		then(anfrageProzessService).should().prozessStornieren(anfrageId);
+		then(anfrageProzessService).should().prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
 		then(anfrageProzessService).shouldHaveNoMoreInteractions();
 	}
 
 	@Test
-	@DisplayName("Bedarf Anfrage stornieren koennen")
-	void anfrage_stornieren_koennen() {
+	@DisplayName("Bedarf Anfrage ablehnen koennen")
+	void anfrage_ablehnen_koennen() {
 		val anfrageId = beispielBedarfAnfrageId();
 		val anfrageEntity = beispielBedarfAnfrageEntity();
 		val anfrageEntityStorniert = beispielBedarfAnfrageEntity();
-		anfrageEntityStorniert.setStatus(BedarfAnfrageStatus.Storniert);
+		anfrageEntityStorniert.setStatus(BedarfAnfrageStatus.ABGELEHNT);
 
 		given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
-		bedarfService.anfrageStornieren(anfrageId);
+		bedarfService.anfrageAbgelehnt(anfrageId);
 
 		then(bedarfRepository).shouldHaveNoInteractions();
 		then(anfrageRepository).should().findById(anfrageId.getValue());
@@ -334,7 +334,7 @@ class BedarfServiceShould {
 
 		val anfrageEntityAngenommen = beispielBedarfAnfrageEntity();
 		anfrageEntityAngenommen.setAnzahl(anfrageAnzahl);
-		anfrageEntityAngenommen.setStatus(BedarfAnfrageStatus.Angenommen);
+		anfrageEntityAngenommen.setStatus(BedarfAnfrageStatus.ANGENOMMEN);
 
 		val bedarfDanach = anfrageEntityAngenommen.getBedarf();
 		bedarfDanach.setRest(bedarfRestDanach);
@@ -367,7 +367,7 @@ class BedarfServiceShould {
 
 		val anfrageEntityAngenommen = beispielBedarfAnfrageEntity();
 		anfrageEntityAngenommen.setAnzahl(anfrageAnzahl);
-		anfrageEntityAngenommen.setStatus(BedarfAnfrageStatus.Angenommen);
+		anfrageEntityAngenommen.setStatus(BedarfAnfrageStatus.ANGENOMMEN);
 
 		val bedarfDanach = anfrageEntityAngenommen.getBedarf();
 		bedarfDanach.setRest(bedarfRestDanach);

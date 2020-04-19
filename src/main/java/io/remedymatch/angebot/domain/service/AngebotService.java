@@ -22,6 +22,7 @@ import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
+import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
@@ -61,9 +62,9 @@ public class AngebotService {
 
 		val angebot = getNichtBedienteAngebotDerUserInstitution(angebotId);
 
-		// Alle laufende Anfragen stornieren
-		anfrageRepository.updateStatus(angebotId.getValue(), AngebotAnfrageStatus.Offen,
-				AngebotAnfrageStatus.Storniert);
+		// Alle offene Anfragen stornieren
+		anfrageRepository.updateStatus(angebotId.getValue(), AngebotAnfrageStatus.OFFEN,
+				AngebotAnfrageStatus.STORNIERT);
 
 		// Prozesse stornieren
 		anfrageProzessService.prozesseStornieren(angebotId);
@@ -88,7 +89,7 @@ public class AngebotService {
 				.standort(getUserInstitutionStandort(userInstitution, standortId)) //
 				.anzahl(anzahl) //
 				.kommentar(kommentar) //
-				.status(AngebotAnfrageStatus.Offen) //
+				.status(AngebotAnfrageStatus.OFFEN) //
 				.build());
 		val anfrageId = anfrage.getId();
 
@@ -103,28 +104,28 @@ public class AngebotService {
 	}
 
 	@Transactional
-	public void angebotAnfrageDerUserInstitutionLoeschen(//
+	public void angebotAnfrageDerUserInstitutionStornieren(//
 			final @NotNull @Valid AngebotId angebotId, //
 			final @NotNull @Valid AngebotAnfrageId anfrageId) {
 		val anfrage = getOffeneAnfrageDerUserInstitution(angebotId, anfrageId);
-		anfrage.setStatus(AngebotAnfrageStatus.Storniert);
+		anfrage.setStatus(AngebotAnfrageStatus.STORNIERT);
 
 		// Prozess stornieren
-		anfrageProzessService.prozessStornieren(anfrageId);
+		anfrageProzessService.prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
 
 		anfrageRepository.save(anfrage);
 	}
 
 	@Transactional
-	public void anfrageStornieren(final @NotNull @Valid AngebotAnfrageId anfrageId) {
+	public void anfrageAbgelehnt(final @NotNull @Valid AngebotAnfrageId anfrageId) {
 		val anfrage = getOffeneAnfrage(anfrageId);
-		anfrage.setStatus(AngebotAnfrageStatus.Storniert);
+		anfrage.setStatus(AngebotAnfrageStatus.ABGELEHNT);
 
 		anfrageRepository.save(anfrage);
 	}
 
 	@Transactional
-	public void anfrageAnnehmen(final @NotNull @Valid AngebotAnfrageId anfrageId) {
+	public void anfrageAngenommen(final @NotNull @Valid AngebotAnfrageId anfrageId) {
 		val anfrage = getOffeneAnfrage(anfrageId);
 
 		// Angebot als bedient markieren
@@ -135,13 +136,13 @@ public class AngebotService {
 		val anfrageAnzahl = anfrage.getAnzahl();
 		BigDecimal angebotRest = angebot.getRest();
 		if (anfrageAnzahl.compareTo(angebotRest) > 0) {
-			anfrage.setStatus(AngebotAnfrageStatus.Storniert);
+			anfrage.setStatus(AngebotAnfrageStatus.STORNIERT);
 			anfrageRepository.save(anfrage);
 			throw new OperationNotAlloudException("Nicht genügend Ware auf Lager");
 		}
 
 		// Angebot angenommen
-		anfrage.setStatus(AngebotAnfrageStatus.Angenommen);
+		anfrage.setStatus(AngebotAnfrageStatus.ANGENOMMEN);
 		anfrageRepository.save(anfrage);
 
 		if (anfrageAnzahl.compareTo(angebotRest) == 0) {
@@ -216,7 +217,7 @@ public class AngebotService {
 					angebotId.getValue(), angebotAnfrageId.getValue()));
 		}
 
-		if (!AngebotAnfrageStatus.Offen.equals(anfrage.getStatus())) {
+		if (!AngebotAnfrageStatus.OFFEN.equals(anfrage.getStatus())) {
 			throw new OperationNotAlloudException(
 					String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_GESCHLOSSEN, anfrage.getStatus()));
 		}

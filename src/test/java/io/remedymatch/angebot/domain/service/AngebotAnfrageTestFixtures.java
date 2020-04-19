@@ -18,7 +18,7 @@ public final class AngebotAnfrageTestFixtures {
 	public static final BigDecimal ANGEBOT_ANFRAGE_ANZAHL = BigDecimal.valueOf(120.0);
 	public static final String ANGEBOT_ANFRAGE_KOMMENTAR = "Angebot Anfrage Kommentar";
 	public static final String ANGEBOT_ANFRAGE_PROZESSINSTANZ_ID = "Angebot_Anfrage_ProzessInstanzId";
-	public static final AngebotAnfrageStatus ANGEBOT_ANFRAGE_STATUS = AngebotAnfrageStatus.Offen;
+	public static final AngebotAnfrageStatus ANGEBOT_ANFRAGE_STATUS = AngebotAnfrageStatus.OFFEN;
 
 	public static AngebotAnfrageId beispielAngebotAnfrageId() {
 		return ANGEBOT_ANFRAGE_ID;

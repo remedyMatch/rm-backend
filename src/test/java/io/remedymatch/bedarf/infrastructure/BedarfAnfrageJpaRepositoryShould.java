@@ -113,26 +113,26 @@ public class BedarfAnfrageJpaRepositoryShould {
 	@Test
 	@DisplayName("Status der Anfragen aktualisieren")
 	void status_der_Anfragen_aktualisieren() {
-		BedarfAnfrageEntity ersteOffeneAnfrage = persist(bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.Offen));
-		BedarfAnfrageEntity zweiteOffeneAnfrage = persist(bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.Offen));
+		BedarfAnfrageEntity ersteOffeneAnfrage = persist(bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.OFFEN));
+		BedarfAnfrageEntity zweiteOffeneAnfrage = persist(bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.OFFEN));
 		BedarfAnfrageEntity dritteAnfrageStorniert = persist(
-				bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.Angenommen));
+				bedarfAnfrage(beispielBedarf, BedarfAnfrageStatus.ANGENOMMEN));
 		entityManager.flush();
 
 		assertEquals(Optional.of(ersteOffeneAnfrage), jpaRepository.findById(ersteOffeneAnfrage.getId()));
 		assertEquals(Optional.of(zweiteOffeneAnfrage), jpaRepository.findById(zweiteOffeneAnfrage.getId()));
 		assertEquals(Optional.of(dritteAnfrageStorniert), jpaRepository.findById(dritteAnfrageStorniert.getId()));
 
-		jpaRepository.updateStatus(beispielBedarf.getId(), BedarfAnfrageStatus.Offen, BedarfAnfrageStatus.Storniert);
+		jpaRepository.updateStatus(beispielBedarf.getId(), BedarfAnfrageStatus.OFFEN, BedarfAnfrageStatus.STORNIERT);
 
 		entityManager.flush();
 		entityManager.clear();
 
-		assertEquals(BedarfAnfrageStatus.Storniert,
+		assertEquals(BedarfAnfrageStatus.STORNIERT,
 				jpaRepository.findById(ersteOffeneAnfrage.getId()).get().getStatus());
-		assertEquals(BedarfAnfrageStatus.Storniert,
+		assertEquals(BedarfAnfrageStatus.STORNIERT,
 				jpaRepository.findById(zweiteOffeneAnfrage.getId()).get().getStatus());
-		assertEquals(BedarfAnfrageStatus.Angenommen,
+		assertEquals(BedarfAnfrageStatus.ANGENOMMEN,
 				jpaRepository.findById(dritteAnfrageStorniert.getId()).get().getStatus());
 	}
 
@@ -224,7 +224,7 @@ public class BedarfAnfrageJpaRepositoryShould {
 				.standort(meinStandort) //
 				.anzahl(anzahl) //
 				.kommentar("Bla bla") //
-				.status(BedarfAnfrageStatus.Offen) //
+				.status(BedarfAnfrageStatus.OFFEN) //
 				.build();
 	}
 
@@ -237,7 +237,7 @@ public class BedarfAnfrageJpaRepositoryShould {
 				.standort(meinStandort) //
 				.anzahl(anzahl) //
 				.kommentar("Bla bla") //
-				.status(BedarfAnfrageStatus.Offen) //
+				.status(BedarfAnfrageStatus.OFFEN) //
 				.build();
 	}
 }

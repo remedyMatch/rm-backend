@@ -89,7 +89,7 @@ public class BedarfController {
 			@PathVariable("bedarfId") @NotNull UUID bedarfId, //
 			@PathVariable("anfrageId") @NotNull UUID anfrageId) {
 		try {
-			bedarfService.bedarfAnfrageDerUserInstitutionLoeschen(//
+			bedarfService.bedarfAnfrageDerUserInstitutionStornieren(//
 					BedarfControllerMapper.mapToBedarfId(bedarfId), //
 					new BedarfAnfrageId(anfrageId));
 		} catch (ObjectNotFoundException e) {

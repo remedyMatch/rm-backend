@@ -22,6 +22,7 @@ import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
+import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
@@ -62,8 +63,8 @@ public class BedarfService {
 		val bedarf = getNichtBedienteBedarfDerUserInstitution(bedarfId);
 
 		// Alle laufende Anfragen stornieren
-		anfrageRepository.updateStatus(bedarfId.getValue(), BedarfAnfrageStatus.Offen,
-				BedarfAnfrageStatus.Storniert);
+		anfrageRepository.updateStatus(bedarfId.getValue(), BedarfAnfrageStatus.OFFEN,
+				BedarfAnfrageStatus.STORNIERT);
 
 		// Prozesse stornieren
 		anfrageProzessService.prozesseStornieren(bedarfId);
@@ -88,7 +89,7 @@ public class BedarfService {
 				.standort(getUserInstitutionStandort(userInstitution, standortId)) //
 				.anzahl(anzahl) //
 				.kommentar(kommentar) //
-				.status(BedarfAnfrageStatus.Offen) //
+				.status(BedarfAnfrageStatus.OFFEN) //
 				.build());
 		val anfrageId = anfrage.getId();
 
@@ -103,22 +104,22 @@ public class BedarfService {
 	}
 
 	@Transactional
-	public void bedarfAnfrageDerUserInstitutionLoeschen(//
+	public void bedarfAnfrageDerUserInstitutionStornieren(//
 			final @NotNull @Valid BedarfId bedarfId, //
 			final @NotNull @Valid BedarfAnfrageId anfrageId) {
 		val anfrage = getOffeneAnfrageDerUserInstitution(bedarfId, anfrageId);
-		anfrage.setStatus(BedarfAnfrageStatus.Storniert);
+		anfrage.setStatus(BedarfAnfrageStatus.STORNIERT);
 
 		// Prozess stornieren
-		anfrageProzessService.prozessStornieren(anfrageId);
+		anfrageProzessService.prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
 
 		anfrageRepository.save(anfrage);
 	}
 
 	@Transactional
-	public void anfrageStornieren(final @NotNull @Valid BedarfAnfrageId anfrageId) {
+	public void anfrageAbgelehnt(final @NotNull @Valid BedarfAnfrageId anfrageId) {
 		val anfrage = getOffeneAnfrage(anfrageId);
-		anfrage.setStatus(BedarfAnfrageStatus.Storniert);
+		anfrage.setStatus(BedarfAnfrageStatus.ABGELEHNT);
 
 		anfrageRepository.save(anfrage);
 	}
@@ -135,13 +136,13 @@ public class BedarfService {
 		val anfrageAnzahl = anfrage.getAnzahl();
 		BigDecimal bedarfRest = bedarf.getRest();
 		if (anfrageAnzahl.compareTo(bedarfRest) > 0) {
-			anfrage.setStatus(BedarfAnfrageStatus.Storniert);
+			anfrage.setStatus(BedarfAnfrageStatus.STORNIERT);
 			anfrageRepository.save(anfrage);
 			throw new OperationNotAlloudException("Nicht genügend Ware auf Lager");
 		}
 
 		// Bedarf angenommen
-		anfrage.setStatus(BedarfAnfrageStatus.Angenommen);
+		anfrage.setStatus(BedarfAnfrageStatus.ANGENOMMEN);
 		anfrageRepository.save(anfrage);
 
 		if (anfrageAnzahl.compareTo(bedarfRest) == 0) {
@@ -216,7 +217,7 @@ public class BedarfService {
 					bedarfId.getValue(), bedarfAnfrageId.getValue()));
 		}
 
-		if (!BedarfAnfrageStatus.Offen.equals(anfrage.getStatus())) {
+		if (!BedarfAnfrageStatus.OFFEN.equals(anfrage.getStatus())) {
 			throw new OperationNotAlloudException(
 					String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_GESCHLOSSEN, anfrage.getStatus()));
 		}

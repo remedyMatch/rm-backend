@@ -36,7 +36,7 @@ import lombok.val;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
+@ActiveProfiles(profiles = { "test", "disableexternaltasks" })
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("AngebotAnfrageJpaRepository soll")
@@ -112,25 +112,25 @@ public class AngebotAnfrageJpaRepositoryShould {
 	@Test
 	@DisplayName("Status der Anfragen aktualisieren")
 	void status_der_Anfragen_aktualisieren() {
-		val ersteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Offen));
-		val zweiteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Offen));
-		val dritteAnfrageStorniert = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.Angenommen));
+		val ersteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.OFFEN));
+		val zweiteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.OFFEN));
+		val dritteAnfrageStorniert = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.ANGENOMMEN));
 		entityManager.flush();
 
 		assertEquals(Optional.of(ersteOffeneAnfrage), jpaRepository.findById(ersteOffeneAnfrage.getId()));
 		assertEquals(Optional.of(zweiteOffeneAnfrage), jpaRepository.findById(zweiteOffeneAnfrage.getId()));
 		assertEquals(Optional.of(dritteAnfrageStorniert), jpaRepository.findById(dritteAnfrageStorniert.getId()));
 
-		jpaRepository.updateStatus(beispielAngebot.getId(), AngebotAnfrageStatus.Offen, AngebotAnfrageStatus.Storniert);
+		jpaRepository.updateStatus(beispielAngebot.getId(), AngebotAnfrageStatus.OFFEN, AngebotAnfrageStatus.STORNIERT);
 
 		entityManager.flush();
 		entityManager.clear();
 
-		assertEquals(AngebotAnfrageStatus.Storniert,
+		assertEquals(AngebotAnfrageStatus.STORNIERT,
 				jpaRepository.findById(ersteOffeneAnfrage.getId()).get().getStatus());
-		assertEquals(AngebotAnfrageStatus.Storniert,
+		assertEquals(AngebotAnfrageStatus.STORNIERT,
 				jpaRepository.findById(zweiteOffeneAnfrage.getId()).get().getStatus());
-		assertEquals(AngebotAnfrageStatus.Angenommen,
+		assertEquals(AngebotAnfrageStatus.ANGENOMMEN,
 				jpaRepository.findById(dritteAnfrageStorniert.getId()).get().getStatus());
 	}
 
@@ -223,7 +223,7 @@ public class AngebotAnfrageJpaRepositoryShould {
 				.standort(meinStandort) //
 				.anzahl(anzahl) //
 				.kommentar("Bla bla") //
-				.status(AngebotAnfrageStatus.Offen) //
+				.status(AngebotAnfrageStatus.OFFEN) //
 				.build();
 	}
 
@@ -236,7 +236,7 @@ public class AngebotAnfrageJpaRepositoryShould {
 				.standort(meinStandort) //
 				.anzahl(anzahl) //
 				.kommentar("Bla bla") //
-				.status(AngebotAnfrageStatus.Offen) //
+				.status(AngebotAnfrageStatus.OFFEN) //
 				.build();
 	}
 }

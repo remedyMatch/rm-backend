@@ -53,17 +53,13 @@ class AngebotAnfrageProzessService {
 		engineClient.messageKorrelieren(//
 				PROZESS_KEY, //
 				ANFRAGE_STORNIEREN_MESSAGE, //
-				Variables.createVariables()//
-						.putValue("prozessKey", PROZESS_KEY.getValue()) //
-						.putValue("angebotId", angebotId.getValue()));
+				Variables.createVariables().putValue("angebotId", angebotId.getValue()));
 	}
 
-	void prozessStornieren(final @NotNull @Valid AngebotAnfrageId anfrageId) {
+	void prozessStornieren(final @NotNull @Valid ProzessInstanzId prozessInstanzId) {
 		engineClient.messageKorrelieren(//
 				PROZESS_KEY, //
-				ANFRAGE_STORNIEREN_MESSAGE, //
-				Variables.createVariables()//
-						.putValue("prozessKey", PROZESS_KEY.getValue()) //
-						.putValue("anfrageId", anfrageId.getValue()));
+				prozessInstanzId, //
+				ANFRAGE_STORNIEREN_MESSAGE);
 	}
 }

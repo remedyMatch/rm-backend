@@ -64,7 +64,7 @@ class AngebotControllerMapperShould {
 	private static final BigDecimal ANFRAGE_ANZAHL = BigDecimal.valueOf(98741.0);
 	private static final String ANFRAGE_KOMMENTAR = "Anfrage Kommentar";
 	private static final String ANFRAGE_PROZESS_INSTANZ_ID = "Anfrage ProzessInstanzId";
-	private static final AngebotAnfrageStatus ANFRAGE_STATUS = AngebotAnfrageStatus.Offen;
+	private static final AngebotAnfrageStatus ANFRAGE_STATUS = AngebotAnfrageStatus.OFFEN;
 
 	@Test
 	@DisplayName("eine leere Liste der Domain Objekte in leere Liste der ROs konvertieren")

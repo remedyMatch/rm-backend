@@ -15,7 +15,7 @@ public final class BedarfAnfrageTestFixtures {
 	public static final String BEDARF_ANFRAGE_KOMMENTAR = "Kommentar";
 	public static final String BEDARF_ANFRAGE_PROZESSINSTANZ_ID = "ProzessInstanzId";
 	public static final BigDecimal BEDARF_ANFRAGE_ANZAHL = BigDecimal.valueOf(120.0);
-	public static final BedarfAnfrageStatus BEDARF_ANFRAGE_STATUS = BedarfAnfrageStatus.Offen;
+	public static final BedarfAnfrageStatus BEDARF_ANFRAGE_STATUS = BedarfAnfrageStatus.OFFEN;
 
 	public static BedarfAnfrageId beispielBedarfAnfrageId() {
 		return BEDARF_ANFRAGE_ID;

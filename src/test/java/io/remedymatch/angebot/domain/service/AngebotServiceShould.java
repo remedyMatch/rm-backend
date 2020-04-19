@@ -132,7 +132,7 @@ class AngebotServiceShould {
 		val stornierteAnfrageId = beispielAngebotAnfrageId();
 		val stornierteAnfrageAngebotId = beispielAngebotAnfrage().getAngebot().getId();
 		val stornierteAnfrageEntity = beispielAngebotAnfrageEntity();
-		stornierteAnfrageEntity.setStatus(AngebotAnfrageStatus.Storniert);
+		stornierteAnfrageEntity.setStatus(AngebotAnfrageStatus.STORNIERT);
 
 		given(anfrageRepository.findById(stornierteAnfrageId.getValue()))
 				.willReturn(Optional.of(stornierteAnfrageEntity));
@@ -184,8 +184,8 @@ class AngebotServiceShould {
 		then(angebotRepository).should().findById(angebotId.getValue());
 		then(angebotRepository).should().save(angebotEntityBedient);
 		then(angebotRepository).shouldHaveNoMoreInteractions();
-		then(anfrageRepository).should().updateStatus(angebotId.getValue(), AngebotAnfrageStatus.Offen,
-				AngebotAnfrageStatus.Storniert);
+		then(anfrageRepository).should().updateStatus(angebotId.getValue(), AngebotAnfrageStatus.OFFEN,
+				AngebotAnfrageStatus.STORNIERT);
 		then(anfrageRepository).shouldHaveNoMoreInteractions();
 		then(userService).should().isUserContextInstitution(angebotInstitutionId);
 		then(userService).shouldHaveNoMoreInteractions();
@@ -227,7 +227,7 @@ class AngebotServiceShould {
 				.standort(standortEntity) //
 				.anzahl(anzahl) //
 				.kommentar(kommentar) //
-				.status(AngebotAnfrageStatus.Offen) //
+				.status(AngebotAnfrageStatus.OFFEN) //
 				.build();
 
 		given(angebotRepository.findById(angebotId.getValue())).willReturn(Optional.of(angebotEntity));
@@ -255,21 +255,21 @@ class AngebotServiceShould {
 	}
 
 	@Test
-	@DisplayName("Angebot Anfrage der UserContext Institution loeschen koennen")
-	void anfrage_der_UserContext_Institution_loeschen_koennen() {
+	@DisplayName("Angebot Anfrage der UserContext Institution stornieren koennen")
+	void anfrage_der_UserContext_Institution_stornieren_koennen() {
 		val anfrageId = beispielAngebotAnfrageId();
 		val anfrage = beispielAngebotAnfrage();
 		val anfrageInstitutionId = anfrage.getInstitution().getId();
 		val anfrageAngebotId = anfrage.getAngebot().getId();
 		val anfrageEntity = beispielAngebotAnfrageEntity();
 		val anfrageEntityStorniert = beispielAngebotAnfrageEntity();
-		anfrageEntityStorniert.setStatus(AngebotAnfrageStatus.Storniert);
+		anfrageEntityStorniert.setStatus(AngebotAnfrageStatus.STORNIERT);
 
 		given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 		given(userService.isUserContextInstitution(anfrageInstitutionId)).willReturn(true);
 		given(anfrageRepository.save(anfrageEntityStorniert)).willReturn(anfrageEntityStorniert);
 
-		angebotService.angebotAnfrageDerUserInstitutionLoeschen(anfrageAngebotId, anfrageId);
+		angebotService.angebotAnfrageDerUserInstitutionStornieren(anfrageAngebotId, anfrageId);
 
 		then(angebotRepository).shouldHaveNoInteractions();
 		then(anfrageRepository).should().findById(anfrageId.getValue());
@@ -277,21 +277,21 @@ class AngebotServiceShould {
 		then(anfrageRepository).shouldHaveNoMoreInteractions();
 		then(userService).should().isUserContextInstitution(anfrageInstitutionId);
 		then(userService).shouldHaveNoMoreInteractions();
-		then(anfrageProzessService).should().prozessStornieren(anfrageId);
+		then(anfrageProzessService).should().prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
 		then(anfrageProzessService).shouldHaveNoMoreInteractions();
 	}
 
 	@Test
-	@DisplayName("Angebot Anfrage stornieren koennen")
-	void anfrage_stornieren_koennen() {
+	@DisplayName("Angebot Anfrage ablehnen koennen")
+	void anfrage_ablehnen_koennen() {
 		val anfrageId = beispielAngebotAnfrageId();
 		val anfrageEntity = beispielAngebotAnfrageEntity();
 		val anfrageEntityStorniert = beispielAngebotAnfrageEntity();
-		anfrageEntityStorniert.setStatus(AngebotAnfrageStatus.Storniert);
+		anfrageEntityStorniert.setStatus(AngebotAnfrageStatus.ABGELEHNT);
 
 		given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
-		angebotService.anfrageStornieren(anfrageId);
+		angebotService.anfrageAbgelehnt(anfrageId);
 
 		then(angebotRepository).shouldHaveNoInteractions();
 		then(anfrageRepository).should().findById(anfrageId.getValue());
@@ -316,7 +316,7 @@ class AngebotServiceShould {
 		given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
 		assertThrows(OperationNotAlloudException.class, //
-				() -> angebotService.anfrageAnnehmen(anfrageId));
+				() -> angebotService.anfrageAngenommen(anfrageId));
 	}
 
 	@Test
@@ -334,14 +334,14 @@ class AngebotServiceShould {
 
 		val anfrageEntityAngenommen = beispielAngebotAnfrageEntity();
 		anfrageEntityAngenommen.setAnzahl(anfrageAnzahl);
-		anfrageEntityAngenommen.setStatus(AngebotAnfrageStatus.Angenommen);
+		anfrageEntityAngenommen.setStatus(AngebotAnfrageStatus.ANGENOMMEN);
 
 		val angebotDanach = anfrageEntityAngenommen.getAngebot();
 		angebotDanach.setRest(angebotRestDanach);
 
 		given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
-		angebotService.anfrageAnnehmen(anfrageId);
+		angebotService.anfrageAngenommen(anfrageId);
 
 		then(angebotRepository).should().save(angebotDanach);
 		then(angebotRepository).shouldHaveNoMoreInteractions();
@@ -367,7 +367,7 @@ class AngebotServiceShould {
 
 		val anfrageEntityAngenommen = beispielAngebotAnfrageEntity();
 		anfrageEntityAngenommen.setAnzahl(anfrageAnzahl);
-		anfrageEntityAngenommen.setStatus(AngebotAnfrageStatus.Angenommen);
+		anfrageEntityAngenommen.setStatus(AngebotAnfrageStatus.ANGENOMMEN);
 
 		val angebotDanach = anfrageEntityAngenommen.getAngebot();
 		angebotDanach.setRest(angebotRestDanach);
@@ -375,7 +375,7 @@ class AngebotServiceShould {
 
 		given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
-		angebotService.anfrageAnnehmen(anfrageId);
+		angebotService.anfrageAngenommen(anfrageId);
 
 		then(angebotRepository).should().save(angebotDanach);
 		then(angebotRepository).shouldHaveNoMoreInteractions();

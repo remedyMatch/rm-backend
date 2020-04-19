@@ -90,7 +90,7 @@ public class AngebotController {
 			@PathVariable("angebotId") @NotNull UUID angebotId, //
 			@PathVariable("anfrageId") @NotNull UUID anfrageId) {
 		try {
-			angebotService.angebotAnfrageDerUserInstitutionLoeschen(//
+			angebotService.angebotAnfrageDerUserInstitutionStornieren(//
 					AngebotControllerMapper.mapToAngebotId(angebotId), //
 					new AngebotAnfrageId(anfrageId));
 		} catch (ObjectNotFoundException e) {

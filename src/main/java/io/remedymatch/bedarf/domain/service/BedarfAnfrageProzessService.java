@@ -53,17 +53,13 @@ class BedarfAnfrageProzessService {
 		engineClient.messageKorrelieren(//
 				PROZESS_KEY, //
 				ANFRAGE_STORNIEREN_MESSAGE, //
-				Variables.createVariables()//
-				.putValue("prozessKey", PROZESS_KEY.getValue()) //
-				.putValue("bedarfId", bedarfId.getValue()));
+				Variables.createVariables().putValue("bedarfId", bedarfId.getValue()));
 	}
 
-	void prozessStornieren(final @NotNull @Valid BedarfAnfrageId anfrageId) {
+	void prozessStornieren(final @NotNull @Valid ProzessInstanzId prozessInstanzId) {
 		engineClient.messageKorrelieren(//
 				PROZESS_KEY, //
-				ANFRAGE_STORNIEREN_MESSAGE, //
-				Variables.createVariables()//
-				.putValue("prozessKey", PROZESS_KEY.getValue()) //
-				.putValue("anfrageId", anfrageId.getValue()));
+				prozessInstanzId, //
+				ANFRAGE_STORNIEREN_MESSAGE);
 	}
 }

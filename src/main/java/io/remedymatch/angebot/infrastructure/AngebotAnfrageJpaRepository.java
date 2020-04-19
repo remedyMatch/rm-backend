@@ -20,7 +20,7 @@ public interface AngebotAnfrageJpaRepository extends JpaRepository<AngebotAnfrag
 	default Optional<AngebotAnfrageEntity> findByAngebotIdAndAnfrageIdAndStatusOffen(//
 			final UUID angebotId, //
 			final UUID anfrageId) {
-		return findByAngebot_IdAndIdAndStatus(angebotId, anfrageId, AngebotAnfrageStatus.Offen);
+		return findByAngebot_IdAndIdAndStatus(angebotId, anfrageId, AngebotAnfrageStatus.OFFEN);
 	}
 	
 	Optional<AngebotAnfrageEntity> findByAngebot_IdAndIdAndStatus(//

@@ -29,6 +29,6 @@ class AngebotAnfrageBearbeitenTaskCompleteHandler implements TaskCompleteHandler
 			return;
 		}
 
-		angebotService.anfrageAnnehmen(new AngebotAnfrageId(UUID.fromString(taskDTO.getObjektId())));
+		angebotService.anfrageAngenommen(new AngebotAnfrageId(UUID.fromString(taskDTO.getObjektId())));
 	}
 }

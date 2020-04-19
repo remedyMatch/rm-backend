@@ -20,7 +20,7 @@ public interface BedarfAnfrageJpaRepository extends JpaRepository<BedarfAnfrageE
 	default Optional<BedarfAnfrageEntity> findByBedarfIdAndAnfrageIdAndStatusOffen(//
 			final UUID bedarfId, //
 			final UUID anfrageId) {
-		return findByBedarf_IdAndIdAndStatus(bedarfId, anfrageId, BedarfAnfrageStatus.Offen);
+		return findByBedarf_IdAndIdAndStatus(bedarfId, anfrageId, BedarfAnfrageStatus.OFFEN);
 	}
 
 	Optional<BedarfAnfrageEntity> findByBedarf_IdAndIdAndStatus(//

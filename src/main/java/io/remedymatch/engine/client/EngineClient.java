@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.sun.istack.NotNull;
 
@@ -60,7 +61,7 @@ public class EngineClient {
 				.variables(prozessVariables) //
 				.build());
 	}
-	
+
 	public ProzessInstanzId prozessStarten(//
 			final @NotNull @Valid ProzessKey prozessKey, //
 			final @NotNull @Valid BusinessKey businessKey, //
@@ -125,35 +126,39 @@ public class EngineClient {
 	public void messageKorrelieren(//
 			final @NotNull @Valid ProzessKey prozessKey, //
 			final @NotNull @Valid MessageKey messageKey, //
-			final @NotNull @Valid Map<String, Object> variables) {
-		val request = MessageKorrelierenRequest.builder()//
-		// FIXME prozessKey
-//				.prozessInstanzId(prozessInstanzId) //
+			final @NotNull @Valid Map<String, Object> variablesEqual) {
+
+		messageKorrelieren(MessageKorrelierenRequest.builder() //
+				.prozessKey(prozessKey.getValue()) //
 				.messageKey(messageKey.getValue()) //
-				.variables(variables)//
-				.build();
-
-		ResponseEntity<Void> response = new RestTemplate()
-				.postForEntity(properties.getRemedyRestApiUrl() + "/message/korrelieren/", request, Void.class);
-
-		if (response.getStatusCode().isError()) {
-			throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
-		}
+				.variablesEqual(variablesEqual) //
+				.build());
 	}
 
-	public void messageKorrelieren(ProzessInstanzId prozessInstanzId, String messageKey,
-			Map<String, Object> variables) {
+	public void messageKorrelieren( //
+			final @NotNull @Valid ProzessKey prozessKey, //
+			final @NotNull @Valid ProzessInstanzId prozessInstanzId, //
+			final @NotNull @Valid MessageKey messageKey) {
 
-		val request = MessageKorrelierenRequest.builder().prozessInstanzId(prozessInstanzId.getValue())
-				.messageKey(messageKey).variables(variables).build();
+		messageKorrelieren(MessageKorrelierenRequest.builder() //
+				.prozessKey(prozessKey.getValue()) //
+				.messageKey(messageKey.getValue()) //
+				.prozessInstanzId(prozessInstanzId.getValue()) //
+				.build());
+	}
+
+	private void messageKorrelieren(final @NotNull @Valid MessageKorrelierenRequest request) {
 
 		val restTemplate = new RestTemplate();
-		ResponseEntity<Void> response = restTemplate
-				.postForEntity(properties.getRemedyRestApiUrl() + "/message/korrelieren/", request, Void.class);
+		ResponseEntity<Void> response = restTemplate.postForEntity(//
+				UriComponentsBuilder.fromHttpUrl(properties.getRemedyRestApiUrl()) //
+						.path("/message/korrelieren") //
+						.build().toUri(), //
+				request, //
+				Void.class);
 
 		if (response.getStatusCode().isError()) {
-			throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
+			throw new RuntimeException("Beim korrelieren ist etwas fehlgeschlagen: " + response.getStatusCodeValue());
 		}
 	}
-
 }

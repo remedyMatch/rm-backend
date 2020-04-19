@@ -1,15 +1,9 @@
 package io.remedymatch.usercontext;
 
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextPerson;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
-import java.util.Optional;
-import java.util.UUID;
-
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.person.domain.service.PersonSucheService;
+import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,9 +14,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.institution.domain.model.InstitutionId;
-import io.remedymatch.person.domain.service.PersonSucheService;
-import lombok.val;
+import java.util.Optional;
+import java.util.UUID;
+
+import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextPerson;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +37,7 @@ public class UserContextServiceShould {
 	private UserContextService userContextService;
 
 	@MockBean
-	private UserContextProvider userProviced;
+	private UserContextProvider userContextProvider;
 
 	@MockBean
 	private PersonSucheService personSucheService;
@@ -51,13 +49,13 @@ public class UserContextServiceShould {
 		val username = "sample_username";
 		val userContextPerson = beispielUserContextPerson();
 
-		given(userProviced.getUserName()).willReturn(username);
+		given(userContextProvider.getUserName()).willReturn(username);
 		given(personSucheService.findByUsername(username)).willReturn(Optional.of(userContextPerson));
 
 		assertEquals(userContextPerson, userContextService.getContextUser());
 
-		then(userProviced).should().getUserName();
-		then(userProviced).shouldHaveNoMoreInteractions();
+		then(userContextProvider).should().getUserName();
+		then(userContextProvider).shouldHaveNoMoreInteractions();
 		then(personSucheService).should().findByUsername(username);
 		then(personSucheService).shouldHaveNoMoreInteractions();
 	}
@@ -69,31 +67,52 @@ public class UserContextServiceShould {
 		val username = "sample_username";
 		val userContextPerson = beispielUserContextPerson();
 
-		given(userProviced.getUserName()).willReturn(username);
+		given(userContextProvider.getUserName()).willReturn(username);
 		given(personSucheService.findByUsername(username)).willReturn(Optional.of(userContextPerson));
 
 		assertEquals(userContextPerson.getId(), userContextService.getContextUserId());
 
-		then(userProviced).should().getUserName();
-		then(userProviced).shouldHaveNoMoreInteractions();
+		then(userContextProvider).should().getUserName();
+		then(userContextProvider).shouldHaveNoMoreInteractions();
 		then(personSucheService).should().findByUsername(username);
 		then(personSucheService).shouldHaveNoMoreInteractions();
 	}
 	
 	@Test
-	@DisplayName("Context Institution zurueckliefern")
-	void context_Institution_zurueckliefern() {
+	@DisplayName("Context Institution zurueckliefern mit Hauptstandort nicht in Standorten enthalten")
+	void context_Institution_zurueckliefern_mit_Hauptstandort_nicht_in_Standorten_enthalten() throws CloneNotSupportedException {
 
 		val username = "sample_username";
 		val userContextPerson = beispielUserContextPerson();
 
-		given(userProviced.getUserName()).willReturn(username);
+		given(userContextProvider.getUserName()).willReturn(username);
 		given(personSucheService.findByUsername(username)).willReturn(Optional.of(userContextPerson));
 
-		assertEquals(userContextPerson.getInstitution(), userContextService.getContextInstitution());
+		Institution contextInstitution = userContextService.getContextInstitution(true);
 
-		then(userProviced).should().getUserName();
-		then(userProviced).shouldHaveNoMoreInteractions();
+		assertFalse(contextInstitution.getStandorte().contains(contextInstitution.getHauptstandort()));
+
+		then(userContextProvider).should().getUserName();
+		then(userContextProvider).shouldHaveNoMoreInteractions();
+		then(personSucheService).should().findByUsername(username);
+		then(personSucheService).shouldHaveNoMoreInteractions();
+	}
+
+	@Test
+	@DisplayName("Context Institution zurueckliefern mit Hauptstandort in Standorten enthalten")
+	void context_Institution_zurueckliefern_mit_Hauptstandort_in_Standorten_enthalten() {
+
+		val username = "sample_username";
+		val beispielUserContextPerson = beispielUserContextPerson();
+
+		given(userContextProvider.getUserName()).willReturn(username);
+		given(personSucheService.findByUsername(username)).willReturn(Optional.of(beispielUserContextPerson));
+		Institution contextInstitution = userContextService.getContextInstitution();
+
+		assertTrue(contextInstitution.getStandorte().contains(contextInstitution.getHauptstandort()));
+
+		then(userContextProvider).should().getUserName();
+		then(userContextProvider).shouldHaveNoMoreInteractions();
 		then(personSucheService).should().findByUsername(username);
 		then(personSucheService).shouldHaveNoMoreInteractions();
 	}
@@ -105,13 +124,13 @@ public class UserContextServiceShould {
 		val username = "sample_username";
 		val userContextPerson = beispielUserContextPerson();
 
-		given(userProviced.getUserName()).willReturn(username);
+		given(userContextProvider.getUserName()).willReturn(username);
 		given(personSucheService.findByUsername(username)).willReturn(Optional.of(userContextPerson));
 
 		assertEquals(userContextPerson.getInstitution().getId(), userContextService.getContextInstitutionId());
 
-		then(userProviced).should().getUserName();
-		then(userProviced).shouldHaveNoMoreInteractions();
+		then(userContextProvider).should().getUserName();
+		then(userContextProvider).shouldHaveNoMoreInteractions();
 		then(personSucheService).should().findByUsername(username);
 		then(personSucheService).shouldHaveNoMoreInteractions();
 	}
@@ -123,13 +142,13 @@ public class UserContextServiceShould {
 		val username = "sample_username";
 		val userContextPerson = beispielUserContextPerson();
 
-		given(userProviced.getUserName()).willReturn(username);
+		given(userContextProvider.getUserName()).willReturn(username);
 		given(personSucheService.findByUsername(username)).willReturn(Optional.of(userContextPerson));
 
 		assertTrue(userContextService.isUserContextInstitution(userContextPerson.getInstitution().getId()));
 
-		then(userProviced).should().getUserName();
-		then(userProviced).shouldHaveNoMoreInteractions();
+		then(userContextProvider).should().getUserName();
+		then(userContextProvider).shouldHaveNoMoreInteractions();
 		then(personSucheService).should().findByUsername(username);
 		then(personSucheService).shouldHaveNoMoreInteractions();
 	}
@@ -141,13 +160,13 @@ public class UserContextServiceShould {
 		val username = "sample_username";
 		val userContextPerson = beispielUserContextPerson();
 
-		given(userProviced.getUserName()).willReturn(username);
+		given(userContextProvider.getUserName()).willReturn(username);
 		given(personSucheService.findByUsername(username)).willReturn(Optional.of(userContextPerson));
 
 		assertFalse(userContextService.isUserContextInstitution(new InstitutionId(UUID.randomUUID())));
 
-		then(userProviced).should().getUserName();
-		then(userProviced).shouldHaveNoMoreInteractions();
+		then(userContextProvider).should().getUserName();
+		then(userContextProvider).shouldHaveNoMoreInteractions();
 		then(personSucheService).should().findByUsername(username);
 		then(personSucheService).shouldHaveNoMoreInteractions();
 	}

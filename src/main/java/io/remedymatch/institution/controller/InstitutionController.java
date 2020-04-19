@@ -80,10 +80,17 @@ public class InstitutionController {
 				.ok(Stream.of(InstitutionTyp.values()).map(InstitutionTyp::toString).collect(Collectors.toList()));
 	}
 
-	// ist das gleiche wie pures GET
-	@GetMapping("/assigned")
-	@Deprecated
-	public ResponseEntity<InstitutionRO> meineInstitutionLaden() {
-		return institutionLaden();
-	}
+    /**
+     * Liefert die Institution des ContextUsers. Im Unterschied zu {@link InstitutionController#institutionLaden()}
+	 * enthaelt die zurueckgelieferte Institution den HauptStandort jedoch <b>NICHT</b> in der Liste
+	 * {@link InstitutionRO#getStandorte()}.
+     *
+     * @return Institution des ContextUsers. Der Hauptstandort ist <b>nicht</b> {@link InstitutionRO#getStandorte()}
+     * enthalten!
+     */
+    @GetMapping("/assigned")
+    @Deprecated
+    public ResponseEntity<InstitutionRO> meineInstitutionLaden() {
+        return ResponseEntity.ok(mapToInstitutionRO(UserService.getContextInstitution(true)));
+    }
 }

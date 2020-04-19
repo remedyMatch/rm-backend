@@ -38,6 +38,7 @@ class AngebotControllerMapper {
 	static AngebotRO mapToAngebotRO(final Angebot angebot) {
 		return AngebotRO.builder() //
 				.id(angebot.getId().getValue()) //
+				.artikelId(angebot.getArtikelVariante().getArtikelId().getValue()) //
 				.artikelVarianteId(angebot.getArtikelVariante().getId().getValue()) //
 				.anzahl(angebot.getAnzahl()) //
 				.rest(angebot.getRest()) //

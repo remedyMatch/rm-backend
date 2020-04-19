@@ -19,6 +19,7 @@ import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.domain.model.NeuesAngebot;
+import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.institution.controller.InstitutionRO;
@@ -35,8 +36,9 @@ class AngebotControllerMapperShould {
 	private static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
 	private static final BigDecimal ANGEBOT_ANZAHL = BigDecimal.valueOf(120.0);
 	private static final BigDecimal ANGEBOT_REST = BigDecimal.valueOf(120.0);
+	private static final ArtikelId ARTIKEL_ID = new ArtikelId(UUID.randomUUID());
 	private static final ArtikelVarianteId ARTIKEL_VARIANTE_ID = new ArtikelVarianteId(UUID.randomUUID());
-	private static final ArtikelVariante ARTIKEL_VARIANTE = ArtikelVariante.builder().id(ARTIKEL_VARIANTE_ID).build();
+	private static final ArtikelVariante ARTIKEL_VARIANTE = ArtikelVariante.builder().id(ARTIKEL_VARIANTE_ID).artikelId(ARTIKEL_ID).build();
 	private static final InstitutionId ANGEBOT_INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 	private static final Institution ANGEBOT_INSTITUTION = Institution.builder().id(ANGEBOT_INSTITUTION_ID).build();
 	private static final InstitutionStandortId ANGEBOT_STANDORT_ID = new InstitutionStandortId(UUID.randomUUID());
@@ -152,6 +154,7 @@ class AngebotControllerMapperShould {
 				.id(ANGEBOT_ID.getValue()) //
 				.anzahl(ANGEBOT_ANZAHL) //
 				.rest(ANGEBOT_REST) //
+				.artikelId(ARTIKEL_ID.getValue()) //
 				.artikelVarianteId(ARTIKEL_VARIANTE_ID.getValue()) //
 				.institutionId(ANGEBOT_INSTITUTION_ID.getValue()) //
 				.standort(ANGEBOT_STANDORT_DTO) //

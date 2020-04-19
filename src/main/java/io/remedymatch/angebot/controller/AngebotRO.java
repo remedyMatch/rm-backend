@@ -23,6 +23,10 @@ public class AngebotRO {
 
 	@NotNull
 	@Valid
+	private UUID artikelId;
+	
+	@NotNull
+	@Valid
 	private UUID artikelVarianteId;
 
 	@NotNull

@@ -20,6 +20,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.google.common.base.Optional;
+
 import io.remedymatch.TestApplication;
 import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
@@ -51,7 +53,7 @@ public class PersonJpaRepositoryShould {
 		val ich = persist(person("ich", meinKrankenhaus, meinStandort));
 		entityManager.flush();
 
-		assertEquals(ich, jpaRepository.findOneByUsername("ich"));
+		assertEquals(Optional.of(ich), jpaRepository.findOneByUsername("ich"));
 	}
 
 	@Rollback(true)

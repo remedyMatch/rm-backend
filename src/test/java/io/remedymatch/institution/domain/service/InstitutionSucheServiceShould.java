@@ -54,21 +54,4 @@ class InstitutionSucheServiceShould {
 		then(institutionRepository).should().findById(institutionId);
 		then(institutionRepository).shouldHaveNoMoreInteractions();
 	}
-
-	@Test
-	@DisplayName("gesuchte Institution fuer InstitutionKey finden")
-	void gesuchte_Institution_fuer_InstitutionKey_finden() {
-
-		val institutionEntity = beispielInstitutionEntity();
-		val institutionKey = institutionEntity.getInstitutionKey();
-
-		given(institutionRepository.findByInstitutionKey(institutionKey)).willReturn(Optional.of(institutionEntity));
-
-		val expectedInstitution = beispielInstitution();
-
-		assertEquals(Optional.of(expectedInstitution), institutionSucheService.findByInstitutionKey(institutionKey));
-
-		then(institutionRepository).should().findByInstitutionKey(institutionKey);
-		then(institutionRepository).shouldHaveNoMoreInteractions();
-	}
 }

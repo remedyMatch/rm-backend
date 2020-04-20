@@ -28,6 +28,9 @@ logging:
   level:
     root: INFO
     io.remedymatch: DEBUG
+    org.springframework: DEBUG
+    org.apache.coyote: DEBUG
+    #org.hibernate: DEBUG
         
 remedy:
   security:

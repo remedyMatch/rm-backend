@@ -10,6 +10,9 @@ import static org.mockito.BDDMockito.then;
 
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -28,7 +31,8 @@ import lombok.val;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { //
 		PersonSucheService.class, //
-		PersonJpaRepository.class //
+		PersonJpaRepository.class, //
+		EntityManager.class //
 })
 @Tag("Spring")
 @DisplayName("PersonSucheService soll")
@@ -40,60 +44,64 @@ class PersonSucheServiceShould {
 	@MockBean
 	private PersonJpaRepository personRepository;
 
+	@MockBean
+	private EntityManager entityManager;
+	
 	@Test
-	@DisplayName("gesuchte Person finden")
-	void gesuchtes_Artikel_finden() {
+	@DisplayName("eine ObjectNotFoundException werfen wenn gesuchte Person mit diesem PersonId nicht existiert")
+	void eine_ObjectNotFoundException_werfen_wenn_gesuchte_Person_mit_diesem_PersonId_nicht_existiert() {
+
+		val personId = beispielPersonId();
+
+		given(personRepository.getOne(personId.getValue())).willThrow(new EntityNotFoundException());
+
+		assertThrows(ObjectNotFoundException.class, () -> personSucheService.getByPersonId(beispielPersonId()));
+	}
+
+	@Test
+	@DisplayName("gesuchte Person fuer PersonId zurueckliefern")
+	void gesuchte_Person_fuer_PersonId_zurueckliefern() {
 
 		val personId = beispielPersonId();
 		val personEntity = beispielPersonEntity();
 
-		given(personRepository.findById(personId.getValue())).willReturn(Optional.of(personEntity));
+		given(personRepository.getOne(personId.getValue())).willReturn(personEntity);
 
 		val expectedPerson = beispielPerson();
 
-		assertEquals(Optional.of(expectedPerson), personSucheService.findPerson(personId));
+		assertEquals(expectedPerson, personSucheService.getByPersonId(personId));
 
 		then(personRepository).should().findById(personId.getValue());
 		then(personRepository).shouldHaveNoMoreInteractions();
+		then(entityManager).should().detach(personEntity);
+		then(entityManager).shouldHaveNoMoreInteractions();
 	}
 
 	@Test
-	@DisplayName("eine ObjectNotFoundException werfen wenn gesuchte Person nicht existiert")
-	void eine_ObjectNotFoundException_werfen_wenn_gesuchtes_Artikel_nicht_existiert() {
-		assertThrows(ObjectNotFoundException.class, () -> personSucheService.getPersonOrElseThrow(beispielPersonId()));
+	@DisplayName("eine ObjectNotFoundException werfen wenn gesuchte Person mit diesem Username nicht existiert")
+	void eine_ObjectNotFoundException_werfen_wenn_gesuchte_Person_mit_diesem_Username_nicht_existiert() {
+
+		given(personRepository.findOneByUsername("username")).willThrow(new EntityNotFoundException());
+
+		assertThrows(ObjectNotFoundException.class, () -> personSucheService.getByUsername("username"));
 	}
 
 	@Test
-	@DisplayName("gesuchte Person zurueckliefern")
-	void gesuchte_Person_zurueckliefern() {
-
-		val personId = beispielPersonId();
-		val personEntity = beispielPersonEntity();
-
-		given(personRepository.findById(personId.getValue())).willReturn(Optional.of(personEntity));
-
-		val expectedPerson = beispielPerson();
-
-		assertEquals(expectedPerson, personSucheService.getPersonOrElseThrow(personId));
-
-		then(personRepository).should().findById(personId.getValue());
-		then(personRepository).shouldHaveNoMoreInteractions();
-	}
-
-	@Test
-	@DisplayName("gesuchte Person fuer Username finden")
+	@DisplayName("gesuchte Person fuer Username zurueckliefern")
 	void gesuchte_Person_fuer_Username_finden() {
 
 		val personEntity = beispielPersonEntity();
 		val username = personEntity.getUsername();
 
-		given(personRepository.findByUsername(username)).willReturn(Optional.of(personEntity));
+		given(personRepository.findOneByUsername(username)).willReturn(Optional.of(personEntity));
 
 		val expectedPerson = beispielPerson();
 
-		assertEquals(Optional.of(expectedPerson), personSucheService.findByUsername(username));
+		assertEquals(expectedPerson, personSucheService.getByUsername(username));
 
-		then(personRepository).should().findByUsername(username);
+		then(personRepository).should().findOneByUsername(username);
 		then(personRepository).shouldHaveNoMoreInteractions();
+		then(entityManager).should().detach(personEntity);
+		then(entityManager).shouldHaveNoMoreInteractions();
 	}
 }

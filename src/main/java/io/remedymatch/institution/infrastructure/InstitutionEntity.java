@@ -81,7 +81,7 @@ public class InstitutionEntity extends Auditable {
 
 		return standorte.stream().filter(standort -> standortId.equals(standort.getId())).findAny();
 	}
-	
+
 	public void addStandort(final InstitutionStandortEntity standort) {
 		this.standorte.add(standort);
 	}

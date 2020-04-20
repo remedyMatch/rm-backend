@@ -2,6 +2,7 @@ package io.remedymatch.person.infrastructure;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -56,12 +57,12 @@ public class PersonEntity extends Auditable {
 	@Column(name = "TELEFON", nullable = true, updatable = true, length = 32)
 	private String telefon;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@Type(type = "uuid-char")
 	@JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private InstitutionEntity institution;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@Type(type = "uuid-char")
 	@JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = true, updatable = true)
 	private InstitutionStandortEntity standort;

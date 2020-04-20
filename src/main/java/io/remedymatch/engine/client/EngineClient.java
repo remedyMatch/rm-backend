@@ -47,7 +47,7 @@ public class EngineClient {
 			final @NotNull @Valid PersonId benachrichtingungAnPerson, //
 			final @NotNull @Valid Map<String, Object> variables) {
 
-		val person = personSucheService.getPersonOrElseThrow(benachrichtingungAnPerson);
+		val person = personSucheService.getByPersonId(benachrichtingungAnPerson);
 
 		VariableMap prozessVariables = Variables.createVariables();
 		prozessVariables.putAll(variables);

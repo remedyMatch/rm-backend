@@ -36,18 +36,6 @@ public class InstitutionJpaRepositoryShould {
 	
 	@Autowired
 	private InstitutionJpaRepository jpaRepository;
-
-	@Rollback(true)
-	@Transactional
-	@Test
-	@DisplayName("Institution fuer Key zurueckliefern")
-	void institution_fuer_Key_zurueckliefern() {
-		InstitutionEntity meineInstitution = persist(institution("meine"));
-		persist(institution("andere"));
-		entityManager.flush();
-
-		assertEquals(Optional.of(meineInstitution), jpaRepository.findByInstitutionKey("meine"));
-	}
 	
 	@Rollback(true)
 	@Transactional

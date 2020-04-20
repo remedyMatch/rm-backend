@@ -3,6 +3,7 @@ package io.remedymatch.bedarf.infrastructure;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -45,11 +46,11 @@ public class BedarfEntity extends Auditable {
 	@Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
 	private UUID id;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "ARTIKEL_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private ArtikelEntity artikel;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "ARTIKEL_VARIANTE_UUID", referencedColumnName = "UUID", nullable = true, updatable = false)
 	private ArtikelVarianteEntity artikelVariante;
 
@@ -59,11 +60,11 @@ public class BedarfEntity extends Auditable {
 	@Column(name = "REST", nullable = false, updatable = true)
 	private BigDecimal rest;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private InstitutionEntity institution;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private InstitutionStandortEntity standort;
 

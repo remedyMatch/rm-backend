@@ -2,8 +2,9 @@ package io.remedymatch.institution.infrastructure;
 
 import java.util.UUID;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import io.remedymatch.shared.infrastructure.ReadOnlyRepository;
 
-public interface InstitutionStandortJpaRepository extends JpaRepository<InstitutionStandortEntity, UUID> {
-	// leer
+public interface InstitutionStandortJpaRepository extends ReadOnlyRepository<InstitutionStandortEntity, UUID> {
+
+	InstitutionStandortEntity save(final InstitutionStandortEntity entity);
 }

@@ -6,6 +6,9 @@ import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.person.domain.service.PersonSucheService;
 import lombok.AllArgsConstructor;
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,13 +16,17 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class UserContextService {
 	private final UserContextProvider userProvider;
 	private final PersonSucheService personSucheService;
 
-	@Transactional(readOnly = true)
 	public Person getContextUser() {
-		return personSucheService.findByUsername(userProvider.getUserName()).get();
+		
+		val userName = userProvider.getUserName();
+		log.debug("Suche nach ContextUser: " + userName);
+		
+		return personSucheService.getByUsername(userName);
 	}
 	
 	@Transactional(readOnly = true)

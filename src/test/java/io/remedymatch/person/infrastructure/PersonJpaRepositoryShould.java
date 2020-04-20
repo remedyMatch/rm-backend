@@ -1,10 +1,12 @@
 package io.remedymatch.person.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Optional;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +51,29 @@ public class PersonJpaRepositoryShould {
 		val ich = persist(person("ich", meinKrankenhaus, meinStandort));
 		entityManager.flush();
 
-		assertEquals(Optional.of(ich), jpaRepository.findByUsername("ich"));
+		assertEquals(ich, jpaRepository.findOneByUsername("ich"));
+	}
+
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("eine EntityNotFoundException werfen wenn gesuchte Person mit diesem Id nicht existiert")
+	void eine_EntityNotFoundException_werfen_wenn_gesuchte_Person_mit_diesem_Id_nicht_existiert() {
+
+		assertThrows(EntityNotFoundException.class, () -> jpaRepository.getOne(UUID.randomUUID()).toString());
+	}
+
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("ein Person anhand Id lesen")
+	void eine_Person_anhand_Id_lesen() {
+		val meinStandort = persist(standort());
+		val meinKrankenhaus = persist(institution(meinStandort));
+		val ich = persist(person("ich", meinKrankenhaus, meinStandort));
+		entityManager.flush();
+
+		assertEquals(ich, jpaRepository.getOne(ich.getId()));
 	}
 
 	/* help methods */

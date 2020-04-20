@@ -11,11 +11,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @Profile("!test")
+@Slf4j
 class UserContextAuditingConfiguration {
 
 	private final UserContextService userContextService;
@@ -29,7 +31,12 @@ class UserContextAuditingConfiguration {
 				return Optional.empty();
 			}
 
-			return Optional.ofNullable(userContextService.getContextUserId().getValue());
+			try {
+				return Optional.ofNullable(userContextService.getContextUserId().getValue());
+			} catch (Exception e) {
+				log.error("Unable to find contextUser");
+				return Optional.empty();
+			}
 		};
 	}
 }

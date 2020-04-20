@@ -3,6 +3,7 @@ package io.remedymatch.angebot.infrastructure;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -46,15 +47,15 @@ public class AngebotAnfrageEntity extends Auditable {
 	@Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
 	private UUID id;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "ANGEBOT_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private AngebotEntity angebot;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private InstitutionEntity institution;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
 	private InstitutionStandortEntity standort;
 

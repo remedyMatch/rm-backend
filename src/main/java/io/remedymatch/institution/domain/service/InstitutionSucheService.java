@@ -3,7 +3,6 @@ package io.remedymatch.institution.domain.service;
 import java.util.Optional;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
@@ -21,12 +20,6 @@ import lombok.AllArgsConstructor;
 public class InstitutionSucheService {
 
 	private final InstitutionJpaRepository institutionRepository;
-
-	@Transactional(readOnly = true)
-	public Optional<Institution> findByInstitutionKey(final @NotBlank String institutionKey) {
-		return institutionRepository.findByInstitutionKey(institutionKey)
-				.map(InstitutionEntityConverter::convertInstitution);
-	}
 
 	@Transactional(readOnly = true)
 	public Optional<Institution> findInstitution(final @NotNull @Valid InstitutionId institutionId) {

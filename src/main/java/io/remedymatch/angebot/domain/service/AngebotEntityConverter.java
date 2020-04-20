@@ -31,7 +31,7 @@ final class AngebotEntityConverter {
 				.rest(entity.getRest()) //
 				.artikelVariante(ArtikelEntityConverter.convertVariante(entity.getArtikelVariante())) //
 				.institution(InstitutionEntityConverter.convertInstitution(entity.getInstitution()))//
-				.standort(InstitutionStandortEntityConverter.convertStandort(entity.getStandort()))
+				.standort(InstitutionStandortEntityConverter.convertStandort(entity.getStandort())) //
 				.haltbarkeit(entity.getHaltbarkeit()) //
 				.steril(entity.isSteril()) //
 				.originalverpackt(entity.isOriginalverpackt()) //

@@ -60,6 +60,7 @@ public class AngebotService {
 	@Transactional
 	public void angebotDerUserInstitutionLoeschen(final @NotNull @Valid AngebotId angebotId) {
 
+		// pruefe ob die Angebot existiert
 		val angebot = getNichtBedienteAngebotDerUserInstitution(angebotId);
 
 		// Alle offene Anfragen stornieren

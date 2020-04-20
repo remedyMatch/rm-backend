@@ -1,6 +1,6 @@
 package io.remedymatch.person.domain.service;
 
-import static io.remedymatch.person.domain.service.PersonEntityConverter.convert;
+import static io.remedymatch.person.domain.service.PersonEntityConverter.convertPerson;
 
 import java.util.function.Supplier;
 
@@ -68,7 +68,9 @@ public class PersonSucheService {
 
 	private Person detachAndConvert(Supplier<PersonEntity> supplier) {
 		PersonEntity personEntity = supplier.get();
+		Person converted = convertPerson(personEntity);
 		entityManager.detach(personEntity);
-		return convert(personEntity);
+		
+		return converted;
 	}
 }

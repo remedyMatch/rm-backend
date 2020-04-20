@@ -1,4 +1,4 @@
-package io.remedymatch.person.api;
+package io.remedymatch.person.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import io.remedymatch.person.controller.PersonMapper;
+import io.remedymatch.person.controller.PersonRO;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
 

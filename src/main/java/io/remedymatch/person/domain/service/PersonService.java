@@ -1,6 +1,6 @@
 package io.remedymatch.person.domain.service;
 
-import static io.remedymatch.person.domain.service.PersonEntityConverter.convert;
+import static io.remedymatch.person.domain.service.PersonEntityConverter.convertPerson;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -39,7 +39,7 @@ public class PersonService {
 		val institution = getInstitution(neuePerson.getInstitutionId());
 		val standort = getInstitutionStandort(institution, neuePerson.getStandortId());
 
-		return convert(personRepository.save(PersonEntity.builder() //
+		return convertPerson(personRepository.save(PersonEntity.builder() //
 				.username(neuePerson.getUsername()) //
 				.vorname(neuePerson.getVorname()) //
 				.nachname(neuePerson.getNachname()) //

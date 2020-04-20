@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
-@Profile("!test")
+@Profile("!testauditing")
 @Slf4j
 class UserContextAuditingConfiguration {
 

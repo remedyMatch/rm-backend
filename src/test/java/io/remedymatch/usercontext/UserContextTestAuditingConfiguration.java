@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
-@Profile("test")
+@Profile("testauditing")
 class UserContextTestAuditingConfiguration {
 
 	@Bean

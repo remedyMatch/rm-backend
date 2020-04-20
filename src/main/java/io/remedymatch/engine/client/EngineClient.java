@@ -40,7 +40,8 @@ public class EngineClient {
 
 	private final EngineProperties properties;
 	private final PersonSucheService personSucheService;
-
+	private final RestTemplate restTemplate;
+	
 	public ProzessInstanzId prozessStarten(//
 			final @NotNull @Valid ProzessKey prozessKey, //
 			final @NotNull @Valid BusinessKey businessKey, //
@@ -76,9 +77,8 @@ public class EngineClient {
 
 	private ProzessInstanzId prozessStarten(final @NotNull @Valid ProzessStartRequest request) {
 
-		val restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate
-				.postForEntity(properties.getRemedyRestApiUrl() + "/prozess/start/", request, String.class);
+				.postForEntity(properties.getRemedyRestApiUrl() + "/prozess/start", request, String.class);
 
 		if (response.getStatusCode().isError()) {
 			throw new RuntimeException("Beim Starten des Prozesses ist etwas fehlgeschlagen");
@@ -88,7 +88,6 @@ public class EngineClient {
 	}
 
 	public TaskDTO ladeTask(String taskId, String institutionId) {
-		val restTemplate = new RestTemplate();
 		ResponseEntity<TaskDTO> taskResponse = restTemplate.getForEntity(
 				properties.getRemedyRestApiUrl() + "/task/" + institutionId + "/" + taskId, TaskDTO.class);
 
@@ -101,7 +100,6 @@ public class EngineClient {
 	}
 
 	public List<TaskDTO> ladeAlleTask(String institutionId) {
-		val restTemplate = new RestTemplate();
 		ResponseEntity<TaskDTO[]> taskResponse = restTemplate
 				.getForEntity(properties.getRemedyRestApiUrl() + "/task/institution/" + institutionId, TaskDTO[].class);
 		if (taskResponse.getStatusCode().isError()) {
@@ -114,7 +112,6 @@ public class EngineClient {
 	public void taskAbschliessen(String task, Map<String, Object> variables) {
 
 		val request = TaskAbschliessenRequest.builder().variables(variables).build();
-		val restTemplate = new RestTemplate();
 		ResponseEntity<Void> response = restTemplate.postForEntity(properties.getRemedyRestApiUrl() + "/task/" + task,
 				request, Void.class);
 
@@ -149,7 +146,6 @@ public class EngineClient {
 
 	private void messageKorrelieren(final @NotNull @Valid MessageKorrelierenRequest request) {
 
-		val restTemplate = new RestTemplate();
 		ResponseEntity<Void> response = restTemplate.postForEntity(//
 				UriComponentsBuilder.fromHttpUrl(properties.getRemedyRestApiUrl()) //
 						.path("/message/korrelieren") //

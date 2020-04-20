@@ -16,6 +16,6 @@ class PersonEntityConverterShould {
 	@Test
 	@DisplayName("eine Entity in ein Domain Objekt konvertieren")
 	void eine_entity_in_ein_Domain_Objekt_konvertieren() {
-		assertEquals(beispielPerson(), PersonEntityConverter.convert(beispielPersonEntity()));
+		assertEquals(beispielPerson(), PersonEntityConverter.convertPerson(beispielPersonEntity()));
 	}
 }

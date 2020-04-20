@@ -1,9 +1,11 @@
-package io.remedymatch.person.api;
+package io.remedymatch.person.controller;
 
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
 
 class PersonMapper {
+	private PersonMapper() {
+	}
 
 	static PersonRO mapToPersonRO(Person person) {
 		if (person == null) {

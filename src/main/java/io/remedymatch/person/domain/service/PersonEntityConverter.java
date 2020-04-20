@@ -11,7 +11,7 @@ class PersonEntityConverter {
 		
 	}
 
-	static Person convert(final PersonEntity entity) {
+	static Person convertPerson(final PersonEntity entity) {
 		return Person.builder()//
 				.id(new PersonId(entity.getId())) //
 				.username(entity.getUsername()) //

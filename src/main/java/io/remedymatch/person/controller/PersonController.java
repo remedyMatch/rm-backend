@@ -1,4 +1,4 @@
-package io.remedymatch.person.api;
+package io.remedymatch.person.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;

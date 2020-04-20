@@ -40,7 +40,8 @@ class BedarfControllerMapper {
 		return BedarfRO.builder() //
 				.id(bedarf.getId().getValue()) //
 				.artikelId(bedarf.getArtikel().getId().getValue()) //
-				.artikelVarianteId(bedarf.getArtikelVariante().getId().getValue()) //
+				.artikelVarianteId(
+						bedarf.getArtikelVariante() != null ? bedarf.getArtikelVariante().getId().getValue() : null) //
 				.anzahl(bedarf.getAnzahl()) //
 				.rest(bedarf.getRest()) //
 				.institutionId(bedarf.getInstitution().getId().getValue()) //

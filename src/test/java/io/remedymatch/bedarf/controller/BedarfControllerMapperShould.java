@@ -28,6 +28,7 @@ import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
+import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("BedarfMapper soll")
@@ -80,9 +81,21 @@ class BedarfControllerMapperShould {
 	}
 
 	@Test
-	@DisplayName("Bedarf Domain Objekt in RO konvertieren")
-	void bedarf_domain_Objekt_in_RO_konvertieren() {
+	@DisplayName("Bedarf Domain Objekt mit mit_ArtikelVariante_ in RO konvertieren")
+	void bedarf_domain_Objekt_mit_ArtikelVariante_in_RO_konvertieren() {
 		assertEquals(bedarfRO(), BedarfControllerMapper.mapToBedarfRO(bedarf()));
+	}
+	
+	@Test
+	@DisplayName("Bedarf Domain Objekt ohne mit_ArtikelVariante_in RO konvertieren")
+	void bedarf_domain_Objekt_ohne_ArtikelVariante_in_RO_konvertieren() {
+		val bedarfOhneArtikelVariante = bedarf();
+		bedarfOhneArtikelVariante.setArtikelVariante(null);
+		
+		BedarfRO bedarfROOhneArtikelVariante = bedarfRO();
+		bedarfROOhneArtikelVariante.setArtikelVarianteId(null);
+		
+		assertEquals(bedarfROOhneArtikelVariante, BedarfControllerMapper.mapToBedarfRO(bedarfOhneArtikelVariante));
 	}
 
 	@Test

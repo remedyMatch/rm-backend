@@ -71,7 +71,7 @@ class PersonSucheServiceShould {
 
 		assertEquals(expectedPerson, personSucheService.getByPersonId(personId));
 
-		then(personRepository).should().findById(personId.getValue());
+		then(personRepository).should().getOne(personId.getValue());
 		then(personRepository).shouldHaveNoMoreInteractions();
 		then(entityManager).should().detach(personEntity);
 		then(entityManager).shouldHaveNoMoreInteractions();
@@ -81,7 +81,7 @@ class PersonSucheServiceShould {
 	@DisplayName("eine ObjectNotFoundException werfen wenn gesuchte Person mit diesem Username nicht existiert")
 	void eine_ObjectNotFoundException_werfen_wenn_gesuchte_Person_mit_diesem_Username_nicht_existiert() {
 
-		given(personRepository.findOneByUsername("username")).willThrow(new EntityNotFoundException());
+		given(personRepository.findOneByUsername("username")).willReturn(Optional.empty());
 
 		assertThrows(ObjectNotFoundException.class, () -> personSucheService.getByUsername("username"));
 	}

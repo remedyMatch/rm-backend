@@ -34,7 +34,6 @@ public class PersonSucheService {
 
 	private final PersonJpaRepository jpaRepository;
 
-	@PersistenceContext
 	private final EntityManager entityManager;
 
 	/**

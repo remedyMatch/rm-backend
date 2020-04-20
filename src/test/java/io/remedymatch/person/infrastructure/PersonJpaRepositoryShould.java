@@ -3,6 +3,7 @@ package io.remedymatch.person.infrastructure;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -19,8 +20,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import com.google.common.base.Optional;
 
 import io.remedymatch.TestApplication;
 import io.remedymatch.institution.domain.model.InstitutionTyp;

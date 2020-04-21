@@ -24,7 +24,7 @@ import io.remedymatch.TestApplication;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
+@ActiveProfiles(profiles = { "test", "disableexternaltasks" })
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("MatchStandortJpaRepository InMemory Test soll")
@@ -32,7 +32,7 @@ public class MatchStandortJpaRepositoryShould {
 
 	@Autowired
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	private MatchStandortJpaRepository jpaRepository;
 
@@ -46,14 +46,14 @@ public class MatchStandortJpaRepositoryShould {
 
 		assertEquals(Optional.of(standort), jpaRepository.findById(standort.getId()));
 	}
-	
+
 	/* help methods */
-	
+
 	public <E> E persist(E entity) {
 		entityManager.persist(entity);
 		return entity;
 	}
-	
+
 	private MatchStandortEntity standort() {
 		return MatchStandortEntity.builder() //
 				.institutionStandortId(UUID.randomUUID()) //

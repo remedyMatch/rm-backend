@@ -21,6 +21,7 @@ import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.service.PersonSucheService;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
+import io.remedymatch.usercontext.TestUserContext;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,12 +52,15 @@ public abstract class BedarfControllerTestBasis {
 
 		PersonEntity spenderEntity = spenderAnlegen();
 		entityManager.flush();
+		spender = personSucheService.getByUsername(SPENDER_USERNAME);
 
 		PersonEntity suchenderEntity = suchenderAnlegen();
 		entityManager.flush();
+		suchender = personSucheService.getByUsername(SUCHENDER_USERNAME);
 
 		val artikel = artikelRepository.findAll().get(0);
 
+		TestUserContext.setContextUser(spender);
 		BedarfEntity bedarf = persist(BedarfEntity.builder() //
 				.createdBy(spenderEntity.getId()) //
 				.createdDate(LocalDateTime.now()) //
@@ -68,9 +72,11 @@ public abstract class BedarfControllerTestBasis {
 				.kommentar("ITest Bedarf Kommentar") //
 				.steril(true) //
 				.build());
+		TestUserContext.clear();
 
 		bedarfId = new BedarfId(bedarf.getId());
 
+		TestUserContext.setContextUser(suchender);
 		persist(BedarfAnfrageEntity.builder() //
 				.createdBy(suchenderEntity.getId()) //
 				.createdDate(LocalDateTime.now()) //
@@ -82,15 +88,12 @@ public abstract class BedarfControllerTestBasis {
 				.prozessInstanzId("test_anfrage_prozess") //
 				.status(BedarfAnfrageStatus.OFFEN) //
 				.build());
+		TestUserContext.clear();
 
 		entityManager.flush();
 
-		spender = personSucheService.getByUsername(SPENDER_USERNAME);
 		log.info("Spender: " + spenderEntity);
-
-		suchender = personSucheService.getByUsername(SUCHENDER_USERNAME);
 		log.info("Suchender: " + suchenderEntity);
-
 		log.info("Bedarf: " + bedarf);
 	}
 

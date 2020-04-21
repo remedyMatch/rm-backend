@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,12 +29,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.remedymatch.TestApplication;
 import io.remedymatch.WithMockJWT;
+import io.remedymatch.usercontext.TestUserContext;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = { "dbinit", "test", "disableexternaltasks" })
+@DirtiesContext
 @Tag("InMemory")
 @Tag("SpringBoot")
 public class NeuesBedarfShould extends BedarfControllerTestBasis {
@@ -49,10 +53,17 @@ public class NeuesBedarfShould extends BedarfControllerTestBasis {
 		prepareBedarfEntities();
 	}
 
+	@AfterEach
+	void clear() {
+		TestUserContext.clear();
+	}
+
 	@Test
 	@Transactional
 	@WithMockJWT(groupsClaim = { "testgroup" }, usernameClaim = SPENDER_USERNAME)
 	public void neue_Bedarf_anlegen() throws Exception {
+
+		TestUserContext.setContextUser(spender);
 
 		val artikelVariante = artikelRepository.findAll().get(0).getVarianten().get(0);
 

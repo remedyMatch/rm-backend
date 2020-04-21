@@ -1,34 +1,24 @@
 package io.remedymatch.usercontext;
 
-import io.remedymatch.institution.domain.model.Institution;
-import io.remedymatch.institution.domain.model.InstitutionId;
-import io.remedymatch.person.domain.model.Person;
-import io.remedymatch.person.domain.model.PersonId;
-import io.remedymatch.person.domain.service.PersonSucheService;
-import lombok.AllArgsConstructor;
-import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Collectors;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonId;
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
-@Slf4j
 public class UserContextService {
-	private final UserContextProvider userProvider;
-	private final PersonSucheService personSucheService;
 
 	public Person getContextUser() {
-		
-		val userName = userProvider.getUserName();
-		log.debug("Suche nach ContextUser: " + userName);
-		
-		return personSucheService.getByUsername(userName);
+		return UserContext.getContextUser();
 	}
-	
+
 	@Transactional(readOnly = true)
 	public PersonId getContextUserId() {
 		return getContextUser().getId();
@@ -52,7 +42,8 @@ public class UserContextService {
 	}
 
 	/**
-	 * Ruft {@link UserContextService#getContextInstitution(boolean)} mit {@code false} auf.
+	 * Ruft {@link UserContextService#getContextInstitution(boolean)} mit
+	 * {@code false} auf.
 	 */
 	@Transactional(readOnly = true)
 	public Institution getContextInstitution() {

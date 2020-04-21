@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.net.URI;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.ExpectedCount;
@@ -30,11 +32,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 import io.remedymatch.TestApplication;
 import io.remedymatch.WithMockJWT;
+import io.remedymatch.usercontext.TestUserContext;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = { "dbinit", "test", "disableexternaltasks" })
+@DirtiesContext
 @Tag("InMemory")
 @Tag("SpringBoot")
 public class BedarfLoeschungSchould extends BedarfControllerTestBasis {
@@ -55,11 +59,18 @@ public class BedarfLoeschungSchould extends BedarfControllerTestBasis {
 		mockServer = MockRestServiceServer.createServer(restTemplate);
 	}
 
+	@AfterEach
+	void clear() {
+		TestUserContext.clear();
+	}
+
 	@Test
 	@Transactional
 	@WithMockJWT(groupsClaim = { "testgroup" }, usernameClaim = SPENDER_USERNAME)
 	public void bedarf_loeschen() throws Exception {
 
+		TestUserContext.setContextUser(spender);
+		
 		mockServer.expect(ExpectedCount.once(), //
 				requestTo(new URI("http://localhost:8008/engine/remedy/message/korrelieren"))) //
 				.andExpect(method(HttpMethod.POST)) //

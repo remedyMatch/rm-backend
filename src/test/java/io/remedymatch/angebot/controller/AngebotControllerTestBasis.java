@@ -21,6 +21,7 @@ import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.service.PersonSucheService;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
+import io.remedymatch.usercontext.TestUserContext;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,12 +52,15 @@ public abstract class AngebotControllerTestBasis {
 
 		PersonEntity spenderEntity = spenderAnlegen();
 		entityManager.flush();
-		
+		spender = personSucheService.getByUsername(SPENDER_USERNAME);
+
 		PersonEntity suchenderEntity = suchenderAnlegen();
 		entityManager.flush();
-		
+		suchender = personSucheService.getByUsername(SUCHENDER_USERNAME);
+
 		val artikelVariante = artikelRepository.findAll().get(0).getVarianten().get(0);
 
+		TestUserContext.setContextUser(spender);
 		AngebotEntity angebot = persist(AngebotEntity.builder() //
 				.createdBy(spenderEntity.getId()) //
 				.createdDate(LocalDateTime.now()) //
@@ -69,9 +73,11 @@ public abstract class AngebotControllerTestBasis {
 				.kommentar("ITest Angebot Kommentar") //
 				.steril(true) //
 				.build());
+		TestUserContext.clear();
 
 		angebotId = new AngebotId(angebot.getId());
 
+		TestUserContext.setContextUser(suchender);
 		persist(AngebotAnfrageEntity.builder() //
 				.createdBy(suchenderEntity.getId()) //
 				.createdDate(LocalDateTime.now()) //
@@ -83,15 +89,12 @@ public abstract class AngebotControllerTestBasis {
 				.prozessInstanzId("test_anfrage_prozess") //
 				.status(AngebotAnfrageStatus.OFFEN) //
 				.build());
+		TestUserContext.clear();
 
 		entityManager.flush();
 
-		spender = personSucheService.getByUsername(SPENDER_USERNAME);
 		log.info("Spender: " + spenderEntity);
-		
-		suchender = personSucheService.getByUsername(SUCHENDER_USERNAME);
 		log.info("Suchender: " + suchenderEntity);
-
 		log.info("Angebot: " + angebot);
 	}
 

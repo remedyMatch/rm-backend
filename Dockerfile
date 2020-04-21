@@ -14,7 +14,7 @@ COPY --from=build /home/gradle/src/build/resources/main/* /app/
 
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends redir curl iputils-ping; \
+	apt-get install -y --no-install-recommends redir curl iputils-ping tcpdump; \
 	rm -rf /var/lib/apt/lists/*
 
 ADD docker/entrypoint.sh /entrypoint.sh

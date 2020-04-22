@@ -74,7 +74,7 @@ public class BedarfEntity extends Auditable {
 	@Column(name = "MEDIZINISCH", nullable = false, updatable = false)
 	private boolean medizinisch;
 
-	@Column(name = "KOMMENTAR", nullable = false, updatable = false, length = 256)
+	@Column(name = "KOMMENTAR", nullable = false, updatable = false, length = 1024)
 	private String kommentar;
 
 	@Column(name = "BEDIENT", nullable = false, updatable = true)

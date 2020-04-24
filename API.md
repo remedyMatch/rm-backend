@@ -1,6 +1,6 @@
 # Rest API
 
-Beschreibung der Rest-API für:
+Beschreibung der Rest-API fï¿½r:
 * Angebot
 * Artikel und Artikel-Kategorie
 * Bedarf
@@ -9,9 +9,86 @@ Beschreibung der Rest-API für:
 
 # Angebot
 
-## Alle Angebote laden
+## ï¿½bersicht
 
-Liefert alle aktuelle Angebote.
+* Alle aktuelle Angebote laden
+
+  `GET /angebot/suche`
+
+* Alle Angebote meiner Institution laden
+
+  `GET /angebot`
+
+* Neues Angebot einstellen
+
+  `POST /angebot`
+
+* Angebot lï¿½schen
+
+  `DELETE /angebot/{angebotId}`
+
+* Angebot anfragen
+
+  `POST /angebot/{angebotId}/anfrage`
+
+* Angebot-Anfrage lï¿½schen
+
+  `DELETE /angebot/{angebotId}/anfrage/{anfrageId}`
+
+## Alle aktuelle Angebote laden
+
+Liefert alle aktuelle (nicht bediente) Angebote.
+
+* **Request:**
+
+  `GET /angebot/suche`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+      "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+      "anzahl": 10000,
+      "rest": 2000,
+      "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+      "standort": { "..." },
+      "haltbarkeit": "2022-01-25T21:34:55",
+      "steril": false,
+      "originalverpackt": true,
+      "medizinisch": false,
+      "kommentar": "Wir haben 10000 Masken ï¿½brig",
+      "entfernung": 25014
+    },
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/angebot/suche
+  ```
+
+## Alle Angebote meiner Institution laden
+
+Liefert alle aktuelle (nicht bediente) Angebote, die Personen aus meiner Institution gemeldet haben.
 
 * **Request:**
 
@@ -33,16 +110,17 @@ Liefert alle aktuelle Angebote.
   [
     {
       "id": "5bc4f514-c591-470e-a056-933f3ea00421",
-      "artikel": {
-        "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-      },
+      "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
       "anzahl": 10000,
-      "kommentar": "Wir haben 10000 Masken übrig",
-      "standort": "...",
+      "rest": 2000,
+      "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+      "standort": { "..." },
       "haltbarkeit": "2022-01-25T21:34:55",
       "steril": false,
       "originalverpackt": true,
-      "medizinisch": false
+      "medizinisch": false,
+      "kommentar": "Wir haben 10000 Masken ï¿½brig",
+      "entfernung": 25014
     },
     ...
   ]
@@ -59,9 +137,9 @@ Liefert alle aktuelle Angebote.
    curl -i -H 'Accept: application/json' http://localhost:7000/angebot
   ```
 
-## Angebot melden
+## Neues Angebot einstellen
 
-Angebot melden.
+Neues Angebot melden.
 
 * **Request:**
 
@@ -75,12 +153,10 @@ Angebot melden.
 
   ```
   {
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
+    "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
     "anzahl": 10000,
-    "kommentar": "Wir haben 10000 Masken übrig",
-    "standort": "...",
+    "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
+    "kommentar": "Wir haben 10000 Masken ï¿½brig",
     "haltbarkeit": "2022-01-25T21:34:55",
     "steril": false,
     "originalverpackt": true,
@@ -95,16 +171,17 @@ Angebot melden.
   ```
   {
     "id": "5bc4f514-c591-470e-a056-933f3ea00421",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
+    "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
     "anzahl": 10000,
-    "kommentar": "Wir haben 10000 Masken übrig",
-    "standort": "...",
+    "rest": 2000,
+    "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+    "standort": { "..." },
     "haltbarkeit": "2022-01-25T21:34:55",
     "steril": false,
     "originalverpackt": true,
-    "medizinisch": false
+    "medizinisch": false,
+    "kommentar": "Wir haben 10000 Masken ï¿½brig",
+    "entfernung": 25014
   }
   ```
   
@@ -120,71 +197,9 @@ Angebot melden.
 
 * **Sample Call:**
 
-## Angebot aktualisieren
+## Angebot lï¿½schen
 
-Angebot aktualisieren.
-
-* **Request:**
-
-  `PUT /angebot`
-
-* **URL Params**
-
-  None
-
-* **Data Params**
-
-  ```
-  {
-    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000,
-    "kommentar": "Wir haben 10000 Masken übrig",
-    "standort": "...",
-    "haltbarkeit": "2022-01-25T21:34:55",
-    "steril": false,
-    "originalverpackt": true,
-    "medizinisch": false
-  }
-  ```
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** 
-  ```
-  {
-    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000,
-    "kommentar": "Wir haben 10000 Masken übrig",
-    "standort": "...",
-    "haltbarkeit": "2022-01-25T21:34:55",
-    "steril": false,
-    "originalverpackt": true,
-    "medizinisch": false
-  }
-  ```
-  
-* **Error Response:**
-
-  * **Code:** 400 BAD REQUEST <br />
-    **Content:** `{ error : "..." }`
-
-  OR
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
-
-## Angebot löschen
-
-Angebot löschen.
+Angebot lï¿½schen.
 
 * **Request:**
 
@@ -225,21 +240,139 @@ Angebot löschen.
    curl -X DELETE http://localhost:7000/angebot/5bc4f514-c591-470e-a056-933f3ea00421
   ```
 
-# Artikel
+## Angebot anfragen
 
-## Artikel-Kategorie Suche
-
-Suche nach Artikel-Kategorien.
+Angebot anfragen.
 
 * **Request:**
 
-  `GET /artikelkategorie/suche`
+  `POST /angebot/{angebotId}/anfrage`
 
 * **URL Params**
 
-   **Optional:**
+   **Required:**
  
-   `nameLike=[string]`
+   `angebotId=[UUID]`
+
+* **Data Params**
+
+  ```
+  {
+    "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
+    "anzahl": 3000,
+    "kommentar": "Wir brauchen 3000 Masken"
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+    "angebot": { "..." },
+    "institution": { "..." },
+    "standort": { "..." },
+    "anzahl": 3000,
+    "kommentar": "Wir brauchen 3000 Masken"
+    "prozessInstanzId": "...",
+    "status": "Offen"
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Angebot nicht gefunden." }`
+
+* **Sample Call:**
+
+## Angebot-Anfrage lï¿½schen
+
+Angebot-Anfrage lï¿½schen.
+
+* **Request:**
+
+  `DELETE /angebot/{angebotId}/anfrage/{anfrageId}`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `angebotId=[UUID]`
+   `anfrageId=[UUID]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Angebot nicht gefunden." }`
+
+* **Sample Call:**
+
+  ```
+   curl -X DELETE http://localhost:7000/angebot/5bc4f514-c591-470e-a056-933f3ea00421/anfrage/5bc4f514-c591-470e-a056-933f3ea00421
+  ```
+
+# Artikel
+
+## ï¿½bersicht
+
+* Alle Artikel-Kategorien laden
+
+  `GET /artikel/kategorie`
+
+* Suche nach Artikeln
+
+  `GET /artikel/suche`
+
+* Alle Artikel laden
+
+  `GET /artikel`
+
+* Artikel laden
+
+  `GET /artikel/{artikelId}`
+
+## Alle Artikel-Kategorien laden
+
+Alle Artikel-Kategorien laden.
+
+* **Request:**
+
+  `GET /artikel/kategorie`
+
+* **URL Params**
+
+  None
 
 * **Data Params**
 
@@ -253,11 +386,13 @@ Suche nach Artikel-Kategorien.
   [
     {
       "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-      "name": "Atemschutzmasken"
+      "name": "Atemschutzmasken",
+      "icon": "maske.png"
     },
     {
-      "key": "cd5c00ec-c328-4c8b-8278-098b4b5ea0dc",
-      "name": "Overalls"
+      "id": "cd5c00ec-c328-4c8b-8278-098b4b5ea0dc",
+      "name": "Overalls",
+      "icon": "body.png"
     },
     
     ...
@@ -272,68 +407,21 @@ Suche nach Artikel-Kategorien.
 * **Sample Call:**
 
   ```
-   curl -i -H 'Accept: application/json' http://localhost:7000/artikelkategorie/suche?nameLike="maske"
+   curl -i -H 'Accept: application/json' http://localhost:7000/artikel/kategorie
   ```
 
-## Artikel-Kategorie lesen
+## Alle Artikel laden
 
-Eine Artikel-Kategorie lesen.
+Alle Artikel laden.
 
 * **Request:**
 
-  `GET /artikelkategorie/{kategorieId}`
+  `GET /artikel`
 
-* **Path Params**
-
-   **Required:**
- 
-   `kategorieId=[UUID]`
-
-* **Data Params**
+*  **URL Params**
 
   None
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** 
-  ```
-  {
-    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "name": "Atemschutzmasken"
-  }
-  ```
-  
-* **Error Response:**
-
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "Artikel-Kategorie nicht gefunden." }`
-
-  OR
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
-
-  ```
-   curl -i -H 'Accept: application/json' http://localhost:7000/artikelkategorie/77977887-78e8-4ee3-8a34-ec37fcfc5f8b
-  ```
-
-## Alle Artikel einer Kategorie
-
-Suche nach Artikel einer Kategorien.
-
-* **Request:**
-
-  `GET /artikelkategorie/{kategorieId}/artikel`
-
-* **URL Params**
-
-   **Required:**
- 
-   `kategorieId=[UUID]`
-
+   
 * **Data Params**
 
   None
@@ -346,19 +434,28 @@ Suche nach Artikel einer Kategorien.
   [
     {
       "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
-      "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-      "ean": "4046719303120", 
-      "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+      "artikelKategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+      "name": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
       "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
-      "hersteller": "3M"
+      "varianten": 
+      [
+        {
+          "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+          "artikelId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+          "variante": "Variante ",
+          "norm": "Norm"
+          "beschreibung": "Beschreibunf der Variante"
+          "medizinischAuswaehlbar": true
+        }
+        ...
+      ]
     },
     {
       "id": "atemschutzmaske_FFP2_M3",
-      "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-      "ean": "4046719382583", 
+      "artikelKategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
       "name":	"Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
       "beschreibung": "Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
-      "hersteller": "3M"
+      "varianten": [ ... ]
     },
      
     ...
@@ -367,117 +464,14 @@ Suche nach Artikel einer Kategorien.
   
 * **Error Response:**
 
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "Artikel-Kategorie nicht gefunden." }`
-
-  OR
-  
   * **Code:** 401 UNAUTHORIZED <br />
     **Content:** `{ error : "You are unauthorized to make this request." }`
 
 * **Sample Call:**
 
   ```
-   curl -i -H 'Accept: application/json' http://localhost:7000/artikelkategorie/77977887-78e8-4ee3-8a34-ec37fcfc5f8b/artikel"
+   curl -i -H 'Accept: application/json' http://localhost:7000/artikel"
   ```
-
-## Artikel-Kategorie hinzufügen
-
-Eine Artikel-Kategorie hinzufügen.
-
-* **Request:**
-
-  `POST /artikelkategorie/{kategorieId}`
-
-* **Path Params**
-
-   **Required:**
- 
-   `kategorieId=[UUID]`
-   
-* **Data Params**
-
-  ```
-  {
-    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "name": "Atemschutzmasken"
-  }
-  ```
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** 
-  ```
-  {
-    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "name": "Atemschutzmasken"
-  }
-  ```
-  
-* **Error Response:**
-
-  * **Code:** 400 BAD REQUEST <br />
-    **Content:** `{ error : "..." }`
-
-  OR
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-    OR
-
-  * **Code:** 409 CONFLICT <br />
-    **Content:** `{ error : "Category with name exists already" }`
-
-* **Sample Call:**
-
-## Artikel-Kategorie aktualisieren
-
-Eine Artikel-Kategorie aktualisieren.
-
-* **Request:**
-
-  `POST /artikelkategorie/{}`
-
-* **Path Params**
-
-* **Data Params**
-
-  ```
-  {
-    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "name": "Atemschutzmasken"
-  }
-  ```
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** 
-  ```
-  {
-    "id": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "name": "Atemschutzmasken"
-  }
-  ```
-  
-* **Error Response:**
-
-  * **Code:** 400 BAD REQUEST <br />
-    **Content:** `{ error : "..." }`
-
-  OR
-  
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "Artikel-Kategorie nicht gefunden." }`
-
-  OR
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
 
 ## Artikel Suche
 
@@ -491,7 +485,6 @@ Suche nach Artikeln.
 
    **Optional:**
  
-   `kategorieId=[UUID]`
    `nameLike=[string]`
    
 * **Data Params**
@@ -506,19 +499,28 @@ Suche nach Artikeln.
   [
     {
       "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
-      "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-      "ean": "4046719303120", 
-      "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+      "artikelKategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+      "name": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
       "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
-      "hersteller": "3M"
+      "varianten": 
+      [
+        {
+          "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+          "artikelId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+          "variante": "Variante ",
+          "norm": "Norm"
+          "beschreibung": "Beschreibunf der Variante"
+          "medizinischAuswaehlbar": true
+        }
+        ...
+      ]
     },
     {
       "id": "atemschutzmaske_FFP2_M3",
-      "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-      "ean": "4046719382583", 
+      "artikelKategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
       "name":	"Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
       "beschreibung": "Spezialmaske \"9926\" FFP2 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
-      "hersteller": "3M"
+      "varianten": [ ... ]
     },
      
     ...
@@ -561,12 +563,22 @@ Ein Artikel lesen.
   ```
   {
     "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
-    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "ean": "4046719303120", 
-    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
+    "artikelKategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+    "name": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
     "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
-    "hersteller": "3M"
-   }
+    "varianten": 
+    [
+      {
+        "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+        "artikelId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
+        "variante": "Variante ",
+        "norm": "Norm"
+        "beschreibung": "Beschreibunf der Variante"
+        "medizinischAuswaehlbar": true
+      }
+      ...
+    ]
+  }
   ```
   
 * **Error Response:**
@@ -585,114 +597,87 @@ Ein Artikel lesen.
    curl -i -H 'Accept: application/json' http://localhost:7000/artikel/bbeac45e-e296-4fad-878d-7e9b6e85a3d8
   ```
 
-## Artikel hinzufügen
-
-Ein Artikel hinzufügen.
-
-* **Request:**
-
-  `POST /artikel/`
-
-* **Path Params**
-
-* **Data Params**
-
-  ```
-  {
-    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "ean": "4046719303120", 
-    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
-    "hersteller": "3M"
-   }
-  ```
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** 
-  ```
-  {
-    "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
-    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "ean": "4046719303120", 
-    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M®",
-    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3M® ..."
-    "hersteller": "3M"
-   }
-  ```
-  
-* **Error Response:**
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
-
-## Artikel aktualisieren
-
-Ein Artikel hinzufügen.
-
-* **Request:**
-
-  `PUT /artikel/{artikelId}`
-
-* **Path Params**
-
-   **Required:**
- 
-   `artikelId=[UUID]`
-
-* **Data Params**
-
-  ```
-  {
-    "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
-    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "ean": "4046719303120", 
-    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
-    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
-    "hersteller": "3M"
-   }
-  ```
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** 
-  ```
-  {
-    "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
-    "kategorieId": "77977887-78e8-4ee3-8a34-ec37fcfc5f8b",
-    "ean": "4046719303120", 
-    "name":	"Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½",
-    "beschreibung": "Atemschutzmaske \"8812\" FFP1 NR D vorgeformte Partikelmaske mit Ausatemventil - 3Mï¿½ ..."
-    "hersteller": "3M"
-   }
-  ```
-  
-* **Error Response:**
-
-  * **Code:** 400 BAD REQUEST <br />
-    **Content:** `{ error : "..." }`
-
-  OR
-  
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "Artikel nicht gefunden." }`
-
-  OR
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
-
 # Bedarf
 
-## Alle Bedarfe laden
+## ï¿½bersicht
 
-Liefert alle aktuelle Bedarfe.
+* Alle aktuelle Bedarfe laden
+
+  `GET /bedarf/suche`
+
+* Alle Bedarfe meiner Institution laden
+
+  `GET /bedarf`
+
+* Neues Bedarf melden
+
+  `POST /bedarf`
+
+* Bedarf lï¿½schen
+
+  `DELETE /bedarf/{bedarfId}`
+
+* Bedarf bedienen
+
+  `POST /bedarf/{bedarfId}/anfrage`
+
+* Bedarf-Anfrage lï¿½schen
+
+  `DELETE /bedarf/{bedarfId}/anfrage/{anfrageId}`
+
+## Alle aktuelle Bedarfe laden
+
+Liefert alle aktuelle (nicht bediente) Bedarfe.
+
+* **Request:**
+
+  `GET /bedarf/suche`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  [
+    {
+      "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+      "artikelId": "12e79aaf-1edc-41b3-a83d-6b4f871dd5e3",
+      "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+      "anzahl": 10000,
+      "rest": 2000,
+      "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+      "standort": { "..." },
+      "steril": false,
+      "medizinisch": false,
+      "kommentar": "Wir brauchen 5000 Masken",
+      "entfernung": 25014
+    },
+    ...
+  ]
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```
+   curl -i -H 'Accept: application/json' http://localhost:7000/bedarf/suche
+  ```
+
+## Alle Bedarfe meiner Institution laden
+
+Liefert alle aktuelle (nicht bediente) Bedarfe, die Personen aus meiner Institution gemeldet haben.
 
 * **Request:**
 
@@ -713,11 +698,17 @@ Liefert alle aktuelle Bedarfe.
   ```
   [
     {
-      "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
-      "artikel": {
-        "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-      },
-      "anzahl": 10000
+      "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+      "artikelId": "12e79aaf-1edc-41b3-a83d-6b4f871dd5e3",
+      "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+      "anzahl": 10000,
+      "rest": 2000,
+      "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+      "standort": { "..." },
+      "steril": false,
+      "medizinisch": false,
+      "kommentar": "Wir brauchen 5000 Masken",
+      "entfernung": 25014
     },
     ...
   ]
@@ -734,9 +725,9 @@ Liefert alle aktuelle Bedarfe.
    curl -i -H 'Accept: application/json' http://localhost:7000/bedarf
   ```
 
-## Bedarf melden
+## Neues Bedarf einstellen
 
-Bedarf melden.
+Neues Bedarf melden.
 
 * **Request:**
 
@@ -750,10 +741,13 @@ Bedarf melden.
 
   ```
   {
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000
+    "artikelId": "12e79aaf-1edc-41b3-a83d-6b4f871dd5e3",
+    "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "anzahl": 10000,
+    "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
+    "kommentar": "Wir haben 10000 Masken ï¿½brig",
+    "steril": false,
+    "medizinisch": false
   }
   ```
 
@@ -763,11 +757,17 @@ Bedarf melden.
     **Content:** 
   ```
   {
-    "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000
+    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+    "artikelId": "12e79aaf-1edc-41b3-a83d-6b4f871dd5e3",
+    "artikelVarianteId": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8",
+    "anzahl": 10000,
+    "rest": 2000,
+    "institutionId": "43d30ef8-852b-41ae-9e5d-8f6b35d7b5b2",
+    "standort": { "..." },
+    "steril": false,
+    "medizinisch": false,
+    "kommentar": "Wir brauchen 5000 Masken",
+    "entfernung": 25014
   }
   ```
   
@@ -783,59 +783,9 @@ Bedarf melden.
 
 * **Sample Call:**
 
-## Bedarf aktualisieren
+## Bedarf lï¿½schen
 
-Bedarf aktualisieren.
-
-* **Request:**
-
-  `PUT /bedarf`
-
-* **URL Params**
-
-  None
-
-* **Data Params**
-
-  ```
-  {
-    "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000
-  }
-  ```
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** 
-  ```
-  {
-    "id": "b872561f-dab9-43c2-bec9-d4e3694a7ea1",
-    "artikel": {
-      "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
-    },
-    "anzahl": 10000
-  }
-  ```
-  
-* **Error Response:**
-
-  * **Code:** 400 BAD REQUEST <br />
-    **Content:** `{ error : "..." }`
-
-  OR
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
-
-## Bedarf löschen
-
-Bedarf löschen.
+Bedarf lï¿½schen.
 
 * **Request:**
 
@@ -873,7 +823,109 @@ Bedarf löschen.
 * **Sample Call:**
 
   ```
-   curl -X DELETE http://localhost:7000/bedarf/b872561f-dab9-43c2-bec9-d4e3694a7ea1
+   curl -X DELETE http://localhost:7000/bedarf/5bc4f514-c591-470e-a056-933f3ea00421
+  ```
+
+## Bedarf bedienen
+
+Bedarf bedienen.
+
+* **Request:**
+
+  `POST /bedarf/{bedarfId}/anfrage`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `bedarfId=[UUID]`
+
+* **Data Params**
+
+  ```
+  {
+    "standortId": "6b0cd44b-5dfc-4475-8b48-491688bc0a34",
+    "anzahl": 3000,
+    "kommentar": "Wir haben 3000 Masken"
+  }
+  ```
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+  ```
+  {
+    "id": "5bc4f514-c591-470e-a056-933f3ea00421",
+    "bedarf": { "..." },
+    "institutionVon": { "..." },
+    "standortVon": { "..." },
+    "anzahl": 3000,
+    "kommentar": "Wir brauchen 3000 Masken"
+    "prozessInstanzId": "...",
+    "status": "Offen"
+  }
+  ```
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Bedarf nicht gefunden." }`
+
+* **Sample Call:**
+
+## Bedarf-Anfrage lï¿½schen
+
+Bedarf-Anfrage lï¿½schen.
+
+* **Request:**
+
+  `DELETE /bedarf/{bedarfId}/anfrage/{anfrageId}`
+
+* **URL Params**
+
+   **Required:**
+ 
+   `bedarfId=[UUID]`
+   `anfrageId=[UUID]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+  
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "..." }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Bedarf nicht gefunden." }`
+
+* **Sample Call:**
+
+  ```
+   curl -X DELETE http://localhost:7000/bedarf/5bc4f514-c591-470e-a056-933f3ea00421/anfrage/5bc4f514-c591-470e-a056-933f3ea00421
   ```
 
 # Institution
@@ -903,13 +955,13 @@ Liefert alle aktuelle Institutionen.
     {
       "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
       "key": "isar_klinikum",
-      "name":	"ISAR Klinikum®",
+      "name":	"ISAR Klinikumï¿½",
       "typ": "krankenhaus"
     },
     {
       "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
       "key": "arzt_praxis_xyz",
-      "name":	"Arzt Praxis XYZ®",
+      "name":	"Arzt Praxis XYZï¿½",
       "typ": "doktor"
     },
      
@@ -955,13 +1007,13 @@ Suche nach Institutionen.
     {
       "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
       "key": "isar_klinikum",
-      "name":	"ISAR Klinikum®",
+      "name":	"ISAR Klinikumï¿½",
       "typ": "krankenhaus"
     },
     {
       "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
       "key": "arzt_praxis_xyz",
-      "name":	"Arzt Praxis XYZ®",
+      "name":	"Arzt Praxis XYZï¿½",
       "typ": "doktor"
     },
      
@@ -1006,7 +1058,7 @@ Eine Institution lesen.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
    }
   ```
@@ -1029,7 +1081,7 @@ Eine Institution lesen.
 
 ## Institution hinzufugen (noch nicht umgesetzt)
 
-Eine Institution hinzufügen.
+Eine Institution hinzufï¿½gen.
 
 * **Request:**
 
@@ -1042,7 +1094,7 @@ Eine Institution hinzufügen.
   ```
   {
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
    }
   ```
@@ -1058,7 +1110,7 @@ Eine Institution hinzufügen.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
    }
   ```
@@ -1095,7 +1147,7 @@ Eine Institution aktualisieren.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
   }
   ```
@@ -1111,7 +1163,7 @@ Eine Institution aktualisieren.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
   }
   ```
@@ -1157,7 +1209,7 @@ Institution des angemeldetes Benutzer lesen.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
    }
   ```
@@ -1192,7 +1244,7 @@ Institution des angemeldetes Benutzer aktualisieren.
   ```
   {
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
   }
   ```
@@ -1208,7 +1260,7 @@ Institution des angemeldetes Benutzer aktualisieren.
   {
     "id": "b8de7af3-05a2-4fe4-8b07-f74071eb71f1",
     "key": "isar_klinikum",
-    "name":	"ISAR Klinikum®",
+    "name":	"ISAR Klinikumï¿½",
     "typ": "krankenhaus"
   }
   ```
@@ -1253,7 +1305,7 @@ Liefert alle Angebote der Institution von angemeldeten User.
         "id": "bbeac45e-e296-4fad-878d-7e9b6e85a3d8"
       },
       "anzahl": 10000,
-      "kommentar": "Wir haben 10000 Masken übrig",
+      "kommentar": "Wir haben 10000 Masken ï¿½brig",
       "standort": "...",
       "haltbarkeit": "2022-01-25T21:34:55",
       "steril": false,
@@ -1373,7 +1425,7 @@ Liefert alle Personen.
    curl -i -H 'Accept: application/json' http://localhost:7000/person
   ```
   
-## Person hinzufügen
+## Person hinzufï¿½gen
 
 Person erstellen.
 

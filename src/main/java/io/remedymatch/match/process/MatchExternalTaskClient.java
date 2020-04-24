@@ -1,83 +1,81 @@
 package io.remedymatch.match.process;
 
-import io.remedymatch.angebot.domain.AngebotAnfrageId;
-import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
-import io.remedymatch.bedarf.domain.BedarfAnfrageId;
-import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
-import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.match.api.MatchProzessConstants;
-import io.remedymatch.match.domain.*;
-import io.remedymatch.properties.RmBackendProperties;
-import lombok.AllArgsConstructor;
-import lombok.val;
-import org.camunda.bpm.client.ExternalTaskClient;
-import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
-import org.camunda.bpm.client.task.ExternalTask;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
+
+import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.camunda.bpm.client.task.ExternalTask;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
+import io.remedymatch.match.api.MatchProzessConstants;
+import io.remedymatch.match.domain.Match;
+import io.remedymatch.match.domain.MatchId;
+import io.remedymatch.match.domain.MatchRepository;
+import io.remedymatch.match.domain.MatchService;
+import io.remedymatch.match.domain.MatchStatus;
+import io.remedymatch.properties.EngineProperties;
+import lombok.AllArgsConstructor;
+import lombok.val;
+
 @AllArgsConstructor
 @Component
+@Profile("!disableexternaltasks")
 public class MatchExternalTaskClient {
-    private final RmBackendProperties properties;
-    private final MatchRepository matchRepository;
-    private final MatchService matchService;
-    private final BedarfAnfrageRepository bedarfAnfrageRepository;
-    private final AngebotAnfrageRepository angebotAnfrageRepository;
-    private final EngineClient engineClient;
 
-    @PostConstruct
-    public void doSubscribe() {
+	private final EngineProperties properties;
+	private final MatchRepository matchRepository;
+	private final MatchService matchService;
+	private final AngebotAnfrageSucheService angebotAnfrageSucheService;
+	private final BedarfAnfrageSucheService bedarfAnfrageSucheService;
 
-        ExternalTaskClient client = ExternalTaskClient.create()
-                .baseUrl(properties.getEngineUrl() + "/rest")
-                .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000))
-                .build();
+	@PostConstruct
+	public void doSubscribe() {
 
-        client.subscribe("auslieferungBestaetigung")
-                .lockDuration(2000)
-                .handler((externalTask, externalTaskService) -> {
+		ExternalTaskClient client = ExternalTaskClient.create().baseUrl(properties.getExternalTaskUrl())
+				.backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000)).build();
 
-                    //set retries for the external task in the engine
-                    Integer retries = externalTask.getRetries();
-                    if (retries == null) {
-                        retries = 3;
-                    } else {
-                        retries--;
-                    }
+		client.subscribe("auslieferungBestaetigung").lockDuration(2000).handler((externalTask, externalTaskService) -> {
+			val matchId = externalTask.getVariable("objektId").toString();
+			val match = matchRepository.get(new MatchId(UUID.fromString(matchId)));
+			match.get().setStatus(MatchStatus.Ausgeliefert);
+			matchRepository.save(match.get());
 
-                    val matchId = externalTask.getVariable("objektId").toString();
-                    val match = matchRepository.get(new MatchId(UUID.fromString(matchId)));
+			externalTaskService.complete(externalTask);
+		}).open();
 
-                    try {
-                        match.get().setStatus(MatchStatus.Ausgeliefert);
-                        matchRepository.save(match.get());
-                    } catch (Exception e) {
-                        externalTaskService.handleFailure(externalTask, "Hello I am an error", "more space for details", retries, 30000);
-                    }
+		client.subscribe("matchErstellen").lockDuration(2000).handler((externalTask, externalTaskService) -> {
 
-                    externalTaskService.complete(externalTask);
-                }).open();
+			//set retries for the external task in the engine
+			Integer retries = externalTask.getRetries();
+			if (retries == null) {
+				retries = 3;
+			} else {
+				retries--;
+			}
 
-        client.subscribe("matchErstellen")
-                .lockDuration(2000)
-                .handler((externalTask, externalTaskService) -> {
+			val matchId = externalTask.getVariable("objektId").toString();
+			val match = matchRepository.get(new MatchId(UUID.fromString(matchId)));
 
+			try {
+				match.get().setStatus(MatchStatus.Ausgeliefert);
+				matchRepository.save(match.get());
+			} catch (Exception e) {
+				externalTaskService.handleFailure(externalTask, "Hello I am an error", "more space for details", retries, 30000);
+			}
 
-                    val variables = matchErstellen(externalTask);
+		}).open();
 
-                    externalTaskService.complete(externalTask, variables);
-
-                }).open();
-
-
-        client.subscribe("matchStornierungVerarbeiten")
-                .lockDuration(2000)
-                .handler((externalTask, externalTaskService) -> {
+		client.subscribe("matchStornierungVerarbeiten").lockDuration(2000)
+				.handler((externalTask, externalTaskService) -> {
 
                     System.out.println("Stornierung erhalten");
 
@@ -105,12 +103,14 @@ public class MatchExternalTaskClient {
 
         Match match;
 
-        if (anfrageTyp.equals(MatchProzessConstants.ANFRAGE_TYP_BEDARF)) {
-            match = matchService.matchAusBedarfErstellen(bedarfAnfrageRepository.get(new BedarfAnfrageId(UUID.fromString(anfrageId))).get());
+		if (anfrageTyp.equals(MatchProzessConstants.ANFRAGE_TYP_BEDARF)) {
+			match = matchService.matchAusBedarfErstellen(
+					bedarfAnfrageSucheService.findAnfrage(new BedarfAnfrageId(UUID.fromString(anfrageId))).get());
 
-        } else {
-            match = matchService.matchAusAngebotErstellen(angebotAnfrageRepository.get(new AngebotAnfrageId(UUID.fromString(anfrageId))).get());
-        }
+		} else {
+			match = matchService.matchAusAngebotErstellen(
+					angebotAnfrageSucheService.findAnfrage(new AngebotAnfrageId(UUID.fromString(anfrageId))).get());
+		}
 
         val variables = new HashMap<String, Object>();
         variables.put("lieferant", match.getInstitutionVon().getId().getValue().toString());

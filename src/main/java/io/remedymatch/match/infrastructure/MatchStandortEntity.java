@@ -12,24 +12,25 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
+import io.remedymatch.shared.infrastructure.Auditable;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Builder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity(name = "MatchStandort")
 @Table(name = "RM_MATCH_STANDORT")
-public class MatchStandortEntity {
+public class MatchStandortEntity extends Auditable {
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -38,20 +39,23 @@ public class MatchStandortEntity {
 	private UUID id;
 
 	@Type(type = "uuid-char")
-	@Column(name = "INSTITUTION_STANDORT_ID", nullable = false, updatable = false, length = 36)
+	@Column(name = "INSTITUTION_STANDORT_UUID", nullable = false, updatable = false, length = 36)
 	private UUID institutionStandortId;
 
 	@Column(name = "NAME", nullable = false, updatable = true, length = 64)
 	private String name;
+
+	@Column(name = "STRASSE", nullable = false, updatable = true, length = 64)
+	private String strasse;
+
+	@Column(name = "HAUSNUMMER", nullable = false, updatable = true, length = 16)
+	private String hausnummer;
 
 	@Column(name = "PLZ", nullable = false, updatable = true, length = 8)
 	private String plz;
 
 	@Column(name = "ORT", nullable = false, updatable = true, length = 64)
 	private String ort;
-
-	@Column(name = "STRASSE", nullable = false, updatable = true, length = 64)
-	private String strasse;
 
 	@Column(name = "LAND", nullable = false, updatable = true, length = 64)
 	private String land;

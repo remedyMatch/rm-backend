@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,8 +31,9 @@ import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
+@Disabled
 @Tag("SpringBoot")
 public class ArtikelKategorieIntegrationTest {
 
@@ -58,7 +60,7 @@ public class ArtikelKategorieIntegrationTest {
     }
 
     @Test
-    @WithMockJWT(groupsClaim = {"testgroup"}, subClaim = "myUsername")
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "myUsername")
     public void shouldReadAlleKategorien() throws Exception {
         artikelKategorieRepository.save(ArtikelKategorieEntity.builder().name("sample").build());
         mockMvc.perform(get("/artikelkategorie")

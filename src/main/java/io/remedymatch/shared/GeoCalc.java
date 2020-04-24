@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import io.remedymatch.institution.domain.InstitutionStandort;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.match.domain.MatchStandort;
 import lombok.val;
 
@@ -12,7 +12,7 @@ public class GeoCalc {
 
 	private static final Map<String, Double> geoDatenMap = new WeakHashMap<>();
 
-	public static double distanzBerechnen(double lat1, double lon1, double lat2, double lon2, DistanzTyp unit) {
+	private static double distanzBerechnen(double lat1, double lon1, double lat2, double lon2, DistanzTyp unit) {
 
 		if ((lat1 == lat2) && (lon1 == lon2)) {
 

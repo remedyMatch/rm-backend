@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionId;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.match.infrastructure.MatchEntity;
 import io.remedymatch.match.infrastructure.MatchStandortEntity;

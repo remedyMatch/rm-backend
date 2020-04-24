@@ -1,41 +1,74 @@
 package io.remedymatch.bedarf.process;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.UUID;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Component;
 
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
-import io.remedymatch.bedarf.domain.BedarfAnfrageId;
-import io.remedymatch.bedarf.domain.BedarfAnfrageRepository;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
 @AllArgsConstructor
 @Component
-public class BedarfAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler {
+class BedarfAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler {
 
-    private final BedarfAnfrageRepository anfrageRepository;
+	private static final String BESCHREIBUNG_TEMPLATE_MIT_ARTIKEL_VARIANTE = "%s: Anfrage zu Bedarf von %s %s - %s";
+	private static final String BESCHREIBUNG_TEMPLATE_OHNE_ARTIKEL_VARIANTE = "%s: Anfrage zu Bedarf von %s %s";
 
-    @Override
-    public String beschreibung(TaskDTO taskDTO) {
+	private final BedarfAnfrageSucheService anfrageSucheService;
 
-        String beschreibung = "";
+	@Override
+	public String taskKey() {
+		return BedarfAnfrageBearbeitenTaskContstants.TASK_KEY;
+	}
 
-        val anfrage = anfrageRepository.get(new BedarfAnfrageId(UUID.fromString(taskDTO.getObjektId())));
+	@Override
+	public String beschreibung(final TaskDTO taskDTO) {
+		return formatBeschreibungstext(new BedarfAnfrageId(UUID.fromString(taskDTO.getObjektId())));
+	}
 
-        var prefix = "Anfrage zu Bedarf von ";
-        var artikel = anfrage.get().getBedarf().getArtikel();
-        var anzahl = anfrage.get().getBedarf().getAnzahl();
+	private String formatBeschreibungstext(final @NotNull BedarfAnfrageId anfrageId) {
+		val anfrage = getAnfrage(anfrageId);
+		val bedarf = anfrage.getBedarf();
 
-        beschreibung += anfrage.get().getInstitutionVon().getName() + ": " + prefix;
-        beschreibung += (int) anzahl.intValue() + " " + artikel.getName();
+		if (bedarf.getArtikelVariante() != null) {
+			return String.format(BESCHREIBUNG_TEMPLATE_MIT_ARTIKEL_VARIANTE, //
+					anfrage.getInstitution().getName(), //
+					formatAnzahl(bedarf.getAnzahl()), //
+					bedarf.getArtikel().getName(), //
+					bedarf.getArtikelVariante().getVariante());
+		}
 
-        return beschreibung;
-    }
+		return String.format(BESCHREIBUNG_TEMPLATE_OHNE_ARTIKEL_VARIANTE, //
+				anfrage.getInstitution().getName(), //
+				formatAnzahl(bedarf.getAnzahl()), //
+				bedarf.getArtikel().getName());
+	}
 
-    @Override
-    public String taskKey() {
-        return BedarfAnfrageBearbeitenTaskContstants.TASK_KEY;
-    }
+	private BedarfAnfrage getAnfrage(final BedarfAnfrageId anfrageId) {
+		return anfrageSucheService.getAnfrageOrElseThrow(anfrageId);
+	}
+	
+	private String formatAnzahl(final @NotNull BigDecimal anzahl) {
+		double doubleValue = anzahl.doubleValue();
+		if (doubleValue == (long) doubleValue) {
+			return String.format("%d", (long) doubleValue);
+		}
+
+		NumberFormat nf = NumberFormat.getNumberInstance(Locale.GERMANY);
+		DecimalFormat df = (DecimalFormat) nf;
+		df.setMaximumFractionDigits(2);
+		df.setMinimumFractionDigits(2);
+		return df.format(anzahl);
+	}
 }

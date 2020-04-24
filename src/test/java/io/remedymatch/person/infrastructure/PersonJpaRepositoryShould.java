@@ -1,10 +1,13 @@
 package io.remedymatch.person.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -19,14 +22,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = { "test", "disableexternaltasks" })
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("PersonJpaRepository InMemory Test soll")
@@ -43,11 +47,34 @@ public class PersonJpaRepositoryShould {
 	@Test
 	@DisplayName("ein Person anhand username lesen")
 	void eine_Person_anhand_Username_lesen() {
-		val meinKrankenhaus = persist(institution());
-		val ich = persist(person("ich", meinKrankenhaus));
+		val meinStandort = persist(standort());
+		val meinKrankenhaus = persist(institution(meinStandort));
+		val ich = persist(person("ich", meinKrankenhaus, meinStandort));
 		entityManager.flush();
 
-		assertEquals(Optional.of(ich), jpaRepository.findByUsername("ich"));
+		assertEquals(Optional.of(ich), jpaRepository.findOneByUsername("ich"));
+	}
+
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("eine EntityNotFoundException werfen wenn gesuchte Person mit diesem Id nicht existiert")
+	void eine_EntityNotFoundException_werfen_wenn_gesuchte_Person_mit_diesem_Id_nicht_existiert() {
+
+		assertThrows(EntityNotFoundException.class, () -> jpaRepository.getOne(UUID.randomUUID()).toString());
+	}
+
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("ein Person anhand Id lesen")
+	void eine_Person_anhand_Id_lesen() {
+		val meinStandort = persist(standort());
+		val meinKrankenhaus = persist(institution(meinStandort));
+		val ich = persist(person("ich", meinKrankenhaus, meinStandort));
+		entityManager.flush();
+
+		assertEquals(ich, jpaRepository.getOne(ich.getId()));
 	}
 
 	/* help methods */
@@ -57,21 +84,36 @@ public class PersonJpaRepositoryShould {
 		return entity;
 	}
 
-	private InstitutionEntity institution() {
+	private InstitutionEntity institution(final InstitutionStandortEntity standort) {
 		return InstitutionEntity.builder() //
 				.name("Mein Krankenhaus") //
 				.institutionKey("mein-krankehnaus") //
-				.typ(InstitutionTyp.Krankenhaus) //
+				.typ(InstitutionTyp.KRANKENHAUS) //
+				.hauptstandort(standort) //
 				.build();
 	}
-	
-	private PersonEntity person(final String username, final InstitutionEntity institution) {
+
+	private InstitutionStandortEntity standort() {
+		return InstitutionStandortEntity.builder() //
+				.name("Mein Standort") //
+				.strasse("Strasse") //
+				.hausnummer("10a") //
+				.plz("PLZ") //
+				.ort("Ort") //
+				.land("Land") //
+				.build();
+	}
+
+	private PersonEntity person(final String username, final InstitutionEntity institution,
+			final InstitutionStandortEntity standort) {
 		return PersonEntity.builder() //
 				.username(username) //
 				.vorname("Vorname") //
 				.nachname("Nachname") //
+				.email("EMail") //
 				.telefon("08106112233") //
 				.institution(institution) //
+				.standort(standort) //
 				.build();
 	}
 }

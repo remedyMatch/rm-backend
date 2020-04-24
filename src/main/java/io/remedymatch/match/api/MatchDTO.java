@@ -1,40 +1,42 @@
 package io.remedymatch.match.api;
 
-import io.remedymatch.institution.api.InstitutionDTO;
+import java.math.BigDecimal;
+import java.util.UUID;
+
+import io.remedymatch.institution.controller.InstitutionRO;
 import io.remedymatch.match.domain.MatchStatus;
 import lombok.Builder;
 import lombok.Data;
-
-import java.math.BigDecimal;
-import java.util.UUID;
 
 @Data
 @Builder
 public class MatchDTO {
 
-    private UUID id;
+	private UUID id;
 
-    private InstitutionDTO institutionVon;
+	private InstitutionRO institutionVon;
 
-    private MatchStandortDTO standortVon;
+	private MatchStandortRO standortVon;
 
-    private MatchStandortDTO standortAn;
+	private MatchStandortRO standortAn;
 
-    private InstitutionDTO institutionAn;
+	private InstitutionRO institutionAn;
 
-    private String kommentar;
+	private String kommentar;
 
-    private UUID anfrageId;
+	private UUID anfrageId;
 
-    private MatchStatus status;
+	private MatchStatus status;
 
-    private String prozessInstanzId;
+	private String prozessInstanzId;
 
-    private BigDecimal entfernung;
+	private BigDecimal entfernung;
 
-    private UUID artikelId;
+	private UUID artikelId;
 
-    private BigDecimal anzahl;
+	private UUID artikelVarianteId;
 
-    private String anfrageTyp;
+	private BigDecimal anzahl;
+
+	private String anfrageTyp;
 }

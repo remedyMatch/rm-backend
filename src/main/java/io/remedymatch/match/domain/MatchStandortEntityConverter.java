@@ -14,9 +14,10 @@ class MatchStandortEntityConverter {
 				.id(new MatchStandortId(entity.getId())) //
 				.institutionStandortId(entity.getInstitutionStandortId()) //
 				.name(entity.getName()) //
+				.strasse(entity.getStrasse())//
+				.hausnummer(entity.getHausnummer())//
 				.plz(entity.getPlz()) //
 				.ort(entity.getOrt()) //
-				.strasse(entity.getStrasse())//
 				.land(entity.getLand()) //
 				.longitude(entity.getLongitude()) //
 				.latitude(entity.getLatitude()) //
@@ -36,9 +37,10 @@ class MatchStandortEntityConverter {
 		return builder
 				.institutionStandortId(matchStandort.getInstitutionStandortId()) //
 				.name(matchStandort.getName()) //
+				.strasse(matchStandort.getStrasse())//
+				.hausnummer(matchStandort.getHausnummer()) //
 				.plz(matchStandort.getPlz()) //
 				.ort(matchStandort.getOrt()) //
-				.strasse(matchStandort.getStrasse())//
 				.land(matchStandort.getLand()) //
 				.longitude(matchStandort.getLongitude()) //
 				.latitude(matchStandort.getLatitude()) // ;

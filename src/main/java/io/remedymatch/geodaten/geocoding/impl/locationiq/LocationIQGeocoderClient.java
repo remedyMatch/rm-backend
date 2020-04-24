@@ -8,15 +8,15 @@ import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.AdressQuery;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.KoordinatenQuery;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Query;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Response;
-import io.remedymatch.properties.RmBackendProperties;
+import io.remedymatch.properties.GeodatenProperties;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -29,12 +29,13 @@ import java.util.stream.Collectors;
 import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
+@Profile("prod | geo")
 @Component
 @RequiredArgsConstructor
 public class LocationIQGeocoderClient implements Geocoder {
 
     private final RestTemplate restTemplate;
-    private final RmBackendProperties properties;
+    private final GeodatenProperties properties;
 
     @Override
     public List<Point> findePointsByAdressString(@NonNull String adressString) {
@@ -101,6 +102,9 @@ public class LocationIQGeocoderClient implements Geocoder {
         }
         final ResponseEntity<Response[]> responseEntity = restTemplate.getForEntity(url, Response[].class);
         if (responseEntity.getStatusCode() != HttpStatus.OK) {
+            if (responseEntity.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                throw new RuntimeException("Ist ein valider geocoder API key hinterlegt?");
+            }
             throw new RuntimeException(responseEntity.getStatusCode().name());
         }
         final Response[] gefundeneResponses = responseEntity.getBody();

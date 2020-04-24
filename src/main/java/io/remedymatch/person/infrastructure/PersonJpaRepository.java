@@ -3,10 +3,11 @@ package io.remedymatch.person.infrastructure;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import io.remedymatch.shared.infrastructure.ReadOnlyRepository;
 
-@Repository
-public interface PersonJpaRepository extends JpaRepository<PersonEntity, UUID> {
-	Optional<PersonEntity> findByUsername(String userName);
+public interface PersonJpaRepository extends ReadOnlyRepository<PersonEntity, UUID> {
+
+	PersonEntity save(final PersonEntity entity);
+
+	Optional<PersonEntity> findOneByUsername(final String userName);
 }

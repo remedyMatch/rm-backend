@@ -3,7 +3,8 @@ package io.remedymatch.angebot.infrastructure;
 import io.remedymatch.TestApplication;
 import io.remedymatch.artikel.infrastructure.ArtikelEntity;
 import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
-import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
+import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,99 +30,121 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("AngebotJpaRepository InMemory Test soll")
 public class AngebotJpaRepositoryShould {
 
-    @Autowired
-    private EntityManager entityManager;
+	@Autowired
+	private EntityManager entityManager;
 
-    @Autowired
-    private AngebotJpaRepository jpaRepository;
+	@Autowired
+	private AngebotJpaRepository jpaRepository;
 
-    private InstitutionEntity meinKrankenhaus;
-    private InstitutionStandortEntity meinStandort;
-    private ArtikelKategorieEntity beispielKategorieArtikel;
-    private ArtikelEntity beispielArtikel;
+	private InstitutionEntity meinKrankenhaus;
+	private InstitutionStandortEntity meinStandort;
+	private ArtikelKategorieEntity beispielKategorieArtikel;
+	private ArtikelEntity beispielArtikel;
+	private ArtikelVarianteEntity beispielArtikelVariante;
 
-    @BeforeEach
-    private void prepare() {
-        meinKrankenhaus = persist(meinKrankenhaus());
-        meinStandort = persist(meinStandort());
-        beispielKategorieArtikel = persist(beispielArtikelKategorie());
-        beispielArtikel = persist(beispielArtikel());
-        entityManager.flush();
-    }
+	@BeforeEach
+	private void prepare() {
+		meinKrankenhaus = persist(meinKrankenhaus());
+		meinStandort = persist(meinStandort());
+		beispielKategorieArtikel = persist(beispielArtikelKategorie());
+		beispielArtikel = persist(beispielArtikel());
+		beispielArtikelVariante = persist(beispielArtikelVariante());
+		entityManager.flush();
+	}
 
-    @Rollback(true)
-    @Transactional
-    @Test
-    @DisplayName("alle nicht bediente Angebote zurueckliefern")
-    void alle_nicht_bediente_Angebote_zurueckliefern() {
-        AngebotEntity ersteAngebot = persist(angebot(BigDecimal.valueOf(100)));
-        AngebotEntity zweiteAngebot = persist(angebot(BigDecimal.valueOf(200)));
-        entityManager.flush();
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("alle nicht bediente Angebote zurueckliefern")
+	void alle_nicht_bediente_Angebote_zurueckliefern() {
+		AngebotEntity ersteAngebot = persist(angebot(BigDecimal.valueOf(100)));
+		AngebotEntity zweiteAngebot = persist(angebot(BigDecimal.valueOf(200)));
+		entityManager.flush();
 
-        assertEquals(Arrays.asList(ersteAngebot, zweiteAngebot), jpaRepository.findAllByDeletedFalseAndBedientFalse());
-    }
+		assertEquals(Arrays.asList(ersteAngebot, zweiteAngebot), jpaRepository.findAllByDeletedFalseAndBedientFalse());
+	}
 
-    /* help methods */
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("alle nicht bediente Angebote einer Institution zurueckliefern")
+	void alle_nicht_bediente_Angebote_einer_Institution_zurueckliefern() {
+		AngebotEntity ersteAngebot = persist(angebot(BigDecimal.valueOf(100)));
+		AngebotEntity zweiteAngebot = persist(angebot(BigDecimal.valueOf(200)));
+		entityManager.flush();
 
-    public <E> E persist(E entity) {
-        entityManager.persist(entity);
-        return entity;
-    }
+		assertEquals(Arrays.asList(ersteAngebot, zweiteAngebot),
+				jpaRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(meinKrankenhaus.getId()));
+	}
 
-    private InstitutionEntity meinKrankenhaus() {
-        return InstitutionEntity.builder() //
-                .institutionKey("mein_krankenhaus") //
-                .name("Mein Krankenhaus") //
-                .typ(InstitutionTyp.Krankenhaus) //
-                .build();
-    }
+	/* help methods */
 
-    private InstitutionStandortEntity meinStandort() {
-        return InstitutionStandortEntity.builder() //
-                .name("Mein Standort") //
-                .plz("PLZ") //
-                .ort("Ort") //
-                .strasse("Strasse") //
-                .land("Land") //
-                .build();
-    }
+	public <E> E persist(E entity) {
+		entityManager.persist(entity);
+		return entity;
+	}
 
-    private ArtikelKategorieEntity beispielArtikelKategorie() {
-        return ArtikelKategorieEntity.builder() //
-                .name("beispiel Kategorie") //
-                .build();
-    }
+	private InstitutionEntity meinKrankenhaus() {
+		return InstitutionEntity.builder() //
+				.institutionKey("mein_krankenhaus") //
+				.name("Mein Krankenhaus") //
+				.typ(InstitutionTyp.KRANKENHAUS) //
+				.build();
+	}
 
-    private ArtikelEntity beispielArtikel() {
-        return ArtikelEntity.builder() //
-                .ean("EAN") //
-                .name("egal") //
-                .beschreibung("beschreibung") //
-                .hersteller("hersteller") //
-                .artikelKategorie(beispielKategorieArtikel) //
-                .build();
-    }
+	private InstitutionStandortEntity meinStandort() {
+		return InstitutionStandortEntity.builder() //
+				.name("Mein Standort") //
+				.strasse("Strasse") //
+				.hausnummer("10a") //
+				.plz("PLZ") //
+				.ort("Ort") //
+				.land("Land") //
+				.build();
+	}
 
-    private AngebotEntity angebot(//
-                                  BigDecimal anzahl) {
-        return AngebotEntity.builder() //
-                .artikel(beispielArtikel) //
-                .institution(meinKrankenhaus) //
-                .standort(meinStandort) //
-                .anzahl(anzahl) //
-                .rest(anzahl) //
-                .haltbarkeit(LocalDateTime.now()) //
-                .steril(true) //
-                .originalverpackt(true) //
-                .medizinisch(true) //
-                .kommentar("Bla bla") //
-                .bedient(false) //
-                .build();
-    }
+	private ArtikelKategorieEntity beispielArtikelKategorie() {
+		return ArtikelKategorieEntity.builder() //
+				.name("beispiel Kategorie") //
+				.build();
+	}
+
+	private ArtikelEntity beispielArtikel() {
+		return ArtikelEntity.builder() //
+				.name("egal") //
+				.beschreibung("beschreibung") //
+				.artikelKategorie(beispielKategorieArtikel.getId()) //
+				.build();
+	}
+
+	private ArtikelVarianteEntity beispielArtikelVariante() {
+		return ArtikelVarianteEntity.builder() //
+				.artikel(beispielArtikel.getId()) //
+				.variante("egal") //
+				.beschreibung("beschreibung") //
+				.build();
+	}
+
+	private AngebotEntity angebot(//
+			BigDecimal anzahl) {
+		return AngebotEntity.builder() //
+				.artikelVariante(beispielArtikelVariante) //
+				.institution(meinKrankenhaus) //
+				.standort(meinStandort) //
+				.anzahl(anzahl) //
+				.rest(anzahl) //
+				.haltbarkeit(LocalDateTime.now()) //
+				.steril(true) //
+				.originalverpackt(true) //
+				.medizinisch(true) //
+				.kommentar("Bla bla") //
+				.bedient(false) //
+				.build();
+	}
 }

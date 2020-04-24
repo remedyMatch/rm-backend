@@ -23,7 +23,7 @@ import io.remedymatch.TestApplication;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("InstitutionStandortJpaRepository InMemory Test soll")
@@ -56,9 +56,10 @@ public class InstitutionStandortJpaRepositoryShould {
 	private InstitutionStandortEntity standort() {
 		return InstitutionStandortEntity.builder() //
 				.name("Mein Standort") //
+				.strasse("Strasse") //
+				.hausnummer("10a") //
 				.plz("PLZ") //
 				.ort("Ort") //
-				.strasse("Strasse") //
 				.land("Land") //
 				.build();
 	}

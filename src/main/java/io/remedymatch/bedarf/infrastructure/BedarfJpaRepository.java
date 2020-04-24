@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface BedarfJpaRepository extends JpaRepository<BedarfEntity, UUID> {
     List<BedarfEntity> findAllByDeletedFalseAndBedientFalse();
 
-    List<BedarfEntity> findAllByDeletedFalseAndInstitution_Id(UUID id);
+    List<BedarfEntity> findAllByDeletedFalseAndBedientFalseAndInstitution_Id(UUID id);
 }

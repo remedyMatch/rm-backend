@@ -5,38 +5,3 @@ server:
 logging:
   level:
     root: info
-
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/rmdb
-    maxActive: 10
-    maxIdle: 5
-    minIdle: 2
-    initialSize: 5
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    driver-class-name: org.postgresql.Driver
-    username: rmbe
-    password: rmbe
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        ddl-auto: update
-        jdbc:
-          lob:
-            non_contextual_creation: true
-        generate_statistics: false
-        create_empty_composites:
-          enabled: true
-        show_sql: false
-        use_sql_comments: false
-        format_sql: false
-    generate-ddl: true
-
-
-io:
-  remedymatch:
-    backend:
-      engine-url: http://localhost:8085
-      geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
-      geocoderServiceApiKey: 2831cf619102d5

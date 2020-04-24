@@ -1,6 +1,6 @@
 package io.remedymatch.match.domain;
 
-import io.remedymatch.institution.domain.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.match.infrastructure.MatchJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;

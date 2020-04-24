@@ -34,21 +34,20 @@ public class MatchStandort {
 	private String name;
 
 	@NotBlank
+	private String strasse;
+
+	@NotBlank
+	private String hausnummer;
+
+	@NotBlank
 	private String plz;
 
 	@NotBlank
 	private String ort;
 
 	@NotBlank
-	private String strasse;
-
-	@NotBlank
 	private String land;
 
 	private BigDecimal longitude;
 	private BigDecimal latitude;
-
-	public String getAdresse() {
-		return strasse + ", " + plz + " " + ort + ", " + land;
-	}
 }

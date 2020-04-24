@@ -4,8 +4,8 @@ import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.aufgabe.domain.handler.TaskCompleteHandler;
 import io.remedymatch.engine.TaskDTO;
 import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.person.domain.Person;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class AufgabeService {
 
     private final EngineClient engineClient;
-    private final UserService userService;
+    private final UserContextService userService;
 
     @Qualifier("TaskBeschreibungHandlerMap")
     private Map<String, TaskBeschreibungHandler> beschreibungHandlerMap;

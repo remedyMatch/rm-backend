@@ -4,94 +4,69 @@
 
 * Docker
 * docker-compose
-* IDE (IntelliJ, VSCode, ...)
+* IDE (Eclipse, IntelliJ, ...)
 * git
-* node / npm
 
 ## lokale Installation
-Um sowohl Frontend als auch Backend lokal lauffähig zu bekommen, müssen die folgenden
-Repositories geklont werden.
+Um Backend lokal lauffähig zu bekommen, müssen die folgenden Repositories geklont werden.
 
-* rm-gateway
-* rm-engine
+* rm-stack
 * rm-backend
-* rm-frontend
 
 Alle Repositories sind zu finden unter https://github.com/remedyMatch .
 
-### Gateway
+### rm-stack starten
 
-* `docker-compose up` auf top level Ebene (wo auch die Datei docker-compose.yml liegt)
-* Applikation starten (Klasse `GatewayApplication`)
-* http://localhost:8090/auth/ aufrufen
-* KeyCloak konfigurieren
-    * Administration Console --> mit den credentials aus `docker-compose.yml` einloggen
-    * Clients --> Create
-    * Client ID: spring-cloud-gateway-client
-    * Clients --> spring-cloud-gateway-client
-        * Valid Redirect URIs: *
-        * Advanced Settings --> Access Token Lifespan: 1 Days
-        * Save
-    * Groups --> New
-        * Name: beliebig --> save
-    * Users --> View all users --> admin user anklicken --> Groups -->
-     Available Groups --> View all groups --> angelegte Gruppe auswählen --> Join
-    * Clients --> spring-cloud-gateway-client
-        * Tab Mappers --> Create
-            * Name: GroupMapper
-            * Mapper Type: Group Membership
-            * Token Claim Name: groups
-            * Save
+Da rm-stack mit lokalem backend gestartet werden soll, muss in rm-stack folgendes angepasst werden:
 
-### Engine
+#### nginx.conf anpassen
+* In  `location /remedy/` auf internes backend switchen
 
-* `cd etc/postgres`
-* `./build_pg.sh`
-* `./run_pg.sh`
-* Applikation starten (Klasse `RmeEngineApplication`)
+```
+    location /remedy/ {
+#        proxy_pass          http://backend:8081/remedy/;
+#        for local development
+        proxy_pass          http://host.docker.internal:8081/remedy/;
+        ...
+  }
+```
+__ACHTUNG: host.docker.internal funktioniert nur unter MacOS!__ Unter Windows/Linux
+kann der Befehl `docker network inspect bridge` verwendet werden, um die IP-Adresse
+des docker hosts herauszufinden (in der Regel 172.17.0.1). host.docker.internal dann
+durch diese IP ersetzen.
+
+#### docker-compose.yml anpassen
+* In `reverseproxy` depends on backend auskommentieren
+
+```
+  reverseproxy:
+    build: .
+    ports:
+    - 8008:8008
+    depends_on:
+      - auth
+#      - backend
+      - engine
+      - frontend
+```
+
+* Den `backend` service komplett auskommentieren
+
+```
+#  backend:
+#    image: remedymatch/backend:latest
+# ...
+```
 
 ### Backend
 
-* `cd etc/postgres`
-* `./build_pg.sh`
-* `./run_pg.sh`
 * Applikation starten (Klasse `RmBeApplication`)
-    * Beim __erstmaligen__ start als aktives Profil "dbinit,prod" verwenden 
-    (In der RunConfiguration)
-        * Grund --> Damit wird die DbInit Config angezogen und die pusht dann 
-        Testdaten in die Db
-    * Bei jedem weiteren Start das Profil "prod" verwenden
+** Beim start als aktives Profil "dbinit,dev" verwenden
 
-### Frontend
+## Rest API
 
-* npm install
-* npm start
+siehe [API.md](https://github.com/remedyMatch/rm-backend/blob/master/API.md)
 
-Nach Ausführung der obigen Schritte kann http://localhost:8080 aufgerufen werden und 
-man kann sich mit dem admin-Benutzer einloggen. Wurde die Backend-Applikation einmalig 
-mit dem profile "test" gestartet, sollten nun auch Beispiel-Daten in der Applikation zur 
-Verfügung stehen. Dies kann einfach getestet werden indem man über den Bedarf-Button versucht 
-einen neuen Bedarf anzulegen. Hier sollten nun Beispiel-Kategorien und -Artikel zur Auswahl 
-angeboten werden. Das Anlegen eines neuen Bedarfs sollte ebenso funktionieren.
+## Geocoding
 
-
-### Details
-
-Hier eine genauere Beschreibung was mit den Punkten "Applikation starten (Klasse `XYZ`)" 
-gemeint ist:
-
-Als Beispiel betrachten wir das Gateway --> *Applikation starten (Klasse `GatewayApplication`)*
-
-Um das zu tun, kann man beispielsweise IntelliJ benutzen. Hier eine Klick-Anleitung:
-
-* In IntelliJ: `File` - `Open...`
-* `rm-gateway` Ordner auswählen (darin liegen z.B. die Dateien `Dockerfile` und `docker-compose.yml`)
-* Java-JDK auswählen: `File` - `Project Structure...`
-* Sicherstellen, dass ein valides JDK mit Java Version 11 ausgwählt ist --> `Apply`
-* Sicherstellen, dass das Projekt als gradle Projekt von IntelliJ erkannt wurde (IntelliJ
-fragt in der Regel, nachdme das Java-JDK ausgewählt wurde, ob das Projekt ein Gradle-Projekt
-ist. Das bestätigen. Anschliessend zur Klasse `src/main/java/io/remedymatch/gateway/GatewayApplication.java`
-navigieren. IntelliJ sollte diese Klasse nun korrekt, als Spring Boot application class
-registrieren und einen entsprechenden "Play-Button" anzeigen, mit welchem man die Applikation
-starten kann. Falls dies nicht der Fall ist, kann man die Run Configuration auch manuell 
-konfigurieren (rechts oben die Kombobox neben dem "Run"- und "Debug"-Button.)
+siehe [GECODING.md](https://github.com/remedyMatch/rm-backend/blob/master/GEOCODING.md)

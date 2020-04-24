@@ -19,13 +19,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.institution.domain.InstitutionTyp;
+import io.remedymatch.institution.domain.model.InstitutionTyp;
 import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("InstitutionJpaRepository InMemory Test soll")
@@ -36,18 +36,6 @@ public class InstitutionJpaRepositoryShould {
 	
 	@Autowired
 	private InstitutionJpaRepository jpaRepository;
-
-	@Rollback(true)
-	@Transactional
-	@Test
-	@DisplayName("Institution fuer Key zurueckliefern")
-	void institution_fuer_Key_zurueckliefern() {
-		InstitutionEntity meineInstitution = persist(institution("meine"));
-		persist(institution("andere"));
-		entityManager.flush();
-
-		assertEquals(Optional.of(meineInstitution), jpaRepository.findByInstitutionKey("meine"));
-	}
 	
 	@Rollback(true)
 	@Transactional
@@ -74,16 +62,17 @@ public class InstitutionJpaRepositoryShould {
 		return InstitutionEntity.builder() //
 				.name("Mein Krankenhaus") //
 				.institutionKey(institutionKey) //
-				.typ(InstitutionTyp.Krankenhaus) //
+				.typ(InstitutionTyp.KRANKENHAUS) //
 				.build();
 	}
 	
 	private InstitutionStandortEntity standort(final String name) {
 		return InstitutionStandortEntity.builder() //
 				.name(name) //
+				.strasse("Strasse") //
+				.hausnummer("10a") //
 				.plz("PLZ") //
 				.ort("Ort") //
-				.strasse("Strasse") //
 				.land("Land") //
 				.build();
 	}

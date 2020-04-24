@@ -21,9 +21,10 @@ public class MatchStandortMapperShould {
 	private static final MatchStandortId MATCH_STANDORT_ID = new MatchStandortId(UUID.randomUUID());
 	private static final UUID INSTITUTION_STANDORT_ID = UUID.randomUUID();
 	private static final String NAME = "Name";
+	private static final String STRASSE = "Strasse";
+	private static final String HAUSNUMMER = "10a";
 	private static final String PLZ = "PLZ";
 	private static final String ORT = "Ort";
-	private static final String STRASSE = "Strasse";
 	private static final String LAND = "Land";
 	private static final BigDecimal LONGITUDE = BigDecimal.valueOf(123);
 	private static final BigDecimal LATITUDE = BigDecimal.valueOf(555);
@@ -40,14 +41,15 @@ public class MatchStandortMapperShould {
 		assertNull(MatchStandortMapper.mapToDTO((MatchStandort) null));
 	}
 
-	private MatchStandortDTO matchStandortDTO() {
-		return MatchStandortDTO.builder() //
+	private MatchStandortRO matchStandortDTO() {
+		return MatchStandortRO.builder() //
 				.id(MATCH_STANDORT_ID.getValue()) //
 				.institutionStandortId(INSTITUTION_STANDORT_ID) //
 				.name(NAME) //
+				.strasse(STRASSE) //
+				.hausnummer(HAUSNUMMER) //
 				.plz(PLZ) //
 				.ort(ORT) //
-				.strasse(STRASSE) //
 				.land(LAND) //
 				.longitude(LONGITUDE) //
 				.latitude(LATITUDE) //
@@ -59,9 +61,10 @@ public class MatchStandortMapperShould {
 				.id(MATCH_STANDORT_ID) //
 				.institutionStandortId(INSTITUTION_STANDORT_ID) //
 				.name(NAME) //
+				.strasse(STRASSE) //
+				.hausnummer(HAUSNUMMER) //
 				.plz(PLZ) //
 				.ort(ORT) //
-				.strasse(STRASSE) //
 				.land(LAND) //
 				.longitude(LONGITUDE) //
 				.latitude(LATITUDE) //

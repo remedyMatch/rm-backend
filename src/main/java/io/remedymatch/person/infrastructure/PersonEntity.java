@@ -2,6 +2,7 @@ package io.remedymatch.person.infrastructure;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,45 +15,55 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.shared.infrastructure.Auditable;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Builder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity(name = "Person")
 @Table(name = "RM_PERSON")
-public class PersonEntity {
+public class PersonEntity extends Auditable {
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Type(type = "uuid-char")
-    @Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
-    private UUID id;
+	@Type(type = "uuid-char")
+	@Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
+	private UUID id;
 
-    @Column(name = "USERNAME", nullable = false, updatable = false, length = 64)
-    private String username;
+	@Column(name = "USERNAME", nullable = false, updatable = false, length = 64)
+	private String username;
 
-    @Column(name = "VORNAME", nullable = true, updatable = true, length = 64)
-    private String vorname;
+	@Column(name = "VORNAME", nullable = true, updatable = true, length = 64)
+	private String vorname;
 
-    @Column(name = "NACHNAME", nullable = true, updatable = true, length = 64)
-    private String nachname;
+	@Column(name = "NACHNAME", nullable = true, updatable = true, length = 64)
+	private String nachname;
 
-    @Column(name = "TELEFON", nullable = true, updatable = true, length = 32)
-    private String telefon;
+	@Column(name = "EMAIL", nullable = true, updatable = true, length = 64)
+	private String email;
 
-    @ManyToOne
-    @Type(type = "uuid-char")
-    @JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
-    private InstitutionEntity institution;
+	@Column(name = "TELEFON", nullable = true, updatable = true, length = 32)
+	private String telefon;
+
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@Type(type = "uuid-char")
+	@JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
+	private InstitutionEntity institution;
+
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@Type(type = "uuid-char")
+	@JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = true, updatable = true)
+	private InstitutionStandortEntity standort;
 }

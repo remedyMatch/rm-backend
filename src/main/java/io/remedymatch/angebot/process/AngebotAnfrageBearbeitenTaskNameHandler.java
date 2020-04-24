@@ -1,11 +1,21 @@
 package io.remedymatch.angebot.process;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.UUID;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Component;
 
-import io.remedymatch.angebot.domain.AngebotAnfrageId;
-import io.remedymatch.angebot.domain.AngebotAnfrageRepository;
+import io.remedymatch.angebot.domain.model.AngebotAnfrage;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
+import io.remedymatch.artikel.domain.model.Artikel;
+import io.remedymatch.artikel.domain.model.ArtikelId;
+import io.remedymatch.artikel.domain.service.ArtikelSucheService;
 import io.remedymatch.aufgabe.domain.handler.TaskBeschreibungHandler;
 import io.remedymatch.engine.TaskDTO;
 import lombok.AllArgsConstructor;
@@ -13,29 +23,56 @@ import lombok.val;
 
 @AllArgsConstructor
 @Component
-public class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler {
+class AngebotAnfrageBearbeitenTaskNameHandler implements TaskBeschreibungHandler {
 
-    private final AngebotAnfrageRepository anfrageRepository;
+	private static final String BESCHREIBUNG_TEMPLATE_MIT_ARTIKEL_VARIANTE = "%s: Anfrage zu Angebot von %s %s - %s";
 
-    @Override
-    public String beschreibung(TaskDTO taskDTO) {
+	private final ArtikelSucheService artikelSucheService;
+	private final AngebotAnfrageSucheService anfrageSucheService;
 
-        String beschreibung = "";
+	@Override
+	public String taskKey() {
+		return AngebotAnfrageBearbeitenTaskContstants.TASK_KEY;
+	}
 
-        val anfrage = anfrageRepository.get(new AngebotAnfrageId(UUID.fromString(taskDTO.getObjektId())));
+	@Override
+	public String beschreibung(final TaskDTO taskDTO) {
+		return formatBeschreibungstext(new AngebotAnfrageId(UUID.fromString(taskDTO.getObjektId())));
+	}
 
-        var prefix = "Anfrage zu Angebot von ";
-        var artikel = anfrage.get().getAngebot().getArtikel();
-        var anzahl = anfrage.get().getAngebot().getAnzahl();
+	private String formatBeschreibungstext(final @NotNull AngebotAnfrageId anfrageId) {
 
-        beschreibung += anfrage.get().getInstitutionVon().getName() + ": " + prefix;
-        beschreibung += (int) anzahl.intValue() + " " + artikel.getName();
+		val anfrage = getAnfrage(anfrageId);
+		val angebot = anfrage.getAngebot();
+		val artikelVariante = angebot.getArtikelVariante();
+		val artikel = getArtikel(artikelVariante.getArtikelId());
 
-        return beschreibung;
-    }
+		return String.format(BESCHREIBUNG_TEMPLATE_MIT_ARTIKEL_VARIANTE, //
+				anfrage.getInstitution().getName(), //
+				formatAnzahl(angebot.getAnzahl()), //
+				artikel.getName(), //
+				artikelVariante.getVariante());
 
-    @Override
-    public String taskKey() {
-        return AnfrageBearbeitenTaskContstants.TASK_KEY;
-    }
+	}
+
+	private AngebotAnfrage getAnfrage(final AngebotAnfrageId anfrageId) {
+		return anfrageSucheService.getAnfrageOrElseThrow(anfrageId);
+	}
+
+	private Artikel getArtikel(final ArtikelId artikelId) {
+		return artikelSucheService.getArtikelOrElseThrow(artikelId);
+	}
+
+	private String formatAnzahl(final @NotNull BigDecimal anzahl) {
+		double doubleValue = anzahl.doubleValue();
+		if (doubleValue == (long) doubleValue) {
+			return String.format("%d", (long) doubleValue);
+		}
+
+		NumberFormat nf = NumberFormat.getNumberInstance(Locale.GERMANY);
+		DecimalFormat df = (DecimalFormat) nf;
+		df.setMaximumFractionDigits(2);
+		df.setMinimumFractionDigits(2);
+		return df.format(anzahl);
+	}
 }

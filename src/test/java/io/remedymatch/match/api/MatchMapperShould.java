@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.institution.api.InstitutionDTO;
-import io.remedymatch.institution.domain.Institution;
-import io.remedymatch.institution.domain.InstitutionId;
+import io.remedymatch.institution.controller.InstitutionRO;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.match.domain.Match;
 import io.remedymatch.match.domain.MatchId;
 import io.remedymatch.match.domain.MatchStandort;
@@ -27,19 +27,19 @@ public class MatchMapperShould {
 	private static final String KOMMENTAR = "Kommentar";
 	private static final InstitutionId INSTITUTION_VON_ID = new InstitutionId(UUID.randomUUID());
 	private static final Institution INSTITUTION_VON = Institution.builder().id(INSTITUTION_VON_ID).build();
-	private static final InstitutionDTO INSTITUTION_VON_DTO = InstitutionDTO.builder().id(INSTITUTION_VON_ID.getValue())
+	private static final InstitutionRO INSTITUTION_VON_DTO = InstitutionRO.builder().id(INSTITUTION_VON_ID.getValue())
 			.build();
 	private static final MatchStandortId STANDORT_VON_ID = new MatchStandortId(UUID.randomUUID());
 	private static final MatchStandort STANDORT_VON = MatchStandort.builder().id(STANDORT_VON_ID).build();
-	private static final MatchStandortDTO STANDORT_VON_DTO = MatchStandortDTO.builder().id(STANDORT_VON_ID.getValue())
+	private static final MatchStandortRO STANDORT_VON_DTO = MatchStandortRO.builder().id(STANDORT_VON_ID.getValue())
 			.build();
 	private static final InstitutionId INSTITUTION_AN_ID = new InstitutionId(UUID.randomUUID());
 	private static final Institution INSTITUTION_AN = Institution.builder().id(INSTITUTION_AN_ID).build();
-	private static final InstitutionDTO INSTITUTION_AN_DTO = InstitutionDTO.builder().id(INSTITUTION_AN_ID.getValue())
+	private static final InstitutionRO INSTITUTION_AN_DTO = InstitutionRO.builder().id(INSTITUTION_AN_ID.getValue())
 			.build();
 	private static final MatchStandortId STANDORT_AN_ID = new MatchStandortId(UUID.randomUUID());
 	private static final MatchStandort STANDORT_AN = MatchStandort.builder().id(STANDORT_AN_ID).build();
-	private static final MatchStandortDTO STANDORT_AN_DTO = MatchStandortDTO.builder().id(STANDORT_AN_ID.getValue())
+	private static final MatchStandortRO STANDORT_AN_DTO = MatchStandortRO.builder().id(STANDORT_AN_ID.getValue())
 			.build();
 	private static final UUID ANFRAGE_ID = UUID.randomUUID();
 	private static final String PROZESSINSTANZ_ID = "ProzessInstanzId";

@@ -1,9 +1,9 @@
 package io.remedymatch.match.domain;
 
-import io.remedymatch.angebot.domain.AngebotAnfrage;
-import io.remedymatch.bedarf.domain.BedarfAnfrage;
+import io.remedymatch.angebot.domain.model.AngebotAnfrage;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.user.domain.UserService;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
     private final MatchStandortRepository matchStandortRepository;
-    private final UserService userService;
+    private final UserContextService userService;
     private final GeoCalcService geoCalcService;
 
     @Transactional
@@ -27,13 +27,16 @@ public class MatchService {
         match.setInstitutionAn(bedarfAnfrage.getBedarf().getInstitution());
         match.setStandortAn(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getBedarf().getStandort()));
         match.setAnfrageId(bedarfAnfrage.getId().getValue());
-        match.setAritkelId(bedarfAnfrage.getBedarf().getArtikel().getId().getValue());
+        match.setArtikelId(bedarfAnfrage.getBedarf().getArtikel().getId().getValue());
+        if (bedarfAnfrage.getBedarf().getArtikelVariante() != null) {
+        	match.setArtikelVarianteId(bedarfAnfrage.getBedarf().getArtikelVariante().getId().getValue());
+        }
         match.setAnzahl(bedarfAnfrage.getAnzahl());
         match.setAnfrageTyp("Bedarf");
         match.setKommentar("");
 
-        match.setInstitutionVon(bedarfAnfrage.getInstitutionVon());
-        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getStandortVon()));
+        match.setInstitutionVon(bedarfAnfrage.getInstitution());
+        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(bedarfAnfrage.getStandort()));
 
         match.setStandortVon(matchStandortRepository.add(match.getStandortVon()));
         match.setStandortAn(matchStandortRepository.add(match.getStandortAn()));
@@ -46,16 +49,17 @@ public class MatchService {
     public Match matchAusAngebotErstellen(AngebotAnfrage angebotAnfrage) {
         val match = new Match();
 
-        match.setInstitutionAn(angebotAnfrage.getInstitutionVon());
-        match.setStandortAn(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandortVon()));
+        match.setInstitutionVon(angebotAnfrage.getInstitution());
+        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getStandort()));
         match.setAnfrageId(angebotAnfrage.getId().getValue());
-        match.setAritkelId(angebotAnfrage.getAngebot().getArtikel().getId().getValue());
+        match.setArtikelId(angebotAnfrage.getAngebot().getArtikelVariante().getArtikelId().getValue());
+        match.setArtikelVarianteId(angebotAnfrage.getAngebot().getArtikelVariante().getId().getValue());
         match.setAnzahl(angebotAnfrage.getAnzahl());
         match.setAnfrageTyp("Angebot");
         match.setKommentar("");
 
-        match.setInstitutionVon(angebotAnfrage.getAngebot().getInstitution());
-        match.setStandortVon(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getAngebot().getStandort()));
+        match.setInstitutionAn(angebotAnfrage.getAngebot().getInstitution());
+        match.setStandortAn(MatchStandortMapper.mapToMatchStandort(angebotAnfrage.getAngebot().getStandort()));
 
         match.setStandortVon(matchStandortRepository.add(match.getStandortVon()));
         match.setStandortAn(matchStandortRepository.add(match.getStandortAn()));

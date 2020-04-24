@@ -1,91 +1,160 @@
 package io.remedymatch.engine.client;
 
-import io.remedymatch.engine.TaskDTO;
-import io.remedymatch.engine.request.MessageKorrelierenRequest;
-import io.remedymatch.engine.request.ProzessStartRequest;
-import io.remedymatch.engine.request.TaskAbschliessenRequest;
-import io.remedymatch.properties.RmBackendProperties;
-import lombok.AllArgsConstructor;
-import lombok.val;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
+import org.camunda.bpm.engine.variable.VariableMap;
+import org.camunda.bpm.engine.variable.Variables;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.sun.istack.NotNull;
+
+import io.remedymatch.engine.TaskDTO;
+import io.remedymatch.engine.domain.BusinessKey;
+import io.remedymatch.engine.domain.MessageKey;
+import io.remedymatch.engine.domain.ProzessInstanzId;
+import io.remedymatch.engine.domain.ProzessKey;
+import io.remedymatch.engine.request.MessageKorrelierenRequest;
+import io.remedymatch.engine.request.ProzessStartRequest;
+import io.remedymatch.engine.request.TaskAbschliessenRequest;
+import io.remedymatch.person.domain.model.PersonId;
+import io.remedymatch.person.domain.service.PersonSucheService;
+import io.remedymatch.properties.EngineProperties;
+import lombok.AllArgsConstructor;
+import lombok.val;
+
 @AllArgsConstructor
 @Component
+@Validated
 public class EngineClient {
 
-    private final RmBackendProperties properties;
+	static final String ENGINE_VARIABLE_BENACHRICHTIGUNG_AN_NAME = "benachrichtigungAnName";
+	static final String ENGINE_VARIABLE_BENACHRICHTIGUNG_AN_EMAIL = "benachrichtigungAnEmail";
 
-    public TaskDTO ladeTask(String taskId, String institutionId) {
-        val restTemplate = new RestTemplate();
-        ResponseEntity<TaskDTO> taskResponse = restTemplate.getForEntity(properties.getEngineUrl() + "/restapi/task/" + institutionId + "/" + taskId, TaskDTO.class);
+	private final EngineProperties properties;
+	private final PersonSucheService personSucheService;
+	private final RestTemplate restTemplate;
+	
+	public ProzessInstanzId prozessStarten(//
+			final @NotNull @Valid ProzessKey prozessKey, //
+			final @NotNull @Valid BusinessKey businessKey, //
+			final @NotNull @Valid PersonId benachrichtingungAnPerson, //
+			final @NotNull @Valid Map<String, Object> variables) {
 
-        if (taskResponse.getStatusCode().isError()) {
-            throw new RuntimeException("Beim laden des Task ist etwas fehlgeschlagen");
-        }
+		val person = personSucheService.getByPersonId(benachrichtingungAnPerson);
 
-        val task = taskResponse.getBody();
-        return task;
-    }
+		VariableMap prozessVariables = Variables.createVariables();
+		prozessVariables.putAll(variables);
+		prozessVariables.putValue(ENGINE_VARIABLE_BENACHRICHTIGUNG_AN_EMAIL, person.getEmail());
+		prozessVariables.putValue(ENGINE_VARIABLE_BENACHRICHTIGUNG_AN_NAME,
+				person.getVorname() + " " + person.getNachname());
 
-    public List<TaskDTO> ladeAlleTask(String institutionId) {
-        val restTemplate = new RestTemplate();
-        ResponseEntity<TaskDTO[]> taskResponse = restTemplate.getForEntity(properties.getEngineUrl() + "/restapi/task/institution/" + institutionId, TaskDTO[].class);
-        if (taskResponse.getStatusCode().isError()) {
-            throw new RuntimeException("Beim laden der Task ist etwas fehlgeschlagen");
-        }
-        val task = taskResponse.getBody();
-        return Arrays.asList(task);
-    }
+		return prozessStarten(ProzessStartRequest.builder() //
+				.prozessKey(prozessKey.getValue()) //
+				.businessKey(businessKey.getValue().toString()) //
+				.variables(prozessVariables) //
+				.build());
+	}
 
-    public void taskAbschliessen(String task, Map<String, Object> variables) {
+	public ProzessInstanzId prozessStarten(//
+			final @NotNull @Valid ProzessKey prozessKey, //
+			final @NotNull @Valid BusinessKey businessKey, //
+			final @NotNull @Valid Map<String, Object> variables) {
 
-        val request = TaskAbschliessenRequest.builder().variables(variables).build();
-        val restTemplate = new RestTemplate();
-        ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/task/" + task, request, Void.class);
+		return prozessStarten(ProzessStartRequest.builder() //
+				.prozessKey(prozessKey.getValue()) //
+				.businessKey(businessKey.getValue().toString()) //
+				.variables(variables) //
+				.build());
+	}
 
-        if (response.getStatusCode().isError()) {
-            throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
-        }
-    }
+	private ProzessInstanzId prozessStarten(final @NotNull @Valid ProzessStartRequest request) {
 
-    public String prozessStarten(String prozessKey, String businessKey, Map<String, Object> variables) {
+		ResponseEntity<String> response = restTemplate
+				.postForEntity(properties.getRemedyRestApiUrl() + "/prozess/start", request, String.class);
 
-        val request = ProzessStartRequest.builder()
-                .prozessKey(prozessKey)
-                .variables(variables)
-                .businessKey(businessKey)
-                .build();
+		if (response.getStatusCode().isError()) {
+			throw new RuntimeException("Beim Starten des Prozesses ist etwas fehlgeschlagen");
+		}
 
-        val restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/prozess/start/", request, String.class);
+		return new ProzessInstanzId(response.getBody());
+	}
 
-        if (response.getStatusCode().isError()) {
-            throw new RuntimeException("Beim Starten des Prozesses ist etwas fehlgeschlagen");
-        }
+	public TaskDTO ladeTask(String taskId, String institutionId) {
+		ResponseEntity<TaskDTO> taskResponse = restTemplate.getForEntity(
+				properties.getRemedyRestApiUrl() + "/task/" + institutionId + "/" + taskId, TaskDTO.class);
 
-        return response.getBody();
-    }
+		if (taskResponse.getStatusCode().isError()) {
+			throw new RuntimeException("Beim laden des Task ist etwas fehlgeschlagen");
+		}
 
-    public void messageKorrelieren(String prozessInstanzId, String messageKey, Map<String, Object> variables) {
+		val task = taskResponse.getBody();
+		return task;
+	}
 
-        val request = MessageKorrelierenRequest.builder()
-                .prozessInstanzId(prozessInstanzId)
-                .messageKey(messageKey)
-                .variables(variables)
-                .build();
+	public List<TaskDTO> ladeAlleTask(String institutionId) {
+		ResponseEntity<TaskDTO[]> taskResponse = restTemplate
+				.getForEntity(properties.getRemedyRestApiUrl() + "/task/institution/" + institutionId, TaskDTO[].class);
+		if (taskResponse.getStatusCode().isError()) {
+			throw new RuntimeException("Beim laden der Task ist etwas fehlgeschlagen");
+		}
+		val task = taskResponse.getBody();
+		return Arrays.asList(task);
+	}
 
-        val restTemplate = new RestTemplate();
-        ResponseEntity<Void> response = restTemplate.postForEntity(properties.getEngineUrl() + "/restapi/message/korrelieren/", request, Void.class);
+	public void taskAbschliessen(String task, Map<String, Object> variables) {
 
-        if (response.getStatusCode().isError()) {
-            throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
-        }
-    }
+		val request = TaskAbschliessenRequest.builder().variables(variables).build();
+		ResponseEntity<Void> response = restTemplate.postForEntity(properties.getRemedyRestApiUrl() + "/task/" + task,
+				request, Void.class);
 
+		if (response.getStatusCode().isError()) {
+			throw new RuntimeException("Beim abschliessen ist etwas fehlgeschlagen");
+		}
+	}
+
+	public void messageKorrelieren(//
+			final @NotNull @Valid ProzessKey prozessKey, //
+			final @NotNull @Valid MessageKey messageKey, //
+			final @NotNull @Valid Map<String, Object> variablesEqual) {
+
+		messageKorrelieren(MessageKorrelierenRequest.builder() //
+				.prozessKey(prozessKey.getValue()) //
+				.messageKey(messageKey.getValue()) //
+				.variablesEqual(variablesEqual) //
+				.build());
+	}
+
+	public void messageKorrelieren( //
+			final @NotNull @Valid ProzessKey prozessKey, //
+			final @NotNull @Valid ProzessInstanzId prozessInstanzId, //
+			final @NotNull @Valid MessageKey messageKey) {
+
+		messageKorrelieren(MessageKorrelierenRequest.builder() //
+				.prozessKey(prozessKey.getValue()) //
+				.messageKey(messageKey.getValue()) //
+				.prozessInstanzId(prozessInstanzId.getValue()) //
+				.build());
+	}
+
+	private void messageKorrelieren(final @NotNull @Valid MessageKorrelierenRequest request) {
+
+		ResponseEntity<Void> response = restTemplate.postForEntity(//
+				UriComponentsBuilder.fromHttpUrl(properties.getRemedyRestApiUrl()) //
+						.path("/message/korrelieren") //
+						.build().toUri(), //
+				request, //
+				Void.class);
+
+		if (response.getStatusCode().isError()) {
+			throw new RuntimeException("Beim korrelieren ist etwas fehlgeschlagen: " + response.getStatusCodeValue());
+		}
+	}
 }

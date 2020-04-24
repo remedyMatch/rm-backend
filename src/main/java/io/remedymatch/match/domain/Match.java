@@ -1,10 +1,11 @@
 package io.remedymatch.match.domain;
 
-import io.remedymatch.institution.domain.Institution;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import io.remedymatch.institution.domain.model.Institution;
 
 @Getter
 @Setter
@@ -16,7 +17,8 @@ import java.util.UUID;
 public class Match {
     private MatchId id;
     private UUID anfrageId;
-    private UUID aritkelId;
+    private UUID artikelId;
+    private UUID artikelVarianteId;
     private BigDecimal anzahl;
     private String anfrageTyp;
     private Institution institutionVon;

@@ -2,21 +2,26 @@ package io.remedymatch.engine;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Builder
 public class TaskDTO {
 
-    public String taskId;
-    public String prozessInstanceId;
-    public String institution;
-    public String objektId;
-    public String displayName;
-    public String taskKey;
-    public String taskName;
-
+	private String taskId;
+	private String prozessInstanceId;
+	private String institution;
+	private String objektId;
+	private String displayName;
+	private String taskKey;
+	private String taskName;
 }

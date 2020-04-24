@@ -1,17 +1,11 @@
 spring:
   profiles: test
   datasource:
-# H2
     url: jdbc:h2:mem:rm-test-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     platform: h2
     username: sa
     password:
     driverClassName: org.h2.Driver
-# MySQL Test
-#    driverClassName: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/test?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-#    username: unittest
-#    password:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -21,8 +15,7 @@ spring:
       generate-ddl: true
     properties:
       hibernate:
-#        dialect: org.hibernate.dialect.MySQL8Dialect
-        show_sql: true
+        show_sql: false
         use_sql_comments: true
         format_sql: true
         
@@ -33,8 +26,19 @@ remedy:
 
 io:
   remedymatch:
-    backend:
-      engineUrl: http://localhost:8085
+    engine: 
+      remedyRestApiUrl: http://localhost:8008/engine/remedy
+      externalTaskUrl: http://localhost:8008/engine/rest
+    geodaten:
       geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
       geocoderServiceApiKey: code
-        
+    keycloak:
+      serverUrl: http://localhost:8008/auth
+      user:
+        realm: rmio
+      client:
+        realm: rmio
+        username: rm_backend_user
+        password: rm_backend_user_password
+        clientId: admin-cli
+        clientSecret: admin

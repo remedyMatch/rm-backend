@@ -1,0 +1,54 @@
+spring:
+  profiles: dev
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8008/auth/realms/rmio
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/backend?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+#      ddl-auto: create-drop
+#      ddl-auto: create
+      ddl-auto: update
+      generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+
+logging:
+  level:
+    root: INFO
+    io.remedymatch: DEBUG
+    org.springframework: DEBUG
+    org.apache.coyote: DEBUG
+    #org.hibernate: DEBUG
+        
+remedy:
+  security:
+    disabled:
+      true
+
+io:
+  remedymatch:
+    engine: 
+      remedyRestApiUrl: http://localhost:8008/engine/remedy
+      externalTaskUrl: http://localhost:8008/engine/rest
+    keycloak:
+      serverUrl: http://localhost:8008/auth
+      user:
+        realm: rmio
+      client:
+        realm: rmio
+        username: rm_backend_user
+        password: rm_backend_user_password
+        clientId: admin-cli
+        clientSecret: admin

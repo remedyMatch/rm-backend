@@ -106,7 +106,7 @@ public class AngebotAnfrageJpaRepositoryShould {
 				beispielAngebot.getId(), //
 				anfrage.getId()));
 	}
-
+	
 	@Rollback(true)
 	@Transactional
 	@Test

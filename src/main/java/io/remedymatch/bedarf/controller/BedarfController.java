@@ -43,12 +43,6 @@ public class BedarfController {
 	private final BedarfService bedarfService;
 
 	@Transactional(readOnly = true)
-	@GetMapping("/suche")
-	public ResponseEntity<List<BedarfRO>> getAlleNichtBedienteBedarfe() {
-		return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.findAlleNichtBedienteBedarfe()));
-	}
-
-	@Transactional(readOnly = true)
 	@GetMapping
 	public ResponseEntity<List<BedarfRO>> getInstituionBedarfe() {
 		return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.findAlleNichtBedienteBedarfeDerUserInstitution()));

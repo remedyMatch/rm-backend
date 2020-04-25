@@ -3,6 +3,7 @@ package io.remedymatch.bedarf.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -20,6 +21,7 @@ import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
+import io.remedymatch.bedarf.domain.model.BedarfFilterEntry;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.domain.model.NeuesBedarf;
 import io.remedymatch.institution.controller.InstitutionRO;
@@ -68,6 +70,9 @@ class BedarfControllerMapperShould {
 	private static final String ANFRAGE_PROZESS_INSTANZ_ID = "Anfrage ProzessInstanzId";
 	private static final BedarfAnfrageStatus ANFRAGE_STATUS = BedarfAnfrageStatus.OFFEN;
 
+	private static final UUID FILTER_ENTRY_ID = UUID.randomUUID();
+	private static final BigInteger FILTER_ENTRY_ANZAHL = BigInteger.valueOf(123);
+
 	@Test
 	@DisplayName("eine leere Liste der Domain Objekte in leere Liste der ROs konvertieren")
 	void eine_leere_Liste_der_Domain_Objekte_in_leere_Liste_der_ROs_konvertieren() {
@@ -81,21 +86,39 @@ class BedarfControllerMapperShould {
 	}
 
 	@Test
-	@DisplayName("Bedarf Domain Objekt mit mit_ArtikelVariante_ in RO konvertieren")
+	@DisplayName("Bedarf Domain Objekt mit ArtikelVariante in RO konvertieren")
 	void bedarf_domain_Objekt_mit_ArtikelVariante_in_RO_konvertieren() {
 		assertEquals(bedarfRO(), BedarfControllerMapper.mapToBedarfRO(bedarf()));
 	}
-	
+
 	@Test
-	@DisplayName("Bedarf Domain Objekt ohne mit_ArtikelVariante_in RO konvertieren")
+	@DisplayName("Bedarf Domain Objekt ohne ArtikelVariante in RO konvertieren")
 	void bedarf_domain_Objekt_ohne_ArtikelVariante_in_RO_konvertieren() {
 		val bedarfOhneArtikelVariante = bedarf();
 		bedarfOhneArtikelVariante.setArtikelVariante(null);
-		
+
 		BedarfRO bedarfROOhneArtikelVariante = bedarfRO();
 		bedarfROOhneArtikelVariante.setArtikelVarianteId(null);
-		
+
 		assertEquals(bedarfROOhneArtikelVariante, BedarfControllerMapper.mapToBedarfRO(bedarfOhneArtikelVariante));
+	}
+	
+	@Test
+	@DisplayName("eine leere Liste der FilterEntries in leere Liste der ROs konvertieren")
+	void eine_leere_Liste_der_FilterEntries_in_leere_Liste_der_ROs_konvertieren() {
+		assertEquals(Collections.emptyList(), BedarfControllerMapper.mapToFilterEntriesRO(Collections.emptyList()));
+	}
+
+	@Test
+	@DisplayName("eine Liste der FilterEntries in Liste der ROs konvertieren")
+	void eine_Liste_der_FilterEntries_in_Liste_der_ROs_konvertieren() {
+		assertEquals(Arrays.asList(bedarfFilterEntryRO()), BedarfControllerMapper.mapToFilterEntriesRO(Arrays.asList(bedarfFilterEntry())));
+	}
+
+	@Test
+	@DisplayName("FilterEntry in RO konvertieren")
+	void filterEntry_in_RO_konvertieren() {
+		assertEquals(bedarfFilterEntryRO(), BedarfControllerMapper.mapToFilterEntryRO(bedarfFilterEntry()));
 	}
 
 	@Test
@@ -196,6 +219,20 @@ class BedarfControllerMapperShould {
 				.kommentar(ANFRAGE_KOMMENTAR) //
 				.prozessInstanzId(ANFRAGE_PROZESS_INSTANZ_ID) //
 				.status(ANFRAGE_STATUS) //
+				.build();
+	}
+
+	private BedarfFilterEntryRO bedarfFilterEntryRO() {
+		return BedarfFilterEntryRO.builder() //
+				.id(FILTER_ENTRY_ID) //
+				.anzahl(FILTER_ENTRY_ANZAHL) //
+				.build();
+	}
+
+	private BedarfFilterEntry bedarfFilterEntry() {
+		return BedarfFilterEntry.builder() //
+				.id(FILTER_ENTRY_ID) //
+				.anzahl(FILTER_ENTRY_ANZAHL) //
 				.build();
 	}
 }

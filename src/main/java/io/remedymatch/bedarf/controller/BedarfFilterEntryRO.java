@@ -1,7 +1,10 @@
-package io.remedymatch.angebot.infrastructure;
+package io.remedymatch.bedarf.controller;
 
 import java.math.BigInteger;
 import java.util.UUID;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +21,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class FilterEntry {
+class BedarfFilterEntryRO {
+
+	@NotNull
 	private UUID id;
 
-	private long anzahl;
+	@NotNull
+	@PositiveOrZero
+	private BigInteger anzahl;
 }

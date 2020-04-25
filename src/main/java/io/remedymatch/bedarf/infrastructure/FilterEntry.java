@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-class FilterEntry {
+public class FilterEntry {
 	private UUID id;
 
 	private long anzahl;

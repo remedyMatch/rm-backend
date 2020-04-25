@@ -8,6 +8,7 @@ import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
+import io.remedymatch.bedarf.domain.model.BedarfFilterEntry;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.domain.model.NeuesBedarf;
 import io.remedymatch.institution.controller.InstitutionMapper;
@@ -50,6 +51,17 @@ class BedarfControllerMapper {
 				.medizinisch(bedarf.isMedizinisch()) //
 				.kommentar(bedarf.getKommentar()) //
 				.entfernung(bedarf.getEntfernung()) //
+				.build();
+	}
+	
+	static List<BedarfFilterEntryRO> mapToFilterEntriesRO(final List<BedarfFilterEntry> filterEntries) {
+		return filterEntries.stream().map(BedarfControllerMapper::mapToFilterEntryRO).collect(Collectors.toList());
+	}
+	
+	static BedarfFilterEntryRO mapToFilterEntryRO(final BedarfFilterEntry filterEntry) {
+		return BedarfFilterEntryRO.builder() //
+				.id(filterEntry.getId()) //
+				.anzahl(filterEntry.getAnzahl()) //
 				.build();
 	}
 

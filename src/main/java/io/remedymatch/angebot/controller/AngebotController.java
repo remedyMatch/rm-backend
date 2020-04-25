@@ -43,12 +43,6 @@ public class AngebotController {
 	private final AngebotService angebotService;
 
 	@Transactional(readOnly = true)
-	@GetMapping("/suche")
-	public ResponseEntity<List<AngebotRO>> getAlleNichtBedienteAngebote() {
-		return ResponseEntity.ok(mapToAngeboteRO(angebotSucheService.findAlleNichtBedienteAngebote()));
-	}
-
-	@Transactional(readOnly = true)
 	@GetMapping
 	public ResponseEntity<List<AngebotRO>> getInstituionAngebote() {
 		return ResponseEntity.ok(mapToAngeboteRO(angebotSucheService.findAlleNichtBedienteAngeboteDerUserInstitution()));

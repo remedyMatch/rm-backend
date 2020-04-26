@@ -30,7 +30,7 @@ public class AngebotSucheController {
 	private final AngebotSucheService angebotSucheService;
 
 	@Transactional(readOnly = true)
-	@GetMapping("/suche")
+	@GetMapping
 	public ResponseEntity<List<AngebotRO>> getAlleNichtBedienteAngebote() {
 		return ResponseEntity.ok(mapToAngeboteRO(angebotSucheService.findAlleNichtBedienteAngebote()));
 	}

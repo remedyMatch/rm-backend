@@ -39,7 +39,7 @@ import io.remedymatch.WithMockJWT;
 @DirtiesContext
 @Tag("InMemory")
 @Tag("SpringBoot")
-public class BedarfFiltersSchould extends BedarfControllerTestBasis {
+public class BedarfFiltersShould extends BedarfControllerTestBasis {
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;

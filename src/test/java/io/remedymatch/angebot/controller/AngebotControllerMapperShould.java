@@ -3,6 +3,7 @@ package io.remedymatch.angebot.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,6 +18,7 @@ import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
+import io.remedymatch.angebot.domain.model.AngebotFilterEntry;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.artikel.domain.model.ArtikelId;
@@ -68,6 +70,9 @@ class AngebotControllerMapperShould {
 	private static final String ANFRAGE_PROZESS_INSTANZ_ID = "Anfrage ProzessInstanzId";
 	private static final AngebotAnfrageStatus ANFRAGE_STATUS = AngebotAnfrageStatus.OFFEN;
 
+	private static final UUID FILTER_ENTRY_ID = UUID.randomUUID();
+	private static final BigInteger FILTER_ENTRY_ANZAHL = BigInteger.valueOf(123);
+
 	@Test
 	@DisplayName("eine leere Liste der Domain Objekte in leere Liste der ROs konvertieren")
 	void eine_leere_Liste_der_Domain_Objekte_in_leere_Liste_der_ROs_konvertieren() {
@@ -84,6 +89,24 @@ class AngebotControllerMapperShould {
 	@DisplayName("Angebot Domain Objekt in RO konvertieren")
 	void angebot_domain_Objekt_in_RO_konvertieren() {
 		assertEquals(angebotRO(), AngebotControllerMapper.mapToAngebotRO(angebot()));
+	}
+	
+	@Test
+	@DisplayName("eine leere Liste der FilterEntries in leere Liste der ROs konvertieren")
+	void eine_leere_Liste_der_FilterEntries_in_leere_Liste_der_ROs_konvertieren() {
+		assertEquals(Collections.emptyList(), AngebotControllerMapper.mapToFilterEntriesRO(Collections.emptyList()));
+	}
+
+	@Test
+	@DisplayName("eine Liste der FilterEntries in Liste der ROs konvertieren")
+	void eine_Liste_der_FilterEntries_in_Liste_der_ROs_konvertieren() {
+		assertEquals(Arrays.asList(angebotFilterEntryRO()), AngebotControllerMapper.mapToFilterEntriesRO(Arrays.asList(angebotFilterEntry())));
+	}
+
+	@Test
+	@DisplayName("FilterEntry in RO konvertieren")
+	void filterEntry_in_RO_konvertieren() {
+		assertEquals(angebotFilterEntryRO(), AngebotControllerMapper.mapToFilterEntryRO(angebotFilterEntry()));
 	}
 
 	@Test
@@ -189,6 +212,20 @@ class AngebotControllerMapperShould {
 				.kommentar(ANFRAGE_KOMMENTAR) //
 				.prozessInstanzId(ANFRAGE_PROZESS_INSTANZ_ID) //
 				.status(ANFRAGE_STATUS) //
+				.build();
+	}
+
+	private AngebotFilterEntryRO angebotFilterEntryRO() {
+		return AngebotFilterEntryRO.builder() //
+				.id(FILTER_ENTRY_ID) //
+				.anzahl(FILTER_ENTRY_ANZAHL) //
+				.build();
+	}
+
+	private AngebotFilterEntry angebotFilterEntry() {
+		return AngebotFilterEntry.builder() //
+				.id(FILTER_ENTRY_ID) //
+				.anzahl(FILTER_ENTRY_ANZAHL) //
 				.build();
 	}
 }

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
+import io.remedymatch.angebot.domain.model.AngebotFilterEntry;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
@@ -49,6 +50,17 @@ class AngebotControllerMapper {
 				.medizinisch(angebot.isMedizinisch()) //
 				.kommentar(angebot.getKommentar()) //
 				.entfernung(angebot.getEntfernung()) //
+				.build();
+	}
+	
+	static List<AngebotFilterEntryRO> mapToFilterEntriesRO(final List<AngebotFilterEntry> filterEntries) {
+		return filterEntries.stream().map(AngebotControllerMapper::mapToFilterEntryRO).collect(Collectors.toList());
+	}
+	
+	static AngebotFilterEntryRO mapToFilterEntryRO(final AngebotFilterEntry filterEntry) {
+		return AngebotFilterEntryRO.builder() //
+				.id(filterEntry.getId()) //
+				.anzahl(filterEntry.getAnzahl()) //
 				.build();
 	}
 

@@ -1,15 +1,23 @@
 package io.remedymatch.angebot.domain.service;
 
+import static io.remedymatch.angebot.domain.service.AngebotFilterConverter.convertFilterEntries;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import io.remedymatch.angebot.domain.model.Angebot;
+import io.remedymatch.angebot.domain.model.AngebotFilterEntry;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
+import io.remedymatch.artikel.domain.model.ArtikelId;
+import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
@@ -25,6 +33,21 @@ public class AngebotSucheService {
 	private final UserContextService userService;
 	private final GeoCalcService geoCalcService;
 
+	@Transactional(readOnly = true)
+	public List<AngebotFilterEntry> getArtikelKategorieFilter() {
+		return convertFilterEntries(angebotRepository.findAllKategorienMitUnbedientenAngebotenFilter());
+	}
+
+	@Transactional(readOnly = true)
+	public List<AngebotFilterEntry> getArtikelFilter(final @NotNull @Valid ArtikelKategorieId kategorieId) {
+		return convertFilterEntries(angebotRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilter(kategorieId.getValue()));
+	}
+
+	@Transactional(readOnly = true)
+	public List<AngebotFilterEntry> getArtikelVarianteFilter(final @NotNull @Valid ArtikelId artikelId) {
+		return convertFilterEntries(angebotRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilter(artikelId.getValue()));
+	}
+	
 	@Transactional(readOnly = true)
 	public List<Angebot> findAlleNichtBedienteAngebote() {
 		return mitEntfernung(angebotRepository.findAllByDeletedFalseAndBedientFalse());

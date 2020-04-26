@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -94,7 +95,7 @@ public class AngebotJpaRepositoryShould {
 		FilterEntry zweiteKategorie = FilterEntry.builder().id(kategorie2.getId()).anzahl(1).build();
 
 		assertThat(//
-				jpaRepository.findAllKategorienMitUnbedientenAnbebotenFilter(), //
+				jpaRepository.findAllKategorienMitUnbedientenAngebotenFilter(), //
 				containsInAnyOrder(ersteKategorie, zweiteKategorie));
 	}
 
@@ -126,9 +127,49 @@ public class AngebotJpaRepositoryShould {
 		FilterEntry zweitesArtikel = FilterEntry.builder().id(artikel2.getId()).anzahl(1).build();
 
 		assertThat(//
-				jpaRepository.findAllArtikelInKagegorieMitUnbedientenAnbebotenFilter(beispielKategorieArtikel.getId()), //
+				jpaRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilter(beispielKategorieArtikel.getId()), //
 				containsInAnyOrder(erstesArtikel, zweitesArtikel));
 	}
+
+	@Rollback(true)
+	@Transactional
+	@Test
+	@DisplayName("ArtikelVarianteIds mit Anzahl nicht bedienter Angebote zurueckliefern")
+	void artikelVarianteIds_mit_Anzahl_nicht_bedienten_Angebote_zurueckliefern() {
+		// zwei Angebote in erster Artikel-Variante
+		val kategorie1 = persist(beispielArtikelKategorie());
+		val kategorie1Artikel1 = persist(artikel(kategorie1));
+		val kategorie1Artikel1Variante1 = persist(artikelVariante(kategorie1Artikel1, "variante1"));
+		persist(angebot(kategorie1Artikel1Variante1, BigDecimal.valueOf(100)));
+		persist(angebot(kategorie1Artikel1Variante1, BigDecimal.valueOf(200)));
+
+		// ein Angebot in zweiter Artikel-Variante
+		val kategorie1Artikel1Variante2 = persist(artikelVariante(kategorie1Artikel1, "variante2"));
+		persist(angebot(kategorie1Artikel1Variante2, BigDecimal.valueOf(100)));
+
+		// ein bedientes Angebot in dritter Artikel-Variante
+		val kategorie1Artikel1Variante3 = persist(artikelVariante(kategorie1Artikel1, "variante3"));
+		val bedientesAngebot = angebot(kategorie1Artikel1Variante3, BigDecimal.valueOf(100));
+		bedientesAngebot.setBedient(true);
+		persist(bedientesAngebot);
+
+		// ein geloeschtes Angebot in vierter Artikel-Variante
+		val kategorie1Artikel1Variante4 = persist(artikelVariante(kategorie1Artikel1, "variante4"));
+		val geloeschtesAngebot = angebot(kategorie1Artikel1Variante4, BigDecimal.valueOf(100));
+		geloeschtesAngebot.setDeleted(true);
+		persist(geloeschtesAngebot);
+
+		// default Variante mit Angebot
+		persist(angebot(BigDecimal.valueOf(1)));
+
+		FilterEntry ersteVariante = filterEntry(kategorie1Artikel1Variante1.getId(), 2);
+		FilterEntry zweiteVariante = filterEntry(kategorie1Artikel1Variante2.getId(), 1);
+		assertThat(//
+				jpaRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilter(
+						kategorie1Artikel1.getId()), //
+				containsInAnyOrder(ersteVariante, zweiteVariante));
+	}
+	
 
 	@Rollback(true)
 	@Transactional
@@ -194,11 +235,28 @@ public class AngebotJpaRepositoryShould {
 				.artikelKategorie(beispielKategorieArtikel.getId()) //
 				.build();
 	}
+	
+
+	private ArtikelEntity artikel(final ArtikelKategorieEntity artikelKategorie) {
+		return ArtikelEntity.builder() //
+				.name("egal") //
+				.beschreibung("beschreibung") //
+				.artikelKategorie(artikelKategorie.getId()) //
+				.build();
+	}
 
 	private ArtikelVarianteEntity beispielArtikelVariante() {
 		return ArtikelVarianteEntity.builder() //
 				.artikel(beispielArtikel.getId()) //
 				.variante("egal") //
+				.beschreibung("beschreibung") //
+				.build();
+	}
+	
+	private ArtikelVarianteEntity artikelVariante(final ArtikelEntity artikel, final String variante) {
+		return ArtikelVarianteEntity.builder() //
+				.artikel(artikel.getId()) //
+				.variante(variante) //
 				.beschreibung("beschreibung") //
 				.build();
 	}
@@ -217,6 +275,29 @@ public class AngebotJpaRepositoryShould {
 				.medizinisch(true) //
 				.kommentar("Bla bla") //
 				.bedient(false) //
+				.build();
+	}
+
+	private AngebotEntity angebot(final ArtikelVarianteEntity artikelVariante, BigDecimal anzahl) {
+		return AngebotEntity.builder() //
+				.artikelVariante(artikelVariante) //
+				.institution(meinKrankenhaus) //
+				.standort(meinStandort) //
+				.anzahl(BigDecimal.valueOf(123)) //
+				.rest(BigDecimal.valueOf(123)) //
+				.steril(true) //
+				.haltbarkeit(LocalDateTime.now())
+				.medizinisch(true) //
+				.kommentar("Bla bla") //
+				.bedient(false) //
+				.build();
+	}
+
+
+	private FilterEntry filterEntry(final UUID id, final long anzahl) {
+		return FilterEntry.builder() //
+				.id(id) //
+				.anzahl(anzahl) //
 				.build();
 	}
 }

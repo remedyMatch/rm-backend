@@ -36,17 +36,11 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/bedarf")
 @Validated
 @Transactional
-public class BedarfController {
+class BedarfController {
 
 	private final BedarfSucheService bedarfSucheService;
 	private final BedarfAnlageService bedarfAnlageService;
 	private final BedarfService bedarfService;
-
-	@Transactional(readOnly = true)
-	@GetMapping("/suche")
-	public ResponseEntity<List<BedarfRO>> getAlleNichtBedienteBedarfe() {
-		return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.findAlleNichtBedienteBedarfe()));
-	}
 
 	@Transactional(readOnly = true)
 	@GetMapping

@@ -11,10 +11,20 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 import io.remedymatch.institution.controller.InstitutionStandortRO;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Builder
 public class AngebotRO {
 
@@ -24,7 +34,7 @@ public class AngebotRO {
 	@NotNull
 	@Valid
 	private UUID artikelId;
-	
+
 	@NotNull
 	@Valid
 	private UUID artikelVarianteId;

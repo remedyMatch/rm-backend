@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
-import io.remedymatch.institution.domain.model.NeuesInstitutionStandort;
+import io.remedymatch.institution.domain.model.NeuerInstitutionStandort;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("InstitutionStandortMapper soll")
@@ -89,8 +89,8 @@ class InstitutionStandortMapperShould {
 				.build();
 	}
 
-	private NeuesInstitutionStandort neuesStandort() {
-		return NeuesInstitutionStandort.builder() //
+	private NeuerInstitutionStandort neuesStandort() {
+		return NeuerInstitutionStandort.builder() //
 				.name(STANDORT_NAME) //
 				.plz(STANDORT_PLZ) //
 				.ort(STANDORT_ORT) //
@@ -100,8 +100,8 @@ class InstitutionStandortMapperShould {
 				.build();
 	}
 
-	private NeuesInstitutionStandortRequest neuesStandortRequest() {
-		return NeuesInstitutionStandortRequest.builder() //
+	private NeuerInstitutionStandortRequest neuesStandortRequest() {
+		return NeuerInstitutionStandortRequest.builder() //
 				.name(STANDORT_NAME) //
 				.plz(STANDORT_PLZ) //
 				.ort(STANDORT_ORT) //

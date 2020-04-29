@@ -1,4 +1,4 @@
-package io.remedymatch.institution.controller;
+package io.remedymatch.institution.domain.model;
 
 import javax.validation.constraints.NotBlank;
 
@@ -10,15 +10,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @EqualsAndHashCode
 @Builder
-class NeuesInstitutionStandortRequest {
-
+public class NeuerInstitutionStandort {
 	@NotBlank
 	private String name;
 

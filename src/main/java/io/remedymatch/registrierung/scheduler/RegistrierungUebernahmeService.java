@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 
 import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.domain.model.NeueInstitution;
-import io.remedymatch.institution.domain.model.NeuesInstitutionStandort;
+import io.remedymatch.institution.domain.model.NeuerInstitutionStandort;
 import io.remedymatch.institution.domain.service.InstitutionService;
 import io.remedymatch.person.domain.model.NeuePerson;
 import io.remedymatch.person.domain.service.PersonService;
@@ -53,7 +53,7 @@ class RegistrierungUebernahmeService {
 				.name(institutionName) //
 				.institutionKey(institutionKey) //
 				.typ(institutionTyp) //
-				.hauptstandort(NeuesInstitutionStandort.builder() //
+				.hauptstandort(NeuerInstitutionStandort.builder() //
 						.name(institutionName) //
 						.strasse(registrierterUser.getStrasse()) //
 						.hausnummer(registrierterUser.getHausnummer()) //

@@ -71,7 +71,7 @@ public class NeueAngebotShould extends AngebotControllerTestBasis {
 		val neuesAngebot = NeuesAngebotRequest.builder() //
 				.artikelVarianteId(artikelVariante.getId()) //
 				.anzahl(BigDecimal.valueOf(1000)) //
-				.standortId(spender.getStandort().getId().getValue()) //
+				.standortId(spender.getAktuelleInstitution().getStandort().getId().getValue()) //
 				.kommentar("ITest Angebot Kommentar") //
 				.haltbarkeit(LocalDateTime.of(2020, 12, 24, 18, 0)) //
 				.steril(true) //

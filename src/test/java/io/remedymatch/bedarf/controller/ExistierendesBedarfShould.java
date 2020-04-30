@@ -90,7 +90,7 @@ public class ExistierendesBedarfShould extends BedarfControllerTestBasis {
 
 		val bedarfBedienen = BedarfBedienenRequest.builder() //
 				.anzahl(BigDecimal.valueOf(200)) //
-				.standortId(suchender.getStandort().getId().getValue()) //
+				.standortId(suchender.getAktuelleInstitution().getStandort().getId().getValue()) //
 				.kommentar("ITest Bedarf Anfrage Kommentar") //
 				.build();
 

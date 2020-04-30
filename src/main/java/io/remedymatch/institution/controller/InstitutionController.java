@@ -107,19 +107,4 @@ public class InstitutionController {
         val antraege = institutionService.ladeErstellteAntraege().stream().map(InstitutionAntragMapper::mapToRO).collect(Collectors.toList());
         return ResponseEntity.ok(antraege);
     }
-
-    /**
-     * Liefert die Institution des ContextUsers. Im Unterschied zu {@link InstitutionController#institutionLaden()}
-     * enthaelt die zurueckgelieferte Institution den HauptStandort jedoch <b>NICHT</b> in der Liste
-     * {@link InstitutionRO#getStandorte()}.
-     *
-     * @return Institution des ContextUsers. Der Hauptstandort ist <b>nicht</b> {@link InstitutionRO#getStandorte()}
-     * enthalten!
-     */
-    @GetMapping("/assigned")
-    @Deprecated
-
-    public ResponseEntity<InstitutionRO> meineInstitutionLaden() {
-        return ResponseEntity.ok(mapToInstitutionRO(UserService.getContextInstitution(true)));
-    }
 }

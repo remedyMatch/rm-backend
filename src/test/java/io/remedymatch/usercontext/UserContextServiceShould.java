@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.person.domain.model.Person;
 
@@ -64,35 +63,25 @@ public class UserContextServiceShould {
 	}
 
 	@Test
-	@DisplayName("Context Institution zurueckliefern mit Hauptstandort nicht in Standorten enthalten")
-	void context_Institution_zurueckliefern_mit_Hauptstandort_nicht_in_Standorten_enthalten() {
+	@DisplayName("Context Institution zurueckliefern")
+	void context_Institution_zurueckliefern() {
 
-		Institution contextInstitution = userContextService.getContextInstitution(true);
-
-		assertFalse(contextInstitution.getStandorte().contains(contextInstitution.getHauptstandort()));
-	}
-
-	@Test
-	@DisplayName("Context Institution zurueckliefern mit Hauptstandort in Standorten enthalten")
-	void context_Institution_zurueckliefern_mit_Hauptstandort_in_Standorten_enthalten() {
-
-		Institution contextInstitution = userContextService.getContextInstitution();
-
-		assertTrue(contextInstitution.getStandorte().contains(contextInstitution.getHauptstandort()));
+		assertEquals(userContextPerson, userContextService.getContextInstitution());
 	}
 
 	@Test
 	@DisplayName("Context InstitutionId zurueckliefern")
 	void context_InstitutionId_zurueckliefern() {
 
-		assertEquals(userContextPerson.getInstitution().getId(), userContextService.getContextInstitutionId());
+		assertEquals(userContextPerson.getAktuelleInstitution().getId(), userContextService.getContextInstitutionId());
 	}
 
 	@Test
 	@DisplayName("true zurueckliefern, wenn die angefragte Institution UserContext Institution ist")
 	void true_zurueckliefern_wenn_die_angefragte_Institution_UserContext_Institution_ist() {
 
-		assertTrue(userContextService.isUserContextInstitution(userContextPerson.getInstitution().getId()));
+		assertTrue(userContextService
+				.isUserContextInstitution(userContextPerson.getAktuelleInstitution().getInstitution().getId()));
 	}
 
 	@Test

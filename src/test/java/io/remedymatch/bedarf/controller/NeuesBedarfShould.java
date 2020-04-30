@@ -70,7 +70,7 @@ public class NeuesBedarfShould extends BedarfControllerTestBasis {
 		val neuesBedarf = NeuesBedarfRequest.builder() //
 				.artikelVarianteId(artikelVariante.getId()) //
 				.anzahl(BigDecimal.valueOf(1000)) //
-				.standortId(spender.getStandort().getId().getValue()) //
+				.standortId(spender.getAktuelleInstitution().getStandort().getId().getValue()) //
 				.kommentar("ITest Bedarf Kommentar") //
 				.steril(true) //
 				.build();

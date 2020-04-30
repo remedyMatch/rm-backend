@@ -39,15 +39,16 @@ public class PersonService {
 		val institution = getInstitution(neuePerson.getInstitutionId());
 		val standort = getInstitutionStandort(institution, neuePerson.getStandortId());
 
-		return convertPerson(personRepository.save(PersonEntity.builder() //
+		PersonEntity personEntity = personRepository.save(PersonEntity.builder() //
 				.username(neuePerson.getUsername()) //
 				.vorname(neuePerson.getVorname()) //
 				.nachname(neuePerson.getNachname()) //
 				.email(neuePerson.getEmail()) //
 				.telefon(neuePerson.getTelefon()) //
-				.institution(institution) //
-				.standort(standort) //
-				.build()));
+				.build());
+		personEntity.addNeueAktuelleInstitution(institution, standort);
+
+		return convertPerson(personRepository.save(personEntity));
 	}
 
 	InstitutionEntity getInstitution(final @NotNull @Valid InstitutionId institutionId) {

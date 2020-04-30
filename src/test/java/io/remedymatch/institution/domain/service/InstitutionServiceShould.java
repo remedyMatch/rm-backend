@@ -22,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -462,7 +463,7 @@ class InstitutionServiceShould {
 
         val personId = UUID.randomUUID();
         val antragId = UUID.randomUUID();
-        val antrag = InstitutionAntragEntity.builder() //
+        InstitutionAntragEntity antrag = InstitutionAntragEntity.builder() //
                 .id(antragId)
                 .name("Mein Standort") //
                 .strasse("Strasse") //
@@ -477,7 +478,7 @@ class InstitutionServiceShould {
                 .antragsteller(personId) //
                 .build();
 
-        given(institutionAntragJpaRepository.findById(antragId)).willReturn(java.util.Optional.ofNullable(antrag));
+        given(institutionAntragJpaRepository.findById(antragId)).willReturn(Optional.ofNullable(antrag));
         given(institutionAntragJpaRepository.save(antrag)).willReturn(antrag);
 
         institutionService.antragAblehnen(new InstitutionAntragId(antragId));

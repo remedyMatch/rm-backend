@@ -67,8 +67,8 @@ public abstract class AngebotControllerTestBasis {
 				.artikelVariante(artikelVariante) //
 				.anzahl(BigDecimal.valueOf(1000)) //
 				.rest(BigDecimal.valueOf(1000)) //
-				.institution(spenderEntity.getInstitution()) //
-				.standort(spenderEntity.getStandort()) //
+				.institution(spenderEntity.getAktuelleInstitution().getInstitution()) //
+				.standort(spenderEntity.getAktuelleInstitution().getStandort()) //
 				.haltbarkeit(LocalDateTime.of(2020, 12, 24, 18, 0)) //
 				.kommentar("ITest Angebot Kommentar") //
 				.steril(true) //
@@ -83,8 +83,8 @@ public abstract class AngebotControllerTestBasis {
 				.createdDate(LocalDateTime.now()) //
 				.angebot(angebot) //
 				.anzahl(BigDecimal.valueOf(200)) //
-				.institution(suchenderEntity.getInstitution()) //
-				.standort(suchenderEntity.getStandort()) //
+				.institution(suchenderEntity.getAktuelleInstitution().getInstitution()) //
+				.standort(suchenderEntity.getAktuelleInstitution().getStandort()) //
 				.kommentar("ITest Angebot Anfrage Kommentar") //
 				.prozessInstanzId("test_anfrage_prozess") //
 				.status(AngebotAnfrageStatus.OFFEN) //
@@ -124,15 +124,16 @@ public abstract class AngebotControllerTestBasis {
 				.standorte(Arrays.asList(standort)) //
 				.build());
 
-		return persist(PersonEntity.builder() //
+		PersonEntity person = persist(PersonEntity.builder() //
 				.username(SPENDER_USERNAME) //
 				.vorname("Spender Vorname") //
 				.nachname("Spender Nachname") //
 				.email("itest_spender@remedymetch.local") //
 				.telefon("12345678") //
-				.institution(institution) //
-				.standort(standort) //
 				.build());
+		person.addNeueAktuelleInstitution(institution, standort);
+
+		return persist(person);
 	}
 
 	protected PersonEntity suchenderAnlegen() {
@@ -161,15 +162,16 @@ public abstract class AngebotControllerTestBasis {
 				.standorte(Arrays.asList(standort)) //
 				.build());
 
-		return persist(PersonEntity.builder() //
+		PersonEntity person = persist(PersonEntity.builder() //
 				.username(SUCHENDER_USERNAME) //
 				.vorname("Suchender Vorname") //
 				.nachname("Suchender Nachname") //
 				.email("itest_suchender@remedymetch.local") //
 				.telefon("2233445566") //
-				.institution(institution) //
-				.standort(standort) //
 				.build());
+		person.addNeueAktuelleInstitution(institution, standort);
+
+		return persist(person);
 	}
 
 	private <E> E persist(E entity) {

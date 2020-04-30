@@ -1,7 +1,10 @@
 package io.remedymatch.person.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -39,4 +42,12 @@ class PersonRO {
 
 	@NotBlank
 	private String telefon;
+
+	@NotNull
+	@Valid
+	private PersonInstitutionRO aktuelleInstitution;
+
+	@NotNull
+	@Builder.Default
+	private List<PersonInstitutionRO> institutionen = new ArrayList<>();
 }

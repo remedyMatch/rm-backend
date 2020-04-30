@@ -24,30 +24,9 @@ public class UserContextService {
 		return getContextUser().getId();
 	}
 
-	/**
-	 * Liefert die Institution des Context Users.
-	 * @param excludeHauptStandortFromStandorte Hauptstandort ist nicht in Standorte-Liste enthalten falls true,
-	 *                                          ansonsten (falls false) ist er enthalten.
-	 * @return Institution des ContextUsers.
-	 */
-	@Transactional(readOnly = true)
-	public Institution getContextInstitution(boolean excludeHauptStandortFromStandorte) {
-		Institution institution = getContextUser().getInstitution();
-		if (excludeHauptStandortFromStandorte) {
-			institution.setStandorte(institution.getStandorte().stream()
-					.filter(standort -> !(standort.getId().equals(institution.getHauptstandort().getId())))
-					.collect(Collectors.toList()));
-		}
-		return institution;
-	}
-
-	/**
-	 * Ruft {@link UserContextService#getContextInstitution(boolean)} mit
-	 * {@code false} auf.
-	 */
 	@Transactional(readOnly = true)
 	public Institution getContextInstitution() {
-		return getContextInstitution(false);
+		return getContextUser().getAktuelleInstitution().getInstitution();
 	}
 
 	@Transactional(readOnly = true)

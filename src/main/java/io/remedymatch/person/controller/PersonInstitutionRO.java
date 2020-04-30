@@ -1,5 +1,7 @@
 package io.remedymatch.person.controller;
 
+import java.util.UUID;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -22,6 +24,9 @@ import lombok.ToString;
 @Builder
 public class PersonInstitutionRO {
 
+	@NotNull
+	private UUID id;
+	
 	@NotNull
 	@Valid
 	private InstitutionRO institution;

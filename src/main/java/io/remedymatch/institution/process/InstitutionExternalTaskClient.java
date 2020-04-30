@@ -71,21 +71,6 @@ public class InstitutionExternalTaskClient {
 
         }).open();
 
-
-        client.subscribe("institution_antrag_prozess_inst_zuweisen").lockDuration(2000).handler((externalTask, externalTaskService) -> {
-
-            try {
-                val institution = institutionService.institutionAusAntragAnlegen(new InstitutionAntragId(UUID.fromString(externalTask.getBusinessKey())));
-                val variables = new HashMap<String, Object>();
-                variables.put(VAR_INSTITUTION_ID, institution.getId().getValue());
-                externalTaskService.complete(externalTask, variables);
-            } catch (Exception e) {
-                log.error("Der External Task konnte nicht abgeschlossen werden.", e);
-                externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);
-            }
-
-        }).open();
-
     }
 
 

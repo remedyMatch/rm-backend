@@ -1,5 +1,6 @@
 package io.remedymatch.person.process;
 
+import io.remedymatch.institution.process.InstitutionAntragProzessConstants;
 import io.remedymatch.person.domain.service.PersonService;
 import io.remedymatch.properties.EngineProperties;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class PersonExternalTaskClient {
 
         client.subscribe("institution_antrag_prozess_inst_zuweisen").lockDuration(2000).handler((externalTask, externalTaskService) -> {
             try {
-
+                externalTask.getVariable(InstitutionAntragProzessConstants.VAR_INSTITUTION_ID);
 
             } catch (Exception e) {
                 log.error("Der External Task konnte nicht abgeschlossen werden.", e);

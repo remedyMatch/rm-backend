@@ -8,7 +8,6 @@ import io.remedymatch.geodaten.domain.StandortService;
 import io.remedymatch.institution.domain.model.*;
 import io.remedymatch.institution.infrastructure.*;
 import io.remedymatch.institution.process.InstitutionAntragProzessConstants;
-import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -154,15 +153,6 @@ public class InstitutionService {
         return this.institutionAnlegen(neueInstitution);
     }
 
-    public void institutionZuweisen(final @NotNull InstitutionId institutionId, PersonId personId) {
-        val institution = institutionRepository.findById(institutionId.getValue())
-                .orElseThrow(() -> new ObjectNotFoundException("Institution ist nicht vorhanden"));
-
-        //TODO wie passiert die Zuweisung? n:m beziehung? Wie lege ich das hier ein? Zyklische Abhängigkeit verweiden
-
-
-    }
-
     /* help methods */
 
     private NeueInstitution institutionAusAntragErstellen(InstitutionAntragEntity antrag) {
@@ -187,7 +177,7 @@ public class InstitutionService {
     private void institutionAntragProzessStarten(@NotNull @Valid final InstitutionAntrag antrag) {
 
         val variables = new HashMap<String, Object>();
-        engineClient.prozessStarten(InstitutionAntragProzessConstants.PROZESS_KEY, new BusinessKey(antrag.getId().getValue()), variables);
+        engineClient.prozessStarten(InstitutionAntragProzessConstants.PROZESS_KEY, new BusinessKey(antrag.getId().getValue()), userService.getContextUserId(), variables);
     }
 
     private InstitutionAntrag updateAntrag(InstitutionAntrag antrag) {

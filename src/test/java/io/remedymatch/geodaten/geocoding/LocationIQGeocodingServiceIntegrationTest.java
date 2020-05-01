@@ -1,0 +1,159 @@
+package io.remedymatch.geodaten.geocoding;
+
+import io.remedymatch.TestApplication;
+import io.remedymatch.WithMockJWT;
+import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.geodaten.geocoding.domain.Adresse;
+import io.remedymatch.geodaten.geocoding.domain.Point;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import io.remedymatch.match.domain.MatchStandort;
+import io.remedymatch.usercontext.UserContextService;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static io.remedymatch.shared.DefaultDistanzBerechnungServiceShould.*;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
+@Disabled(value = "Only for manual execution! Make sure to set io.remedymatch.geodaten.* - properties in " +
+        "application-geo.yaml.")
+@ActiveProfiles(profiles = {"test", "disableexternaltasks", "geo", "geo-liq"})
+@Tag("InMemory")
+@Tag("SpringBoot")
+public class LocationIQGeocodingServiceIntegrationTest {
+
+    @Autowired
+    private GeocodingService geocodingService;
+
+    @MockBean(answer = Answers.RETURNS_DEEP_STUBS)
+    private UserContextService userService;
+
+    @Test
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
+    public void unstrukturierteAdressSucheSollteErgebnisseLiefern() throws InterruptedException {
+
+        final String queryString = "Hüttenhospital Dortmund";
+
+        final List<Point> gefundeneKoordinaten = geocodingService.findePointsByAdressString(queryString);
+        Thread.sleep(2000);
+
+        assertThat(gefundeneKoordinaten).isNotNull();
+        assertThat(gefundeneKoordinaten).isNotEmpty();
+    }
+
+    @Test
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
+    public void strukturierteAdressSucheSollteErgebnisseLiefern() {
+
+        final Adresse adresse = new Adresse();
+        adresse.setPlz("44229");
+        adresse.setStrasse("Schneiderstraße");
+
+        final List<Point> gefundeneKoordinaten = geocodingService.findePointsByAdresse(adresse);
+
+        assertThat(gefundeneKoordinaten).isNotNull();
+        assertThat(gefundeneKoordinaten).isNotEmpty();
+    }
+
+    @Test
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
+    public void sucheNachVorschlaegenSollteErgebnisseLiefern() throws InterruptedException {
+
+        final String standort = "Hüttenhospital Dortmund";
+
+        final List<String> vorschlaege = geocodingService.findeAdressVorschlaegeByAdressString(standort);
+        Thread.sleep(2000);
+
+        assertThat(vorschlaege).isNotNull();
+        assertThat(vorschlaege).isNotEmpty();
+    }
+
+    @Test
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
+    public void sucheNachAdresseViaKoordinatenSollteEinErgebnisLiefern() {
+
+        final Point point = new Point(51.4807647, 7.50986959582075);
+
+        final String adressString = geocodingService.findeAdresseByPoint(point);
+
+        assertThat(adressString).isNotEmpty();
+        assertThat(adressString).contains("Hüttenhospital");
+    }
+
+    @Test
+    @DisplayName("Kilometer via Match-Standorten berechnen")
+    void sollteKmViaMatchStandortenBerechnen() {
+
+        MatchStandort matchStandortDortmund = MatchStandort.builder()
+                .latitude(BigDecimal.valueOf(HUETTENHOSPITAL_DORTMUND_LAT))
+                .longitude(BigDecimal.valueOf(HUETTENHOSPITAL_DORTMUND_LON))
+                .build();
+        MatchStandort matchStandortMenden = MatchStandort.builder()
+                .latitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LAT))
+                .longitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LON))
+                .build();
+
+        BigDecimal distanz = geocodingService.berechneDistanzInKilometer(matchStandortDortmund, matchStandortMenden);
+
+        // LocationIQ nutzt den DefaultDistanzBerechnungService (=Luftlinie): 19.659 km
+        assertThat(distanz).isGreaterThan(BigDecimal.valueOf(19.0d));
+        assertThat(distanz).isLessThan(BigDecimal.valueOf(20.0d));
+    }
+
+    @Test
+    @DisplayName("Kilometer via Institutions-Standorten berechnen")
+    void sollteKmViaInstitutionStandortenBerechnen() {
+
+        InstitutionStandort instiStandortDortmund = InstitutionStandort.builder()
+                .latitude(BigDecimal.valueOf(HUETTENHOSPITAL_DORTMUND_LAT))
+                .longitude(BigDecimal.valueOf(HUETTENHOSPITAL_DORTMUND_LON))
+                .build();
+        InstitutionStandort instiStandortMenden = InstitutionStandort.builder()
+                .latitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LAT))
+                .longitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LON))
+                .build();
+
+        BigDecimal distanz = geocodingService.berechneDistanzInKilometer(instiStandortDortmund, instiStandortMenden);
+
+        // LocationIQ nutzt den DefaultDistanzBerechnungService (=Luftlinie): 19.659 km
+        assertThat(distanz).isGreaterThan(BigDecimal.valueOf(19.0d));
+        assertThat(distanz).isLessThan(BigDecimal.valueOf(20.0d));
+    }
+
+    @Test
+    @DisplayName("Kilometer fuer User Distanz berechnen")
+    void sollteKmViafuerUserDistanzBerechnen() {
+
+        InstitutionStandort instiStandortDortmund = InstitutionStandort.builder()
+                .latitude(BigDecimal.valueOf(HUETTENHOSPITAL_DORTMUND_LAT))
+                .longitude(BigDecimal.valueOf(HUETTENHOSPITAL_DORTMUND_LON))
+                .build();
+        InstitutionStandort hauptstandort = InstitutionStandort.builder()
+                .latitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LAT))
+                .longitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LON))
+                .build();
+        when(userService.getContextInstitution().getHauptstandort()).thenReturn(hauptstandort);
+
+        BigDecimal distanz = geocodingService.berechneUserDistanzInKilometer(instiStandortDortmund);
+
+        // LocationIQ nutzt den DefaultDistanzBerechnungService (=Luftlinie): 19.659 km
+        assertThat(distanz).isGreaterThan(BigDecimal.valueOf(19.0d));
+        assertThat(distanz).isLessThan(BigDecimal.valueOf(20.0d));
+    }
+}

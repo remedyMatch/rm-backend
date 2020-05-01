@@ -7,11 +7,16 @@ import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.AdressQuery;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.KoordinatenQuery;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Response;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.ResponseBuilder;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import io.remedymatch.match.domain.MatchStandort;
+import io.remedymatch.shared.DistanzTyp;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,7 +26,7 @@ import java.util.stream.Collectors;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Component
-@Profile("!prod & !geo")
+@Profile("!prod & !geo & !geo-liq")
 @RequiredArgsConstructor
 public class MockGeocoderClient implements Geocoder {
 
@@ -50,7 +55,6 @@ public class MockGeocoderClient implements Geocoder {
 
     @Override
     public List<Point> findePointsByAdressString(@NonNull String adressString) {
-        final AdressQuery adressQuery = new AdressQuery(adressString);
         final List<Response> responses = pointsByAdressStringResponses;
         if (isEmpty(responses)) {
             return List.of();
@@ -62,7 +66,6 @@ public class MockGeocoderClient implements Geocoder {
 
     @Override
     public List<Point> findePointsByAdresse(@NonNull Adresse adresse) {
-        final AdressQuery adressQuery = new AdressQuery(adresse);
         final List<Response> responses = pointsByAdresseResponses;
         if (isEmpty(responses)) {
             return List.of();
@@ -74,7 +77,6 @@ public class MockGeocoderClient implements Geocoder {
 
     @Override
     public String findeAdresseByPoint(@NonNull Point point) {
-        final KoordinatenQuery koordinatenQuery = new KoordinatenQuery(point);
         final List<Response> responses = adresseByPointResponses;
         if (isEmpty(responses)) {
             return "";
@@ -89,5 +91,25 @@ public class MockGeocoderClient implements Geocoder {
     @Override
     public List<String> findeAdressVorschlaegeByAdressString(@NonNull String adressString) {
         return new ArrayList<>();
+    }
+
+    @Override
+    public double kilometerBerechnen(BigDecimal lat1, BigDecimal lon1, BigDecimal lat2, BigDecimal lon2) {
+        return 0;
+    }
+
+    @Override
+    public double kilometerBerechnen(double lat1, double lon1, double lat2, double lon2) {
+        return 0;
+    }
+
+    @Override
+    public double kilometerBerechnen(InstitutionStandort von, InstitutionStandort nach) {
+        return 0;
+    }
+
+    @Override
+    public double kilometerBerechnen(MatchStandort von, MatchStandort nach) {
+        return 0;
     }
 }

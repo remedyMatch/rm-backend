@@ -8,7 +8,11 @@ import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.AdressQuery;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.KoordinatenQuery;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Query;
 import io.remedymatch.geodaten.geocoding.impl.locationiq.domain.Response;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import io.remedymatch.match.domain.MatchStandort;
 import io.remedymatch.properties.GeodatenProperties;
+import io.remedymatch.shared.DistanzTyp;
+import io.remedymatch.shared.DefaultDistanzBerechnungService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -29,13 +34,14 @@ import java.util.stream.Collectors;
 import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-@Profile("prod | geo")
+@Profile("geo-liq")
 @Component
 @RequiredArgsConstructor
 public class LocationIQGeocoderClient implements Geocoder {
 
     private final RestTemplate restTemplate;
     private final GeodatenProperties properties;
+    private final DefaultDistanzBerechnungService distanzBerechnungService;
 
     @Override
     public List<Point> findePointsByAdressString(@NonNull String adressString) {
@@ -125,4 +131,28 @@ public class LocationIQGeocoderClient implements Geocoder {
     private void putApiKeyInMap(Map<String, String> map) {
         map.put("key", properties.getGeocoderServiceApiKey());
     }
+
+
+    @Override
+    public double kilometerBerechnen(double lat1, double lon1, double lat2, double lon2) {
+        return distanzBerechnungService.distanzBerechnen(lat1, lon1, lat2, lon2, DistanzTyp.Kilometer);
+    }
+
+    @Override
+    public double kilometerBerechnen(@NonNull MatchStandort von, @NonNull MatchStandort nach) {
+        return kilometerBerechnen(von.getLatitude(), von.getLongitude(), nach.getLatitude(), nach.getLongitude());
+    }
+
+    @Override
+    public double kilometerBerechnen(@NonNull BigDecimal lat1, @NonNull BigDecimal lon1,
+                                     @NonNull BigDecimal lat2, @NonNull BigDecimal lon2) {
+        return kilometerBerechnen(lat1.doubleValue(), lon1.doubleValue(), lat2.doubleValue(), lon2.doubleValue());
+    }
+    @Override
+    public double kilometerBerechnen(@NonNull InstitutionStandort von, @NonNull InstitutionStandort nach) {
+        return kilometerBerechnen(von.getLatitude().doubleValue(), von.getLongitude().doubleValue(),
+                nach.getLatitude().doubleValue(), nach.getLongitude().doubleValue());
+    }
+
+
 }

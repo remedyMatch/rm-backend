@@ -21,7 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.geodaten.domain.StandortService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.geodaten.geocoding.domain.Point;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
@@ -46,7 +46,7 @@ import lombok.val;
 		UserContextService.class, //
 		InstitutionJpaRepository.class, //
 		InstitutionStandortJpaRepository.class, //
-		StandortService.class //
+		GeocodingService.class //
 })
 @Tag("Spring")
 @DisplayName("InstitutionService soll")
@@ -65,7 +65,7 @@ class InstitutionServiceShould {
 	private InstitutionStandortJpaRepository institutionStandortRepository;
 
 	@MockBean
-	private StandortService standortService;
+	private GeocodingService geocodingService;
 
 	@Test
 	@DisplayName("Fehler werfen bei Bearbeitung von Standort, der sich nicht in Institution befindet")
@@ -189,7 +189,7 @@ class InstitutionServiceShould {
 		given(institutionStandortRepository.save(neuesHauptstandortEntityOhneId)).willReturn(neuesHauptstandortEntity);
 		given(institutionRepository.save(neueInstitutionMitHauptstandortEntityOhneId))
 				.willReturn(neueInstitutionMitHauptstandortEntity);
-		given(standortService.findePointsByAdressString(addresse))
+		given(geocodingService.findePointsByAdressString(addresse))
 				.willReturn(Arrays.asList(new Point(latitude, longitude)));
 
 		assertEquals(neueInstitutionMitHauptstandort, institutionService.institutionAnlegen(neueInstitution));
@@ -199,8 +199,8 @@ class InstitutionServiceShould {
 		then(institutionRepository).shouldHaveNoMoreInteractions();
 		then(institutionStandortRepository).should().save(neuesHauptstandortEntityOhneId);
 		then(institutionStandortRepository).shouldHaveNoMoreInteractions();
-		then(standortService).should().findePointsByAdressString(addresse);
-		then(standortService).shouldHaveNoMoreInteractions();
+		then(geocodingService).should().findePointsByAdressString(addresse);
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 
 	@Test
@@ -225,7 +225,7 @@ class InstitutionServiceShould {
 		then(institutionRepository).should().save(institutionEntityMitNeuemName);
 		then(institutionRepository).shouldHaveNoMoreInteractions();
 		then(institutionStandortRepository).shouldHaveNoInteractions();
-		then(standortService).shouldHaveNoInteractions();
+		then(geocodingService).shouldHaveNoInteractions();
 	}
 
 	@Test
@@ -250,7 +250,7 @@ class InstitutionServiceShould {
 		then(institutionRepository).should().save(institutionEntityMitNeuemTyp);
 		then(institutionRepository).shouldHaveNoMoreInteractions();
 		then(institutionStandortRepository).shouldHaveNoInteractions();
-		then(standortService).shouldHaveNoInteractions();
+		then(geocodingService).shouldHaveNoInteractions();
 	}
 
 	@Test
@@ -285,7 +285,7 @@ class InstitutionServiceShould {
 		then(institutionRepository).should().save(institutionEntityMitNeuemHauptstandort);
 		then(institutionRepository).shouldHaveNoMoreInteractions();
 		then(institutionStandortRepository).shouldHaveNoInteractions();
-		then(standortService).shouldHaveNoInteractions();
+		then(geocodingService).shouldHaveNoInteractions();
 	}
 
 	@Test
@@ -359,7 +359,7 @@ class InstitutionServiceShould {
 		given(institutionStandortRepository.save(neuesHauptstandortEntityOhneId)).willReturn(neuesHauptstandortEntity);
 		given(institutionRepository.save(institutionEntityMitNeuemHauptstandort))
 				.willReturn(institutionEntityMitNeuemHauptstandort);
-		given(standortService.findePointsByAdressString(addresse))
+		given(geocodingService.findePointsByAdressString(addresse))
 				.willReturn(Arrays.asList(new Point(latitude, longitude)));
 
 		assertEquals(institutionMitNeuemHauptstandort,
@@ -371,8 +371,8 @@ class InstitutionServiceShould {
 		then(institutionRepository).shouldHaveNoMoreInteractions();
 		then(institutionStandortRepository).should().save(neuesHauptstandortEntityOhneId);
 		then(institutionStandortRepository).shouldHaveNoMoreInteractions();
-		then(standortService).should().findePointsByAdressString(addresse);
-		then(standortService).shouldHaveNoMoreInteractions();
+		then(geocodingService).should().findePointsByAdressString(addresse);
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 
 	@Test
@@ -443,7 +443,7 @@ class InstitutionServiceShould {
 		given(institutionStandortRepository.save(neuesStandortEntityOhneId)).willReturn(neuesStandortEntity);
 		given(institutionRepository.save(institutionEntityMitNeuemStandort))
 				.willReturn(institutionEntityMitNeuemStandort);
-		given(standortService.findePointsByAdressString(addresse))
+		given(geocodingService.findePointsByAdressString(addresse))
 				.willReturn(Arrays.asList(new Point(latitude, longitude)));
 
 		assertEquals(institutionMitNeuemStandort, institutionService.userInstitutionStandortHinzufuegen(neuesStandort));
@@ -454,7 +454,7 @@ class InstitutionServiceShould {
 		then(institutionRepository).shouldHaveNoMoreInteractions();
 		then(institutionStandortRepository).should().save(neuesStandortEntityOhneId);
 		then(institutionStandortRepository).shouldHaveNoMoreInteractions();
-		then(standortService).should().findePointsByAdressString(addresse);
-		then(standortService).shouldHaveNoMoreInteractions();
+		then(geocodingService).should().findePointsByAdressString(addresse);
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 }

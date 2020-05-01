@@ -1,27 +1,25 @@
 package io.remedymatch.bedarf.domain.service;
 
-import static io.remedymatch.bedarf.domain.service.BedarfFilterConverter.convertFilterEntries;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
 import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfFilterEntry;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static io.remedymatch.bedarf.domain.service.BedarfFilterConverter.convertFilterEntries;
 
 @AllArgsConstructor
 @Validated
@@ -31,7 +29,7 @@ public class BedarfSucheService {
 	private final BedarfJpaRepository bedarfRepository;
 
 	private final UserContextService userService;
-	private final GeoCalcService geoCalcService;
+	private final GeocodingService geocodingService;
 
 	@Transactional(readOnly = true)
 	public List<BedarfFilterEntry> getArtikelKategorieFilter() {
@@ -68,7 +66,7 @@ public class BedarfSucheService {
 
 	private Bedarf mitEntfernung(final BedarfEntity bedarf) {
 		val convertedBedarf = BedarfEntityConverter.convertBedarf(bedarf);
-		convertedBedarf.setEntfernung(geoCalcService.berechneUserDistanzInKilometer(convertedBedarf.getStandort()));
+		convertedBedarf.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedBedarf.getStandort()));
 		return convertedBedarf;
 	}
 }

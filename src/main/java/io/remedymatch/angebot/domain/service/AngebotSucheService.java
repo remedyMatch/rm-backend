@@ -1,27 +1,25 @@
 package io.remedymatch.angebot.domain.service;
 
-import static io.remedymatch.angebot.domain.service.AngebotFilterConverter.convertFilterEntries;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
 import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.AngebotFilterEntry;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static io.remedymatch.angebot.domain.service.AngebotFilterConverter.convertFilterEntries;
 
 @AllArgsConstructor
 @Validated
@@ -31,7 +29,7 @@ public class AngebotSucheService {
 	private final AngebotJpaRepository angebotRepository;
 	
 	private final UserContextService userService;
-	private final GeoCalcService geoCalcService;
+	private final GeocodingService geocodingService;
 
 	@Transactional(readOnly = true)
 	public List<AngebotFilterEntry> getArtikelKategorieFilter() {
@@ -66,7 +64,7 @@ public class AngebotSucheService {
 
 	private Angebot mitEntfernung(final AngebotEntity angebot) {
 		val convertedAngebot = AngebotEntityConverter.convertAngebot(angebot);
-		convertedAngebot.setEntfernung(geoCalcService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
+		convertedAngebot.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
 		return convertedAngebot;
 	}
 }

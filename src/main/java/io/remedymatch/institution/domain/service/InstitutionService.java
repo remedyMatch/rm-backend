@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.geodaten.domain.StandortService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.model.InstitutionUpdate;
@@ -40,7 +40,7 @@ public class InstitutionService {
 
 	private final InstitutionJpaRepository institutionRepository;
 	private final InstitutionStandortJpaRepository institutionStandortRepository;
-	private final StandortService standortService;
+	private final GeocodingService geocodingService;
 	private final UserContextService userService;
 
 	public Institution institutionAnlegen(final @NotNull @Valid NeueInstitution neueInstitution) {
@@ -135,7 +135,7 @@ public class InstitutionService {
 	InstitutionStandortEntity mitGeodatenErweitern(final InstitutionStandortEntity standort) {
 		val addresseFuerGeocoding = formatAdresse(standort);
 		log.info("Suche Geodaten für: " + addresseFuerGeocoding);
-		var longlatList = standortService.findePointsByAdressString(addresseFuerGeocoding);
+		var longlatList = geocodingService.findePointsByAdressString(addresseFuerGeocoding);
 
 		if (longlatList == null || longlatList.size() == 0) {
 			throw new ObjectNotFoundException("Die Adresse konnte nicht aufgelöst werden");

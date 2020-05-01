@@ -1,15 +1,14 @@
 package io.remedymatch.institution.domain.service;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-
+import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
+import io.remedymatch.bedarf.domain.service.BedarfAnfrageTestFixtures;
+import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import io.remedymatch.usercontext.UserContextService;
+import io.remedymatch.usercontext.UserContextTestFixtures;
+import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,15 +19,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
-import io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures;
-import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
-import io.remedymatch.bedarf.domain.service.BedarfAnfrageTestFixtures;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.institution.domain.model.InstitutionStandort;
-import io.remedymatch.usercontext.UserContextService;
-import io.remedymatch.usercontext.UserContextTestFixtures;
-import lombok.val;
+import java.math.BigDecimal;
+import java.util.Arrays;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +36,7 @@ import lombok.val;
 		UserContextService.class, //
 		AngebotAnfrageSucheService.class, //
 		BedarfAnfrageSucheService.class, //
-		GeoCalcService.class //
+		GeocodingService.class //
 })
 @Tag("Spring")
 @DisplayName("InstitutionAnfragenSucheService soll")
@@ -56,7 +55,7 @@ class InstitutionAnfragenSucheServiceShould {
 	private BedarfAnfrageSucheService bedarfAnfrageSucheService;
 
 	@MockBean
-	private GeoCalcService geoCalcService;
+	private GeocodingService geocodingService;
 
 	@Test
 	@DisplayName("alle gestellte Anfragen der User Institution zurueckliefern")
@@ -78,9 +77,9 @@ class InstitutionAnfragenSucheServiceShould {
 				.willReturn(Arrays.asList(angebotAnfrage));
 		given(bedarfAnfrageSucheService.findAlleAnfragenDerInstitution(userInstitutionId))
 				.willReturn(Arrays.asList(BedarfAnfrageTestFixtures.beispielBedarfAnfrage()));
-		given(geoCalcService.berechneDistanzInKilometer(angebotAnfrage.getStandort(),
+		given(geocodingService.berechneDistanzInKilometer(angebotAnfrage.getStandort(),
 				angebotAnfrage.getAngebot().getStandort())).willReturn(angebotAnfrageEntfernung);
-		given(geoCalcService.berechneDistanzInKilometer(bedarfAnfrage.getStandort(),
+		given(geocodingService.berechneDistanzInKilometer(bedarfAnfrage.getStandort(),
 				bedarfAnfrage.getBedarf().getStandort())).willReturn(bedarfAnfrageEntfernung);
 
 		assertThat(//
@@ -93,9 +92,9 @@ class InstitutionAnfragenSucheServiceShould {
 		then(angebotAnfrageSucheService).shouldHaveNoMoreInteractions();
 		then(bedarfAnfrageSucheService).should().findAlleAnfragenDerInstitution(userInstitutionId);
 		then(bedarfAnfrageSucheService).shouldHaveNoMoreInteractions();
-		then(geoCalcService).should(times(2)).berechneDistanzInKilometer(any(InstitutionStandort.class),
+		then(geocodingService).should(times(2)).berechneDistanzInKilometer(any(InstitutionStandort.class),
 				any(InstitutionStandort.class));
-		then(geoCalcService).shouldHaveNoMoreInteractions();
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 
 	@Test
@@ -119,9 +118,9 @@ class InstitutionAnfragenSucheServiceShould {
 				.willReturn(Arrays.asList(angebotAnfrage));
 		given(bedarfAnfrageSucheService.findAlleAnfragenDerBedarfInstitution(userInstitutionId))
 				.willReturn(Arrays.asList(BedarfAnfrageTestFixtures.beispielBedarfAnfrage()));
-		given(geoCalcService.berechneDistanzInKilometer(angebotAnfrage.getStandort(),
+		given(geocodingService.berechneDistanzInKilometer(angebotAnfrage.getStandort(),
 				angebotAnfrage.getAngebot().getStandort())).willReturn(angebotAnfrageEntfernung);
-		given(geoCalcService.berechneDistanzInKilometer(bedarfAnfrage.getStandort(),
+		given(geocodingService.berechneDistanzInKilometer(bedarfAnfrage.getStandort(),
 				bedarfAnfrage.getBedarf().getStandort())).willReturn(bedarfAnfrageEntfernung);
 
 		assertThat(//
@@ -134,8 +133,8 @@ class InstitutionAnfragenSucheServiceShould {
 		then(angebotAnfrageSucheService).shouldHaveNoMoreInteractions();
 		then(bedarfAnfrageSucheService).should().findAlleAnfragenDerBedarfInstitution(userInstitutionId);
 		then(bedarfAnfrageSucheService).shouldHaveNoMoreInteractions();
-		then(geoCalcService).should(times(2)).berechneDistanzInKilometer(any(InstitutionStandort.class),
+		then(geocodingService).should(times(2)).berechneDistanzInKilometer(any(InstitutionStandort.class),
 				any(InstitutionStandort.class));
-		then(geoCalcService).shouldHaveNoMoreInteractions();
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 }

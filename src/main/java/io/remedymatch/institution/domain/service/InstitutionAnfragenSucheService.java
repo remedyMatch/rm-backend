@@ -6,13 +6,13 @@ import static io.remedymatch.institution.domain.service.InstitutionAnfrageConver
 import java.util.ArrayList;
 import java.util.List;
 
+import io.remedymatch.geodaten.domain.GeocodingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.model.InstitutionAnfrage;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,7 @@ public class InstitutionAnfragenSucheService {
 	private final UserContextService userService;
 	private final AngebotAnfrageSucheService angebotAnfrageSucheService;
 	private final BedarfAnfrageSucheService bedarfAnfrageSucheService;
-	private final GeoCalcService geoCalcService;
+	private final GeocodingService geocodingService;
 
 	@Transactional(readOnly = true)
 	public List<InstitutionAnfrage> findAlleGestellteUserInstitutionAnfragen() {
@@ -55,7 +55,7 @@ public class InstitutionAnfragenSucheService {
 	}
 
 	private List<InstitutionAnfrage> mitEntfernung(final List<InstitutionAnfrage> anfragen) {
-		anfragen.forEach(anfrage -> anfrage.setEntfernung(geoCalcService.berechneDistanzInKilometer(//
+		anfragen.forEach(anfrage -> anfrage.setEntfernung(geocodingService.berechneDistanzInKilometer(//
 				anfrage.getStandortVon(), //
 				anfrage.getStandortAn())));
 

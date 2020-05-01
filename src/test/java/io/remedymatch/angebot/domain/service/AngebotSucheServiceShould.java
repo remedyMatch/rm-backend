@@ -1,19 +1,11 @@
 package io.remedymatch.angebot.domain.service;
 
-import static io.remedymatch.angebot.domain.service.AngebotTestFixtures.beispielAngebot;
-import static io.remedymatch.angebot.domain.service.AngebotTestFixtures.beispielAngebotEntity;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.UUID;
-
+import io.remedymatch.angebot.domain.model.AngebotId;
+import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
+import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.usercontext.UserContextService;
+import io.remedymatch.usercontext.UserContextTestFixtures;
+import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,12 +16,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.angebot.domain.model.AngebotId;
-import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.usercontext.UserContextService;
-import io.remedymatch.usercontext.UserContextTestFixtures;
-import lombok.val;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.UUID;
+
+import static io.remedymatch.angebot.domain.service.AngebotTestFixtures.beispielAngebot;
+import static io.remedymatch.angebot.domain.service.AngebotTestFixtures.beispielAngebotEntity;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +36,7 @@ import lombok.val;
 		AngebotSucheService.class, //
 		AngebotJpaRepository.class, //
 		UserContextService.class, //
-		GeoCalcService.class //
+		GeocodingService.class //
 })
 @Tag("Spring")
 @DisplayName("AngebotSucheService soll")
@@ -53,7 +52,7 @@ class AngebotSucheServiceShould {
 	private UserContextService userService;
 
 	@MockBean
-	private GeoCalcService geoCalcService;
+	private GeocodingService geocodingService;
 
 	@Test
 	@DisplayName("alle nicht bediente Angebote zurueckliefern")
@@ -75,8 +74,8 @@ class AngebotSucheServiceShould {
 
 		given(angebotRepository.findAllByDeletedFalseAndBedientFalse())
 				.willReturn(Arrays.asList(angebot1Entity, angebot2Entity));
-		given(geoCalcService.berechneUserDistanzInKilometer(angebot1.getStandort())).willReturn(angebot1Entfernung);
-		given(geoCalcService.berechneUserDistanzInKilometer(angebot2.getStandort())).willReturn(angebot2Entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(angebot1.getStandort())).willReturn(angebot1Entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(angebot2.getStandort())).willReturn(angebot2Entfernung);
 
 		assertThat(//
 				angebotSucheService.findAlleNichtBedienteAngebote(), //
@@ -86,8 +85,8 @@ class AngebotSucheServiceShould {
 		then(angebotRepository).shouldHaveNoMoreInteractions();
 		then(userService).shouldHaveNoInteractions();
 		// XXX 2 verschiedene Aufrufe pruefen...
-		then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());
-		then(geoCalcService).shouldHaveNoMoreInteractions();
+		then(geocodingService).should(times(2)).berechneUserDistanzInKilometer(any());
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 
 	@Test
@@ -114,8 +113,8 @@ class AngebotSucheServiceShould {
 				.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue()))
 						.willReturn(Arrays.asList(angebot1Entity, angebot2Entity));
 		given(userService.getContextInstitution()).willReturn(userContextInstitution);
-		given(geoCalcService.berechneUserDistanzInKilometer(angebot1.getStandort())).willReturn(angebot1Entfernung);
-		given(geoCalcService.berechneUserDistanzInKilometer(angebot2.getStandort())).willReturn(angebot2Entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(angebot1.getStandort())).willReturn(angebot1Entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(angebot2.getStandort())).willReturn(angebot2Entfernung);
 
 		assertEquals(Arrays.asList(angebot1, angebot2),
 				angebotSucheService.findAlleNichtBedienteAngeboteDerUserInstitution());
@@ -126,7 +125,7 @@ class AngebotSucheServiceShould {
 		then(userService).should().getContextInstitution();
 		then(userService).shouldHaveNoMoreInteractions();
 		// XXX 2 verschiedene Aufrufe pruefen...
-		then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());
+		then(geocodingService).should(times(2)).berechneUserDistanzInKilometer(any());
 		then(userService).shouldHaveNoMoreInteractions();
 	}
 }

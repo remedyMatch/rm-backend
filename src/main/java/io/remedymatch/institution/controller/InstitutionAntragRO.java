@@ -19,6 +19,7 @@ import java.util.UUID;
 @Builder
 public class InstitutionAntragRO {
 
+    @NotNull
     private UUID id;
 
     @NotBlank
@@ -39,7 +40,7 @@ public class InstitutionAntragRO {
     @NotBlank
     private String land;
 
-    @NotNull
+    @NotBlank
     private String webseite;
 
     @NotNull

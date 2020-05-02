@@ -5,7 +5,6 @@ import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.engine.domain.MessageKey;
-import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.engine.domain.ProzessKey;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.person.domain.model.PersonId;
@@ -26,9 +25,11 @@ class AngebotProzessService {
 
     final static ProzessKey PROZESS_KEY = new ProzessKey("angebot_prozess");
     final static MessageKey ANFRAGE_MESSAGE = new MessageKey("angebot_prozess_anfrage_erhalten");
-    final static MessageKey ANFRAGE_STORNIEREN_MESSAGE = new MessageKey("angebot_prozess_anfrage_storniert");
+    final static MessageKey ANFRAGE_STORNIEREN_MESSAGE = new MessageKey("angebot_prozess_anfrage_storniert_message");
     final static MessageKey REST_ANGEBOT_AENDERN_MESSAGE = new MessageKey("angebot_prozess_rest_geaendert_message");
     final static MessageKey ANGEBOT_UNGUELTIG_MESSAGE = new MessageKey("angebot_prozess_rest_geaendert_message");
+    final static MessageKey ANGEBOT_SCHLIESSEN_MESSAGE = new MessageKey("angebot_prozess_geschlossen_message");
+    final static String VAR_ANFRAGE_ID = "angebot_anfrage_id";
 
     private final EngineClient engineClient;
 
@@ -51,14 +52,33 @@ class AngebotProzessService {
     void restAngebotAendern(final @NotNull @Valid AngebotId angebotId) {
         engineClient.messageKorrelieren(//
                 PROZESS_KEY, //
-                ANFRAGE_STORNIEREN_MESSAGE, //
-                Variables.createVariables().putValue("angebotId", angebotId.getValue()));
+                new BusinessKey(angebotId.getValue()), //
+                REST_ANGEBOT_AENDERN_MESSAGE
+        );
     }
 
-    void angebotSchliessen(final @NotNull @Valid ProzessInstanzId prozessInstanzId) {
+    void angebotSchliessen(final @NotNull @Valid AngebotId angebotId) {
         engineClient.messageKorrelieren(//
                 PROZESS_KEY, //
-                prozessInstanzId, //
-                ANFRAGE_STORNIEREN_MESSAGE);
+                new BusinessKey(angebotId.getValue()), //
+                ANGEBOT_SCHLIESSEN_MESSAGE);
+    }
+
+    void anfrageErhalten(final @NotNull @Valid AngebotAnfrageId angebotAnfrageId, final @NotNull @Valid AngebotId angebotId) {
+        engineClient.messageKorrelieren(//
+                PROZESS_KEY, //
+                new BusinessKey(angebotId.getValue()), //
+                ANFRAGE_MESSAGE,
+                Variables.createVariables()
+                        .putValue(VAR_ANFRAGE_ID, angebotAnfrageId.getValue().toString()));
+    }
+
+    void anfrageStornieren(final @NotNull @Valid AngebotAnfrageId angebotAnfrageId, final @NotNull @Valid AngebotId angebotId) {
+        engineClient.messageKorrelieren(//
+                PROZESS_KEY, //
+                new BusinessKey(angebotId.getValue()), //
+                Variables.createVariables()
+                        .putValue(VAR_ANFRAGE_ID, angebotAnfrageId.getValue().toString()),
+                ANFRAGE_MESSAGE);
     }
 }

@@ -184,7 +184,6 @@ class AngebotServiceShould {
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().isUserContextInstitution(angebotInstitutionId);
         then(userService).shouldHaveNoMoreInteractions();
-        then(anfrageProzessService).should().prozesseStornieren(angebotId);
         then(anfrageProzessService).shouldHaveNoMoreInteractions();
     }
 
@@ -227,8 +226,7 @@ class AngebotServiceShould {
 
         given(angebotRepository.findById(angebotId.getValue())).willReturn(Optional.of(angebotEntity));
         given(userService.getContextInstitution()).willReturn(institution);
-        given(anfrageProzessService.prozessStarten(angebotId, angebotSteller, anfrageId, angebotInstitutionId))
-                .willReturn(prozessInstanzId);
+        // given(anfrageProzessService.prozessStarten(angebotId, angebotSteller, anfrageId, angebotInstitutionId));
         given(anfrageRepository.save(neueAnfrageEntity)).willReturn(anfrageEntity);
         given(anfrageRepository.save(anfrageEntity)).willReturn(anfrageEntity);
 
@@ -272,7 +270,7 @@ class AngebotServiceShould {
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().isUserContextInstitution(anfrageInstitutionId);
         then(userService).shouldHaveNoMoreInteractions();
-        then(anfrageProzessService).should().prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
+        //  then(anfrageProzessService).should().prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
         then(anfrageProzessService).shouldHaveNoMoreInteractions();
     }
 

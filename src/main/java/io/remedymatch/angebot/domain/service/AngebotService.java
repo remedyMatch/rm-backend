@@ -11,13 +11,11 @@ import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
-import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -66,7 +64,7 @@ public class AngebotService {
                 AngebotAnfrageStatus.STORNIERT);
 
         // Prozesse stornieren
-        anfrageProzessService.prozesseStornieren(angebotId);
+        //  anfrageProzessService.prozesseStornieren(angebotId);
 
         angebot.setDeleted(true);
         angebotRepository.save(angebot);
@@ -92,11 +90,11 @@ public class AngebotService {
                 .build());
         val anfrageId = anfrage.getId();
 
-        anfrage.setProzessInstanzId(anfrageProzessService.prozessStarten(//
-                angebotId, //
-                new PersonId(angebot.getCreatedBy()), //
-                new AngebotAnfrageId(anfrageId), //
-                new InstitutionId(angebot.getInstitution().getId())).getValue());
+//        anfrage.setProzessInstanzId(anfrageProzessService.prozessStarten(//
+//                angebotId, //
+//                new PersonId(angebot.getCreatedBy()), //
+//                new AngebotAnfrageId(anfrageId), //
+//                new InstitutionId(angebot.getInstitution().getId()).getValue());
 
         updateAnfrage(anfrage);
         return AngebotAnfrageEntityConverter.convertAnfrage(anfrage);
@@ -110,7 +108,7 @@ public class AngebotService {
         anfrage.setStatus(AngebotAnfrageStatus.STORNIERT);
 
         // Prozess stornieren
-        anfrageProzessService.prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
+        //  anfrageProzessService.prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
 
         anfrageRepository.save(anfrage);
     }

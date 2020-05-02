@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-@Profile("prod | (geo & !geo-liq)")
+@Profile("prod | geo")
 @Component
 @RequiredArgsConstructor
 @Slf4j

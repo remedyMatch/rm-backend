@@ -14,8 +14,5 @@ import lombok.Setter;
 @Profile("geo")
 @ConfigurationProperties(prefix = "io.remedymatch.geodaten")
 public class GeodatenProperties {
-
-	private String geocoderServiceBaseUrl;
-
 	private String geocoderServiceApiKey;
 }

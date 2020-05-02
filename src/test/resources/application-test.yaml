@@ -30,7 +30,6 @@ io:
       remedyRestApiUrl: http://localhost:8008/engine/remedy
       externalTaskUrl: http://localhost:8008/engine/rest
     geodaten:
-      geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
       geocoderServiceApiKey: code
     keycloak:
       serverUrl: http://localhost:8008/auth

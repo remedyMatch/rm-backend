@@ -2,7 +2,6 @@ package io.remedymatch.registrierung.keycloak;
 
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_ATTRIBUT_CITY;
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_ATTRIBUT_COMPANY;
-import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_ATTRIBUT_COMPANY_TYPE;
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_ATTRIBUT_COUNTRY;
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_ATTRIBUT_HOUSENUMBER;
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_USER_ATTRIBUT_PHONE;
@@ -28,7 +27,11 @@ final class KeycloakUserConverter {
 				.keycloakUserId(new KeycloakUserId(userRepresentation.getId())) //
 				// Institution
 				.institutionName(getAttributWertAlsText(attribute, KEYCLOAK_USER_ATTRIBUT_COMPANY)) //
-				.institutionTyp(getAttributWertAlsText(attribute, KEYCLOAK_USER_ATTRIBUT_COMPANY_TYPE)) //
+
+				// Alle registrierte Users sollen Privatpersonen sein
+				// .institutionTyp(getAttributWertAlsText(attribute,
+				// KEYCLOAK_USER_ATTRIBUT_COMPANY_TYPE)) //
+
 				// Person
 				.username(userRepresentation.getUsername()) //
 				.vorname(userRepresentation.getFirstName()) //

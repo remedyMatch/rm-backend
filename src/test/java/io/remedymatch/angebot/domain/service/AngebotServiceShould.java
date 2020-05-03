@@ -173,7 +173,7 @@ class AngebotServiceShould {
         given(userService.isUserContextInstitution(angebotInstitutionId)).willReturn(true);
         given(angebotRepository.save(angebotEntityBedient)).willReturn(angebotEntityBedient);
 
-        angebotService.angebotDerUserInstitutionLoeschen(angebotId);
+        angebotService.angebotDerUserInstitutionSchliessen(angebotId);
 
         then(angebotRepository).should().findById(angebotId.getValue());
         then(angebotRepository).should().save(angebotEntityBedient);

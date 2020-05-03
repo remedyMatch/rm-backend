@@ -1,16 +1,21 @@
 package io.remedymatch.angebot.process;
 
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.model.AngebotId;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
 import io.remedymatch.angebot.domain.service.AngebotService;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.properties.EngineProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -18,6 +23,7 @@ import javax.annotation.PostConstruct;
 @Profile("!disableexternaltasks")
 class AngebotExternalTaskClient {
     private final EngineProperties properties;
+    private final AngebotAnfrageSucheService anfrageSucheService;
     private final AngebotService angebotService;
     private final EngineClient engineClient;
     final static String VAR_ANFRAGE_ID = "angebot_anfrage_id";
@@ -46,6 +52,16 @@ class AngebotExternalTaskClient {
 
                     //TODO Benachrichtigung einstellen, Bedarf anlegen?
 
+                    externalTaskService.complete(externalTask);
+                }).open();
+
+        client.subscribe("angebot_anfrage_schliessen_topic").lockDuration(2000) //
+                .handler((externalTask, externalTaskService) -> {
+
+                    val anfrageId = new AngebotAnfrageId(UUID.fromString(externalTask.getVariable(VAR_ANFRAGE_ID).toString()));
+                    val angebotId = new AngebotId(UUID.fromString(externalTask.getBusinessKey()));
+                    angebotService.angebotAnfrageSchliessen(angebotId, anfrageId);
+                    //TODO Benachrichtigung senden?
                     externalTaskService.complete(externalTask);
                 }).open();
     }

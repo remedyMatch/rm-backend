@@ -7,6 +7,7 @@ import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +30,21 @@ public class AngebotAnfrageSucheService {
 
     private final AngebotAnfrageJpaRepository anfrageRepository;
     private final GeoCalcService geoCalcService;
+    private final UserContextService userContextService;
 
     @Transactional(readOnly = true)
     public List<AngebotAnfrage> findAlleAnfragenDerInstitution(final @NotNull @Valid InstitutionId institutionId) {
         return convertAnfragen(anfrageRepository.findAllByInstitution_Id(institutionId.getValue()));
+    }
+
+    @Transactional(readOnly = true)
+    public List<AngebotAnfrage> findAlleOffeneAnfragenDerInstitution(final @NotNull @Valid InstitutionId institutionId) {
+        return convertAnfragen(anfrageRepository.findAllByStatusOffenAndInstitution_Id(institutionId.getValue()));
+    }
+
+    @Transactional(readOnly = true)
+    public List<AngebotAnfrage> findAlleOffeneAnfragenDerUserInstitution() {
+        return findAlleOffeneAnfragenDerInstitution(userContextService.getContextInstitutionId());
     }
 
     @Transactional(readOnly = true)

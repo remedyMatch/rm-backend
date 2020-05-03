@@ -14,6 +14,9 @@ public interface AngebotAnfrageJpaRepository extends JpaRepository<AngebotAnfrag
 
     List<AngebotAnfrageEntity> findAllByAngebot_Institution_Id(final UUID institutionId);
 
+    @Query("SELECT a FROM AngebotAnfrage a WHERE a.angebot.institution.id = :institutionId AND a.status='OFFEN'")
+    List<AngebotAnfrageEntity> findAllByStatusOffenAndInstitution_Id(@Param("institutionId") final UUID institutionId);
+
     List<AngebotAnfrageEntity> findAllByInstitution_Id(final UUID institutionId);
 
     @Query("SELECT a FROM AngebotAnfrage a WHERE a.angebot.id IN (:angebotIds) AND a.status='OFFEN'")

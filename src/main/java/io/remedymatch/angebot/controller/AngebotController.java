@@ -1,6 +1,7 @@
 package io.remedymatch.angebot.controller;
 
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
 import io.remedymatch.angebot.domain.service.AngebotAnlageService;
 import io.remedymatch.angebot.domain.service.AngebotService;
 import io.remedymatch.angebot.domain.service.AngebotSucheService;
@@ -8,6 +9,7 @@ import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import lombok.AllArgsConstructor;
+import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +19,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static io.remedymatch.angebot.controller.AngebotControllerMapper.*;
 
@@ -28,6 +31,7 @@ import static io.remedymatch.angebot.controller.AngebotControllerMapper.*;
 public class AngebotController {
 
     private final AngebotSucheService angebotSucheService;
+    private final AngebotAnfrageSucheService angebotAnfrageSucheService;
     private final AngebotAnlageService angebotAnlageService;
     private final AngebotService angebotService;
 
@@ -47,7 +51,7 @@ public class AngebotController {
     public ResponseEntity<Void> angebotSchliessen(
             @PathVariable("angebotId") @NotNull UUID angebotId) {
         try {
-            angebotService.angebotDerUserInstitutionLoeschen(AngebotControllerMapper.mapToAngebotId(angebotId));
+            angebotService.angebotDerUserInstitutionSchliessen(AngebotControllerMapper.mapToAngebotId(angebotId));
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NotUserInstitutionObjectException e) {
@@ -117,6 +121,7 @@ public class AngebotController {
     @Transactional(readOnly = true)
     @GetMapping("/anfrage/gestellt")
     public ResponseEntity<List<GestellteAngebotAnfrageRO>> getGestellteAnfragen() {
-        return ResponseEntity.ok(null);
+        val offeneGestellteAnfragen = angebotAnfrageSucheService.findAlleOffeneAnfragenDerUserInstitution();
+        return ResponseEntity.ok(offeneGestellteAnfragen.stream().map(AngebotControllerMapper::mapToGestellteAngebotAnfrageRO).collect(Collectors.toList()));
     }
 }

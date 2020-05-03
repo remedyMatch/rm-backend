@@ -54,7 +54,7 @@ public class AngebotService {
     private final AngebotProzessService angebotProzessService;
 
     @Transactional
-    public void angebotDerUserInstitutionLoeschen(final @NotNull @Valid AngebotId angebotId) {
+    public void angebotDerUserInstitutionSchliessen(final @NotNull @Valid AngebotId angebotId) {
 
         // pruefe ob die Angebot existiert
         val angebot = getNichtBedienteAngebotDerUserInstitution(angebotId);
@@ -110,6 +110,17 @@ public class AngebotService {
 
         // Anfrage stornieren
         angebotProzessService.anfrageStornieren(anfrageId, angebotId);
+
+        anfrageRepository.save(anfrage);
+    }
+
+    @Transactional
+    public void angebotAnfrageSchliessen(
+            final @NotNull @Valid AngebotId angebotId, //
+            final @NotNull @Valid AngebotAnfrageId anfrageId) {
+        val anfrage = getOffeneAnfrage(angebotId, anfrageId);
+        anfrage.setStatus(AngebotAnfrageStatus.STORNIERT);
+
 
         anfrageRepository.save(anfrage);
     }

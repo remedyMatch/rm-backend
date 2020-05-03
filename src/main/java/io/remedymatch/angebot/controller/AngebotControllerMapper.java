@@ -1,6 +1,7 @@
 package io.remedymatch.angebot.controller;
 
 import io.remedymatch.angebot.domain.model.*;
+import io.remedymatch.artikel.controller.ArtikelControllerMapper;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.institution.controller.InstitutionMapper;
 import io.remedymatch.institution.controller.InstitutionStandortMapper;
@@ -47,9 +48,8 @@ class AngebotControllerMapper {
     static AngebotRO mapToAngebotRO(final Angebot angebot) {
         return AngebotRO.builder() //
                 .id(angebot.getId().getValue()) //
-                .artikelId(angebot.getArtikelVariante().getArtikelId().getValue()) //
+                .artikel(ArtikelControllerMapper.mapArtikelToRO(angebot.getArtikel())) //
                 .artikelVarianteId(angebot.getArtikelVariante().getId().getValue()) //
-                .artikelKategorieId(angebot.getArtikelVariante().getArtikelKategorieId().getValue())
                 .verfuegbareAnzahl(angebot.getRest()) //
                 .ort(angebot.getStandort().getOrt())
                 .haltbarkeit(angebot.getHaltbarkeit()).medizinisch(angebot.isMedizinisch()).steril(angebot.isSteril()) //
@@ -67,7 +67,7 @@ class AngebotControllerMapper {
     static InstitutionAngebotRO mapToInstitutionAngebotRO(final Angebot angebot) {
         return InstitutionAngebotRO.builder() //
                 .id(angebot.getId().getValue()) //
-                .artikelId(angebot.getArtikelVariante().getArtikelId().getValue()) //
+                .artikel(ArtikelControllerMapper.mapArtikelToRO(angebot.getArtikel())) //
                 .artikelVarianteId(angebot.getArtikelVariante().getId().getValue()) //
                 .verfuegbareAnzahl(angebot.getAnzahl()) //
                 .ort(angebot.getStandort().getOrt())

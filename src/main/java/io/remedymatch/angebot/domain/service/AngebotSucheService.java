@@ -60,9 +60,13 @@ public class AngebotSucheService {
 
         //TODO geht das einfacher?
         val angebotIds = angebote.stream().map(Angebot::getId).collect(Collectors.toList());
-        val anfragen = angebotAnfrageSucheService.findeAlleAnfrageFuerAngebotIds(angebotIds);
+        val anfragen = angebotAnfrageSucheService.findeAlleOffenenAnfragenFuerAngebotIds(angebotIds);
         val anfrageMap = anfragen.stream().collect(Collectors.groupingBy(anfrage -> anfrage.getAngebot().getId().getValue()));
-        angebote.forEach(a -> a.setAnfragen(anfrageMap.get(a.getId().getValue())));
+        angebote.forEach(a -> {
+            if (anfrageMap.containsKey(a.getId().getValue())) {
+                a.setAnfragen(anfrageMap.get(a.getId().getValue()));
+            }
+        });
         return angebote;
     }
 

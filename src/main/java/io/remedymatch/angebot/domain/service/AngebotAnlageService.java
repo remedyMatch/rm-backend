@@ -4,6 +4,7 @@ import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
+import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.artikel.domain.service.ArtikelEntityConverter;
 import io.remedymatch.artikel.domain.service.ArtikelSucheService;
@@ -34,24 +35,28 @@ public class AngebotAnlageService {
     private static final String EXCEPTION_MSG_ARTIKEL_VARIANTE_NICHT_GEFUNDEN = "ArtikelVariante mit diesem Id nicht gefunden. (Id: %s)";
 
     private static final String EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION = "Standort gehoert nicht der Institution des angemeldetes Benutzers. (Id: %s)";
+    private static final String EXCEPTION_MSG_ARTIKEL_VARIANTE_NICHT_VORHANDEN = "Artikel Variante nicht vorhanden";
+    private static final String EXCEPTION_MSG_ARTIKEL_NICHT_VORHANDEN = "Artikel nicht vorhanden";
 
     private final AngebotJpaRepository angebotRepository;
-
     private final UserContextService userService;
     private final ArtikelSucheService artikelSucheService;
     private final GeoCalcService geoCalcService;
+    private final AngebotProzessService angebotProzessService;
 
     @Transactional
     public Angebot neueAngebotEinstellen(final @NotNull @Valid NeuesAngebot neuesAngebot) {
         val userInstitution = getUserInstitution();
+        val artikelVariante = getArtikelVariante(neuesAngebot.getArtikelVarianteId());
+        val artikel = artikelSucheService.findArtikel(new ArtikelId(artikelVariante.getArtikel()))
+                .orElseThrow(() -> new ObjectNotFoundException(EXCEPTION_MSG_ARTIKEL_NICHT_VORHANDEN));
 
-        //TODO Prozess starten
-
-        return mitEntfernung(angebotRepository.save(AngebotEntity.builder() //
+        val angebot = mitEntfernung(angebotRepository.save(AngebotEntity.builder() //
                 .anzahl(neuesAngebot.getAnzahl()) //
                 .rest(neuesAngebot.getAnzahl()) //
-                .artikelVariante(getArtikelVariante(neuesAngebot.getArtikelVarianteId())) //
+                .artikelVariante(artikelVariante) //
                 .institution(userInstitution) //
+                .artikel(ArtikelEntityConverter.convertArtikel(artikel)) //
                 .standort(getUserInstitutionStandort(userInstitution, neuesAngebot.getStandortId())) //
                 .haltbarkeit(neuesAngebot.getHaltbarkeit()) //
                 .steril(neuesAngebot.isSteril()) //
@@ -60,6 +65,10 @@ public class AngebotAnlageService {
                 .kommentar(neuesAngebot.getKommentar()) //
                 .bedient(false) //
                 .build()));
+
+        angebotProzessService.prozessStarten(angebot.getId(), userService.getContextUserId(), angebot.getInstitution().getId());
+
+        return angebot;
     }
 
     private Angebot mitEntfernung(final @NotNull AngebotEntity angebot) {

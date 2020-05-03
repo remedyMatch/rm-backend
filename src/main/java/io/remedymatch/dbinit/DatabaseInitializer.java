@@ -205,7 +205,6 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                 .artikel(artikel.getId())
                 .variante(variante)
                 .sort(sort)
-                .artikelKategorie(artikel.getArtikelKategorie())
                 .norm(StringUtils.stripToNull(norm))
                 .beschreibung(beschreibung)
                 .medizinischAuswaehlbar(medizinischAuswaehlbar)

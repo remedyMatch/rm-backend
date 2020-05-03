@@ -43,9 +43,9 @@ public class AngebotController {
                 .ok(mapToAngebotRO(angebotAnlageService.neueAngebotEinstellen(mapToNeueAngebot(neueAngebot))));
     }
 
-    @DeleteMapping("/{angebotId}")
-    public ResponseEntity<Void> angebotLoeschen(//
-                                                @PathVariable("angebotId") @NotNull UUID angebotId) {
+    @PostMapping("/{angebotId}/schliessen")
+    public ResponseEntity<Void> angebotSchliessen(
+            @PathVariable("angebotId") @NotNull UUID angebotId) {
         try {
             angebotService.angebotDerUserInstitutionLoeschen(AngebotControllerMapper.mapToAngebotId(angebotId));
         } catch (ObjectNotFoundException e) {
@@ -53,14 +53,26 @@ public class AngebotController {
         } catch (NotUserInstitutionObjectException e) {
             return ResponseEntity.status(403).build();
         }
+        return ResponseEntity.ok().build();
+    }
 
+    @PostMapping("/{angebotId}/anzahl")
+    public ResponseEntity<Void> angebotAnzahlAendern(
+            @PathVariable("angebotId") @NotNull UUID angebotId, @Valid @NotNull AngebotAnzahlAendernRequest request) {
+        try {
+            angebotService.angebotAnzahlAendern(AngebotControllerMapper.mapToAngebotId(angebotId), request.getAnzahl());
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (NotUserInstitutionObjectException e) {
+            return ResponseEntity.status(403).build();
+        }
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{angebotId}/anfrage")
-    public ResponseEntity<AngebotAnfrageRO> angebotAnfragen(//
-                                                            @PathVariable("angebotId") @NotNull UUID angebotId, //
-                                                            @RequestBody @Valid AngebotAnfragenRequest request) {
+    public ResponseEntity<AngebotAnfrageRO> angebotAnfragen(
+            @PathVariable("angebotId") @NotNull UUID angebotId, //
+            @RequestBody @Valid AngebotAnfragenRequest request) {
         return ResponseEntity.ok(mapToAnfrageRO(angebotService.angebotAnfrageErstellen(//
                 AngebotControllerMapper.mapToAngebotId(angebotId), //
                 new InstitutionStandortId(request.getStandortId()), //
@@ -68,10 +80,10 @@ public class AngebotController {
                 request.getAnzahl())));
     }
 
-    @DeleteMapping("/{angebotId}/anfrage/{anfrageId}")
-    public ResponseEntity<Void> anfrageStornieren(//
-                                                  @PathVariable("angebotId") @NotNull UUID angebotId, //
-                                                  @PathVariable("anfrageId") @NotNull UUID anfrageId) {
+    @PostMapping("/{angebotId}/anfrage/{anfrageId}/stornieren")
+    public ResponseEntity<Void> anfrageStornieren(
+            @PathVariable("angebotId") @NotNull UUID angebotId, //
+            @PathVariable("anfrageId") @NotNull UUID anfrageId) {
         try {
             angebotService.angebotAnfrageDerUserInstitutionStornieren(//
                     AngebotControllerMapper.mapToAngebotId(angebotId), //
@@ -82,5 +94,29 @@ public class AngebotController {
             return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{angebotId}/anfrage/{anfrageId}/beantworten")
+    public ResponseEntity<Void> anfrageBeantworten(
+            @PathVariable("angebotId") @NotNull UUID angebotId, //
+            @PathVariable("anfrageId") @NotNull UUID anfrageId, //
+            @RequestBody @Valid AnfrageBeantwortenRequest request) {
+        try {
+            angebotService.angebotAnfrageBeantworten(//
+                    AngebotControllerMapper.mapToAngebotId(angebotId), //
+                    new AngebotAnfrageId(anfrageId),//
+                    request.getEntscheidung());
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (NotUserInstitutionObjectException e) {
+            return ResponseEntity.status(403).build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/anfrage/gestellt")
+    public ResponseEntity<List<GestellteAngebotAnfrageRO>> getGestellteAnfragen() {
+        return ResponseEntity.ok(null);
     }
 }

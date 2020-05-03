@@ -50,7 +50,6 @@ public final class ArtikelEntityConverter {
                 .id(new ArtikelVarianteId(entity.getId())) //
                 .sort(entity.getSort())
                 .artikelId(new ArtikelId(entity.getArtikel())) //
-                .artikelKategorieId(new ArtikelKategorieId(entity.getArtikelKategorie()))
                 .variante(entity.getVariante()) //
                 .norm(entity.getNorm()) //
                 .beschreibung(entity.getBeschreibung()) //
@@ -69,7 +68,6 @@ public final class ArtikelEntityConverter {
                 .id(variante.getId().getValue()) //
                 .artikel(variante.getArtikelId().getValue()) //
                 .variante(variante.getVariante()) //
-                .artikelKategorie(variante.getArtikelKategorieId().getValue())
                 .norm(variante.getNorm()) //
                 .beschreibung(variante.getBeschreibung()) //
                 .medizinischAuswaehlbar(variante.isMedizinischAuswaehlbar()) //

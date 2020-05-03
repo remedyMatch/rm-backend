@@ -8,7 +8,6 @@ import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.engine.domain.ProzessInstanzId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.person.domain.model.PersonId;
@@ -60,7 +59,7 @@ class AngebotServiceShould {
     private UserContextService userService;
 
     @MockBean
-    private AngebotProzessService anfrageProzessService;
+    private AngebotProzessService angebotProzessService;
 
     @Test
     @DisplayName("Fehler werfen bei Bearbeitung von nicht existierender Angebpt")
@@ -179,12 +178,13 @@ class AngebotServiceShould {
         then(angebotRepository).should().findById(angebotId.getValue());
         then(angebotRepository).should().save(angebotEntityBedient);
         then(angebotRepository).shouldHaveNoMoreInteractions();
-        then(anfrageRepository).should().updateStatus(angebotId.getValue(), AngebotAnfrageStatus.OFFEN,
-                AngebotAnfrageStatus.STORNIERT);
+//        then(anfrageRepository).should().updateStatus(angebotId.getValue(), AngebotAnfrageStatus.OFFEN,
+//                AngebotAnfrageStatus.STORNIERT);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().isUserContextInstitution(angebotInstitutionId);
         then(userService).shouldHaveNoMoreInteractions();
-        then(anfrageProzessService).shouldHaveNoMoreInteractions();
+        then(angebotProzessService).should().angebotSchliessen(angebotId);
+        then(angebotProzessService).shouldHaveNoMoreInteractions();
     }
 
     @Test
@@ -213,8 +213,6 @@ class AngebotServiceShould {
         val angebotId = angebot.getId();
         val angebotInstitutionId = angebot.getInstitution().getId();
 
-        val prozessInstanzId = new ProzessInstanzId(anfrageEntity.getProzessInstanzId());
-
         AngebotAnfrageEntity neueAnfrageEntity = AngebotAnfrageEntity.builder()//
                 .angebot(angebotEntity) //
                 .institution(institutionEntity) //
@@ -239,12 +237,11 @@ class AngebotServiceShould {
         then(angebotRepository).should().findById(angebotId.getValue());
         then(angebotRepository).shouldHaveNoMoreInteractions();
         then(anfrageRepository).should().save(neueAnfrageEntity);
-        then(anfrageRepository).should().save(anfrageEntity);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().getContextInstitution();
         then(userService).shouldHaveNoMoreInteractions();
-        then(anfrageProzessService).should().prozessStarten(angebotId, angebotSteller, anfrageId, angebotInstitutionId);
-        then(anfrageProzessService).shouldHaveNoMoreInteractions();
+        then(angebotProzessService).should().anfrageErhalten(anfrageId, angebotId);
+        then(angebotProzessService).shouldHaveNoMoreInteractions();
     }
 
     @Test
@@ -270,8 +267,8 @@ class AngebotServiceShould {
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().isUserContextInstitution(anfrageInstitutionId);
         then(userService).shouldHaveNoMoreInteractions();
-        //  then(anfrageProzessService).should().prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
-        then(anfrageProzessService).shouldHaveNoMoreInteractions();
+        then(angebotProzessService).should().anfrageStornieren(anfrageId, anfrage.getAngebot().getId());
+        then(angebotProzessService).shouldHaveNoMoreInteractions();
     }
 
     @Test
@@ -284,14 +281,13 @@ class AngebotServiceShould {
 
         given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
-        angebotService.anfrageAbgelehnt(anfrageId);
+        angebotService.anfrageAbgelehnt(anfrageEntity);
 
         then(angebotRepository).shouldHaveNoInteractions();
-        then(anfrageRepository).should().findById(anfrageId.getValue());
         then(anfrageRepository).should().save(anfrageEntityStorniert);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).shouldHaveNoInteractions();
-        then(anfrageProzessService).shouldHaveNoInteractions();
+        then(angebotProzessService).shouldHaveNoInteractions();
     }
 
     @Test
@@ -309,7 +305,7 @@ class AngebotServiceShould {
         given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
         assertThrows(OperationNotAlloudException.class, //
-                () -> angebotService.anfrageAngenommen(anfrageId));
+                () -> angebotService.anfrageAngenommen(anfrageEntity));
     }
 
     @Test
@@ -334,15 +330,14 @@ class AngebotServiceShould {
 
         given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
-        angebotService.anfrageAngenommen(anfrageId);
+        angebotService.anfrageAngenommen(anfrageEntity);
 
         then(angebotRepository).should().save(angebotDanach);
         then(angebotRepository).shouldHaveNoMoreInteractions();
-        then(anfrageRepository).should().findById(anfrageId.getValue());
         then(anfrageRepository).should().save(anfrageEntityAngenommen);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).shouldHaveNoInteractions();
-        then(anfrageProzessService).shouldHaveNoInteractions();
+        then(angebotProzessService).shouldHaveNoInteractions();
     }
 
     @Test
@@ -368,14 +363,13 @@ class AngebotServiceShould {
 
         given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
-        angebotService.anfrageAngenommen(anfrageId);
+        angebotService.anfrageAngenommen(anfrageEntity);
 
         then(angebotRepository).should().save(angebotDanach);
         then(angebotRepository).shouldHaveNoMoreInteractions();
-        then(anfrageRepository).should().findById(anfrageId.getValue());
         then(anfrageRepository).should().save(anfrageEntityAngenommen);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).shouldHaveNoInteractions();
-        then(anfrageProzessService).shouldHaveNoInteractions();
+        then(angebotProzessService).shouldHaveNoInteractions();
     }
 }

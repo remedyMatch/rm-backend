@@ -22,10 +22,6 @@ public class ArtikelVariante {
     @Valid
     private ArtikelId artikelId;
 
-    @NotNull
-    @Valid
-    private ArtikelKategorieId artikelKategorieId;
-
     private Integer sort;
 
     @NotBlank

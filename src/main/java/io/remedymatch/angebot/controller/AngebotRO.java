@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.controller;
 
+import io.remedymatch.artikel.controller.ArtikelRO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -28,15 +29,11 @@ public class AngebotRO {
 
     @NotNull
     @Valid
-    private UUID artikelId;
+    private ArtikelRO artikel;
 
     @NotNull
     @Valid
     private UUID artikelVarianteId;
-
-    @NotNull
-    @Valid
-    private UUID artikelKategorieId;
 
     @NotNull
     @PositiveOrZero

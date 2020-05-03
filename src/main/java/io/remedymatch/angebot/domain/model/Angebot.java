@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.domain.model;
 
+import io.remedymatch.artikel.domain.model.Artikel;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
@@ -31,6 +32,10 @@ public class Angebot {
     @NotNull
     @Valid
     private ArtikelVariante artikelVariante;
+
+    @NotNull
+    @Valid
+    private Artikel artikel;
 
     @NotNull
     @Positive

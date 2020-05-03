@@ -51,7 +51,7 @@ public class AngebotService {
     private final AngebotAnfrageJpaRepository anfrageRepository;
 
     private final UserContextService userService;
-    private final AngebotProzessService anfrageProzessService;
+    private final AngebotProzessService angebotProzessService;
 
     @Transactional
     public void angebotDerUserInstitutionLoeschen(final @NotNull @Valid AngebotId angebotId) {
@@ -59,14 +59,21 @@ public class AngebotService {
         // pruefe ob die Angebot existiert
         val angebot = getNichtBedienteAngebotDerUserInstitution(angebotId);
 
-        // Alle offene Anfragen stornieren
-        anfrageRepository.updateStatus(angebotId.getValue(), AngebotAnfrageStatus.OFFEN,
-                AngebotAnfrageStatus.STORNIERT);
-
         // Prozesse stornieren
-        //  anfrageProzessService.prozesseStornieren(angebotId);
+        angebotProzessService.angebotSchliessen(angebotId);
 
         angebot.setDeleted(true);
+        angebotRepository.save(angebot);
+    }
+
+    @Transactional
+    public void angebotAnzahlAendern(final @NotNull @Valid AngebotId angebotId, @NotNull BigDecimal anzahl) {
+
+        // pruefe ob das Angebot existiert
+        val angebot = getNichtBedienteAngebotDerUserInstitution(angebotId);
+        angebotProzessService.restAngebotAendern(angebotId, anzahl);
+
+        angebot.setAnzahl(anzahl);
         angebotRepository.save(angebot);
     }
 
@@ -88,15 +95,9 @@ public class AngebotService {
                 .kommentar(kommentar) //
                 .status(AngebotAnfrageStatus.OFFEN) //
                 .build());
-        val anfrageId = anfrage.getId();
 
-//        anfrage.setProzessInstanzId(anfrageProzessService.prozessStarten(//
-//                angebotId, //
-//                new PersonId(angebot.getCreatedBy()), //
-//                new AngebotAnfrageId(anfrageId), //
-//                new InstitutionId(angebot.getInstitution().getId()).getValue());
+        angebotProzessService.anfrageErhalten(new AngebotAnfrageId(anfrage.getId()), angebotId);
 
-        updateAnfrage(anfrage);
         return AngebotAnfrageEntityConverter.convertAnfrage(anfrage);
     }
 
@@ -107,23 +108,39 @@ public class AngebotService {
         val anfrage = getOffeneAnfrageDerUserInstitution(angebotId, anfrageId);
         anfrage.setStatus(AngebotAnfrageStatus.STORNIERT);
 
-        // Prozess stornieren
-        //  anfrageProzessService.prozessStornieren(new ProzessInstanzId(anfrage.getProzessInstanzId()));
+        // Anfrage stornieren
+        angebotProzessService.anfrageStornieren(anfrageId, angebotId);
 
         anfrageRepository.save(anfrage);
     }
 
     @Transactional
-    public void anfrageAbgelehnt(final @NotNull @Valid AngebotAnfrageId anfrageId) {
-        val anfrage = getOffeneAnfrage(anfrageId);
+    public void angebotAnfrageBeantworten(
+            final @NotNull @Valid AngebotId angebotId, //
+            final @NotNull @Valid AngebotAnfrageId anfrageId, //
+            final @NotNull Boolean entscheidung) {
+        val anfrage = getOffeneAnfrageDerUserInstitution(angebotId, anfrageId);
+        val angebot = getNichtBedienteAngebot(angebotId);
+        var restAnzahl = angebot.getRest();
+        if (entscheidung) {
+            restAnzahl = anfrageAngenommen(anfrage);
+        } else {
+            anfrageAbgelehnt(anfrage);
+        }
+        // Anfrage beantworten
+        angebotProzessService.anfrageBeantworten(anfrageId, angebotId, entscheidung, restAnzahl);
+
+        anfrageRepository.save(anfrage);
+    }
+
+    @Transactional
+    public void anfrageAbgelehnt(final @NotNull AngebotAnfrageEntity anfrage) {
         anfrage.setStatus(AngebotAnfrageStatus.ABGELEHNT);
-
         anfrageRepository.save(anfrage);
     }
 
     @Transactional
-    public void anfrageAngenommen(final @NotNull @Valid AngebotAnfrageId anfrageId) {
-        val anfrage = getOffeneAnfrage(anfrageId);
+    public BigDecimal anfrageAngenommen(final @NotNull AngebotAnfrageEntity anfrage) {
 
         // Angebot als bedient markieren
         val angebot = anfrage.getAngebot();
@@ -131,10 +148,9 @@ public class AngebotService {
         // Restbestand des Angebots herabsetzen oder Exception werfen,
         // wenn die Anfrage größer als das Angebot ist
         val anfrageAnzahl = anfrage.getAnzahl();
+        var restAnzahl = new BigDecimal(0);
         BigDecimal angebotRest = angebot.getRest();
         if (anfrageAnzahl.compareTo(angebotRest) > 0) {
-            anfrage.setStatus(AngebotAnfrageStatus.STORNIERT);
-            anfrageRepository.save(anfrage);
             throw new OperationNotAlloudException("Nicht genügend Ware auf Lager");
         }
 
@@ -145,11 +161,13 @@ public class AngebotService {
         if (anfrageAnzahl.compareTo(angebotRest) == 0) {
             angebot.setBedient(true);
             angebot.setRest(BigDecimal.ZERO);
+            restAnzahl = BigDecimal.ZERO;
         } else {
+            restAnzahl = angebotRest.subtract(anfrageAnzahl);
             angebot.setRest(angebotRest.subtract(anfrageAnzahl));
         }
-
         angebotRepository.save(angebot);
+        return restAnzahl;
     }
 
     /* help methods */

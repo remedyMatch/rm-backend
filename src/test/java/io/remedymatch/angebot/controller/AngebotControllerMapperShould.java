@@ -1,9 +1,8 @@
 package io.remedymatch.angebot.controller;
 
 import io.remedymatch.angebot.domain.model.*;
-import io.remedymatch.artikel.domain.model.ArtikelId;
-import io.remedymatch.artikel.domain.model.ArtikelVariante;
-import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
+import io.remedymatch.artikel.controller.ArtikelRO;
+import io.remedymatch.artikel.domain.model.*;
 import io.remedymatch.institution.controller.InstitutionRO;
 import io.remedymatch.institution.controller.InstitutionStandortRO;
 import io.remedymatch.institution.domain.model.Institution;
@@ -32,6 +31,8 @@ class AngebotControllerMapperShould {
     private static final BigDecimal ANGEBOT_ANZAHL = BigDecimal.valueOf(120.0);
     private static final BigDecimal ANGEBOT_REST = BigDecimal.valueOf(120.0);
     private static final ArtikelId ARTIKEL_ID = new ArtikelId(UUID.randomUUID());
+
+    private static final ArtikelKategorieId ARTIKEL_KATEGORIE_ID = new ArtikelKategorieId(UUID.randomUUID());
     private static final ArtikelVarianteId ARTIKEL_VARIANTE_ID = new ArtikelVarianteId(UUID.randomUUID());
     private static final ArtikelVariante ARTIKEL_VARIANTE = ArtikelVariante.builder().id(ARTIKEL_VARIANTE_ID).artikelId(ARTIKEL_ID).build();
     private static final InstitutionId ANGEBOT_INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
@@ -47,6 +48,9 @@ class AngebotControllerMapperShould {
     private static final boolean MEDIZINISCH = true;
     private static final String ANGEBOT_KOMMENTAR = "Angebot Kommentar";
     private static final boolean BEDIENT = false;
+
+    private static final Artikel ARTIKEL = Artikel.builder().id(ARTIKEL_ID).artikelKategorieId(ARTIKEL_KATEGORIE_ID).build();
+    private static final ArtikelRO ARTIKELRO = ArtikelRO.builder().id(ARTIKEL_ID.getValue()).artikelKategorieId(ARTIKEL_KATEGORIE_ID.getValue()).build();
 
     private static final AngebotAnfrageId ANFRAGE_ID = new AngebotAnfrageId(UUID.randomUUID());
     private static final InstitutionId ANFRAGE_INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
@@ -153,6 +157,7 @@ class AngebotControllerMapperShould {
                 .id(ANGEBOT_ID) //
                 .anzahl(ANGEBOT_ANZAHL) //
                 .rest(ANGEBOT_REST) //
+                .artikel(ARTIKEL) //
                 .artikelVariante(ARTIKEL_VARIANTE) //
                 .institution(ANGEBOT_INSTITUTION) //
                 .standort(ANGEBOT_STANDORT) //
@@ -169,8 +174,8 @@ class AngebotControllerMapperShould {
         return AngebotRO.builder() //
                 .id(ANGEBOT_ID.getValue()) //
                 .verfuegbareAnzahl(ANGEBOT_ANZAHL) //
-                .artikelId(ARTIKEL_ID.getValue()) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID.getValue()) //
+                .artikel(ARTIKELRO)
                 .ort(ANGEBOT_STANDORT_DTO.getOrt()) //
                 .haltbarkeit(HALTBARKEIT) //
                 .steril(STERIL) //
@@ -188,7 +193,6 @@ class AngebotControllerMapperShould {
                 .standort(ANFRAGE_STANDORT) //
                 .anzahl(ANFRAGE_ANZAHL) //
                 .kommentar(ANFRAGE_KOMMENTAR) //
-                .prozessInstanzId(ANFRAGE_PROZESS_INSTANZ_ID) //
                 .status(ANFRAGE_STATUS) //
                 .build();
     }

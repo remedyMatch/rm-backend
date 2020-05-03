@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @Validated
@@ -30,18 +31,20 @@ class AngebotProzessService {
     final static MessageKey ANGEBOT_UNGUELTIG_MESSAGE = new MessageKey("angebot_prozess_rest_geaendert_message");
     final static MessageKey ANGEBOT_SCHLIESSEN_MESSAGE = new MessageKey("angebot_prozess_geschlossen_message");
     final static String VAR_ANFRAGE_ID = "angebot_anfrage_id";
+    final static String VAR_ANZAHL = "angebot_anzahl";
+    final static String VAR_ANGEBOT_GESCHLOSSEN = "angebot_geschlossen";
+    final static String VAR_ANFRAGE_ANGENOMMEN = "anfrage_angenommen";
 
     private final EngineClient engineClient;
 
     void prozessStarten(
             final @NotNull @Valid AngebotId angebotId, //
             final @NotNull @Valid PersonId angebotErsteller, //
-            final @NotNull @Valid AngebotAnfrageId anfrageId, //
             final @NotNull @Valid InstitutionId angebotInstitutionId) {
 
         engineClient.prozessStarten(//
                 PROZESS_KEY, //
-                new BusinessKey(anfrageId.getValue()), //
+                new BusinessKey(angebotId.getValue()), //
                 angebotErsteller, //
                 Variables.createVariables()//
                         .putValue("prozessKey", PROZESS_KEY.getValue()) //
@@ -49,11 +52,13 @@ class AngebotProzessService {
                         .putValue("institution", angebotInstitutionId.getValue()));
     }
 
-    void restAngebotAendern(final @NotNull @Valid AngebotId angebotId) {
+    void restAngebotAendern(final @NotNull @Valid AngebotId angebotId, BigDecimal anzahl) {
         engineClient.messageKorrelieren(//
                 PROZESS_KEY, //
                 new BusinessKey(angebotId.getValue()), //
-                REST_ANGEBOT_AENDERN_MESSAGE
+                REST_ANGEBOT_AENDERN_MESSAGE,
+                Variables.createVariables()
+                        .putValue(VAR_ANZAHL, anzahl)
         );
     }
 
@@ -61,7 +66,9 @@ class AngebotProzessService {
         engineClient.messageKorrelieren(//
                 PROZESS_KEY, //
                 new BusinessKey(angebotId.getValue()), //
-                ANGEBOT_SCHLIESSEN_MESSAGE);
+                ANGEBOT_SCHLIESSEN_MESSAGE,
+                Variables.createVariables()
+                        .putValue(VAR_ANGEBOT_GESCHLOSSEN, true));
     }
 
     void anfrageErhalten(final @NotNull @Valid AngebotAnfrageId angebotAnfrageId, final @NotNull @Valid AngebotId angebotId) {
@@ -74,6 +81,19 @@ class AngebotProzessService {
     }
 
     void anfrageStornieren(final @NotNull @Valid AngebotAnfrageId angebotAnfrageId, final @NotNull @Valid AngebotId angebotId) {
+        engineClient.messageKorrelieren(//
+                PROZESS_KEY, //
+                new BusinessKey(angebotId.getValue()), //
+                Variables.createVariables()
+                        .putValue(VAR_ANFRAGE_ID, angebotAnfrageId.getValue().toString()),
+                ANFRAGE_MESSAGE);
+    }
+
+    void anfrageBeantworten(
+            final @NotNull @Valid AngebotAnfrageId angebotAnfrageId,
+            final @NotNull @Valid AngebotId angebotId,
+            final @NotNull @Valid Boolean entscheidung,
+            final @NotNull @Valid BigDecimal restAnzahl) {
         engineClient.messageKorrelieren(//
                 PROZESS_KEY, //
                 new BusinessKey(angebotId.getValue()), //

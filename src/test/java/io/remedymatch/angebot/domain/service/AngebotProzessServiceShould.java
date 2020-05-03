@@ -42,18 +42,16 @@ class AngebotProzessServiceShould {
     void prozess_starten_koennen() {
 
         val angebotId = AngebotTestFixtures.beispielAngebotId();
-        val anfrageId = AngebotAnfrageTestFixtures.beispielAngebotAnfrageId();
         val personId = PersonTestFixtures.beispielPersonId();
         val angebotInstitutionId = InstitutionTestFixtures.beispielInstitutionId();
 
-        val businessKey = new BusinessKey(anfrageId.getValue());
+        val businessKey = new BusinessKey(angebotId.getValue());
         val expectedProzessInstanzId = new ProzessInstanzId("egal");
 
         given(engineClient.prozessStarten(eq(AngebotProzessService.PROZESS_KEY), eq(businessKey), eq(personId), anyMap()))
                 .willReturn(expectedProzessInstanzId);
 
-//        assertEquals(expectedProzessInstanzId,
-//                angebotProzessService.prozessStarten(angebotId, personId, anfrageId, angebotInstitutionId));
+        angebotProzessService.prozessStarten(angebotId, personId, angebotInstitutionId);
 
         then(engineClient).should().prozessStarten(eq(AngebotProzessService.PROZESS_KEY), eq(businessKey), eq(personId), anyMap());
         then(engineClient).shouldHaveNoMoreInteractions();

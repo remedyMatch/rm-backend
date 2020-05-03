@@ -36,7 +36,7 @@ public class AngebotAnfrageSucheService {
     }
 
     @Transactional(readOnly = true)
-    public List<AngebotAnfrage> findeAlleAnfrageFuerAngebotIds(final @NotNull @Valid List<AngebotId> angebotIds) {
+    public List<AngebotAnfrage> findeAlleOffenenAnfragenFuerAngebotIds(final @NotNull @Valid List<AngebotId> angebotIds) {
         return mitEntfernung(convertAnfragen(anfrageRepository.findAllByAngebot_IdIn(angebotIds.stream().map(AngebotId::getValue).collect(Collectors.toList()))));
     }
 

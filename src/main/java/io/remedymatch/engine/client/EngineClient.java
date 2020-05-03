@@ -128,7 +128,7 @@ public class EngineClient {
         messageKorrelieren(MessageKorrelierenRequest.builder() //
                 .prozessKey(prozessKey.getValue()) //
                 .messageKey(messageKey.getValue()) //
-                .variablesEqual(variablesEqual) //
+                .localVariablesEqual(variablesEqual) //
                 .build());
     }
 

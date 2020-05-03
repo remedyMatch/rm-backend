@@ -22,7 +22,7 @@ public class MessageKorrelierenRequest {
     @NotBlank
     private String messageKey;
 
-    private Map<String, Object> variablesEqual;
+    private Map<String, Object> localVariablesEqual;
 
     private Map<String, Object> variables;
 }

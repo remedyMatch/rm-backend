@@ -33,10 +33,6 @@ public class ArtikelVarianteEntity extends Auditable {
     @Column(name = "ARTIKEL_UUID", nullable = false, updatable = false, length = 36)
     private UUID artikel;
 
-    @Type(type = "uuid-char")
-    @Column(name = "ARTIKEL_KATEGORIE_UUID", nullable = false, updatable = false, length = 36)
-    private UUID artikelKategorie;
-
     @Column(name = "SORT", nullable = true, updatable = true)
     private Integer sort;
 

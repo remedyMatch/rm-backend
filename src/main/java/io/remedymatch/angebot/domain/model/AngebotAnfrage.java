@@ -42,8 +42,6 @@ public class AngebotAnfrage {
     @NotBlank
     private String kommentar;
 
-    private String prozessInstanzId;
-
     @NotNull
     private AngebotAnfrageStatus status;
 

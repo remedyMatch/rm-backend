@@ -4,6 +4,7 @@ class KeycloakAttribute {
 	private KeycloakAttribute() {
 	}
 
+	static final String KEYCLOAK_GRUPPE_NEU = "neu";
 	static final String KEYCLOAK_GRUPPE_FREIGEGEBEN = "freigegeben";
 	static final String KEYCLOAK_GRUPPE_USER = "user";
 	

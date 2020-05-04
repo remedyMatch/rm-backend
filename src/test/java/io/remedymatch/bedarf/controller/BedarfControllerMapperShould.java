@@ -1,5 +1,6 @@
 package io.remedymatch.bedarf.controller;
 
+import io.remedymatch.artikel.controller.ArtikelRO;
 import io.remedymatch.artikel.domain.model.Artikel;
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelVariante;
@@ -34,6 +35,7 @@ class BedarfControllerMapperShould {
     private static final BigDecimal BEDARF_REST = BigDecimal.valueOf(120.0);
     private static final ArtikelId BEDARF_ARTIKEL_ID = new ArtikelId(UUID.randomUUID());
     private static final Artikel BEDARF_ARTIKEL = Artikel.builder().id(BEDARF_ARTIKEL_ID).build();
+    private static final ArtikelRO BEDARF_ARTIKEL_RO = ArtikelRO.builder().id(BEDARF_ARTIKEL_ID.getValue()).build();
     private static final ArtikelVarianteId ARTIKEL_VARIANTE_ID = new ArtikelVarianteId(UUID.randomUUID());
     private static final ArtikelVariante ARTIKEL_VARIANTE = ArtikelVariante.builder().id(ARTIKEL_VARIANTE_ID).build();
     private static final InstitutionId BEDARF_INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
@@ -179,7 +181,7 @@ class BedarfControllerMapperShould {
                 .id(BEDARF_ID.getValue()) //
                 .anzahl(BEDARF_ANZAHL) //
                 .rest(BEDARF_REST) //
-                .artikel(BEDARF_ARTIKEL) //
+                .artikel(BEDARF_ARTIKEL_RO) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID.getValue()) //
                 .institutionId(BEDARF_INSTITUTION_ID.getValue()) //
                 .standort(BEDARF_STANDORT_DTO) //

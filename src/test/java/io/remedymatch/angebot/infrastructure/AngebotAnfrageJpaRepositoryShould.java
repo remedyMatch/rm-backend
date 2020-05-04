@@ -26,6 +26,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
@@ -207,6 +208,7 @@ public class AngebotAnfrageJpaRepositoryShould {
                 .angebot(angebot) //
                 .institution(meinKrankenhaus) //
                 .standort(meinStandort) //
+                .bedarfId(UUID.randomUUID()) //
                 .anzahl(BigDecimal.valueOf(50)) //
                 .kommentar("Bla bla") //
                 .status(status) //
@@ -220,6 +222,7 @@ public class AngebotAnfrageJpaRepositoryShould {
                 .angebot(angebot)//
                 .institution(meinKrankenhaus) //
                 .standort(meinStandort) //
+                .bedarfId(UUID.randomUUID()) //
                 .anzahl(anzahl) //
                 .kommentar("Bla bla") //
                 .status(AngebotAnfrageStatus.OFFEN) //
@@ -231,7 +234,8 @@ public class AngebotAnfrageJpaRepositoryShould {
                                                               BigDecimal anzahl) {
         return AngebotAnfrageEntity.builder() //
                 .angebot(beispielAngebot) //
-                .institution(institutionVon)//
+                .institution(institutionVon) //
+                .bedarfId(UUID.randomUUID()) //
                 .standort(meinStandort) //
                 .anzahl(anzahl) //
                 .kommentar("Bla bla") //

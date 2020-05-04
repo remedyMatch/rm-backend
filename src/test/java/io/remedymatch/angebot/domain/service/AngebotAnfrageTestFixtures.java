@@ -4,6 +4,7 @@ import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
+import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ public final class AngebotAnfrageTestFixtures {
 
     }
 
+    public static final BedarfId BEDARF_ID = new BedarfId(UUID.randomUUID());
     public static final AngebotAnfrageId ANGEBOT_ANFRAGE_ID = new AngebotAnfrageId(UUID.randomUUID());
     public static final BigDecimal ANGEBOT_ANFRAGE_ANZAHL = BigDecimal.valueOf(120.0);
     public static final String ANGEBOT_ANFRAGE_KOMMENTAR = "Angebot Anfrage Kommentar";
@@ -29,6 +31,7 @@ public final class AngebotAnfrageTestFixtures {
                 .angebot(AngebotTestFixtures.beispielAngebot()) //
                 .institution(InstitutionTestFixtures.beispielInstitution()) //
                 .standort(InstitutionTestFixtures.beispielHaupstandort()) //
+                .bedarfId(BEDARF_ID) //
                 .anzahl(ANGEBOT_ANFRAGE_ANZAHL) //
                 .kommentar(ANGEBOT_ANFRAGE_KOMMENTAR) //
                 .status(ANGEBOT_ANFRAGE_STATUS) //
@@ -41,6 +44,7 @@ public final class AngebotAnfrageTestFixtures {
                 .angebot(AngebotTestFixtures.beispielAngebotEntityMitAngebotSteller()) //
                 .institution(InstitutionTestFixtures.beispielInstitutionEntity()) //
                 .standort(InstitutionTestFixtures.beispielHaupstandortEntity()) //
+                .bedarfId(BEDARF_ID.getValue()) //
                 .anzahl(ANGEBOT_ANFRAGE_ANZAHL) //
                 .kommentar(ANGEBOT_ANFRAGE_KOMMENTAR) //
                 .status(ANGEBOT_ANFRAGE_STATUS) //

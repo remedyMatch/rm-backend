@@ -3,6 +3,7 @@ package io.remedymatch.angebot.controller;
 import io.remedymatch.angebot.domain.model.*;
 import io.remedymatch.artikel.controller.ArtikelRO;
 import io.remedymatch.artikel.domain.model.*;
+import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.institution.controller.InstitutionRO;
 import io.remedymatch.institution.controller.InstitutionStandortRO;
 import io.remedymatch.institution.domain.model.Institution;
@@ -66,6 +67,8 @@ class AngebotControllerMapperShould {
     private static final String ANFRAGE_KOMMENTAR = "Anfrage Kommentar";
     private static final String ANFRAGE_PROZESS_INSTANZ_ID = "Anfrage ProzessInstanzId";
     private static final AngebotAnfrageStatus ANFRAGE_STATUS = AngebotAnfrageStatus.OFFEN;
+
+    private static final BedarfId BEDARF_ID = new BedarfId(UUID.randomUUID());
 
     private static final UUID FILTER_ENTRY_ID = UUID.randomUUID();
     private static final BigInteger FILTER_ENTRY_ANZAHL = BigInteger.valueOf(123);
@@ -191,6 +194,7 @@ class AngebotControllerMapperShould {
                 .angebot(angebot()) //
                 .institution(ANFRAGE_INSTITUTION) //
                 .standort(ANFRAGE_STANDORT) //
+                .bedarfId(BEDARF_ID)
                 .anzahl(ANFRAGE_ANZAHL) //
                 .kommentar(ANFRAGE_KOMMENTAR) //
                 .status(ANFRAGE_STATUS) //
@@ -203,6 +207,7 @@ class AngebotControllerMapperShould {
                 .institution(ANFRAGE_INSTITUTION_DTO) //
                 .standort(ANFRAGE_STANDORT_DTO) //
                 .anzahl(ANFRAGE_ANZAHL) //
+                .bedarfId(BEDARF_ID.getValue()) //
                 .kommentar(ANFRAGE_KOMMENTAR) //
                 .status(ANFRAGE_STATUS) //
                 .build();

@@ -22,6 +22,7 @@ import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.UUID;
 
 @Slf4j
 public abstract class AngebotControllerTestBasis {
@@ -82,6 +83,7 @@ public abstract class AngebotControllerTestBasis {
                 .createdBy(suchenderEntity.getId()) //
                 .createdDate(LocalDateTime.now()) //
                 .angebot(angebot) //
+                .bedarfId(UUID.randomUUID()) //
                 .anzahl(BigDecimal.valueOf(200)) //
                 .institution(suchenderEntity.getAktuelleInstitution().getInstitution()) //
                 .standort(suchenderEntity.getAktuelleInstitution().getStandort()) //

@@ -112,6 +112,7 @@ class BedarfControllerMapper {
                 .steril(neuesBedarfRequest.isSteril()) //
                 .medizinisch(neuesBedarfRequest.isMedizinisch()) //
                 .kommentar(neuesBedarfRequest.getKommentar()) //
+                .oeffentlich(neuesBedarfRequest.isOeffentlich()) //
                 .build();
     }
 

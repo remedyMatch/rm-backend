@@ -1,6 +1,7 @@
 package io.remedymatch.bedarf.domain.service;
 
 import io.remedymatch.bedarf.domain.model.BedarfId;
+import io.remedymatch.bedarf.infrastructure.BedarfAnfrageJpaRepository;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.usercontext.UserContextService;
@@ -37,6 +38,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
         BedarfJpaRepository.class, //
         UserContextService.class, //
         BedarfAnfrageSucheService.class, //
+        BedarfAnfrageJpaRepository.class, //
         GeoCalcService.class //
 })
 @Tag("Spring")
@@ -48,6 +50,9 @@ class BedarfSucheServiceShould {
 
     @MockBean
     private BedarfJpaRepository bedarfRepository;
+
+    @MockBean
+    private BedarfAnfrageJpaRepository bedarfAnfrageJpaRepository;
 
     @MockBean
     private UserContextService userService;

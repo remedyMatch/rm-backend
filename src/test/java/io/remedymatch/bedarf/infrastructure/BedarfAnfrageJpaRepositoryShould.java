@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
@@ -207,6 +208,7 @@ public class BedarfAnfrageJpaRepositoryShould {
                 .bedarf(bedarf) //
                 .institution(meinKrankenhaus) //
                 .standort(meinStandort) //
+                .angebotId(UUID.randomUUID()) //
                 .anzahl(BigDecimal.valueOf(50)) //
                 .kommentar("Bla bla") //
                 .status(status) //
@@ -220,6 +222,7 @@ public class BedarfAnfrageJpaRepositoryShould {
                 .bedarf(bedarf)//
                 .institution(meinKrankenhaus) //
                 .standort(meinStandort) //
+                .angebotId(UUID.randomUUID()) //
                 .anzahl(anzahl) //
                 .kommentar("Bla bla") //
                 .status(BedarfAnfrageStatus.OFFEN) //
@@ -231,7 +234,8 @@ public class BedarfAnfrageJpaRepositoryShould {
                                                             BigDecimal anzahl) {
         return BedarfAnfrageEntity.builder() //
                 .bedarf(beispielBedarf) //
-                .institution(institutionVon)//
+                .institution(institutionVon) //
+                .angebotId(UUID.randomUUID()) //
                 .standort(meinStandort) //
                 .anzahl(anzahl) //
                 .kommentar("Bla bla") //

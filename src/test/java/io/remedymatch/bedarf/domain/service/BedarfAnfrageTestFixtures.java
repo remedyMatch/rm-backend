@@ -1,5 +1,6 @@
 package io.remedymatch.bedarf.domain.service;
 
+import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
@@ -12,6 +13,7 @@ import java.util.UUID;
 public final class BedarfAnfrageTestFixtures {
 
     public static final BedarfAnfrageId BEDARF_ANFRAGE_ID = new BedarfAnfrageId(UUID.randomUUID());
+    public static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
     public static final String BEDARF_ANFRAGE_KOMMENTAR = "Kommentar";
     public static final String BEDARF_ANFRAGE_PROZESSINSTANZ_ID = "ProzessInstanzId";
     public static final BigDecimal BEDARF_ANFRAGE_ANZAHL = BigDecimal.valueOf(120.0);
@@ -27,6 +29,7 @@ public final class BedarfAnfrageTestFixtures {
                 .bedarf(BedarfTestFixtures.beispielBedarf()) //
                 .institution(InstitutionTestFixtures.beispielInstitution()) //
                 .standort(InstitutionTestFixtures.beispielHaupstandort()) //
+                .angebotId(ANGEBOT_ID) //
                 .anzahl(BEDARF_ANFRAGE_ANZAHL) //
                 .kommentar(BEDARF_ANFRAGE_KOMMENTAR) //
                 .status(BEDARF_ANFRAGE_STATUS) //
@@ -39,6 +42,7 @@ public final class BedarfAnfrageTestFixtures {
                 .bedarf(BedarfTestFixtures.beispielBedarfEntityMitBedarfSteller()) //
                 .institution(InstitutionTestFixtures.beispielInstitutionEntity()) //
                 .standort(InstitutionTestFixtures.beispielHaupstandortEntity()) //
+                .angebotId(ANGEBOT_ID.getValue()) //
                 .anzahl(BEDARF_ANFRAGE_ANZAHL) //
                 .kommentar(BEDARF_ANFRAGE_KOMMENTAR) //
                 .status(BEDARF_ANFRAGE_STATUS) //

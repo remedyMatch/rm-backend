@@ -1,10 +1,8 @@
 package io.remedymatch.bedarf.controller;
 
+import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.artikel.controller.ArtikelRO;
-import io.remedymatch.artikel.domain.model.Artikel;
-import io.remedymatch.artikel.domain.model.ArtikelId;
-import io.remedymatch.artikel.domain.model.ArtikelVariante;
-import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
+import io.remedymatch.artikel.domain.model.*;
 import io.remedymatch.bedarf.domain.model.*;
 import io.remedymatch.institution.controller.InstitutionRO;
 import io.remedymatch.institution.controller.InstitutionStandortRO;
@@ -31,11 +29,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class BedarfControllerMapperShould {
 
     private static final BedarfId BEDARF_ID = new BedarfId(UUID.randomUUID());
+    private static final AngebotId ANGEBOT_ID = new AngebotId(UUID.randomUUID());
     private static final BigDecimal BEDARF_ANZAHL = BigDecimal.valueOf(120.0);
     private static final BigDecimal BEDARF_REST = BigDecimal.valueOf(120.0);
     private static final ArtikelId BEDARF_ARTIKEL_ID = new ArtikelId(UUID.randomUUID());
-    private static final Artikel BEDARF_ARTIKEL = Artikel.builder().id(BEDARF_ARTIKEL_ID).build();
-    private static final ArtikelRO BEDARF_ARTIKEL_RO = ArtikelRO.builder().id(BEDARF_ARTIKEL_ID.getValue()).build();
+    private static final ArtikelKategorieId BEDARF_ARTIKEL_KATEGORIE_ID = new ArtikelKategorieId(UUID.randomUUID());
+    private static final Artikel BEDARF_ARTIKEL = Artikel.builder().id(BEDARF_ARTIKEL_ID).artikelKategorieId(BEDARF_ARTIKEL_KATEGORIE_ID).build();
+    private static final ArtikelRO BEDARF_ARTIKEL_RO = ArtikelRO.builder().id(BEDARF_ARTIKEL_ID.getValue()).artikelKategorieId(BEDARF_ARTIKEL_KATEGORIE_ID.getValue()).build();
     private static final ArtikelVarianteId ARTIKEL_VARIANTE_ID = new ArtikelVarianteId(UUID.randomUUID());
     private static final ArtikelVariante ARTIKEL_VARIANTE = ArtikelVariante.builder().id(ARTIKEL_VARIANTE_ID).build();
     private static final InstitutionId BEDARF_INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
@@ -143,6 +143,7 @@ class BedarfControllerMapperShould {
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID) //
                 .standortId(BEDARF_STANDORT_ID) //
                 .steril(STERIL) //
+                .oeffentlich(true) //
                 .medizinisch(MEDIZINISCH) //
                 .kommentar(BEDARF_KOMMENTAR) //
                 .build();
@@ -157,6 +158,7 @@ class BedarfControllerMapperShould {
                 .steril(STERIL) //
                 .medizinisch(MEDIZINISCH) //
                 .kommentar(BEDARF_KOMMENTAR) //
+                .oeffentlich(true) //
                 .build();
     }
 
@@ -164,6 +166,7 @@ class BedarfControllerMapperShould {
         return Bedarf.builder() //
                 .id(BEDARF_ID) //
                 .anzahl(BEDARF_ANZAHL) //
+                .oeffentlich(true) //
                 .rest(BEDARF_REST) //
                 .artikel(BEDARF_ARTIKEL) //
                 .artikelVariante(ARTIKEL_VARIANTE) //
@@ -180,6 +183,7 @@ class BedarfControllerMapperShould {
         return BedarfRO.builder() //
                 .id(BEDARF_ID.getValue()) //
                 .anzahl(BEDARF_ANZAHL) //
+                .oeffentlich(true) //
                 .rest(BEDARF_REST) //
                 .artikel(BEDARF_ARTIKEL_RO) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID.getValue()) //
@@ -195,6 +199,7 @@ class BedarfControllerMapperShould {
         return BedarfAnfrage.builder() //
                 .id(ANFRAGE_ID) //
                 .bedarf(bedarf()) //
+                .angebotId(ANGEBOT_ID)
                 .institution(ANFRAGE_INSTITUTION) //
                 .standort(ANFRAGE_STANDORT) //
                 .anzahl(ANFRAGE_ANZAHL) //
@@ -207,6 +212,7 @@ class BedarfControllerMapperShould {
         return BedarfAnfrageRO.builder() //
                 .id(ANFRAGE_ID.getValue()) //
                 .institution(ANFRAGE_INSTITUTION_DTO) //
+                .angebotId(ANGEBOT_ID.getValue())
                 .standort(ANFRAGE_STANDORT_DTO) //
                 .anzahl(ANFRAGE_ANZAHL) //
                 .kommentar(ANFRAGE_KOMMENTAR) //

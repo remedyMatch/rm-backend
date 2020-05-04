@@ -120,8 +120,6 @@ public class AngebotService {
             final @NotNull @Valid AngebotAnfrageId anfrageId) {
         val anfrage = getOffeneAnfrage(angebotId, anfrageId);
         anfrage.setStatus(AngebotAnfrageStatus.STORNIERT);
-
-
         anfrageRepository.save(anfrage);
     }
 
@@ -175,7 +173,7 @@ public class AngebotService {
             restAnzahl = BigDecimal.ZERO;
         } else {
             restAnzahl = angebotRest.subtract(anfrageAnzahl);
-            angebot.setRest(angebotRest.subtract(anfrageAnzahl));
+            angebot.setRest(restAnzahl);
         }
         angebotRepository.save(angebot);
         return restAnzahl;

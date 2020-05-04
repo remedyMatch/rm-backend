@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.controller;
+package io.remedymatch.bedarf.controller;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Das InstitutionAngebot enthält zusätzlich alle Anfragen, die zu diesem Angebot existieren
+ * Der InstitutionBedarf enthält zusätzlich alle Anfragen, die zu diesem Bedarf offen sind
  */
 @Getter
 @Setter
@@ -17,10 +17,10 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public class InstitutionAngebotRO extends AngebotRO {
+public class InstitutionBedarfRO extends BedarfRO {
 
     @NotNull
     @Builder.Default
-    private List<AngebotAnfrageRO> anfragen = new ArrayList();
+    private List<BedarfAnfrageRO> anfragen = new ArrayList();
 
 }

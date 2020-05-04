@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class AnfrageBeantwortenRequest {
+public class AngebotAnfrageBeantwortenRequest {
 
     Boolean entscheidung;
 

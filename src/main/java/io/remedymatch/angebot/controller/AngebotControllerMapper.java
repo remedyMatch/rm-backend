@@ -70,13 +70,13 @@ class AngebotControllerMapper {
                 .artikel(ArtikelControllerMapper.mapArtikelToRO(angebot.getArtikel())) //
                 .artikelVarianteId(angebot.getArtikelVariante().getId().getValue()) //
                 .verfuegbareAnzahl(angebot.getAnzahl()) //
+                .anfragen(angebot.getAnfragen().stream().map(AngebotControllerMapper::mapToAnfrageRO).collect(Collectors.toList()))
                 .ort(angebot.getStandort().getOrt())
                 .haltbarkeit(angebot.getHaltbarkeit()).medizinisch(angebot.isMedizinisch()).steril(angebot.isSteril()) //
                 .originalverpackt(angebot.isOriginalverpackt()) //
                 .medizinisch(angebot.isMedizinisch()) //
                 .kommentar(angebot.getKommentar()) //
                 .entfernung(angebot.getEntfernung()) //
-                .anfragen(angebot.getAnfragen())
                 .build();
     }
 

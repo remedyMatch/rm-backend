@@ -42,7 +42,7 @@ public class AngebotController {
     }
 
     @PostMapping
-    public ResponseEntity<AngebotRO> neueAngebotEinstellen(@RequestBody @NotNull @Valid NeuesAngebotRequest neueAngebot) {
+    public ResponseEntity<AngebotRO> neuesAngebotEinstellen(@RequestBody @NotNull @Valid NeuesAngebotRequest neueAngebot) {
         return ResponseEntity
                 .ok(mapToAngebotRO(angebotAnlageService.neueAngebotEinstellen(mapToNeueAngebot(neueAngebot))));
     }
@@ -104,7 +104,7 @@ public class AngebotController {
     public ResponseEntity<Void> anfrageBeantworten(
             @PathVariable("angebotId") @NotNull UUID angebotId, //
             @PathVariable("anfrageId") @NotNull UUID anfrageId, //
-            @RequestBody @Valid AnfrageBeantwortenRequest request) {
+            @RequestBody @Valid AngebotAnfrageBeantwortenRequest request) {
         try {
             angebotService.angebotAnfrageBeantworten(//
                     AngebotControllerMapper.mapToAngebotId(angebotId), //

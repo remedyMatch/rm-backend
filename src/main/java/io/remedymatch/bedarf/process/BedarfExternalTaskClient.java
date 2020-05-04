@@ -1,10 +1,9 @@
 package io.remedymatch.bedarf.process;
 
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.domain.service.BedarfService;
 import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.engine.domain.BusinessKey;
-import io.remedymatch.match.api.MatchProzessConstants;
 import io.remedymatch.properties.EngineProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -26,6 +24,8 @@ class BedarfExternalTaskClient {
     private final EngineProperties properties;
     private final BedarfService bedarfService;
     private final EngineClient engineClient;
+    final static String VAR_ANFRAGE_ID = "bedarf_anfrage_id";
+
 
     @PostConstruct
     public void doSubscribe() {
@@ -36,10 +36,9 @@ class BedarfExternalTaskClient {
         client.subscribe("bedarf_anfrage_ablehnen_topic").lockDuration(2000) //
                 .handler((externalTask, externalTaskService) -> {
                     try {
-                        val anfrageId = externalTask.getVariable("anfrageId").toString();
-                        bedarfService.anfrageAbgelehnt(new BedarfAnfrageId(UUID.fromString(anfrageId)));
-                        externalTaskService.complete(externalTask);
+                        //TODO Benachrichtigung einstellen?
 
+                        externalTaskService.complete(externalTask);
                     } catch (Exception e) {
                         log.error("Der External Task konnte nicht abgeschlossen werden.", e);
                         externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);
@@ -49,32 +48,19 @@ class BedarfExternalTaskClient {
         client.subscribe("bedarf_anfrage_stornieren_topic").lockDuration(2000) //
                 .handler((externalTask, externalTaskService) -> {
 
-                    // Vorerst nichts - wurde bereits ueber Service storniert - vielleicht mal
-                    // umbauen
+                    //TODO Benachrichtigung einstellen, Bedarf anlegen?
 
                     externalTaskService.complete(externalTask);
                 }).open();
 
-        client.subscribe("bedarf_anfrage_match_prozess_starten_topic").lockDuration(2000) //
+        client.subscribe("bedarf_anfrage_schliessen_topic").lockDuration(2000) //
                 .handler((externalTask, externalTaskService) -> {
-                    try {
-                        val anfrageId = externalTask.getVariable("anfrageId").toString();
 
-                        val variables = new HashMap<String, Object>();
-                        variables.put("anfrageTyp", MatchProzessConstants.ANFRAGE_TYP_BEDARF);
-                        variables.put("anfrageId", anfrageId);
-
-                        engineClient.prozessStarten( //
-                                MatchProzessConstants.PROZESS_KEY, //
-                                new BusinessKey(UUID.fromString(anfrageId)), //
-                                variables);
-
-                        externalTaskService.complete(externalTask, variables);
-                    } catch (Exception e) {
-                        log.error("Der External Task konnte nicht abgeschlossen werden.", e);
-                        externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);
-                    }
-
+                    val anfrageId = new BedarfAnfrageId(UUID.fromString(externalTask.getVariable(VAR_ANFRAGE_ID).toString()));
+                    val angebotId = new BedarfId(UUID.fromString(externalTask.getBusinessKey()));
+                    bedarfService.bedarfAnfrageSchliessen(angebotId, anfrageId);
+                    //TODO Benachrichtigung senden?
+                    externalTaskService.complete(externalTask);
                 }).open();
     }
 }

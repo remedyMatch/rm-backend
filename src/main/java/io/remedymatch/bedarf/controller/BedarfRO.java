@@ -1,22 +1,18 @@
 package io.remedymatch.bedarf.controller;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import io.remedymatch.artikel.domain.model.Artikel;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import javax.persistence.MappedSuperclass;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-
-import io.remedymatch.institution.controller.InstitutionStandortRO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -24,42 +20,43 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-@Builder
+@SuperBuilder
+@MappedSuperclass
 public class BedarfRO {
 
-	@NotNull
-	private UUID id;
+    @NotNull
+    private UUID id;
 
-	@NotNull
-	@Valid
-	private UUID artikelId;
+    @NotNull
+    @Valid
+    private Artikel artikel;
 
-	@Valid
-	private UUID artikelVarianteId;
+    @Valid
+    private UUID artikelVarianteId;
 
-	@NotNull
-	@Positive
-	private BigDecimal anzahl;
+    @NotNull
+    @Positive
+    private BigDecimal anzahl;
 
-	@NotNull
-	@PositiveOrZero
-	private BigDecimal rest;
+    @NotNull
+    @PositiveOrZero
+    private BigDecimal rest;
 
-	@NotNull
-	private UUID institutionId;
+    @NotNull
+    private UUID institutionId;
 
-	@NotNull
-	@Valid
-	private InstitutionStandortRO standort;
+    @NotNull
+    @Valid
+    private InstitutionStandortRO standort;
 
-	private boolean steril;
+    private boolean steril;
 
-	private boolean medizinisch;
+    private boolean medizinisch;
 
-	@NotBlank
-	private String kommentar;
+    @NotBlank
+    private String kommentar;
 
-	@NotNull
-	@Positive
-	private BigDecimal entfernung;
+    @NotNull
+    @Positive
+    private BigDecimal entfernung;
 }

@@ -23,5 +23,8 @@ class AngebotAnfragenRequest {
     @Positive
     private BigDecimal anzahl;
 
+    @NotNull
+    private UUID bedarfId;
+
     private String kommentar;
 }

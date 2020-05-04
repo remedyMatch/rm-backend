@@ -1,5 +1,6 @@
 package io.remedymatch.angebot.domain.model;
 
+import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
 import lombok.*;
@@ -22,6 +23,10 @@ public class AngebotAnfrage {
     @NotNull
     @Valid
     private AngebotAnfrageId id;
+
+    @NotNull
+    @Valid
+    private BedarfId bedarfId;
 
     @NotNull
     @Valid

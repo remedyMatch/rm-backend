@@ -73,6 +73,9 @@ public class AngebotEntity extends Auditable {
     @Column(name = "BEDIENT", nullable = false, updatable = true)
     private boolean bedient;
 
+    @Column(name = "OEFFENTLICH", nullable = false, updatable = true)
+    private boolean oeffentlich;
+
     @Column(name = "DELETED", nullable = true, updatable = true)
     private boolean deleted;
 }

@@ -43,6 +43,9 @@ class BedarfAnfrageRO {
     private String kommentar;
 
     @NotNull
+    private UUID angebotId;
+
+    @NotNull
     private BedarfAnfrageStatus status;
 
     private BigDecimal entfernung;

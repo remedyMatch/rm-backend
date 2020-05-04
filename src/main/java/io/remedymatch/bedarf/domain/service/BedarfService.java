@@ -74,7 +74,7 @@ public class BedarfService {
 
         // pruefe ob das Angebot existiert
         val bedarf = getNichtBedienteBedarfDerUserInstitution(bedarfId);
-        bedarfProzessService.restAngebotAendern(bedarfId, anzahl);
+        bedarfProzessService.restBedarfAendern(bedarfId, anzahl);
 
         bedarf.setAnzahl(anzahl);
         bedarfRepository.save(bedarf);

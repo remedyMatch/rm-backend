@@ -57,13 +57,17 @@ public class Angebot {
     private LocalDateTime haltbarkeit;
 
     private boolean steril;
+
     private boolean originalverpackt;
+
     private boolean medizinisch;
 
     @NotBlank
     private String kommentar;
 
     private boolean bedient;
+
+    private boolean oeffentlich;
 
     @Positive
     private transient BigDecimal entfernung;

@@ -24,6 +24,7 @@ class BedarfControllerMapper {
                 .institution(InstitutionMapper.mapToInstitutionRO(bedarfAnfrage.getInstitution())) //
                 .standort(InstitutionStandortMapper.mapToStandortRO(bedarfAnfrage.getStandort())) //
                 .anzahl(bedarfAnfrage.getAnzahl()) //
+                .angebotId(bedarfAnfrage.getAngebotId().getValue()) //
                 .kommentar(bedarfAnfrage.getKommentar()) //
                 .entfernung(bedarfAnfrage.getEntfernung()) //
                 .status(bedarfAnfrage.getStatus()) //
@@ -36,6 +37,7 @@ class BedarfControllerMapper {
                 .institution(InstitutionMapper.mapToInstitutionRO(bedarfAnfrage.getInstitution())) //
                 .standort(InstitutionStandortMapper.mapToStandortRO(bedarfAnfrage.getStandort())) //
                 .anzahl(bedarfAnfrage.getAnzahl()) //
+                .angebotId(bedarfAnfrage.getAngebotId().getValue()) //
                 .kommentar(bedarfAnfrage.getKommentar()) //
                 .entfernung(bedarfAnfrage.getEntfernung()) //
                 .status(bedarfAnfrage.getStatus()) //
@@ -54,6 +56,7 @@ class BedarfControllerMapper {
                         bedarf.getArtikelVariante() != null ? bedarf.getArtikelVariante().getId().getValue() : null) //
                 .anzahl(bedarf.getAnzahl()) //
                 .rest(bedarf.getRest()) //
+                .oeffentlich(bedarf.isOeffentlich()) //
                 .institutionId(bedarf.getInstitution().getId().getValue()) //
                 .standort(InstitutionStandortMapper.mapToStandortRO(bedarf.getStandort())) //
                 .steril(bedarf.isSteril()) //
@@ -75,6 +78,7 @@ class BedarfControllerMapper {
                         bedarf.getArtikelVariante() != null ? bedarf.getArtikelVariante().getId().getValue() : null) //
                 .anzahl(bedarf.getAnzahl()) //
                 .rest(bedarf.getRest()) //
+                .oeffentlich(bedarf.isOeffentlich()) //
                 .institutionId(bedarf.getInstitution().getId().getValue()) //
                 .anfragen(bedarf.getAnfragen().stream().map(BedarfControllerMapper::mapToAnfrageRO).collect(Collectors.toList()))
                 .standort(InstitutionStandortMapper.mapToStandortRO(bedarf.getStandort())) //

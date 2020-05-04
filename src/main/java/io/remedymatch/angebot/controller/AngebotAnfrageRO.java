@@ -45,5 +45,8 @@ class AngebotAnfrageRO {
     @NotNull
     private AngebotAnfrageStatus status;
 
+    @NotNull
+    private UUID bedarfId;
+
     private BigDecimal entfernung;
 }

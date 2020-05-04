@@ -30,7 +30,7 @@ class AngebotProzessService {
     final static MessageKey REST_ANGEBOT_AENDERN_MESSAGE = new MessageKey("angebot_prozess_rest_geaendert_message");
     final static MessageKey ANGEBOT_UNGUELTIG_MESSAGE = new MessageKey("angebot_prozess_rest_geaendert_message");
     final static MessageKey ANGEBOT_SCHLIESSEN_MESSAGE = new MessageKey("angebot_prozess_geschlossen_message");
-    final static String VAR_ANFRAGE_ID = "angebot_anfrage_id";
+    final static String VAR_ANFRAGE_ID = "anfrage_id";
     final static String VAR_ANZAHL = "angebot_anzahl";
     final static String VAR_ANGEBOT_GESCHLOSSEN = "angebot_geschlossen";
     final static String VAR_ANFRAGE_ANGENOMMEN = "anfrage_angenommen";
@@ -86,7 +86,7 @@ class AngebotProzessService {
                 new BusinessKey(angebotId.getValue()), //
                 Variables.createVariables()
                         .putValue(VAR_ANFRAGE_ID, angebotAnfrageId.getValue().toString()),
-                ANFRAGE_MESSAGE);
+                ANFRAGE_STORNIEREN_MESSAGE);
     }
 
     void anfrageBeantworten(

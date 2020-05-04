@@ -3,6 +3,7 @@ package io.remedymatch.angebot.domain.service;
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
+import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 
@@ -27,6 +28,7 @@ final class AngebotAnfrageEntityConverter {
                 .standort(InstitutionStandortEntityConverter.convertStandort(entity.getStandort())) //
                 .anzahl(entity.getAnzahl()) //
                 .kommentar(entity.getKommentar()) //
+                .bedarfId(new BedarfId(entity.getBedarfId())) //
                 .status(entity.getStatus())//
                 .build();
     }

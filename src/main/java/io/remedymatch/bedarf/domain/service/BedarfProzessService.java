@@ -30,7 +30,7 @@ class BedarfProzessService {
     final static MessageKey REST_BEDARF_AENDERN_MESSAGE = new MessageKey("bedarf_prozess_rest_geaendert_message");
     final static MessageKey BEDARF_UNGUELTIG_MESSAGE = new MessageKey("bedarf_prozess_rest_geaendert_message");
     final static MessageKey BEDARF_SCHLIESSEN_MESSAGE = new MessageKey("bedarf_prozess_geschlossen_message");
-    final static String VAR_ANFRAGE_ID = "bedarf_anfrage_id";
+    final static String VAR_ANFRAGE_ID = "anfrage_id";
     final static String VAR_ANZAHL = "bedarf_anzahl";
     final static String VAR_BEDARF_GESCHLOSSEN = "bedarf_geschlossen";
     final static String VAR_BEDARF_ANGENOMMEN = "anfrage_angenommen";
@@ -52,7 +52,7 @@ class BedarfProzessService {
                         .putValue("institution", angebotInstitutionId.getValue()));
     }
 
-    void restAngebotAendern(final @NotNull @Valid BedarfId angebotId, BigDecimal anzahl) {
+    void restBedarfAendern(final @NotNull @Valid BedarfId angebotId, BigDecimal anzahl) {
         engineClient.messageKorrelieren(//
                 PROZESS_KEY, //
                 new BusinessKey(angebotId.getValue()), //
@@ -86,7 +86,7 @@ class BedarfProzessService {
                 new BusinessKey(bedarfId.getValue()), //
                 Variables.createVariables()
                         .putValue(VAR_ANFRAGE_ID, bedarfAnfrageId.getValue().toString()),
-                ANFRAGE_MESSAGE);
+                ANFRAGE_STORNIEREN_MESSAGE);
     }
 
     void anfrageBeantworten(

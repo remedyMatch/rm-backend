@@ -1,5 +1,6 @@
 package io.remedymatch.bedarf.domain.model;
 
+import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
 import lombok.*;
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @Builder
 public class BedarfAnfrage {
+
     @NotNull
     @Valid
     private BedarfAnfrageId id;
@@ -25,6 +27,9 @@ public class BedarfAnfrage {
     @NotNull
     @Valid
     private Bedarf bedarf;
+
+    @NotNull
+    private AngebotId angebotId;
 
     @NotNull
     @Valid

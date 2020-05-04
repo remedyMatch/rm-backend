@@ -26,6 +26,7 @@ class AngebotControllerMapper {
                 .kommentar(angebotAnfrage.getKommentar()) //
                 .entfernung(angebotAnfrage.getEntfernung())
                 .status(angebotAnfrage.getStatus()) //
+                .bedarfId(angebotAnfrage.getBedarfId().getValue()) //
                 .build();
     }
 
@@ -38,6 +39,7 @@ class AngebotControllerMapper {
                 .kommentar(angebotAnfrage.getKommentar()) //
                 .entfernung(angebotAnfrage.getEntfernung())
                 .status(angebotAnfrage.getStatus()) //
+                .bedarfId(angebotAnfrage.getBedarfId().getValue()) //
                 .build();
     }
 
@@ -57,6 +59,7 @@ class AngebotControllerMapper {
                 .medizinisch(angebot.isMedizinisch()) //
                 .kommentar(angebot.getKommentar()) //
                 .entfernung(angebot.getEntfernung()) //
+                .oeffentlich(angebot.isOeffentlich()) //
                 .build();
     }
 
@@ -77,6 +80,7 @@ class AngebotControllerMapper {
                 .medizinisch(angebot.isMedizinisch()) //
                 .kommentar(angebot.getKommentar()) //
                 .entfernung(angebot.getEntfernung()) //
+                .oeffentlich(angebot.isOeffentlich()) //
                 .build();
     }
 
@@ -101,6 +105,7 @@ class AngebotControllerMapper {
                 .originalverpackt(neueAngebotRequest.isOriginalverpackt()) //
                 .medizinisch(neueAngebotRequest.isMedizinisch()) //
                 .kommentar(neueAngebotRequest.getKommentar()) //
+                .oeffentlich(neueAngebotRequest.isOeffentlich()) //
                 .build();
     }
 

@@ -35,6 +35,10 @@ public class BedarfAnfrageEntity extends Auditable {
     @JoinColumn(name = "BEDARF_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private BedarfEntity bedarf;
 
+    @Type(type = "uuid-char")
+    @Column(name = "ANGEBOT_UUID", nullable = false, updatable = false, length = 36)
+    private UUID angebotId;
+
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionEntity institution;

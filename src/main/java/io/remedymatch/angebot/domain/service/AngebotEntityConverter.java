@@ -29,6 +29,7 @@ final class AngebotEntityConverter {
                 .id(new AngebotId(entity.getId())) //
                 .anzahl(entity.getAnzahl()) //
                 .rest(entity.getRest()) //
+                .oeffentlich(entity.isOeffentlich()) //
                 .artikelVariante(ArtikelEntityConverter.convertVariante(entity.getArtikelVariante())) //
                 .artikel(ArtikelEntityConverter.convertArtikel(entity.getArtikel())) //
                 .institution(InstitutionEntityConverter.convertInstitution(entity.getInstitution()))//

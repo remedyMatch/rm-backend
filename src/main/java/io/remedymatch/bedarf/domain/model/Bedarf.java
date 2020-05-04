@@ -59,6 +59,8 @@ public class Bedarf {
 
     private boolean bedient;
 
+    private boolean oeffentlich;
+
     @Positive
     private transient BigDecimal entfernung;
 

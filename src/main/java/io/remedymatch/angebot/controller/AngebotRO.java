@@ -51,6 +51,8 @@ public class AngebotRO {
 
     private boolean medizinisch;
 
+    private boolean oeffentlich;
+
     @NotBlank
     private String kommentar;
 

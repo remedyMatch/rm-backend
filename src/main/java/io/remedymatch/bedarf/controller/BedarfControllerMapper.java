@@ -1,5 +1,6 @@
 package io.remedymatch.bedarf.controller;
 
+import io.remedymatch.artikel.controller.ArtikelControllerMapper;
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.bedarf.domain.model.*;
@@ -48,7 +49,7 @@ class BedarfControllerMapper {
     static BedarfRO mapToBedarfRO(final Bedarf bedarf) {
         return BedarfRO.builder() //
                 .id(bedarf.getId().getValue()) //
-                .artikel(bedarf.getArtikel()) //
+                .artikel(ArtikelControllerMapper.mapArtikelToRO(bedarf.getArtikel())) //
                 .artikelVarianteId(
                         bedarf.getArtikelVariante() != null ? bedarf.getArtikelVariante().getId().getValue() : null) //
                 .anzahl(bedarf.getAnzahl()) //
@@ -69,7 +70,7 @@ class BedarfControllerMapper {
     static InstitutionBedarfRO mapToInstitutionBedarfRO(final Bedarf bedarf) {
         return InstitutionBedarfRO.builder() //
                 .id(bedarf.getId().getValue()) //
-                .artikel(bedarf.getArtikel()) //
+                .artikel(ArtikelControllerMapper.mapArtikelToRO(bedarf.getArtikel())) //
                 .artikelVarianteId(
                         bedarf.getArtikelVariante() != null ? bedarf.getArtikelVariante().getId().getValue() : null) //
                 .anzahl(bedarf.getAnzahl()) //

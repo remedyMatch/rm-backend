@@ -1,6 +1,6 @@
 package io.remedymatch.bedarf.controller;
 
-import io.remedymatch.artikel.domain.model.Artikel;
+import io.remedymatch.artikel.controller.ArtikelRO;
 import io.remedymatch.institution.controller.InstitutionStandortRO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -29,7 +29,7 @@ public class BedarfRO {
 
     @NotNull
     @Valid
-    private Artikel artikel;
+    private ArtikelRO artikel;
 
     @Valid
     private UUID artikelVarianteId;

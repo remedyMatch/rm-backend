@@ -1,23 +1,18 @@
 package io.remedymatch.angebot.domain.service;
 
-import static io.remedymatch.angebot.domain.service.AngebotTestFixtures.beispielAngebotId;
-import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVariante;
-import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVarianteEntity;
-import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVarianteId;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextAnderesStandort;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextAnderesStandortEntity;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextInstitution;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextInstitutionEntity;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
-
+import io.remedymatch.angebot.domain.model.Angebot;
+import io.remedymatch.angebot.domain.model.NeuesAngebot;
+import io.remedymatch.angebot.infrastructure.AngebotEntity;
+import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
+import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
+import io.remedymatch.artikel.domain.service.ArtikelSucheService;
+import io.remedymatch.domain.NotUserInstitutionObjectException;
+import io.remedymatch.domain.ObjectNotFoundException;
+import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
+import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.usercontext.UserContextService;
+import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -28,19 +23,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.angebot.domain.model.Angebot;
-import io.remedymatch.angebot.domain.model.NeuesAngebot;
-import io.remedymatch.angebot.infrastructure.AngebotEntity;
-import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
-import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
-import io.remedymatch.artikel.domain.service.ArtikelSucheService;
-import io.remedymatch.domain.NotUserInstitutionObjectException;
-import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
-import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
-import io.remedymatch.usercontext.UserContextService;
-import lombok.val;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
+import static io.remedymatch.angebot.domain.service.AngebotTestFixtures.beispielAngebotId;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.*;
+import static io.remedymatch.usercontext.UserContextTestFixtures.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -49,7 +43,7 @@ import lombok.val;
 		AngebotJpaRepository.class, //
 		UserContextService.class, //
 		ArtikelSucheService.class, //
-		GeoCalcService.class, //
+		GeocodingService.class, //
 })
 @Tag("Spring")
 @DisplayName("AngebotAnlageService soll")
@@ -68,7 +62,7 @@ class AngebotAnlageServiceShould {
 	private ArtikelSucheService artikelSucheService;
 
 	@MockBean
-	private GeoCalcService geoCalcService;
+	private GeocodingService geocodingService;
 
 	@Test
 	@DisplayName("Fehler werfen bei nicht existierende ArtikelVariante")
@@ -149,7 +143,7 @@ class AngebotAnlageServiceShould {
 		val entfernung = BigDecimal.valueOf(123664);
 
 		given(userService.getContextInstitution()).willReturn(userInstitution);
-		given(geoCalcService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
 		given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
 		given(angebotRepository.save(angebotEntityOhneId)).willReturn(angebotEntityMitId);
 
@@ -176,7 +170,7 @@ class AngebotAnlageServiceShould {
 		then(userService).shouldHaveNoMoreInteractions();
 		then(artikelSucheService).should().findArtikelVariante(artikelVarianteId);
 		then(artikelSucheService).shouldHaveNoMoreInteractions();
-		then(geoCalcService).should().berechneUserDistanzInKilometer(userStandort);
-		then(geoCalcService).shouldHaveNoMoreInteractions();
+		then(geocodingService).should().berechneUserDistanzInKilometer(userStandort);
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 }

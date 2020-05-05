@@ -1,19 +1,11 @@
 package io.remedymatch.bedarf.domain.service;
 
-import static io.remedymatch.bedarf.domain.service.BedarfTestFixtures.beispielBedarf;
-import static io.remedymatch.bedarf.domain.service.BedarfTestFixtures.beispielBedarfEntity;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.UUID;
-
+import io.remedymatch.bedarf.domain.model.BedarfId;
+import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
+import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.usercontext.UserContextService;
+import io.remedymatch.usercontext.UserContextTestFixtures;
+import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,12 +16,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.bedarf.domain.model.BedarfId;
-import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.usercontext.UserContextService;
-import io.remedymatch.usercontext.UserContextTestFixtures;
-import lombok.val;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.UUID;
+
+import static io.remedymatch.bedarf.domain.service.BedarfTestFixtures.beispielBedarf;
+import static io.remedymatch.bedarf.domain.service.BedarfTestFixtures.beispielBedarfEntity;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +36,7 @@ import lombok.val;
 		BedarfSucheService.class, //
 		BedarfJpaRepository.class, //
 		UserContextService.class, //
-		GeoCalcService.class //
+		GeocodingService.class //
 })
 @Tag("Spring")
 @DisplayName("BedarfSucheService soll")
@@ -53,7 +52,7 @@ class BedarfSucheServiceShould {
 	private UserContextService userService;
 
 	@MockBean
-	private GeoCalcService geoCalcService;
+	private GeocodingService geocodingService;
 
 	@Test
 	@DisplayName("alle nicht bediente Bedarfe zurueckliefern")
@@ -75,8 +74,8 @@ class BedarfSucheServiceShould {
 
 		given(bedarfRepository.findAllByDeletedFalseAndBedientFalse())
 				.willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
-		given(geoCalcService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
-		given(geoCalcService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
 
 		assertThat(//
 				bedarfSucheService.findAlleNichtBedienteBedarfe(), //
@@ -86,8 +85,8 @@ class BedarfSucheServiceShould {
 		then(bedarfRepository).shouldHaveNoMoreInteractions();
 		then(userService).shouldHaveNoInteractions();
 		// XXX 2 verschiedene Aufrufe pruefen...
-		then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());
-		then(geoCalcService).shouldHaveNoMoreInteractions();
+		then(geocodingService).should(times(2)).berechneUserDistanzInKilometer(any());
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 
 	@Test
@@ -114,8 +113,8 @@ class BedarfSucheServiceShould {
 				.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue()))
 						.willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
 		given(userService.getContextInstitution()).willReturn(userContextInstitution);
-		given(geoCalcService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
-		given(geoCalcService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
 
 		assertEquals(Arrays.asList(bedarf1, bedarf2),
 				bedarfSucheService.findAlleNichtBedienteBedarfeDerUserInstitution());
@@ -126,7 +125,7 @@ class BedarfSucheServiceShould {
 		then(userService).should().getContextInstitution();
 		then(userService).shouldHaveNoMoreInteractions();
 		// XXX 2 verschiedene Aufrufe pruefen...
-		then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());
+		then(geocodingService).should(times(2)).berechneUserDistanzInKilometer(any());
 		then(userService).shouldHaveNoMoreInteractions();
 	}
 }

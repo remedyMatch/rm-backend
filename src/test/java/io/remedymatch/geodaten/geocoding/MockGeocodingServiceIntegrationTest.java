@@ -1,12 +1,10 @@
 package io.remedymatch.geodaten.geocoding;
 
-
 import io.remedymatch.TestApplication;
 import io.remedymatch.WithMockJWT;
-import io.remedymatch.geodaten.domain.StandortService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.geodaten.geocoding.domain.Adresse;
 import io.remedymatch.geodaten.geocoding.domain.Point;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,10 +24,10 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Tag("SpringBoot")
-public class StandortServiceIntegrationTest {
+public class MockGeocodingServiceIntegrationTest {
 
     @Autowired
-    private StandortService standortService;
+    private GeocodingService geocodingService;
 
     @Test
     @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = "testUser")
@@ -37,9 +35,10 @@ public class StandortServiceIntegrationTest {
 
         final String queryString = "Hüttenhospital Dortmund";
 
-        final List<Point> gefundeneKoordinaten = standortService.findePointsByAdressString(queryString);
+        final List<Point> gefundeneKoordinaten = geocodingService.findePointsByAdressString(queryString);
 
-        assertThat(gefundeneKoordinaten != null && !(gefundeneKoordinaten.isEmpty()));
+        assertThat(gefundeneKoordinaten).isNotNull();
+        assertThat(gefundeneKoordinaten).isNotEmpty();
     }
 
     @Test
@@ -50,9 +49,10 @@ public class StandortServiceIntegrationTest {
         adresse.setPlz("44229");
         adresse.setStrasse("Schneiderstraße");
 
-        final List<Point> gefundeneKoordinaten = standortService.findePointsByAdresse(adresse);
+        final List<Point> gefundeneKoordinaten = geocodingService.findePointsByAdresse(adresse);
 
-        assertThat(gefundeneKoordinaten != null && !(gefundeneKoordinaten.isEmpty()));
+        assertThat(gefundeneKoordinaten).isNotNull();
+        assertThat(gefundeneKoordinaten).isNotEmpty();
     }
 
     @Test
@@ -61,9 +61,9 @@ public class StandortServiceIntegrationTest {
 
         final String standort = "Hüttenhospital Dortmund";
 
-        final List<String> vorschlaege = standortService.findeAdressVorschlaegeByAdressString(standort);
+        final List<String> vorschlaege = geocodingService.findeAdressVorschlaegeByAdressString(standort);
 
-        assertThat(vorschlaege != null && !(vorschlaege.isEmpty()));
+        assertThat(vorschlaege).isNotNull();
     }
 
     @Test
@@ -72,9 +72,9 @@ public class StandortServiceIntegrationTest {
 
         final Point point = new Point(51.4807647, 7.50986959582075);
 
-        final String adressString = standortService.findeAdresseByPoint(point);
+        final String adressString = geocodingService.findeAdresseByPoint(point);
 
-        assertThat(StringUtils.isNotEmpty(adressString));
-        assertThat(adressString.contains("Hüttenhospital"));
+        assertThat(adressString).isNotEmpty();
+        assertThat(adressString).contains("Hüttenhospital");
     }
 }

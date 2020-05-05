@@ -188,7 +188,7 @@ public class AngebotJpaRepositoryShould {
 	@Rollback(true)
 	@Transactional
 	@Test
-	@DisplayName("alle nicht bediente Angebote zurueckliefern")
+	@DisplayName("alle nicht bediente oeffentliche Angebote der ArtikelVariante zurueckliefern")
 	void alle_nicht_bediente_oeffentliche_Angebote_der_ArtikelVarianteId_zurueckliefern() {
 		AngebotEntity ersteAngebot = persist(angebot(BigDecimal.valueOf(100)));
 		AngebotEntity zweiteAngebot = persist(angebot(BigDecimal.valueOf(200)));

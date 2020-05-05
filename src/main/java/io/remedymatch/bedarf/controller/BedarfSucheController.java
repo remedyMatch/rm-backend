@@ -5,6 +5,7 @@ import static io.remedymatch.bedarf.controller.BedarfControllerMapper.mapToFilte
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.QueryParam;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
+import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.bedarf.domain.service.BedarfSucheService;
 import lombok.AllArgsConstructor;
 
@@ -31,8 +33,9 @@ class BedarfSucheController {
 
 	@Transactional(readOnly = true)
 	@GetMapping
-	public ResponseEntity<List<BedarfRO>> getAlleNichtBedienteBedarfe() {
-		return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.findAlleNichtBedienteBedarfe()));
+	public ResponseEntity<List<BedarfRO>> getAlleNichtBedienteOeffentlicheBedarfe(
+            @QueryParam("artikelVarianteId") @Valid ArtikelVarianteId artikelVarianteId) {
+		return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.findAlleNichtBedienteOeffentlicheBedarfe(artikelVarianteId)));
 	}
 
 	@Transactional(readOnly = true)

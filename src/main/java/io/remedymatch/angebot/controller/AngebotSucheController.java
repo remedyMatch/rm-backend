@@ -31,7 +31,7 @@ public class AngebotSucheController {
 
     @Transactional(readOnly = true)
     @GetMapping
-    public ResponseEntity<List<AngebotRO>> getAlleNichtBedienteAngebote(
+    public ResponseEntity<List<AngebotRO>> getAlleNichtBedienteOeffentlicheAngebote(
             @QueryParam("artikelVarianteId") @Valid ArtikelVarianteId artikelVarianteId) {
         return ResponseEntity.ok(mapToAngeboteRO(angebotSucheService.findAlleNichtBedienteOeffentlicheAngebote(artikelVarianteId)));
     }

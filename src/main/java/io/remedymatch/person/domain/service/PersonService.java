@@ -1,14 +1,5 @@
 package io.remedymatch.person.domain.service;
 
-import static io.remedymatch.person.domain.service.PersonEntityConverter.convertPerson;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
@@ -18,10 +9,19 @@ import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.person.domain.model.NeuePerson;
 import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import static io.remedymatch.person.domain.service.PersonEntityConverter.convertPerson;
 
 @AllArgsConstructor
 @Validated
@@ -29,38 +29,48 @@ import lombok.val;
 @Transactional
 public class PersonService {
 
-	private static final String EXCEPTION_MSG_INSTITUTION_NICHT_GEFUNDEN = "Institution mit diesem Id nicht gefunden. (Id: %s)";
-	private static final String EXCEPTION_MSG_STANDORT_NICHT_DER_INSTITUTION = "Standort gehoert nicht der Institution. (InstitutionId: %s, StandortId: %s)";
+    private static final String EXCEPTION_MSG_INSTITUTION_NICHT_GEFUNDEN = "Institution mit dieser Id nicht gefunden. (Id: %s)";
+    private static final String EXCEPTION_MSG_STANDORT_NICHT_DER_INSTITUTION = "Standort gehoert nicht der Institution. (InstitutionId: %s, StandortId: %s)";
+    private static final String EXCEPTION_MSG_PERSON_NICHT_GEFUNDEN = "Person mit dieser Id nicht gefunden. (Id: %s)";
 
-	private final InstitutionSucheService institutionSucheService;
-	private final PersonJpaRepository personRepository;
+    private final InstitutionSucheService institutionSucheService;
+    private final PersonJpaRepository personRepository;
 
-	public Person personAnlegen(final @NotNull @Valid NeuePerson neuePerson) {
-		val institution = getInstitution(neuePerson.getInstitutionId());
-		val standort = getInstitutionStandort(institution, neuePerson.getStandortId());
+    public Person personAnlegen(final @NotNull @Valid NeuePerson neuePerson) {
+        val institution = getInstitution(neuePerson.getInstitutionId());
+        val standort = getInstitutionStandort(institution, neuePerson.getStandortId());
 
-		return convertPerson(personRepository.save(PersonEntity.builder() //
-				.username(neuePerson.getUsername()) //
-				.vorname(neuePerson.getVorname()) //
-				.nachname(neuePerson.getNachname()) //
-				.email(neuePerson.getEmail()) //
-				.telefon(neuePerson.getTelefon()) //
-				.institution(institution) //
-				.standort(standort) //
-				.build()));
-	}
+        PersonEntity personEntity = personRepository.save(PersonEntity.builder() //
+                .username(neuePerson.getUsername()) //
+                .vorname(neuePerson.getVorname()) //
+                .nachname(neuePerson.getNachname()) //
+                .email(neuePerson.getEmail()) //
+                .telefon(neuePerson.getTelefon()) //
+                .build());
+        personEntity.addNeueAktuelleInstitution(institution, standort);
 
-	InstitutionEntity getInstitution(final @NotNull @Valid InstitutionId institutionId) {
-		return institutionSucheService.findInstitution(institutionId)
-				.map(InstitutionEntityConverter::convertInstitution)//
-				.orElseThrow(() -> new ObjectNotFoundException(
-						String.format(EXCEPTION_MSG_INSTITUTION_NICHT_GEFUNDEN, institutionId.getValue())));
-	}
+        return convertPerson(personRepository.save(personEntity));
+    }
 
-	InstitutionStandortEntity getInstitutionStandort(//
-			final @NotNull @Valid InstitutionEntity institution, //
-			final @NotNull @Valid InstitutionStandortId standortId) {
-		return institution.findStandort(standortId.getValue()).orElseThrow(() -> new ObjectNotFoundException(String
-				.format(EXCEPTION_MSG_STANDORT_NICHT_DER_INSTITUTION, institution.getId(), standortId.getValue())));
-	}
+    InstitutionEntity getInstitution(final @NotNull @Valid InstitutionId institutionId) {
+        return institutionSucheService.findInstitution(institutionId)
+                .map(InstitutionEntityConverter::convertInstitution)//
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        String.format(EXCEPTION_MSG_INSTITUTION_NICHT_GEFUNDEN, institutionId.getValue())));
+    }
+
+    InstitutionStandortEntity getInstitutionStandort(//
+                                                     final @NotNull @Valid InstitutionEntity institution, //
+                                                     final @NotNull @Valid InstitutionStandortId standortId) {
+        return institution.findStandort(standortId.getValue()).orElseThrow(() -> new ObjectNotFoundException(String
+                .format(EXCEPTION_MSG_STANDORT_NICHT_DER_INSTITUTION, institution.getId(), standortId.getValue())));
+    }
+
+    public void institutionZuweisen(InstitutionId institutionId, PersonId personId) {
+        val institution = institutionSucheService.findInstitution(institutionId)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format(EXCEPTION_MSG_INSTITUTION_NICHT_GEFUNDEN, institutionId.getValue())));
+        val person = personRepository.findById(personId.getValue())
+                .orElseThrow(() -> new ObjectNotFoundException(String.format(EXCEPTION_MSG_PERSON_NICHT_GEFUNDEN, personId.getValue())));
+        person.addNeueInstitution(InstitutionEntityConverter.convertInstitution(institution));
+    }
 }

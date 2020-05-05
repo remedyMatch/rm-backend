@@ -22,6 +22,6 @@ class PersonController {
 	@Transactional(readOnly = true)
 	@GetMapping
 	public ResponseEntity<PersonRO> getUserInfo() {
-		return ResponseEntity.ok(PersonMapper.mapToPersonRO(userContextService.getContextUser()));
+		return ResponseEntity.ok(PersonControllerMapper.mapToPersonRO(userContextService.getContextUser()));
 	}
 }

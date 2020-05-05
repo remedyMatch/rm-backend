@@ -1,6 +1,7 @@
 package io.remedymatch.bedarf.domain.service;
 
 import io.remedymatch.bedarf.domain.model.BedarfId;
+import io.remedymatch.bedarf.infrastructure.BedarfAnfrageJpaRepository;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
@@ -33,99 +34,105 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { //
-		BedarfSucheService.class, //
-		BedarfJpaRepository.class, //
-		UserContextService.class, //
-		GeocodingService.class //
+        BedarfSucheService.class, //
+        BedarfJpaRepository.class, //
+        UserContextService.class, //
+        BedarfAnfrageSucheService.class, //
+        BedarfAnfrageJpaRepository.class, //
+        GeocodingService.class //
+
 })
 @Tag("Spring")
 @DisplayName("BedarfSucheService soll")
 class BedarfSucheServiceShould {
 
-	@Autowired
-	private BedarfSucheService bedarfSucheService;
+    @Autowired
+    private BedarfSucheService bedarfSucheService;
 
-	@MockBean
-	private BedarfJpaRepository bedarfRepository;
+    @MockBean
+    private BedarfJpaRepository bedarfRepository;
 
-	@MockBean
-	private UserContextService userService;
+    @MockBean
+    private BedarfAnfrageJpaRepository bedarfAnfrageJpaRepository;
 
-	@MockBean
-	private GeocodingService geocodingService;
+    @MockBean
+    private UserContextService userService;
 
-	@Test
-	@DisplayName("alle nicht bediente Bedarfe zurueckliefern")
-	void alle_nicht_bediente_Bedarfe_zurueckliefern() {
+    @MockBean
+    private GeocodingService geoCalcService;
 
-		val bedarf1Entfernung = BigDecimal.valueOf(100);
-		val bedarf2Entfernung = BigDecimal.valueOf(500);
+    @Test
+    @DisplayName("alle nicht bediente Bedarfe zurueckliefern")
+    void alle_nicht_bediente_Bedarfe_zurueckliefern() {
 
-		val bedarf1Entity = beispielBedarfEntity();
-		val bedarf1 = beispielBedarf();
-		bedarf1.setEntfernung(bedarf1Entfernung);
+        val bedarf1Entfernung = BigDecimal.valueOf(100);
+        val bedarf2Entfernung = BigDecimal.valueOf(500);
 
-		val bedarf2Id = new BedarfId(UUID.randomUUID());
-		val bedarf2Entity = beispielBedarfEntity();
-		bedarf2Entity.setId(bedarf2Id.getValue());
-		val bedarf2 = beispielBedarf();
-		bedarf2.setId(bedarf2Id);
-		bedarf2.setEntfernung(bedarf2Entfernung);
+        val bedarf1Entity = beispielBedarfEntity();
+        val bedarf1 = beispielBedarf();
+        bedarf1.setEntfernung(bedarf1Entfernung);
 
-		given(bedarfRepository.findAllByDeletedFalseAndBedientFalse())
-				.willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
-		given(geocodingService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
-		given(geocodingService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
+        val bedarf2Id = new BedarfId(UUID.randomUUID());
+        val bedarf2Entity = beispielBedarfEntity();
+        bedarf2Entity.setId(bedarf2Id.getValue());
+        val bedarf2 = beispielBedarf();
+        bedarf2.setId(bedarf2Id);
+        bedarf2.setEntfernung(bedarf2Entfernung);
 
-		assertThat(//
-				bedarfSucheService.findAlleNichtBedienteBedarfe(), //
-				containsInAnyOrder(bedarf1, bedarf2));
+        given(bedarfRepository.findAllByDeletedFalseAndBedientFalse())
+                .willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
+        given(geoCalcService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
+        given(geoCalcService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
 
-		then(bedarfRepository).should().findAllByDeletedFalseAndBedientFalse();
-		then(bedarfRepository).shouldHaveNoMoreInteractions();
-		then(userService).shouldHaveNoInteractions();
-		// XXX 2 verschiedene Aufrufe pruefen...
-		then(geocodingService).should(times(2)).berechneUserDistanzInKilometer(any());
-		then(geocodingService).shouldHaveNoMoreInteractions();
-	}
+        assertThat(//
+                bedarfSucheService.findAlleNichtBedienteBedarfe(), //
+                containsInAnyOrder(bedarf1, bedarf2));
 
-	@Test
-	@DisplayName("alle nicht bediente Bedarfe der UserContext Institution zurueckliefern")
-	void alle_nicht_bediente_Bedarfe_der_UserContext_Institution_zurueckliefern() {
+        then(bedarfRepository).should().findAllByDeletedFalseAndBedientFalse();
+        then(bedarfRepository).shouldHaveNoMoreInteractions();
+        then(userService).shouldHaveNoInteractions();
+        // XXX 2 verschiedene Aufrufe pruefen...
+        then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());
+        then(geoCalcService).shouldHaveNoMoreInteractions();
+    }
 
-		val userContextInstitution = UserContextTestFixtures.beispielUserContextInstitution();
+    @Test
+    @DisplayName("alle nicht bediente Bedarfe der UserContext Institution zurueckliefern")
+    void alle_nicht_bediente_Bedarfe_der_UserContext_Institution_zurueckliefern() {
 
-		val bedarf1Entfernung = BigDecimal.valueOf(100);
-		val bedarf2Entfernung = BigDecimal.valueOf(500);
+        val userContextInstitution = UserContextTestFixtures.beispielUserContextInstitution();
 
-		val bedarf1Entity = beispielBedarfEntity();
-		val bedarf1 = beispielBedarf();
-		bedarf1.setEntfernung(bedarf1Entfernung);
+        val bedarf1Entfernung = BigDecimal.valueOf(100);
+        val bedarf2Entfernung = BigDecimal.valueOf(500);
 
-		val bedarf2Id = new BedarfId(UUID.randomUUID());
-		val bedarf2Entity = beispielBedarfEntity();
-		bedarf2Entity.setId(bedarf2Id.getValue());
-		val bedarf2 = beispielBedarf();
-		bedarf2.setId(bedarf2Id);
-		bedarf2.setEntfernung(bedarf2Entfernung);
+        val bedarf1Entity = beispielBedarfEntity();
+        val bedarf1 = beispielBedarf();
+        bedarf1.setEntfernung(bedarf1Entfernung);
 
-		given(bedarfRepository
-				.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue()))
-						.willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
-		given(userService.getContextInstitution()).willReturn(userContextInstitution);
-		given(geocodingService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
-		given(geocodingService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
+        val bedarf2Id = new BedarfId(UUID.randomUUID());
+        val bedarf2Entity = beispielBedarfEntity();
+        bedarf2Entity.setId(bedarf2Id.getValue());
+        val bedarf2 = beispielBedarf();
+        bedarf2.setId(bedarf2Id);
+        bedarf2.setEntfernung(bedarf2Entfernung);
 
-		assertEquals(Arrays.asList(bedarf1, bedarf2),
-				bedarfSucheService.findAlleNichtBedienteBedarfeDerUserInstitution());
+        given(bedarfRepository
+                .findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue()))
+                .willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
+        given(userService.getContextInstitution()).willReturn(userContextInstitution);
+        given(geoCalcService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
+        given(geoCalcService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
 
-		then(bedarfRepository).should()
-				.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue());
-		then(bedarfRepository).shouldHaveNoMoreInteractions();
-		then(userService).should().getContextInstitution();
-		then(userService).shouldHaveNoMoreInteractions();
-		// XXX 2 verschiedene Aufrufe pruefen...
-		then(geocodingService).should(times(2)).berechneUserDistanzInKilometer(any());
-		then(userService).shouldHaveNoMoreInteractions();
-	}
+        assertEquals(Arrays.asList(bedarf1, bedarf2),
+                bedarfSucheService.findAlleNichtBedienteBedarfeDerUserInstitution());
+
+        then(bedarfRepository).should()
+                .findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue());
+        then(bedarfRepository).shouldHaveNoMoreInteractions();
+        then(userService).should().getContextInstitution();
+        then(userService).shouldHaveNoMoreInteractions();
+        // XXX 2 verschiedene Aufrufe pruefen...
+        then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());
+        then(userService).shouldHaveNoMoreInteractions();
+    }
 }

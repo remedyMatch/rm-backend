@@ -14,7 +14,10 @@ import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
+import io.remedymatch.person.domain.model.PersonInstitution;
+import io.remedymatch.person.domain.model.PersonInstitutionId;
 import io.remedymatch.person.infrastructure.PersonEntity;
+import io.remedymatch.person.infrastructure.PersonInstitutionEntity;
 
 public final class UserContextTestFixtures {
 	private UserContextTestFixtures() {
@@ -40,8 +43,8 @@ public final class UserContextTestFixtures {
 				.nachname(USER_CONTEXT_NACHNAME) //
 				.email(USER_CONTEXT_EMAIL) //
 				.telefon(USER_CONTEXT_ELEFON) //
-				.institution(beispielUserContextInstitution())//
-				.standort(beispielUserContextHauptstandort())//
+				.aktuelleInstitution(beispielAktuelleInstitution())//
+				.institutionen(new ArrayList<>(Arrays.asList(beispielAktuelleInstitution())))//
 				.build();
 	}
 
@@ -53,6 +56,28 @@ public final class UserContextTestFixtures {
 				.nachname(USER_CONTEXT_NACHNAME) //
 				.email(USER_CONTEXT_EMAIL) //
 				.telefon(USER_CONTEXT_ELEFON) //
+				.aktuelleInstitution(beispielAktuelleInstitutionEntity())//
+				.institutionen(new ArrayList<>(Arrays.asList(beispielAktuelleInstitutionEntity())))//
+				.build();
+	}
+
+	private static final PersonInstitutionId AKTUELLE_INSTITUTION_ID = new PersonInstitutionId(UUID.randomUUID());
+
+	public final static PersonInstitutionId beispielAktuelleInstitutionId() {
+		return AKTUELLE_INSTITUTION_ID;
+	}
+
+	public final static PersonInstitution beispielAktuelleInstitution() {
+		return PersonInstitution.builder() //
+				.id(beispielAktuelleInstitutionId()) //
+				.institution(beispielUserContextInstitution())//
+				.standort(beispielUserContextHauptstandort())//
+				.build();
+	}
+
+	public final static PersonInstitutionEntity beispielAktuelleInstitutionEntity() {
+		return PersonInstitutionEntity.builder() //
+				.id(beispielAktuelleInstitutionId().getValue()) //
 				.institution(beispielUserContextInstitutionEntity())//
 				.standort(beispielUserContextHauptstandortEntity())//
 				.build();

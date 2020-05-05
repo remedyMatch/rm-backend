@@ -26,45 +26,58 @@ import static io.remedymatch.angebot.domain.service.AngebotFilterConverter.conve
 @Service
 public class AngebotSucheService {
 
-	private final AngebotJpaRepository angebotRepository;
-	
-	private final UserContextService userService;
-	private final GeocodingService geocodingService;
+    private final AngebotJpaRepository angebotRepository;
+    private final AngebotAnfrageSucheService angebotAnfrageSucheService;
 
-	@Transactional(readOnly = true)
-	public List<AngebotFilterEntry> getArtikelKategorieFilter() {
-		return convertFilterEntries(angebotRepository.findAllKategorienMitUnbedientenAngebotenFilter());
-	}
+    private final UserContextService userService;
+    private final GeocodingService geocodingService;
 
-	@Transactional(readOnly = true)
-	public List<AngebotFilterEntry> getArtikelFilter(final @NotNull @Valid ArtikelKategorieId kategorieId) {
-		return convertFilterEntries(angebotRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilter(kategorieId.getValue()));
-	}
+    @Transactional(readOnly = true)
+    public List<AngebotFilterEntry> getArtikelKategorieFilter() {
+        return convertFilterEntries(angebotRepository.findAllKategorienMitUnbedientenAngebotenFilter());
+    }
 
-	@Transactional(readOnly = true)
-	public List<AngebotFilterEntry> getArtikelVarianteFilter(final @NotNull @Valid ArtikelId artikelId) {
-		return convertFilterEntries(angebotRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilter(artikelId.getValue()));
-	}
-	
-	@Transactional(readOnly = true)
-	public List<Angebot> findAlleNichtBedienteAngebote() {
-		return mitEntfernung(angebotRepository.findAllByDeletedFalseAndBedientFalse());
-	}
+    @Transactional(readOnly = true)
+    public List<AngebotFilterEntry> getArtikelFilter(final @NotNull @Valid ArtikelKategorieId kategorieId) {
+        return convertFilterEntries(angebotRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilter(kategorieId.getValue()));
+    }
 
-	@Transactional(readOnly = true)
-	public List<Angebot> findAlleNichtBedienteAngeboteDerUserInstitution() {
-		val userInstitution = userService.getContextInstitution();
-		return mitEntfernung(
-				angebotRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userInstitution.getId().getValue()));
-	}
+    @Transactional(readOnly = true)
+    public List<AngebotFilterEntry> getArtikelVarianteFilter(final @NotNull @Valid ArtikelId artikelId) {
+        return convertFilterEntries(angebotRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilter(artikelId.getValue()));
+    }
 
-	private List<Angebot> mitEntfernung(final List<AngebotEntity> angebote) {
-		return angebote.stream().map(this::mitEntfernung).collect(Collectors.toList());
-	}
+    @Transactional(readOnly = true)
+    public List<Angebot> findAlleNichtBedienteAngebote() {
+        return mitEntfernung(angebotRepository.findAllByDeletedFalseAndBedientFalse());
+    }
 
-	private Angebot mitEntfernung(final AngebotEntity angebot) {
-		val convertedAngebot = AngebotEntityConverter.convertAngebot(angebot);
-		convertedAngebot.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
-		return convertedAngebot;
-	}
+    @Transactional(readOnly = true)
+    public List<Angebot> findAlleNichtBedienteAngeboteDerUserInstitution() {
+
+        val userInstitution = userService.getContextInstitution();
+        val angebote = mitEntfernung(angebotRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userInstitution.getId().getValue()));
+
+        //TODO geht das einfacher?
+        val angebotIds = angebote.stream().map(Angebot::getId).collect(Collectors.toList());
+        val anfragen = angebotAnfrageSucheService.findeAlleOffenenAnfragenFuerAngebotIds(angebotIds);
+        val anfrageMap = anfragen.stream().collect(Collectors.groupingBy(anfrage -> anfrage.getAngebot().getId().getValue()));
+        angebote.forEach(a -> {
+            if (anfrageMap.containsKey(a.getId().getValue())) {
+                a.setAnfragen(anfrageMap.get(a.getId().getValue()));
+            }
+        });
+        return angebote;
+    }
+
+    private List<Angebot> mitEntfernung(final List<AngebotEntity> angebote) {
+        return angebote.stream().map(this::mitEntfernung).collect(Collectors.toList());
+    }
+
+
+    private Angebot mitEntfernung(final AngebotEntity angebot) {
+        val convertedAngebot = AngebotEntityConverter.convertAngebot(angebot);
+        convertedAngebot.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
+        return convertedAngebot;
+    }
 }

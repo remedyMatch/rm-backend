@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +30,10 @@ import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.person.domain.model.NeuePerson;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
+import io.remedymatch.person.domain.model.PersonInstitution;
+import io.remedymatch.person.domain.model.PersonInstitutionId;
 import io.remedymatch.person.infrastructure.PersonEntity;
+import io.remedymatch.person.infrastructure.PersonInstitutionEntity;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
 import lombok.val;
 
@@ -100,13 +105,40 @@ class PersonServiceShould {
 
 		val personId = new PersonId(UUID.randomUUID());
 
+		val aktuelleInstitutionId = new PersonInstitutionId(UUID.randomUUID());
+
 		PersonEntity personEntityOhneId = PersonEntity.builder() //
 				.username(username) //
 				.vorname(vorname) //
 				.nachname(nachname) //
 				.email(email) //
 				.telefon(telefon) //
-				.institution(institutionEntity).standort(institutionStandortEntity) //
+				.build();
+		
+		PersonEntity personEntityMitId = PersonEntity.builder() //
+				.id(personId.getValue()) //
+				.username(username) //
+				.vorname(vorname) //
+				.nachname(nachname) //
+				.email(email) //
+				.telefon(telefon) //
+				.build();
+		
+		PersonEntity personEntityMitAktuellerInstitutionOhneId = PersonEntity.builder() //
+				.id(personId.getValue()) //
+				.username(username) //
+				.vorname(vorname) //
+				.nachname(nachname) //
+				.email(email) //
+				.telefon(telefon) //
+				.build();
+		personEntityMitAktuellerInstitutionOhneId.addNeueAktuelleInstitution(institutionEntity, institutionStandortEntity);
+		
+		PersonInstitutionEntity aktuelleInstitutionMitId = PersonInstitutionEntity.builder() //
+				.id(aktuelleInstitutionId.getValue()) //
+				.person(personId.getValue()) //
+				.institution(institutionEntity) //
+				.standort(institutionStandortEntity) //
 				.build();
 		PersonEntity personEntity = PersonEntity.builder() //
 				.id(personId.getValue()) //
@@ -115,12 +147,19 @@ class PersonServiceShould {
 				.nachname(nachname) //
 				.email(email) //
 				.telefon(telefon) //
-				.institution(institutionEntity).standort(institutionStandortEntity) //
+				.aktuelleInstitution(aktuelleInstitutionMitId) //
+				.institutionen(new ArrayList<>(Arrays.asList(aktuelleInstitutionMitId))) //
 				.build();
 
 		given(institutionSucheService.findInstitution(institutionId)).willReturn(Optional.of(institution));
-		given(personRepository.save(personEntityOhneId)).willReturn(personEntity);
+		given(personRepository.save(personEntityOhneId)).willReturn(personEntityMitId);
+		given(personRepository.save(personEntityMitAktuellerInstitutionOhneId)).willReturn(personEntity);
 
+		val expectedAktuelleInstitution = PersonInstitution.builder() //
+				.id(aktuelleInstitutionId) //
+				.institution(institution) //
+				.standort(institutionStandort) //
+				.build();
 		val expectedPerson = Person.builder() //
 				.id(personId) //
 				.username(username) //
@@ -128,7 +167,8 @@ class PersonServiceShould {
 				.nachname(nachname) //
 				.email(email) //
 				.telefon(telefon) //
-				.institution(institution).standort(institutionStandort) //
+				.aktuelleInstitution(expectedAktuelleInstitution) //
+				.institutionen(new ArrayList<>(Arrays.asList(expectedAktuelleInstitution))) //
 				.build();
 
 		assertEquals(expectedPerson, personService.personAnlegen(neuePerson));
@@ -136,6 +176,7 @@ class PersonServiceShould {
 		then(institutionSucheService).should().findInstitution(institutionId);
 		then(institutionSucheService).shouldHaveNoMoreInteractions();
 		then(personRepository).should().save(personEntityOhneId);
+		then(personRepository).should().save(personEntityMitAktuellerInstitutionOhneId);
 		then(personRepository).shouldHaveNoMoreInteractions();
 	}
 }

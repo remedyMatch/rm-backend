@@ -49,8 +49,12 @@ public class PersonJpaRepositoryShould {
 	void eine_Person_anhand_Username_lesen() {
 		val meinStandort = persist(standort());
 		val meinKrankenhaus = persist(institution(meinStandort));
-		val ich = persist(person("ich", meinKrankenhaus, meinStandort));
+		val ich = persist(person("ich"));
+		ich.addNeueAktuelleInstitution(meinKrankenhaus, meinStandort);
+		persist(ich);
 		entityManager.flush();
+
+//		val ich = jpaRepository.save(person("ich", meinKrankenhaus, meinStandort));
 
 		assertEquals(Optional.of(ich), jpaRepository.findOneByUsername("ich"));
 	}
@@ -71,7 +75,9 @@ public class PersonJpaRepositoryShould {
 	void eine_Person_anhand_Id_lesen() {
 		val meinStandort = persist(standort());
 		val meinKrankenhaus = persist(institution(meinStandort));
-		val ich = persist(person("ich", meinKrankenhaus, meinStandort));
+		val ich = persist(person("ich"));
+		ich.addNeueAktuelleInstitution(meinKrankenhaus, meinStandort);
+		persist(ich);
 		entityManager.flush();
 
 		assertEquals(ich, jpaRepository.getOne(ich.getId()));
@@ -81,6 +87,7 @@ public class PersonJpaRepositoryShould {
 
 	public <E> E persist(E entity) {
 		entityManager.persist(entity);
+		entityManager.flush();
 		return entity;
 	}
 
@@ -104,16 +111,13 @@ public class PersonJpaRepositoryShould {
 				.build();
 	}
 
-	private PersonEntity person(final String username, final InstitutionEntity institution,
-			final InstitutionStandortEntity standort) {
+	private PersonEntity person(final String username) {
 		return PersonEntity.builder() //
 				.username(username) //
 				.vorname("Vorname") //
 				.nachname("Nachname") //
 				.email("EMail") //
 				.telefon("08106112233") //
-				.institution(institution) //
-				.standort(standort) //
 				.build();
 	}
 }

@@ -1,19 +1,11 @@
 package io.remedymatch.angebot.domain.service;
 
-import static io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures.beispielAngebotAnfrage;
-import static io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures.beispielAngebotAnfrageEntity;
-import static io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures.beispielAngebotAnfrageId;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
-
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
+import io.remedymatch.domain.ObjectNotFoundException;
+import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.usercontext.UserContextService;
+import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,118 +16,133 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
-import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
-import io.remedymatch.domain.ObjectNotFoundException;
-import lombok.val;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
+
+import static io.remedymatch.angebot.domain.service.AngebotAnfrageTestFixtures.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { //
-		AngebotAnfrageSucheService.class, //
-		AngebotAnfrageJpaRepository.class //
+        AngebotAnfrageSucheService.class, //
+        AngebotAnfrageJpaRepository.class, //
+        UserContextService.class, //
+        GeocodingService.class //
 })
 @Tag("Spring")
 @DisplayName("AngebotAnfrageSucheService soll")
 class AngebotAnfrageSucheServiceShould {
 
-	@Autowired
-	private AngebotAnfrageSucheService anfrageSucheService;
+    @Autowired
+    private AngebotAnfrageSucheService anfrageSucheService;
 
-	@MockBean
-	private AngebotAnfrageJpaRepository anfrageRepository;
+    @MockBean
+    private AngebotAnfrageJpaRepository anfrageRepository;
 
-	@Test
-	@DisplayName("alle Anfragen der Institution zurueckliefern")
-	void alle_Anfragen_der_Institution_zurueckliefern() {
+    @MockBean
+    private GeocodingService geoCalcService;
 
-		val anfrage1Entity = beispielAngebotAnfrageEntity();
-		val anfrage1 = beispielAngebotAnfrage();
+    @MockBean
+    private UserContextService userContextService;
 
-		val anfrage2Id = new AngebotAnfrageId(UUID.randomUUID());
-		val anfrage2Entity = beispielAngebotAnfrageEntity();
-		anfrage2Entity.setId(anfrage2Id.getValue());
-		val anfrage2 = AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
-		anfrage2.setId(anfrage2Id);
+    @Test
+    @DisplayName("alle Anfragen der Institution zurueckliefern")
+    void alle_Anfragen_der_Institution_zurueckliefern() {
 
-		val anfrageInstitutionId = anfrage1.getInstitution().getId();
+        val anfrage1Entity = beispielAngebotAnfrageEntity();
+        val anfrage1 = beispielAngebotAnfrage();
 
-		given(anfrageRepository.findAllByInstitution_Id(anfrageInstitutionId.getValue()))
-				.willReturn(Arrays.asList(anfrage1Entity, anfrage2Entity));
+        val anfrage2Id = new AngebotAnfrageId(UUID.randomUUID());
+        val anfrage2Entity = beispielAngebotAnfrageEntity();
+        anfrage2Entity.setId(anfrage2Id.getValue());
+        val anfrage2 = AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
+        anfrage2.setId(anfrage2Id);
 
-		assertThat(//
-				anfrageSucheService.findAlleAnfragenDerInstitution(anfrageInstitutionId), //
-				containsInAnyOrder(anfrage1, anfrage2));
+        val anfrageInstitutionId = anfrage1.getInstitution().getId();
 
-		then(anfrageRepository).should().findAllByInstitution_Id(anfrageInstitutionId.getValue());
-		then(anfrageRepository).shouldHaveNoMoreInteractions();
-	}
+        given(anfrageRepository.findAllByInstitution_Id(anfrageInstitutionId.getValue()))
+                .willReturn(Arrays.asList(anfrage1Entity, anfrage2Entity));
 
-	@Test
-	@DisplayName("alle Anfragen der Angebot Institution zurueckliefern")
-	void alle_Anfragen_der_Angebot_Institution_zurueckliefern() {
+        assertThat(//
+                anfrageSucheService.findAlleAnfragenDerInstitution(anfrageInstitutionId), //
+                containsInAnyOrder(anfrage1, anfrage2));
 
-		val anfrage1Entity = beispielAngebotAnfrageEntity();
-		val anfrage1 = beispielAngebotAnfrage();
+        then(anfrageRepository).should().findAllByInstitution_Id(anfrageInstitutionId.getValue());
+        then(anfrageRepository).shouldHaveNoMoreInteractions();
+    }
 
-		val anfrage2Id = new AngebotAnfrageId(UUID.randomUUID());
-		val anfrage2Entity = beispielAngebotAnfrageEntity();
-		anfrage2Entity.setId(anfrage2Id.getValue());
-		val anfrage2 = AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
-		anfrage2.setId(anfrage2Id);
+    @Test
+    @DisplayName("alle Anfragen der Angebot Institution zurueckliefern")
+    void alle_Anfragen_der_Angebot_Institution_zurueckliefern() {
 
-		val angebotInstitutionId = anfrage1.getAngebot().getInstitution().getId();
+        val anfrage1Entity = beispielAngebotAnfrageEntity();
+        val anfrage1 = beispielAngebotAnfrage();
 
-		given(anfrageRepository.findAllByAngebot_Institution_Id(angebotInstitutionId.getValue()))
-				.willReturn(Arrays.asList(anfrage1Entity, anfrage2Entity));
+        val anfrage2Id = new AngebotAnfrageId(UUID.randomUUID());
+        val anfrage2Entity = beispielAngebotAnfrageEntity();
+        anfrage2Entity.setId(anfrage2Id.getValue());
+        val anfrage2 = AngebotAnfrageTestFixtures.beispielAngebotAnfrage();
+        anfrage2.setId(anfrage2Id);
 
-		assertThat(//
-				anfrageSucheService.findAlleAnfragenDerAngebotInstitution(angebotInstitutionId), //
-				containsInAnyOrder(anfrage1, anfrage2));
+        val angebotInstitutionId = anfrage1.getAngebot().getInstitution().getId();
 
-		then(anfrageRepository).should().findAllByAngebot_Institution_Id(angebotInstitutionId.getValue());
-		then(anfrageRepository).shouldHaveNoMoreInteractions();
-	}
+        given(anfrageRepository.findAllByAngebot_Institution_Id(angebotInstitutionId.getValue()))
+                .willReturn(Arrays.asList(anfrage1Entity, anfrage2Entity));
 
-	@Test
-	@DisplayName("gesuchte Anfrage finden")
-	void gesuchte_Anfrage_finden() {
+        assertThat(//
+                anfrageSucheService.findAlleAnfragenDerAngebotInstitution(angebotInstitutionId), //
+                containsInAnyOrder(anfrage1, anfrage2));
 
-		val anfrageId = beispielAngebotAnfrageId();
-		val anfrageEntity = beispielAngebotAnfrageEntity();
+        then(anfrageRepository).should().findAllByAngebot_Institution_Id(angebotInstitutionId.getValue());
+        then(anfrageRepository).shouldHaveNoMoreInteractions();
+    }
 
-		given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
+    @Test
+    @DisplayName("gesuchte Anfrage finden")
+    void gesuchte_Anfrage_finden() {
 
-		val expectedAnfrage = beispielAngebotAnfrage();
+        val anfrageId = beispielAngebotAnfrageId();
+        val anfrageEntity = beispielAngebotAnfrageEntity();
 
-		assertEquals(Optional.of(expectedAnfrage), anfrageSucheService.findAnfrage(anfrageId));
+        given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
-		then(anfrageRepository).should().findById(anfrageId.getValue());
-		then(anfrageRepository).shouldHaveNoMoreInteractions();
-	}
+        val expectedAnfrage = beispielAngebotAnfrage();
 
-	@Test
-	@DisplayName("eine ObjectNotFoundException werfen wenn gesuchte Anfrage nicht existiert")
-	void eine_ObjectNotFoundException_werfen_wenn_gesuchtes_Artikel_nicht_existiert() {
-		assertThrows(ObjectNotFoundException.class,
-				() -> anfrageSucheService.getAnfrageOrElseThrow(beispielAngebotAnfrageId()));
-	}
+        assertEquals(Optional.of(expectedAnfrage), anfrageSucheService.findAnfrage(anfrageId));
 
-	@Test
-	@DisplayName("gesuchte Anfrage  zurueckliefern")
-	void gesuchte_Anfrage_zurueckliefern() {
+        then(anfrageRepository).should().findById(anfrageId.getValue());
+        then(anfrageRepository).shouldHaveNoMoreInteractions();
+    }
 
-		val anfrageId = beispielAngebotAnfrageId();
-		val anfrageEntity = beispielAngebotAnfrageEntity();
+    @Test
+    @DisplayName("eine ObjectNotFoundException werfen wenn gesuchte Anfrage nicht existiert")
+    void eine_ObjectNotFoundException_werfen_wenn_gesuchtes_Artikel_nicht_existiert() {
+        assertThrows(ObjectNotFoundException.class,
+                () -> anfrageSucheService.getAnfrageOrElseThrow(beispielAngebotAnfrageId()));
+    }
 
-		given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
+    @Test
+    @DisplayName("gesuchte Anfrage  zurueckliefern")
+    void gesuchte_Anfrage_zurueckliefern() {
 
-		val expectedAnfrage = beispielAngebotAnfrage();
+        val anfrageId = beispielAngebotAnfrageId();
+        val anfrageEntity = beispielAngebotAnfrageEntity();
 
-		assertEquals(expectedAnfrage, anfrageSucheService.getAnfrageOrElseThrow(anfrageId));
+        given(anfrageRepository.findById(anfrageId.getValue())).willReturn(Optional.of(anfrageEntity));
 
-		then(anfrageRepository).should().findById(anfrageId.getValue());
-		then(anfrageRepository).shouldHaveNoMoreInteractions();
-	}
+        val expectedAnfrage = beispielAngebotAnfrage();
+
+        assertEquals(expectedAnfrage, anfrageSucheService.getAnfrageOrElseThrow(anfrageId));
+
+        then(anfrageRepository).should().findById(anfrageId.getValue());
+        then(anfrageRepository).shouldHaveNoMoreInteractions();
+    }
 
 }

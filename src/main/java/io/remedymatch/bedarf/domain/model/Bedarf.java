@@ -1,24 +1,19 @@
 package io.remedymatch.bedarf.domain.model;
 
-import java.math.BigDecimal;
+import io.remedymatch.artikel.domain.model.Artikel;
+import io.remedymatch.artikel.domain.model.ArtikelVariante;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-
-import io.remedymatch.artikel.domain.model.Artikel;
-import io.remedymatch.artikel.domain.model.ArtikelVariante;
-import io.remedymatch.institution.domain.model.Institution;
-import io.remedymatch.institution.domain.model.InstitutionStandort;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,41 +24,46 @@ import lombok.ToString;
 @Builder
 public class Bedarf {
 
-	@NotNull
-	@Valid
-	private BedarfId id;
+    @NotNull
+    @Valid
+    private BedarfId id;
 
-	@NotNull
-	@Valid
-	private Artikel artikel;
+    @NotNull
+    @Valid
+    private Artikel artikel;
 
-	@Valid
-	private ArtikelVariante artikelVariante;
+    @Valid
+    private ArtikelVariante artikelVariante;
 
-	@NotNull
-	@Positive
-	private BigDecimal anzahl;
+    @NotNull
+    @Positive
+    private BigDecimal anzahl;
 
-	@NotNull
-	@PositiveOrZero
-	private BigDecimal rest;
+    @NotNull
+    @PositiveOrZero
+    private BigDecimal rest;
 
-	@NotNull
-	@Valid
-	private Institution institution;
+    @NotNull
+    @Valid
+    private Institution institution;
 
-	@NotNull
-	@Valid
-	private InstitutionStandort standort;
+    @NotNull
+    @Valid
+    private InstitutionStandort standort;
 
-	private boolean steril;
-	private boolean medizinisch;
+    private boolean steril;
+    private boolean medizinisch;
 
-	@NotBlank
-	private String kommentar;
+    @NotBlank
+    private String kommentar;
 
-	private boolean bedient;
+    private boolean bedient;
 
-	@Positive
-	private transient BigDecimal entfernung;
+    private boolean oeffentlich;
+
+    @Positive
+    private transient BigDecimal entfernung;
+
+    @Builder.Default
+    private List<BedarfAnfrage> anfragen = new ArrayList();
 }

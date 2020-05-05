@@ -1,21 +1,15 @@
 package io.remedymatch.bedarf.domain.model;
 
-import java.math.BigDecimal;
+import io.remedymatch.angebot.domain.model.AngebotId;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-
-import io.remedymatch.institution.domain.model.Institution;
-import io.remedymatch.institution.domain.model.InstitutionStandort;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -25,31 +19,35 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 public class BedarfAnfrage {
-	@NotNull
-	@Valid
-	private BedarfAnfrageId id;
 
-	@NotNull
-	@Valid
-	private Bedarf bedarf;
+    @NotNull
+    @Valid
+    private BedarfAnfrageId id;
 
-	@NotNull
-	@Valid
-	private Institution institution;
+    @NotNull
+    @Valid
+    private Bedarf bedarf;
 
-	@NotNull
-	@Valid
-	private InstitutionStandort standort;
+    @NotNull
+    private AngebotId angebotId;
 
-	@NotNull
-	@Positive
-	private BigDecimal anzahl;
+    @NotNull
+    @Valid
+    private Institution institution;
 
-	@NotBlank
-	private String kommentar;
+    @NotNull
+    @Valid
+    private InstitutionStandort standort;
 
-	private String prozessInstanzId;
+    @NotNull
+    @Positive
+    private BigDecimal anzahl;
 
-	@NotNull
-	private BedarfAnfrageStatus status;
+    @NotBlank
+    private String kommentar;
+
+    @NotNull
+    private BedarfAnfrageStatus status;
+
+    private BigDecimal entfernung;
 }

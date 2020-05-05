@@ -1,17 +1,10 @@
 package io.remedymatch.bedarf.controller;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,20 +15,22 @@ import lombok.ToString;
 @Builder
 class NeuesBedarfRequest {
 
-	private UUID artikelId;
+    private UUID artikelId;
 
-	private UUID artikelVarianteId;
+    private UUID artikelVarianteId;
 
-	@NotNull
-	private BigDecimal anzahl;
+    @NotNull
+    private BigDecimal anzahl;
 
-	@NotNull
-	private UUID standortId;
+    @NotNull
+    private UUID standortId;
 
-	@NotNull
-	private String kommentar;
+    @NotNull
+    private String kommentar;
 
-	private boolean steril;
+    private boolean steril;
 
-	private boolean medizinisch;
+    private boolean medizinisch;
+
+    private boolean oeffentlich;
 }

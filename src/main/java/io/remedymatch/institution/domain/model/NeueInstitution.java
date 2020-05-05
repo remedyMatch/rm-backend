@@ -32,5 +32,5 @@ public class NeueInstitution {
 
 	@Valid
 	@NotNull
-	private NeuesInstitutionStandort hauptstandort;
+	private NeuerInstitutionStandort hauptstandort;
 }

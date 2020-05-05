@@ -1,16 +1,14 @@
 package io.remedymatch.angebot.infrastructure;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
+import io.remedymatch.TestApplication;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
+import io.remedymatch.institution.domain.model.InstitutionTyp;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,220 +21,225 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import io.remedymatch.TestApplication;
-import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
-import io.remedymatch.artikel.infrastructure.ArtikelEntity;
-import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
-import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
-import io.remedymatch.institution.domain.model.InstitutionTyp;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
-import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
-import lombok.val;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @DirtiesContext
-@ActiveProfiles(profiles = { "test", "disableexternaltasks" })
+@ActiveProfiles(profiles = {"test", "disableexternaltasks"})
 @Tag("InMemory")
 @Tag("SpringBoot")
 @DisplayName("AngebotAnfrageJpaRepository soll")
 public class AngebotAnfrageJpaRepositoryShould {
 
-	@Autowired
-	private EntityManager entityManager;
+    @Autowired
+    private EntityManager entityManager;
 
-	@Autowired
-	private AngebotAnfrageJpaRepository jpaRepository;
+    @Autowired
+    private AngebotAnfrageJpaRepository jpaRepository;
 
-	private InstitutionEntity meinKrankenhaus;
-	private InstitutionStandortEntity meinStandort;
-	private ArtikelKategorieEntity beispielKategorieArtikel;
-	private ArtikelEntity beispielArtikel;
-	private ArtikelVarianteEntity beispielArtikelVariante;
-	private AngebotEntity beispielAngebot;
+    private InstitutionEntity meinKrankenhaus;
+    private InstitutionStandortEntity meinStandort;
+    private ArtikelKategorieEntity beispielKategorieArtikel;
+    private ArtikelEntity beispielArtikel;
+    private ArtikelVarianteEntity beispielArtikelVariante;
+    private AngebotEntity beispielAngebot;
 
-	@BeforeEach
-	private void prepare() {
-		meinKrankenhaus = persist(meinKrankenhaus());
-		meinStandort = persist(meinStandort());
-		beispielKategorieArtikel = persist(beispielArtikelKategorie());
-		beispielArtikel = persist(beispielArtikel());
-		beispielArtikelVariante = persist(beispielArtikelVariante());
-		beispielAngebot = persist(beispielAngebot());
-		entityManager.flush();
-	}
+    @BeforeEach
+    private void prepare() {
+        meinKrankenhaus = persist(meinKrankenhaus());
+        meinStandort = persist(meinStandort());
+        beispielKategorieArtikel = persist(beispielArtikelKategorie());
+        beispielArtikel = persist(beispielArtikel());
+        beispielArtikelVariante = persist(beispielArtikelVariante());
+        beispielAngebot = persist(beispielAngebot());
+        entityManager.flush();
+    }
 
-	@Rollback(true)
-	@Transactional
-	@Test
-	@DisplayName("alle Anfragen der Institution zurueckliefern")
-	void alle_Anfragen_der_Institution_zurueckliefern() {
-		val ersteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(100)));
-		val zweiteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(200)));
-		entityManager.flush();
+    @Rollback(true)
+    @Transactional
+    @Test
+    @DisplayName("alle Anfragen der Institution zurueckliefern")
+    void alle_Anfragen_der_Institution_zurueckliefern() {
+        val ersteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(100)));
+        val zweiteAnfrage = persist(angebotAnfrageFuerAngebot(beispielAngebot, BigDecimal.valueOf(200)));
+        entityManager.flush();
 
-		assertThat(//
-				jpaRepository.findAllByAngebot_Institution_Id(meinKrankenhaus.getId()), //
-				containsInAnyOrder(ersteAnfrage, zweiteAnfrage));
-	}
+        assertThat(//
+                jpaRepository.findAllByAngebot_Institution_Id(meinKrankenhaus.getId()), //
+                containsInAnyOrder(ersteAnfrage, zweiteAnfrage));
+    }
 
-	@Rollback(true)
-	@Transactional
-	@Test
-	@DisplayName("alle Anfragen der Angebot Institution zurueckliefern")
-	void alle_Anfragen_der_Angebot_Institution_zurueckliefern() {
-		val ersteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
-		val zweiteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
-		entityManager.flush();
+    @Rollback(true)
+    @Transactional
+    @Test
+    @DisplayName("alle Anfragen der Angebot Institution zurueckliefern")
+    void alle_Anfragen_der_Angebot_Institution_zurueckliefern() {
+        val ersteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
+        val zweiteAnfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(200)));
+        entityManager.flush();
 
-		assertThat(//
-				jpaRepository.findAllByInstitution_Id(meinKrankenhaus.getId()), //
-				containsInAnyOrder(ersteAnfrage, zweiteAnfrage));
-	}
+        assertThat(//
+                jpaRepository.findAllByInstitution_Id(meinKrankenhaus.getId()), //
+                containsInAnyOrder(ersteAnfrage, zweiteAnfrage));
+    }
 
-	@Rollback(true)
-	@Transactional
-	@Test
-	@DisplayName("Offene Anfrage fuer AngebotId und AnfrageId zurueckliefern")
-	void offene_Anfrage_fuer_AngebotId_und_AnfrageId_zurueckliefern() {
-		val anfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
-		entityManager.flush();
+    @Rollback(true)
+    @Transactional
+    @Test
+    @DisplayName("Offene Anfrage fuer AngebotId und AnfrageId zurueckliefern")
+    void offene_Anfrage_fuer_AngebotId_und_AnfrageId_zurueckliefern() {
+        val anfrage = persist(angebotAnfrageVonInstitution(meinKrankenhaus, BigDecimal.valueOf(100)));
+        entityManager.flush();
 
-		assertEquals(Optional.of(anfrage), jpaRepository.findByAngebotIdAndAnfrageIdAndStatusOffen(//
-				beispielAngebot.getId(), //
-				anfrage.getId()));
-	}
-	
-	@Rollback(true)
-	@Transactional
-	@Test
-	@DisplayName("Status der Anfragen aktualisieren")
-	void status_der_Anfragen_aktualisieren() {
-		val ersteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.OFFEN));
-		val zweiteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.OFFEN));
-		val dritteAnfrageStorniert = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.ANGENOMMEN));
-		entityManager.flush();
+        assertEquals(Optional.of(anfrage), jpaRepository.findByAngebotIdAndAnfrageIdAndStatusOffen(//
+                beispielAngebot.getId(), //
+                anfrage.getId()));
+    }
 
-		assertEquals(Optional.of(ersteOffeneAnfrage), jpaRepository.findById(ersteOffeneAnfrage.getId()));
-		assertEquals(Optional.of(zweiteOffeneAnfrage), jpaRepository.findById(zweiteOffeneAnfrage.getId()));
-		assertEquals(Optional.of(dritteAnfrageStorniert), jpaRepository.findById(dritteAnfrageStorniert.getId()));
+    @Rollback(true)
+    @Transactional
+    @Test
+    @DisplayName("Status der Anfragen aktualisieren")
+    void status_der_Anfragen_aktualisieren() {
+        val ersteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.OFFEN));
+        val zweiteOffeneAnfrage = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.OFFEN));
+        val dritteAnfrageStorniert = persist(angebotAnfrage(beispielAngebot, AngebotAnfrageStatus.ANGENOMMEN));
+        entityManager.flush();
 
-		jpaRepository.updateStatus(beispielAngebot.getId(), AngebotAnfrageStatus.OFFEN, AngebotAnfrageStatus.STORNIERT);
+        assertEquals(Optional.of(ersteOffeneAnfrage), jpaRepository.findById(ersteOffeneAnfrage.getId()));
+        assertEquals(Optional.of(zweiteOffeneAnfrage), jpaRepository.findById(zweiteOffeneAnfrage.getId()));
+        assertEquals(Optional.of(dritteAnfrageStorniert), jpaRepository.findById(dritteAnfrageStorniert.getId()));
 
-		entityManager.flush();
-		entityManager.clear();
+        jpaRepository.updateStatus(beispielAngebot.getId(), AngebotAnfrageStatus.OFFEN, AngebotAnfrageStatus.STORNIERT);
 
-		assertEquals(AngebotAnfrageStatus.STORNIERT,
-				jpaRepository.findById(ersteOffeneAnfrage.getId()).get().getStatus());
-		assertEquals(AngebotAnfrageStatus.STORNIERT,
-				jpaRepository.findById(zweiteOffeneAnfrage.getId()).get().getStatus());
-		assertEquals(AngebotAnfrageStatus.ANGENOMMEN,
-				jpaRepository.findById(dritteAnfrageStorniert.getId()).get().getStatus());
-	}
+        entityManager.flush();
+        entityManager.clear();
 
-	/* help methods */
+        assertEquals(AngebotAnfrageStatus.STORNIERT,
+                jpaRepository.findById(ersteOffeneAnfrage.getId()).get().getStatus());
+        assertEquals(AngebotAnfrageStatus.STORNIERT,
+                jpaRepository.findById(zweiteOffeneAnfrage.getId()).get().getStatus());
+        assertEquals(AngebotAnfrageStatus.ANGENOMMEN,
+                jpaRepository.findById(dritteAnfrageStorniert.getId()).get().getStatus());
+    }
 
-	public <E> E persist(E entity) {
-		entityManager.persist(entity);
-		return entity;
-	}
+    /* help methods */
 
-	private InstitutionEntity meinKrankenhaus() {
-		return InstitutionEntity.builder() //
-				.institutionKey("mein_krankenhaus") //
-				.name("Mein Krankenhaus") //
-				.typ(InstitutionTyp.KRANKENHAUS) //
-				.build();
-	}
+    public <E> E persist(E entity) {
+        entityManager.persist(entity);
+        return entity;
+    }
 
-	private InstitutionStandortEntity meinStandort() {
-		return InstitutionStandortEntity.builder() //
-				.name("Mein Standort") //
-				.strasse("Strasse") //
-				.hausnummer("10a") //
-				.plz("PLZ") //
-				.ort("Ort") //
-				.land("Land") //
-				.build();
-	}
+    private InstitutionEntity meinKrankenhaus() {
+        return InstitutionEntity.builder() //
+                .institutionKey("mein_krankenhaus") //
+                .name("Mein Krankenhaus") //
+                .typ(InstitutionTyp.KRANKENHAUS) //
+                .build();
+    }
 
-	private ArtikelKategorieEntity beispielArtikelKategorie() {
-		return ArtikelKategorieEntity.builder() //
-				.name("beispiel Kategorie") //
-				.icon("icon") //
-				.build();
-	}
+    private InstitutionStandortEntity meinStandort() {
+        return InstitutionStandortEntity.builder() //
+                .name("Mein Standort") //
+                .strasse("Strasse") //
+                .hausnummer("10a") //
+                .plz("PLZ") //
+                .ort("Ort") //
+                .land("Land") //
+                .build();
+    }
 
-	private ArtikelEntity beispielArtikel() {
-		return ArtikelEntity.builder() //
-				.artikelKategorie(beispielKategorieArtikel.getId()) //
-				.name("egal") //
-				.beschreibung("beschreibung") //
-				.build();
-	}
+    private ArtikelKategorieEntity beispielArtikelKategorie() {
+        return ArtikelKategorieEntity.builder() //
+                .name("beispiel Kategorie") //
+                .icon("icon") //
+                .build();
+    }
 
-	private ArtikelVarianteEntity beispielArtikelVariante() {
-		return ArtikelVarianteEntity.builder() //
-				.artikel(beispielArtikel.getId()) //
-				.variante("egal") //
-				.norm("egal") //
-				.beschreibung("beschreibung") //
-				.build();
-	}
+    private ArtikelEntity beispielArtikel() {
+        return ArtikelEntity.builder() //
+                .artikelKategorie(beispielKategorieArtikel.getId()) //
+                .name("egal") //
+                .beschreibung("beschreibung") //
+                .build();
+    }
 
-	private AngebotEntity beispielAngebot() {
-		return AngebotEntity.builder() //
-				.artikelVariante(beispielArtikelVariante) //
-				.institution(meinKrankenhaus) //
-				.standort(meinStandort) //
-				.anzahl(BigDecimal.valueOf(100)) //
-				.rest(BigDecimal.valueOf(100)) //
-				.institution(meinKrankenhaus) //
-				.haltbarkeit(LocalDateTime.now()) //
-				.steril(true) //
-				.originalverpackt(true) //
-				.medizinisch(true) //
-				.kommentar("Bla bla") //
-				.bedient(false) //
-				.build();
-	}
+    private ArtikelVarianteEntity beispielArtikelVariante() {
+        return ArtikelVarianteEntity.builder() //
+                .artikel(beispielArtikel.getId()) //
+                .variante("egal") //
+                .norm("egal") //
+                .beschreibung("beschreibung") //
+                .build();
+    }
 
-	private AngebotAnfrageEntity angebotAnfrage(//
-			AngebotEntity angebot, //
-			AngebotAnfrageStatus status) {
-		return AngebotAnfrageEntity.builder() //
-				.angebot(angebot) //
-				.institution(meinKrankenhaus) //
-				.standort(meinStandort) //
-				.anzahl(BigDecimal.valueOf(50)) //
-				.kommentar("Bla bla") //
-				.status(status) //
-				.build();
-	}
+    private AngebotEntity beispielAngebot() {
+        return AngebotEntity.builder() //
+                .artikelVariante(beispielArtikelVariante) //
+                .institution(meinKrankenhaus) //
+                .standort(meinStandort) //
+                .artikel(beispielArtikel) //
+                .anzahl(BigDecimal.valueOf(100)) //
+                .rest(BigDecimal.valueOf(100)) //
+                .institution(meinKrankenhaus) //
+                .haltbarkeit(LocalDateTime.now()) //
+                .steril(true) //
+                .originalverpackt(true) //
+                .medizinisch(true) //
+                .kommentar("Bla bla") //
+                .bedient(false) //
+                .build();
+    }
 
-	private AngebotAnfrageEntity angebotAnfrageFuerAngebot(//
-			AngebotEntity angebot, //
-			BigDecimal anzahl) {
-		return AngebotAnfrageEntity.builder() //
-				.angebot(angebot)//
-				.institution(meinKrankenhaus) //
-				.standort(meinStandort) //
-				.anzahl(anzahl) //
-				.kommentar("Bla bla") //
-				.status(AngebotAnfrageStatus.OFFEN) //
-				.build();
-	}
+    private AngebotAnfrageEntity angebotAnfrage(//
+                                                AngebotEntity angebot, //
+                                                AngebotAnfrageStatus status) {
+        return AngebotAnfrageEntity.builder() //
+                .angebot(angebot) //
+                .institution(meinKrankenhaus) //
+                .standort(meinStandort) //
+                .bedarfId(UUID.randomUUID()) //
+                .anzahl(BigDecimal.valueOf(50)) //
+                .kommentar("Bla bla") //
+                .status(status) //
+                .build();
+    }
 
-	private AngebotAnfrageEntity angebotAnfrageVonInstitution(//
-			InstitutionEntity institutionVon, //
-			BigDecimal anzahl) {
-		return AngebotAnfrageEntity.builder() //
-				.angebot(beispielAngebot) //
-				.institution(institutionVon)//
-				.standort(meinStandort) //
-				.anzahl(anzahl) //
-				.kommentar("Bla bla") //
-				.status(AngebotAnfrageStatus.OFFEN) //
-				.build();
-	}
+    private AngebotAnfrageEntity angebotAnfrageFuerAngebot(//
+                                                           AngebotEntity angebot, //
+                                                           BigDecimal anzahl) {
+        return AngebotAnfrageEntity.builder() //
+                .angebot(angebot)//
+                .institution(meinKrankenhaus) //
+                .standort(meinStandort) //
+                .bedarfId(UUID.randomUUID()) //
+                .anzahl(anzahl) //
+                .kommentar("Bla bla") //
+                .status(AngebotAnfrageStatus.OFFEN) //
+                .build();
+    }
+
+    private AngebotAnfrageEntity angebotAnfrageVonInstitution(//
+                                                              InstitutionEntity institutionVon, //
+                                                              BigDecimal anzahl) {
+        return AngebotAnfrageEntity.builder() //
+                .angebot(beispielAngebot) //
+                .institution(institutionVon) //
+                .bedarfId(UUID.randomUUID()) //
+                .standort(meinStandort) //
+                .anzahl(anzahl) //
+                .kommentar("Bla bla") //
+                .status(AngebotAnfrageStatus.OFFEN) //
+                .build();
+    }
 }

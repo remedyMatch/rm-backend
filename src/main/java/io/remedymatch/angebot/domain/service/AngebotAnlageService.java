@@ -4,6 +4,7 @@ import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
+import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.artikel.domain.service.ArtikelEntityConverter;
 import io.remedymatch.artikel.domain.service.ArtikelSucheService;
@@ -31,62 +32,71 @@ import javax.validation.constraints.NotNull;
 @Validated
 @Transactional
 public class AngebotAnlageService {
-	private static final String EXCEPTION_MSG_ARTIKEL_VARIANTE_NICHT_GEFUNDEN = "ArtikelVariante mit diesem Id nicht gefunden. (Id: %s)";
+    private static final String EXCEPTION_MSG_ARTIKEL_VARIANTE_NICHT_GEFUNDEN = "ArtikelVariante mit diesem Id nicht gefunden. (Id: %s)";
 
-	private static final String EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION = "Standort gehoert nicht der Institution des angemeldetes Benutzers. (Id: %s)";
+    private static final String EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION = "Standort gehoert nicht der Institution des angemeldetes Benutzers. (Id: %s)";
+    private static final String EXCEPTION_MSG_ARTIKEL_VARIANTE_NICHT_VORHANDEN = "Artikel Variante nicht vorhanden";
+    private static final String EXCEPTION_MSG_ARTIKEL_NICHT_VORHANDEN = "Artikel nicht vorhanden";
 
-	private final AngebotJpaRepository angebotRepository;
+    private final AngebotJpaRepository angebotRepository;
+    private final UserContextService userService;
+    private final ArtikelSucheService artikelSucheService;
+    private final GeocodingService geocodingService;
+    private final AngebotProzessService angebotProzessService;
 
-	private final UserContextService userService;
-	private final ArtikelSucheService artikelSucheService;
-	private final GeocodingService geocodingService;
+    @Transactional
+    public Angebot neueAngebotEinstellen(final @NotNull @Valid NeuesAngebot neuesAngebot) {
+        val userInstitution = getUserInstitution();
+        val artikelVariante = getArtikelVariante(neuesAngebot.getArtikelVarianteId());
+        val artikel = artikelSucheService.findArtikel(new ArtikelId(artikelVariante.getArtikel()))
+                .orElseThrow(() -> new ObjectNotFoundException(EXCEPTION_MSG_ARTIKEL_NICHT_VORHANDEN));
 
-	@Transactional
-	public Angebot neueAngebotEinstellen(final @NotNull @Valid NeuesAngebot neuesAngebot) {
-		val userInstitution = getUserInstitution();
+        val angebot = mitEntfernung(angebotRepository.save(AngebotEntity.builder() //
+                .anzahl(neuesAngebot.getAnzahl()) //
+                .rest(neuesAngebot.getAnzahl()) //
+                .artikelVariante(artikelVariante) //
+                .institution(userInstitution) //
+                .artikel(ArtikelEntityConverter.convertArtikel(artikel)) //
+                .standort(getUserInstitutionStandort(userInstitution, neuesAngebot.getStandortId())) //
+                .haltbarkeit(neuesAngebot.getHaltbarkeit()) //
+                .steril(neuesAngebot.isSteril()) //
+                .originalverpackt(neuesAngebot.isOriginalverpackt()) //
+                .medizinisch(neuesAngebot.isMedizinisch()) //
+                .kommentar(neuesAngebot.getKommentar()) //
+                .bedient(false) //
+                .build()));
+        angebotProzessService.prozessStarten(angebot.getId(), userService.getContextUserId(), angebot.getInstitution().getId());
 
-		return mitEntfernung(angebotRepository.save(AngebotEntity.builder() //
-				.anzahl(neuesAngebot.getAnzahl()) //
-				.rest(neuesAngebot.getAnzahl()) //
-				.artikelVariante(getArtikelVariante(neuesAngebot.getArtikelVarianteId())) //
-				.institution(userInstitution) //
-				.standort(getUserInstitutionStandort(userInstitution, neuesAngebot.getStandortId())) //
-				.haltbarkeit(neuesAngebot.getHaltbarkeit()) //
-				.steril(neuesAngebot.isSteril()) //
-				.originalverpackt(neuesAngebot.isOriginalverpackt()) //
-				.medizinisch(neuesAngebot.isMedizinisch()) //
-				.kommentar(neuesAngebot.getKommentar()) //
-				.bedient(false) //
-				.build()));
-	}
+        return angebot;
+    }
 
-	private Angebot mitEntfernung(final @NotNull AngebotEntity angebot) {
-		val convertedAngebot = AngebotEntityConverter.convertAngebot(angebot);
-		convertedAngebot.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
-		return convertedAngebot;
-	}
+    private Angebot mitEntfernung(final @NotNull AngebotEntity angebot) {
+        val convertedAngebot = AngebotEntityConverter.convertAngebot(angebot);
+        convertedAngebot.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
+        return convertedAngebot;
+    }
 
-	ArtikelVarianteEntity getArtikelVariante(//
-			final @NotNull @Valid ArtikelVarianteId artikelVarianteId) {
-		Assert.notNull(artikelVarianteId, "ArtikelVarianteId sind null.");
+    ArtikelVarianteEntity getArtikelVariante(//
+                                             final @NotNull @Valid ArtikelVarianteId artikelVarianteId) {
+        Assert.notNull(artikelVarianteId, "ArtikelVarianteId sind null.");
 
-		return artikelSucheService.findArtikelVariante(artikelVarianteId).map(ArtikelEntityConverter::convertVariante) //
-				.orElseThrow(() -> new ObjectNotFoundException(
-						String.format(EXCEPTION_MSG_ARTIKEL_VARIANTE_NICHT_GEFUNDEN, artikelVarianteId.getValue())));
-	}
+        return artikelSucheService.findArtikelVariante(artikelVarianteId).map(ArtikelEntityConverter::convertVariante) //
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        String.format(EXCEPTION_MSG_ARTIKEL_VARIANTE_NICHT_GEFUNDEN, artikelVarianteId.getValue())));
+    }
 
-	private InstitutionEntity getUserInstitution() {
-		return InstitutionEntityConverter.convertInstitution(userService.getContextInstitution());
-	}
+    private InstitutionEntity getUserInstitution() {
+        return InstitutionEntityConverter.convertInstitution(userService.getContextInstitution());
+    }
 
-	InstitutionStandortEntity getUserInstitutionStandort( //
-			final @NotNull InstitutionEntity userInstitution, //
-			final @NotNull @Valid InstitutionStandortId institutionStandortId) {
-		Assert.notNull(userInstitution, "InstitutionEntity ist null.");
-		Assert.notNull(institutionStandortId, "InstitutionStandortId ist null.");
+    InstitutionStandortEntity getUserInstitutionStandort( //
+                                                          final @NotNull InstitutionEntity userInstitution, //
+                                                          final @NotNull @Valid InstitutionStandortId institutionStandortId) {
+        Assert.notNull(userInstitution, "InstitutionEntity ist null.");
+        Assert.notNull(institutionStandortId, "InstitutionStandortId ist null.");
 
-		return userInstitution.findStandort(institutionStandortId.getValue()) //
-				.orElseThrow(() -> new NotUserInstitutionObjectException(String
-						.format(EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION, institutionStandortId.getValue())));
-	}
+        return userInstitution.findStandort(institutionStandortId.getValue()) //
+                .orElseThrow(() -> new NotUserInstitutionObjectException(String
+                        .format(EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION, institutionStandortId.getValue())));
+    }
 }

@@ -22,7 +22,7 @@ import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.institution.domain.model.NeueInstitution;
-import io.remedymatch.institution.domain.model.NeuesInstitutionStandort;
+import io.remedymatch.institution.domain.model.NeuerInstitutionStandort;
 import io.remedymatch.institution.domain.service.InstitutionService;
 import io.remedymatch.person.domain.model.NeuePerson;
 import io.remedymatch.person.domain.service.PersonService;
@@ -72,7 +72,7 @@ class RegistrierungUebernahmeServiceShould {
 				.name("Privatperson Vorname Privatperson Nachname") //
 				.institutionKey("privat__usernameprivatperson") //
 				.typ(InstitutionTyp.PRIVAT) //
-				.hauptstandort(NeuesInstitutionStandort.builder() //
+				.hauptstandort(NeuerInstitutionStandort.builder() //
 						.name("Privatperson Vorname Privatperson Nachname") //
 						.strasse("Privatperson Strasse") //
 						.hausnummer("155") //
@@ -144,7 +144,7 @@ class RegistrierungUebernahmeServiceShould {
 				.name("Irgendein Lieferant") //
 				.institutionKey("lieferant__irgendein_lieferant") //
 				.typ(InstitutionTyp.LIEFERANT) //
-				.hauptstandort(NeuesInstitutionStandort.builder() //
+				.hauptstandort(NeuerInstitutionStandort.builder() //
 						.name("Irgendein Lieferant") //
 						.strasse("Lieferant Strasse") //
 						.hausnummer("84/2a") //

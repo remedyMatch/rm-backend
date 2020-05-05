@@ -1,23 +1,18 @@
 package io.remedymatch.bedarf.controller;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
+import io.remedymatch.institution.controller.InstitutionRO;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import javax.persistence.MappedSuperclass;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-
-import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
-import io.remedymatch.institution.controller.InstitutionRO;
-import io.remedymatch.institution.controller.InstitutionStandortRO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -25,33 +20,33 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-@Builder
+@SuperBuilder
+@MappedSuperclass
 class BedarfAnfrageRO {
 
-	@NotNull
-	private UUID id;
+    @NotNull
+    private UUID id;
 
-	@NotNull
-	@Valid
-	private BedarfRO bedarf;
+    @NotNull
+    @Valid
+    private InstitutionRO institution;
 
-	@NotNull
-	@Valid
-	private InstitutionRO institution;
+    @NotNull
+    @Valid
+    private InstitutionStandortRO standort;
 
-	@NotNull
-	@Valid
-	private InstitutionStandortRO standort;
+    @NotNull
+    @Positive
+    private BigDecimal anzahl;
 
-	@NotNull
-	@Positive
-	private BigDecimal anzahl;
+    @NotBlank
+    private String kommentar;
 
-	@NotBlank
-	private String kommentar;
+    @NotNull
+    private UUID angebotId;
 
-	private String prozessInstanzId;
+    @NotNull
+    private BedarfAnfrageStatus status;
 
-	@NotNull
-	private BedarfAnfrageStatus status;
+    private BigDecimal entfernung;
 }

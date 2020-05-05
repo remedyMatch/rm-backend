@@ -39,138 +39,151 @@ import static org.mockito.BDDMockito.then;
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { //
-		AngebotAnlageService.class, //
-		AngebotJpaRepository.class, //
-		UserContextService.class, //
-		ArtikelSucheService.class, //
-		GeocodingService.class, //
+        AngebotAnlageService.class, //
+        AngebotJpaRepository.class, //
+        UserContextService.class, //
+        ArtikelSucheService.class, //
+        AngebotProzessService.class, //
+        GeocodingService.class, //
 })
 @Tag("Spring")
 @DisplayName("AngebotAnlageService soll")
 class AngebotAnlageServiceShould {
 
-	@Autowired
-	private AngebotAnlageService angebotAnlageService;
+    @Autowired
+    private AngebotAnlageService angebotAnlageService;
 
-	@MockBean
-	private AngebotJpaRepository angebotRepository;
+    @MockBean
+    private AngebotJpaRepository angebotRepository;
 
-	@MockBean
-	private UserContextService userService;
+    @MockBean
+    private UserContextService userService;
 
-	@MockBean
-	private ArtikelSucheService artikelSucheService;
+    @MockBean
+    private ArtikelSucheService artikelSucheService;
 
-	@MockBean
-	private GeocodingService geocodingService;
+    @MockBean
+    private GeocodingService geoCalcService;
 
-	@Test
-	@DisplayName("Fehler werfen bei nicht existierende ArtikelVariante")
-	void fehler_werfen_bei_Bearbeitung_von_nicht_existierende_ArtikelVariante() {
-		assertThrows(ObjectNotFoundException.class, //
-				() -> angebotAnlageService.getArtikelVariante(new ArtikelVarianteId(UUID.randomUUID())));
-	}
-	
-	@Test
-	@DisplayName("Fehler werfen wenn der Standort nicht in UserContext Institution gefunden wird")
-	void fehler_werfen_wenn_der_Standort_nicht_in_UserContext_Institution_gefunden_wird() {
+    @MockBean
+    private AngebotProzessService angebotProzessService;
 
-		assertThrows(NotUserInstitutionObjectException.class, //
-				() -> angebotAnlageService.getUserInstitutionStandort(InstitutionTestFixtures.beispielInstitutionEntity(),
-						new InstitutionStandortId(UUID.randomUUID())));
-	}
-	
-	@Test
-	@DisplayName("Angebot anlegen koennen")
-	void angebot_anlegen_koennen() {
+    @Test
+    @DisplayName("Fehler werfen bei nicht existierende ArtikelVariante")
+    void fehler_werfen_bei_Bearbeitung_von_nicht_existierende_ArtikelVariante() {
+        assertThrows(ObjectNotFoundException.class, //
+                () -> angebotAnlageService.getArtikelVariante(new ArtikelVarianteId(UUID.randomUUID())));
+    }
 
-		val artikelVarianteId = beispielArtikelVarianteId();
-		val artikelVariante = beispielArtikelVariante();
-		val artikelVarianteEntity = beispielArtikelVarianteEntity();
+    @Test
+    @DisplayName("Fehler werfen wenn der Standort nicht in UserContext Institution gefunden wird")
+    void fehler_werfen_wenn_der_Standort_nicht_in_UserContext_Institution_gefunden_wird() {
 
-		val anzahl = BigDecimal.valueOf(100);
-		val haltbarkeit = LocalDateTime.of(2100, 6, 6, 12, 00);
-		val steril = true;
-		val originalverpackt = false;
-		val medizinisch = true;
-		val kommentar = "Neues Angebot";
+        assertThrows(NotUserInstitutionObjectException.class, //
+                () -> angebotAnlageService.getUserInstitutionStandort(InstitutionTestFixtures.beispielInstitutionEntity(),
+                        new InstitutionStandortId(UUID.randomUUID())));
+    }
 
-		val userInstitution = beispielUserContextInstitution();
-		val userInstitutionEntity = beispielUserContextInstitutionEntity();
-		val userStandort = beispielUserContextAnderesStandort();
-		val userStandortEntity = beispielUserContextAnderesStandortEntity();
+    @Test
+    @DisplayName("Angebot anlegen koennen")
+    void angebot_anlegen_koennen() {
 
-		AngebotEntity angebotEntityOhneId = AngebotEntity.builder() //
-				.artikelVariante(artikelVarianteEntity) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.institution(userInstitutionEntity) //
-				.standort(userStandortEntity) //
-				.haltbarkeit(haltbarkeit) //
-				.steril(steril) //
-				.originalverpackt(originalverpackt) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+        val artikelVarianteId = beispielArtikelVarianteId();
+        val artikelVariante = beispielArtikelVariante();
+        val artikelVarianteEntity = beispielArtikelVarianteEntity();
+        val beispielArtikel = beispielArtikel();
+        val beispielArtikelEntity = beispielArtikelEntity();
 
-		val angebotId = beispielAngebotId();
+        val anzahl = BigDecimal.valueOf(100);
+        val haltbarkeit = LocalDateTime.of(2100, 6, 6, 12, 00);
+        val steril = true;
+        val originalverpackt = false;
+        val medizinisch = true;
+        val kommentar = "Neues Angebot";
 
-		AngebotEntity angebotEntityMitId = AngebotEntity.builder() //
-				.id(angebotId.getValue()) //
-				.artikelVariante(artikelVarianteEntity) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.institution(userInstitutionEntity) //
-				.standort(userStandortEntity) //
-				.haltbarkeit(haltbarkeit) //
-				.steril(steril) //
-				.originalverpackt(originalverpackt) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+        val userInstitution = beispielUserContextInstitution();
+        val userInstitutionEntity = beispielUserContextInstitutionEntity();
+        val userStandort = beispielUserContextAnderesStandort();
+        val userStandortEntity = beispielUserContextAnderesStandortEntity();
 
-		val neueAngebot = NeuesAngebot.builder() //
-				.artikelVarianteId(artikelVarianteId) //
-				.anzahl(anzahl) //
-				.standortId(userStandort.getId()) //
-				.haltbarkeit(haltbarkeit) //
-				.steril(steril) //
-				.originalverpackt(originalverpackt) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+        AngebotEntity angebotEntityOhneId = AngebotEntity.builder() //
+                .artikelVariante(artikelVarianteEntity) //
+                .anzahl(anzahl) //
+                .artikel(beispielArtikelEntity) //
+                .rest(anzahl) //
+                .institution(userInstitutionEntity) //
+                .standort(userStandortEntity) //
+                .haltbarkeit(haltbarkeit) //
+                .steril(steril) //
+                .originalverpackt(originalverpackt) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
 
-		val entfernung = BigDecimal.valueOf(123664);
+        val angebotId = beispielAngebotId();
 
-		given(userService.getContextInstitution()).willReturn(userInstitution);
-		given(geocodingService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
-		given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
-		given(angebotRepository.save(angebotEntityOhneId)).willReturn(angebotEntityMitId);
+        AngebotEntity angebotEntityMitId = AngebotEntity.builder() //
+                .id(angebotId.getValue()) //
+                .artikelVariante(artikelVarianteEntity) //
+                .anzahl(anzahl) //
+                .artikel(beispielArtikelEntity) //
+                .rest(anzahl) //
+                .institution(userInstitutionEntity) //
+                .standort(userStandortEntity) //
+                .haltbarkeit(haltbarkeit) //
+                .steril(steril) //
+                .originalverpackt(originalverpackt) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
 
-		val expectedAngebot = Angebot.builder() //
-				.id(angebotId) //
-				.artikelVariante(artikelVariante) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.institution(userInstitution) //
-				.standort(userStandort) //
-				.haltbarkeit(haltbarkeit) //
-				.steril(steril) //
-				.originalverpackt(originalverpackt) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.entfernung(entfernung) //
-				.build();
+        val neueAngebot = NeuesAngebot.builder() //
+                .artikelVarianteId(artikelVarianteId) //
+                .anzahl(anzahl) //
+                .standortId(userStandort.getId()) //
+                .haltbarkeit(haltbarkeit) //
+                .steril(steril) //
+                .originalverpackt(originalverpackt) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
 
-		assertEquals(expectedAngebot, angebotAnlageService.neueAngebotEinstellen(neueAngebot));
+        val entfernung = BigDecimal.valueOf(123664);
 
-		then(angebotRepository).should().save(angebotEntityOhneId);
-		then(angebotRepository).shouldHaveNoMoreInteractions();
-		then(userService).should().getContextInstitution();
-		then(userService).shouldHaveNoMoreInteractions();
-		then(artikelSucheService).should().findArtikelVariante(artikelVarianteId);
-		then(artikelSucheService).shouldHaveNoMoreInteractions();
-		then(geocodingService).should().berechneUserDistanzInKilometer(userStandort);
-		then(geocodingService).shouldHaveNoMoreInteractions();
-	}
+        given(artikelSucheService.findArtikel(artikelVariante.getArtikelId())).willReturn(Optional.ofNullable(beispielArtikel));
+        given(userService.getContextInstitution()).willReturn(userInstitution);
+        given(geoCalcService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
+        given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
+        given(angebotRepository.save(angebotEntityOhneId)).willReturn(angebotEntityMitId);
+
+        val expectedAngebot = Angebot.builder() //
+                .id(angebotId) //
+                .artikelVariante(artikelVariante) //
+                .artikel(beispielArtikel) //
+                .anzahl(anzahl) //
+                .rest(anzahl) //
+                .institution(userInstitution) //
+                .standort(userStandort) //
+                .haltbarkeit(haltbarkeit) //
+                .steril(steril) //
+                .originalverpackt(originalverpackt) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .entfernung(entfernung) //
+                .build();
+
+
+        assertEquals(expectedAngebot, angebotAnlageService.neueAngebotEinstellen(neueAngebot));
+
+        then(angebotRepository).should().save(angebotEntityOhneId);
+        then(angebotRepository).shouldHaveNoMoreInteractions();
+        then(userService).should().getContextInstitution();
+        then(userService).should().getContextUserId();
+        then(userService).shouldHaveNoMoreInteractions();
+        then(artikelSucheService).should().findArtikelVariante(artikelVarianteId);
+        then(artikelSucheService).should().findArtikel(artikelVariante.getArtikelId());
+        then(artikelSucheService).shouldHaveNoMoreInteractions();
+        then(geoCalcService).should().berechneUserDistanzInKilometer(userStandort);
+        then(geoCalcService).shouldHaveNoMoreInteractions();
+    }
 }

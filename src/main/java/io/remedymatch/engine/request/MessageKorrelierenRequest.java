@@ -5,9 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Map;
-
 import javax.validation.constraints.NotBlank;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -15,15 +14,15 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class MessageKorrelierenRequest {
 
-	@NotBlank
-	private String prozessKey;
-    
-    private String prozessInstanzId;
+    @NotBlank
+    private String prozessKey;
 
-	@NotBlank
+    private String businesskey;
+
+    @NotBlank
     private String messageKey;
 
-    private Map<String, Object> variablesEqual;
-    
+    private Map<String, Object> localVariablesEqual;
+
     private Map<String, Object> variables;
 }

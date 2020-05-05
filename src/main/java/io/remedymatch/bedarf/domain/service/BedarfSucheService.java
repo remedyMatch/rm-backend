@@ -2,6 +2,7 @@ package io.remedymatch.bedarf.domain.service;
 
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
+import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfFilterEntry;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
@@ -50,8 +51,13 @@ public class BedarfSucheService {
     }
 
     @Transactional(readOnly = true)
-    public List<Bedarf> findAlleNichtBedienteBedarfe() {
-        return mitEntfernung(bedarfRepository.findAllByDeletedFalseAndBedientFalse());
+    public List<Bedarf> findAlleNichtBedienteOeffentlicheBedarfe(final @Valid ArtikelVarianteId artikelVarianteId) {
+    	if (artikelVarianteId != null) {
+			return mitEntfernung(
+					bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(
+							artikelVarianteId.getValue()));
+		}
+		return mitEntfernung(bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue());
     }
 
     @Transactional(readOnly = true)

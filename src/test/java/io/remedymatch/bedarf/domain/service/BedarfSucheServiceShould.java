@@ -62,8 +62,8 @@ class BedarfSucheServiceShould {
     private GeocodingService geoCalcService;
 
     @Test
-    @DisplayName("alle nicht bediente Bedarfe zurueckliefern")
-    void alle_nicht_bediente_Bedarfe_zurueckliefern() {
+    @DisplayName("alle nicht bediente oeffentliche Bedarfe zurueckliefern")
+    void alle_nicht_bediente_oeffentliche_Bedarfe_zurueckliefern() {
 
         val bedarf1Entfernung = BigDecimal.valueOf(100);
         val bedarf2Entfernung = BigDecimal.valueOf(500);
@@ -79,16 +79,16 @@ class BedarfSucheServiceShould {
         bedarf2.setId(bedarf2Id);
         bedarf2.setEntfernung(bedarf2Entfernung);
 
-        given(bedarfRepository.findAllByDeletedFalseAndBedientFalse())
+        given(bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue())
                 .willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
         given(geoCalcService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
         given(geoCalcService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
 
         assertThat(//
-                bedarfSucheService.findAlleNichtBedienteBedarfe(), //
+                bedarfSucheService.findAlleNichtBedienteOeffentlicheBedarfe(null), //
                 containsInAnyOrder(bedarf1, bedarf2));
 
-        then(bedarfRepository).should().findAllByDeletedFalseAndBedientFalse();
+        then(bedarfRepository).should().findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue();
         then(bedarfRepository).shouldHaveNoMoreInteractions();
         then(userService).shouldHaveNoInteractions();
         // XXX 2 verschiedene Aufrufe pruefen...
@@ -96,6 +96,43 @@ class BedarfSucheServiceShould {
         then(geoCalcService).shouldHaveNoMoreInteractions();
     }
 
+    @Test
+    @DisplayName("alle nicht bediente oeffentliche Bedarfe der ArtikelVariante zurueckliefern")
+    void alle_nicht_bediente_oeffentliche_Bedarfe_der_ArtikelVariante_zurueckliefern() {
+
+        val bedarf1Entfernung = BigDecimal.valueOf(100);
+        val bedarf2Entfernung = BigDecimal.valueOf(500);
+
+        val bedarf1Entity = beispielBedarfEntity();
+        val bedarf1 = beispielBedarf();
+        bedarf1.setEntfernung(bedarf1Entfernung);
+
+        val bedarf2Id = new BedarfId(UUID.randomUUID());
+        val bedarf2Entity = beispielBedarfEntity();
+        bedarf2Entity.setId(bedarf2Id.getValue());
+        val bedarf2 = beispielBedarf();
+        bedarf2.setId(bedarf2Id);
+        bedarf2.setEntfernung(bedarf2Entfernung);
+
+		val artikelVarianteId = bedarf1.getArtikelVariante().getId();
+		
+        given(bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(artikelVarianteId.getValue()))
+                .willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
+        given(geoCalcService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
+        given(geoCalcService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
+
+        assertThat(//
+                bedarfSucheService.findAlleNichtBedienteOeffentlicheBedarfe(artikelVarianteId), //
+                containsInAnyOrder(bedarf1, bedarf2));
+
+        then(bedarfRepository).should().findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(artikelVarianteId.getValue());
+        then(bedarfRepository).shouldHaveNoMoreInteractions();
+        then(userService).shouldHaveNoInteractions();
+        // XXX 2 verschiedene Aufrufe pruefen...
+        then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());
+        then(geoCalcService).shouldHaveNoMoreInteractions();
+    }
+    
     @Test
     @DisplayName("alle nicht bediente Bedarfe der UserContext Institution zurueckliefern")
     void alle_nicht_bediente_Bedarfe_der_UserContext_Institution_zurueckliefern() {

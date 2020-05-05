@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface AngebotJpaRepository extends JpaRepository<AngebotEntity, UUID> {
-    List<AngebotEntity> findAllByDeletedFalseAndBedientFalse();
+    List<AngebotEntity> findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue();
+
+    List<AngebotEntity> findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(final UUID id);
 
     List<AngebotEntity> findAllByDeletedFalseAndBedientFalseAndInstitution_Id(UUID id);
 

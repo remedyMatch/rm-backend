@@ -27,12 +27,30 @@ class UserAktualisator {
 	void uberpruefeNeueRegistrationen() {
 
 		// 1) Users mit bestätigtem Mail finden
-		List<RegistrierterUser> verifizierteUsers = keycloakClient.findFreigegebeneUsers();
+		List<RegistrierterUser> verifizierteUsers = keycloakClient.findVerifizierteUsers();
 
 		// 2) Prozess starten
 		verifizierteUsers.forEach(user -> userUebernehmen(user));
+		
+		// sollte entfernt werden
+		// 1) Users mit bestätigtem Mail finden
+		List<RegistrierterUser> freigegebeneUsers = keycloakClient.findFreigegebeneUsers();
+
+		// 2) Prozess starten
+		freigegebeneUsers.forEach(user -> freigegebenenUserUebernehmen(user));
 	}
 
+	@Transactional
+	@Deprecated // arbeitet mit freigegebene user
+	private void freigegebenenUserUebernehmen(final @NotNull @Valid RegistrierterUser registrierterUser) {
+		try {
+			registrierungUebernahmeService.registrierungUebernehmen(registrierterUser);
+			keycloakClient.freigegebenenUserAufAktiviertSetzen(registrierterUser.getKeycloakUserId());
+		} catch (Exception e) {
+			log.error("Übernahme des Users hat nicht geklappt: " + registrierterUser, e);
+		}
+	}
+	
 	@Transactional
 	private void userUebernehmen(final @NotNull @Valid RegistrierterUser registrierterUser) {
 		try {

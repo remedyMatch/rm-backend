@@ -5,7 +5,7 @@ import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class AngebotAnfrageSucheService {
     private static final String EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_GEFUNDEN = "AngebotAnfrage mit diesem Id nicht gefunden. (Id: %s)";
 
     private final AngebotAnfrageJpaRepository anfrageRepository;
-    private final GeoCalcService geoCalcService;
+    private final GeocodingService geocodingService;
     private final UserContextService userContextService;
 
     @Transactional(readOnly = true)
@@ -79,7 +79,7 @@ public class AngebotAnfrageSucheService {
     }
 
     private List<AngebotAnfrage> mitEntfernung(final List<AngebotAnfrage> anfragen) {
-        anfragen.forEach(anfrage -> anfrage.setEntfernung(geoCalcService.berechneDistanzInKilometer(//
+        anfragen.forEach(anfrage -> anfrage.setEntfernung(geocodingService.berechneDistanzInKilometer(//
                 anfrage.getStandort(), //
                 anfrage.getAngebot().getStandort())));
 

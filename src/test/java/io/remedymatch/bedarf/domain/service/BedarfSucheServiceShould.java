@@ -3,7 +3,7 @@ package io.remedymatch.bedarf.domain.service;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.infrastructure.BedarfAnfrageJpaRepository;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import io.remedymatch.usercontext.UserContextTestFixtures;
 import lombok.val;
@@ -39,7 +39,8 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
         UserContextService.class, //
         BedarfAnfrageSucheService.class, //
         BedarfAnfrageJpaRepository.class, //
-        GeoCalcService.class //
+        GeocodingService.class //
+
 })
 @Tag("Spring")
 @DisplayName("BedarfSucheService soll")
@@ -58,7 +59,7 @@ class BedarfSucheServiceShould {
     private UserContextService userService;
 
     @MockBean
-    private GeoCalcService geoCalcService;
+    private GeocodingService geoCalcService;
 
     @Test
     @DisplayName("alle nicht bediente Bedarfe zurueckliefern")

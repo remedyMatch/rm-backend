@@ -1,30 +1,5 @@
 package io.remedymatch.bedarf.domain.service;
 
-import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.*;
-import static io.remedymatch.bedarf.domain.service.BedarfTestFixtures.beispielBedarfId;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextAnderesStandort;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextAnderesStandortEntity;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextInstitution;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextInstitutionEntity;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
-import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.artikel.domain.service.ArtikelSucheService;
@@ -35,11 +10,32 @@ import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
+
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.*;
+import static io.remedymatch.bedarf.domain.service.BedarfTestFixtures.beispielBedarfId;
+import static io.remedymatch.usercontext.UserContextTestFixtures.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +44,7 @@ import lombok.val;
 		BedarfJpaRepository.class, //
 		UserContextService.class, //
 		ArtikelSucheService.class, //
-		GeoCalcService.class, //
+		GeocodingService.class, //
 })
 @Tag("Spring")
 @DisplayName("BedarfAnlageService soll")
@@ -67,7 +63,7 @@ class BedarfAnlageServiceShould {
 	private ArtikelSucheService artikelSucheService;
 
 	@MockBean
-	private GeoCalcService geoCalcService;
+	private GeocodingService geocodingService;
 
 	@Test
 	@DisplayName("Fehler werfen wenn beide Artikel und ArtikelVariante leer sind")
@@ -189,7 +185,7 @@ class BedarfAnlageServiceShould {
 		val entfernung = BigDecimal.valueOf(123664);
 
 		given(userService.getContextInstitution()).willReturn(userInstitution);
-		given(geoCalcService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
 		given(artikelSucheService.findArtikel(artikelId)).willReturn(Optional.of(artikel));
 		given(bedarfRepository.save(bedarfEntityOhneId)).willReturn(bedarfEntityMitId);
 
@@ -214,8 +210,8 @@ class BedarfAnlageServiceShould {
 		then(userService).shouldHaveNoMoreInteractions();
 		then(artikelSucheService).should().findArtikel(artikelId);
 		then(artikelSucheService).shouldHaveNoMoreInteractions();
-		then(geoCalcService).should().berechneUserDistanzInKilometer(userStandort);
-		then(geoCalcService).shouldHaveNoMoreInteractions();
+		then(geocodingService).should().berechneUserDistanzInKilometer(userStandort);
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 	
 	@Test
@@ -281,7 +277,7 @@ class BedarfAnlageServiceShould {
 		val entfernung = BigDecimal.valueOf(123664);
 
 		given(userService.getContextInstitution()).willReturn(userInstitution);
-		given(geoCalcService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
+		given(geocodingService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
 		given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
 		given(artikelSucheService.findArtikel(artikelId)).willReturn(Optional.of(artikel));
 		given(bedarfRepository.save(bedarfEntityOhneId)).willReturn(bedarfEntityMitId);
@@ -309,7 +305,7 @@ class BedarfAnlageServiceShould {
 		then(artikelSucheService).should().findArtikelVariante(artikelVarianteId);
 		then(artikelSucheService).should().findArtikel(artikelId);
 		then(artikelSucheService).shouldHaveNoMoreInteractions();
-		then(geoCalcService).should().berechneUserDistanzInKilometer(userStandort);
-		then(geoCalcService).shouldHaveNoMoreInteractions();
+		then(geocodingService).should().berechneUserDistanzInKilometer(userStandort);
+		then(geocodingService).shouldHaveNoMoreInteractions();
 	}
 }

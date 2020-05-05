@@ -60,6 +60,12 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.maps</groupId>
+			<artifactId>google-maps-services</artifactId>
+			<version>0.13.0</version>
+		</dependency>
+
 		<!-- Runtime -->
 		<dependency>
 			<groupId>mysql</groupId>

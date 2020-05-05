@@ -5,7 +5,7 @@ import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.infrastructure.BedarfAnfrageJpaRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class BedarfAnfrageSucheService {
     private static final String EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_GEFUNDEN = "BedarfAnfrage mit diesem Id nicht gefunden. (Id: %s)";
 
     private final BedarfAnfrageJpaRepository anfrageRepository;
-    private final GeoCalcService geoCalcService;
+    private final GeocodingService geoCalcService;
     private final UserContextService userContextService;
 
     @Transactional(readOnly = true)

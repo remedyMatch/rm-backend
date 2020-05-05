@@ -2,7 +2,7 @@ package io.remedymatch.match.domain;
 
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -18,7 +18,7 @@ public class MatchService {
     private final MatchRepository matchRepository;
     private final MatchStandortRepository matchStandortRepository;
     private final UserContextService userService;
-    private final GeoCalcService geoCalcService;
+    private final GeocodingService geocodingService;
 
     @Transactional
     public Match matchAusBedarfErstellen(BedarfAnfrage bedarfAnfrage) {
@@ -80,7 +80,7 @@ public class MatchService {
     }
 
     private List<Match> mitEntfernung(final List<Match> matches) {
-        matches.forEach(match -> match.setEntfernung(geoCalcService.berechneDistanzInKilometer(//
+        matches.forEach(match -> match.setEntfernung(geocodingService.berechneDistanzInKilometer(//
                 match.getStandortVon(), //
                 match.getStandortAn())));
 

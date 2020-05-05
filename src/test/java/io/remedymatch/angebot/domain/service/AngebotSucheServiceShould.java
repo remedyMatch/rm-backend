@@ -3,7 +3,7 @@ package io.remedymatch.angebot.domain.service;
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import io.remedymatch.usercontext.UserContextTestFixtures;
 import lombok.val;
@@ -39,7 +39,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
         AngebotJpaRepository.class, //
         UserContextService.class, //
         AngebotAnfrageSucheService.class, //
-        GeoCalcService.class //
+        GeocodingService.class //
 })
 @Tag("Spring")
 @DisplayName("AngebotSucheService soll")
@@ -55,7 +55,7 @@ class AngebotSucheServiceShould {
     private UserContextService userService;
 
     @MockBean
-    private GeoCalcService geoCalcService;
+    private GeocodingService geoCalcService;
 
     @MockBean
     private AngebotAnfrageSucheService angebotAnfrageSucheService;

@@ -8,7 +8,7 @@ import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.artikel.domain.service.ArtikelSucheService;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
 import io.remedymatch.usercontext.UserContextService;
@@ -44,7 +44,7 @@ import static org.mockito.BDDMockito.then;
         UserContextService.class, //
         ArtikelSucheService.class, //
         AngebotProzessService.class, //
-        GeoCalcService.class, //
+        GeocodingService.class, //
 })
 @Tag("Spring")
 @DisplayName("AngebotAnlageService soll")
@@ -63,7 +63,7 @@ class AngebotAnlageServiceShould {
     private ArtikelSucheService artikelSucheService;
 
     @MockBean
-    private GeoCalcService geoCalcService;
+    private GeocodingService geoCalcService;
 
     @MockBean
     private AngebotProzessService angebotProzessService;

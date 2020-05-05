@@ -3,7 +3,7 @@ package io.remedymatch.angebot.domain.service;
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ import static org.mockito.BDDMockito.then;
         AngebotAnfrageSucheService.class, //
         AngebotAnfrageJpaRepository.class, //
         UserContextService.class, //
-        GeoCalcService.class //
+        GeocodingService.class //
 })
 @Tag("Spring")
 @DisplayName("AngebotAnfrageSucheService soll")
@@ -47,7 +47,7 @@ class AngebotAnfrageSucheServiceShould {
     private AngebotAnfrageJpaRepository anfrageRepository;
 
     @MockBean
-    private GeoCalcService geoCalcService;
+    private GeocodingService geoCalcService;
 
     @MockBean
     private UserContextService userContextService;

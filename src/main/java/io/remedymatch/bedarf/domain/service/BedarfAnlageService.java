@@ -3,6 +3,7 @@ package io.remedymatch.bedarf.domain.service;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import io.remedymatch.geodaten.domain.GeocodingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -22,7 +23,6 @@ import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
@@ -47,7 +47,7 @@ public class BedarfAnlageService {
 
 	private final UserContextService userService;
 	private final ArtikelSucheService artikelSucheService;
-	private final GeoCalcService geoCalcService;
+	private final GeocodingService geocodingService;
 
 	@Transactional
 	public Bedarf neuesBedarfEinstellen(final @NotNull @Valid NeuesBedarf neuesBedarf) {
@@ -88,7 +88,7 @@ public class BedarfAnlageService {
 
 	private Bedarf mitEntfernung(final @NotNull BedarfEntity bedarf) {
 		val convertedBedarf = BedarfEntityConverter.convertBedarf(bedarf);
-		convertedBedarf.setEntfernung(geoCalcService.berechneUserDistanzInKilometer(convertedBedarf.getStandort()));
+		convertedBedarf.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedBedarf.getStandort()));
 		return convertedBedarf;
 	}
 

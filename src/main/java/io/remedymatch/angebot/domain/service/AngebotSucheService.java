@@ -6,7 +6,7 @@ import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -30,7 +30,7 @@ public class AngebotSucheService {
     private final AngebotAnfrageSucheService angebotAnfrageSucheService;
 
     private final UserContextService userService;
-    private final GeoCalcService geoCalcService;
+    private final GeocodingService geocodingService;
 
     @Transactional(readOnly = true)
     public List<AngebotFilterEntry> getArtikelKategorieFilter() {
@@ -74,9 +74,10 @@ public class AngebotSucheService {
         return angebote.stream().map(this::mitEntfernung).collect(Collectors.toList());
     }
 
+
     private Angebot mitEntfernung(final AngebotEntity angebot) {
         val convertedAngebot = AngebotEntityConverter.convertAngebot(angebot);
-        convertedAngebot.setEntfernung(geoCalcService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
+        convertedAngebot.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
         return convertedAngebot;
     }
 }

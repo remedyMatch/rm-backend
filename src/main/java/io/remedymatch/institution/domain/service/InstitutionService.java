@@ -4,7 +4,7 @@ import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.engine.domain.BusinessKey;
-import io.remedymatch.geodaten.domain.StandortService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.model.*;
 import io.remedymatch.institution.infrastructure.*;
 import io.remedymatch.institution.process.InstitutionAntragProzessConstants;
@@ -40,7 +40,7 @@ public class InstitutionService {
     private final InstitutionAntragJpaRepository institutionAntragJpaRepository;
     private final EngineClient engineClient;
 
-    private final StandortService standortService;
+    private final GeocodingService geocodingService;
     private final UserContextService userService;
 
     public Institution institutionAnlegen(final @NotNull @Valid NeueInstitution neueInstitution) {
@@ -177,7 +177,10 @@ public class InstitutionService {
     private void institutionAntragProzessStarten(@NotNull @Valid final InstitutionAntrag antrag) {
 
         val variables = new HashMap<String, Object>();
-        engineClient.prozessStarten(InstitutionAntragProzessConstants.PROZESS_KEY, new BusinessKey(antrag.getId().getValue()), userService.getContextUserId(), variables);
+        engineClient.prozessStarten(
+                InstitutionAntragProzessConstants.PROZESS_KEY,
+                new BusinessKey(antrag.getId().getValue()),
+                userService.getContextUserId(), variables);
     }
 
     private InstitutionAntrag updateAntrag(InstitutionAntrag antrag) {
@@ -192,9 +195,9 @@ public class InstitutionService {
         return InstitutionEntityConverter.convertInstitution(userService.getContextInstitution());
     }
 
-    InstitutionStandortEntity getStandort(//
-                                          final @NotNull @Valid InstitutionEntity institution, //
-                                          @NotNull @Valid final InstitutionStandortId standortId) {
+    InstitutionStandortEntity getStandort(
+            final @NotNull @Valid InstitutionEntity institution, //
+            @NotNull @Valid final InstitutionStandortId standortId) {
         return institution.findStandort(standortId.getValue()).orElseThrow(() -> new ObjectNotFoundException(String
                 .format(EXCEPTION_MSG_STANDORT_NICHT_IN_USER_INSTITUTION, institution.getId(), standortId.getValue())));
     }
@@ -213,7 +216,7 @@ public class InstitutionService {
     InstitutionStandortEntity mitGeodatenErweitern(final InstitutionStandortEntity standort) {
         val addresseFuerGeocoding = formatAdresse(standort);
         log.info("Suche Geodaten für: " + addresseFuerGeocoding);
-        var longlatList = standortService.findePointsByAdressString(addresseFuerGeocoding);
+        var longlatList = geocodingService.findePointsByAdressString(addresseFuerGeocoding);
 
         if (longlatList == null || longlatList.size() == 0) {
             throw new ObjectNotFoundException("Die Adresse konnte nicht aufgelöst werden");

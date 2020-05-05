@@ -11,7 +11,7 @@ import io.remedymatch.artikel.domain.service.ArtikelSucheService;
 import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
@@ -41,7 +41,7 @@ public class AngebotAnlageService {
     private final AngebotJpaRepository angebotRepository;
     private final UserContextService userService;
     private final ArtikelSucheService artikelSucheService;
-    private final GeoCalcService geoCalcService;
+    private final GeocodingService geocodingService;
     private final AngebotProzessService angebotProzessService;
 
     @Transactional
@@ -65,7 +65,6 @@ public class AngebotAnlageService {
                 .kommentar(neuesAngebot.getKommentar()) //
                 .bedient(false) //
                 .build()));
-
         angebotProzessService.prozessStarten(angebot.getId(), userService.getContextUserId(), angebot.getInstitution().getId());
 
         return angebot;
@@ -73,7 +72,7 @@ public class AngebotAnlageService {
 
     private Angebot mitEntfernung(final @NotNull AngebotEntity angebot) {
         val convertedAngebot = AngebotEntityConverter.convertAngebot(angebot);
-        convertedAngebot.setEntfernung(geoCalcService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
+        convertedAngebot.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedAngebot.getStandort()));
         return convertedAngebot;
     }
 

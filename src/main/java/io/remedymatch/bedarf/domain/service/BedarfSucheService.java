@@ -6,7 +6,7 @@ import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.BedarfFilterEntry;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -30,7 +30,7 @@ public class BedarfSucheService {
     private final BedarfAnfrageSucheService bedarfAnfrageSucheService;
 
     private final UserContextService userService;
-    private final GeoCalcService geoCalcService;
+    private final GeocodingService geocodingService;
 
     @Transactional(readOnly = true)
     public List<BedarfFilterEntry> getArtikelKategorieFilter() {
@@ -78,7 +78,7 @@ public class BedarfSucheService {
 
     private Bedarf mitEntfernung(final BedarfEntity bedarf) {
         val convertedBedarf = BedarfEntityConverter.convertBedarf(bedarf);
-        convertedBedarf.setEntfernung(geoCalcService.berechneUserDistanzInKilometer(convertedBedarf.getStandort()));
+        convertedBedarf.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedBedarf.getStandort()));
         return convertedBedarf;
     }
 }

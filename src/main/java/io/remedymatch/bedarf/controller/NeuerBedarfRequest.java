@@ -13,7 +13,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @Builder
-class NeuesBedarfRequest {
+class NeuerBedarfRequest {
 
     private UUID artikelId;
 
@@ -21,9 +21,6 @@ class NeuesBedarfRequest {
 
     @NotNull
     private BigDecimal anzahl;
-
-    @NotNull
-    private UUID standortId;
 
     @NotNull
     private String kommentar;

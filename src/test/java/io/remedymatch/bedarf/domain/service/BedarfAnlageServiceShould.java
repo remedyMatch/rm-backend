@@ -4,15 +4,18 @@ import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.artikel.domain.service.ArtikelSucheService;
 import io.remedymatch.bedarf.domain.model.Bedarf;
-import io.remedymatch.bedarf.domain.model.NeuesBedarf;
+import io.remedymatch.bedarf.domain.model.NeuerBedarf;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonInstitution;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -40,272 +43,278 @@ import static org.mockito.BDDMockito.then;
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { //
-		BedarfAnlageService.class, //
-		BedarfJpaRepository.class, //
-		UserContextService.class, //
-		ArtikelSucheService.class, //
-		GeocodingService.class, //
+        BedarfAnlageService.class, //
+        BedarfJpaRepository.class, //
+        UserContextService.class, //
+        ArtikelSucheService.class, //
+        GeocodingService.class, //
 })
 @Tag("Spring")
 @DisplayName("BedarfAnlageService soll")
 class BedarfAnlageServiceShould {
 
-	@Autowired
-	private BedarfAnlageService bedarfAnlageService;
+    @Autowired
+    private BedarfAnlageService bedarfAnlageService;
 
-	@MockBean
-	private BedarfJpaRepository bedarfRepository;
+    @MockBean
+    private BedarfJpaRepository bedarfRepository;
 
-	@MockBean
-	private UserContextService userService;
+    @MockBean
+    private UserContextService userService;
 
-	@MockBean
-	private ArtikelSucheService artikelSucheService;
+    @MockBean
+    private ArtikelSucheService artikelSucheService;
 
-	@MockBean
-	private GeocodingService geocodingService;
+    @MockBean
+    private GeocodingService geocodingService;
 
-	@Test
-	@DisplayName("Fehler werfen wenn beide Artikel und ArtikelVariante leer sind")
-	void fehler_werfen_wenn_beide_Artikel_und_Artikel_Variante_leer_sind() {
-		assertThrows(OperationNotAlloudException.class, //
-				() -> bedarfAnlageService.neuesBedarfEinstellen(NeuesBedarf.builder().build()));
-	}
-	
-	@Test
-	@DisplayName("Fehler werfen wenn Artikel und ArtikelVariante nicht zusammen passen")
-	void fehler_werfen_wenn_Artikel_und_ArtikelVariante_nicht_zusammen_passen() {
+    @Test
+    @DisplayName("Fehler werfen wenn beide Artikel und ArtikelVariante leer sind")
+    void fehler_werfen_wenn_beide_Artikel_und_Artikel_Variante_leer_sind() {
+        assertThrows(OperationNotAlloudException.class, //
+                () -> bedarfAnlageService.neuenBedarfEinstellen(NeuerBedarf.builder().build()));
+    }
 
-		val artikelId = new ArtikelId(UUID.randomUUID());
-		
-		val artikelVarianteId = beispielArtikelVarianteId();
-		val artikelVariante = beispielArtikelVariante();
-		
-		val anzahl = BigDecimal.valueOf(100);
-		val steril = true;
-		val medizinisch = true;
-		val kommentar = "Neues Bedarf";
+    @Test
+    @DisplayName("Fehler werfen wenn Artikel und ArtikelVariante nicht zusammen passen")
+    void fehler_werfen_wenn_Artikel_und_ArtikelVariante_nicht_zusammen_passen() {
 
-		val userInstitution = beispielUserContextInstitution();
-		val userStandort = beispielUserContextAnderesStandort();
-		
-		val neuesBedarf = NeuesBedarf.builder() //
-				.artikelId(artikelId) //
-				.artikelVarianteId(artikelVarianteId) //
-				.anzahl(anzahl) //
-				.standortId(userStandort.getId()) //
-				.steril(steril) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+        val artikelId = new ArtikelId(UUID.randomUUID());
 
-		given(userService.getContextInstitution()).willReturn(userInstitution);
-		given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
-		
-		assertThrows(OperationNotAlloudException.class, //
-				() -> bedarfAnlageService.neuesBedarfEinstellen(neuesBedarf));
-	}
-	
-	@Test
-	@DisplayName("Fehler werfen bei nicht existierentem Artikel")
-	void fehler_werfen_bei_Bearbeitung_von_nicht_existierendem_Artikel() {
-		assertThrows(ObjectNotFoundException.class, //
-				() -> bedarfAnlageService.getArtikel(new ArtikelId(UUID.randomUUID())));
-	}
+        val artikelVarianteId = beispielArtikelVarianteId();
+        val artikelVariante = beispielArtikelVariante();
 
-	@Test
-	@DisplayName("Fehler werfen bei nicht existierende ArtikelVariante")
-	void fehler_werfen_bei_Bearbeitung_von_nicht_existierende_ArtikelVariante() {
-		assertThrows(ObjectNotFoundException.class, //
-				() -> bedarfAnlageService.getArtikelVariante(new ArtikelVarianteId(UUID.randomUUID())));
-	}
-	
-	@Test
-	@DisplayName("Fehler werfen wenn der Standort nicht in UserContext Institution gefunden wird")
-	void fehler_werfen_wenn_der_Standort_nicht_in_UserContext_Institution_gefunden_wird() {
+        val anzahl = BigDecimal.valueOf(100);
+        val steril = true;
+        val medizinisch = true;
+        val kommentar = "Neues Bedarf";
 
-		assertThrows(NotUserInstitutionObjectException.class, //
-				() -> bedarfAnlageService.getUserInstitutionStandort(
-						InstitutionTestFixtures.beispielInstitutionEntity(),
-						new InstitutionStandortId(UUID.randomUUID())));
-	}
+        val userInstitution = beispielUserContextInstitution();
+        val userStandort = beispielUserContextAnderesStandort();
 
-	@Test
-	@DisplayName("neues Bedarf fuer Artikel anlegen koennen")
-	void neues_Bedarf_fuer_Artikel_anlegen_koennen() {
+        val neuesBedarf = NeuerBedarf.builder() //
+                .artikelId(artikelId) //
+                .artikelVarianteId(artikelVarianteId) //
+                .anzahl(anzahl) //
+                .standortId(userStandort.getId()) //
+                .steril(steril) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
 
-		val artikelId = beispielArtikelId();
-		val artikel= beispielArtikel();
-		val artikelEntity = beispielArtikelEntity();
+        given(userService.getContextInstitution()).willReturn(userInstitution);
+        given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
+        given(userService.getContextUser()).willReturn(Person.builder().aktuelleInstitution(PersonInstitution.builder().standort(InstitutionStandort.builder().id(userStandort.getId()).build()).build()).build());
 
-		val anzahl = BigDecimal.valueOf(100);
-		val steril = true;
-		val medizinisch = true;
-		val kommentar = "Neues Bedarf";
+        assertThrows(OperationNotAlloudException.class, //
+                () -> bedarfAnlageService.neuenBedarfEinstellen(neuesBedarf));
+    }
 
-		val userInstitution = beispielUserContextInstitution();
-		val userInstitutionEntity = beispielUserContextInstitutionEntity();
-		val userStandort = beispielUserContextAnderesStandort();
-		val userStandortEntity = beispielUserContextAnderesStandortEntity();
+    @Test
+    @DisplayName("Fehler werfen bei nicht existierentem Artikel")
+    void fehler_werfen_bei_Bearbeitung_von_nicht_existierendem_Artikel() {
+        assertThrows(ObjectNotFoundException.class, //
+                () -> bedarfAnlageService.getArtikel(new ArtikelId(UUID.randomUUID())));
+    }
 
-		BedarfEntity bedarfEntityOhneId = BedarfEntity.builder() //
-				.artikel(artikelEntity) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.institution(userInstitutionEntity) //
-				.standort(userStandortEntity) //
-				.steril(steril) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+    @Test
+    @DisplayName("Fehler werfen bei nicht existierende ArtikelVariante")
+    void fehler_werfen_bei_Bearbeitung_von_nicht_existierende_ArtikelVariante() {
+        assertThrows(ObjectNotFoundException.class, //
+                () -> bedarfAnlageService.getArtikelVariante(new ArtikelVarianteId(UUID.randomUUID())));
+    }
 
-		val bedarfId = beispielBedarfId();
+    @Test
+    @DisplayName("Fehler werfen wenn der Standort nicht in UserContext Institution gefunden wird")
+    void fehler_werfen_wenn_der_Standort_nicht_in_UserContext_Institution_gefunden_wird() {
 
-		BedarfEntity bedarfEntityMitId = BedarfEntity.builder() //
-				.id(bedarfId.getValue()) //
-				.artikel(artikelEntity) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.institution(userInstitutionEntity) //
-				.standort(userStandortEntity) //
-				.steril(steril) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+        assertThrows(NotUserInstitutionObjectException.class, //
+                () -> bedarfAnlageService.getUserInstitutionStandort(
+                        InstitutionTestFixtures.beispielInstitutionEntity(),
+                        new InstitutionStandortId(UUID.randomUUID())));
+    }
 
-		val neuesBedarf = NeuesBedarf.builder() //
-				.artikelId(artikelId) //
-				.anzahl(anzahl) //
-				.standortId(userStandort.getId()) //
-				.steril(steril) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+    @Test
+    @DisplayName("neues Bedarf fuer Artikel anlegen koennen")
+    void neues_Bedarf_fuer_Artikel_anlegen_koennen() {
 
-		val entfernung = BigDecimal.valueOf(123664);
+        val artikelId = beispielArtikelId();
+        val artikel = beispielArtikel();
+        val artikelEntity = beispielArtikelEntity();
 
-		given(userService.getContextInstitution()).willReturn(userInstitution);
-		given(geocodingService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
-		given(artikelSucheService.findArtikel(artikelId)).willReturn(Optional.of(artikel));
-		given(bedarfRepository.save(bedarfEntityOhneId)).willReturn(bedarfEntityMitId);
+        val anzahl = BigDecimal.valueOf(100);
+        val steril = true;
+        val medizinisch = true;
+        val kommentar = "Neues Bedarf";
 
-		val expectedBedarf = Bedarf.builder() //
-				.id(bedarfId) //
-				.artikel(artikel) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.institution(userInstitution) //
-				.standort(userStandort) //
-				.steril(steril) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.entfernung(entfernung) //
-				.build();
+        val userInstitution = beispielUserContextInstitution();
+        val userInstitutionEntity = beispielUserContextInstitutionEntity();
+        val userStandort = beispielUserContextAnderesStandort();
+        val userStandortEntity = beispielUserContextAnderesStandortEntity();
 
-		assertEquals(expectedBedarf, bedarfAnlageService.neuesBedarfEinstellen(neuesBedarf));
+        BedarfEntity bedarfEntityOhneId = BedarfEntity.builder() //
+                .artikel(artikelEntity) //
+                .anzahl(anzahl) //
+                .rest(anzahl) //
+                .institution(userInstitutionEntity) //
+                .standort(userStandortEntity) //
+                .steril(steril) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
 
-		then(bedarfRepository).should().save(bedarfEntityOhneId);
-		then(bedarfRepository).shouldHaveNoMoreInteractions();
-		then(userService).should().getContextInstitution();
-		then(userService).shouldHaveNoMoreInteractions();
-		then(artikelSucheService).should().findArtikel(artikelId);
-		then(artikelSucheService).shouldHaveNoMoreInteractions();
-		then(geocodingService).should().berechneUserDistanzInKilometer(userStandort);
-		then(geocodingService).shouldHaveNoMoreInteractions();
-	}
-	
-	@Test
-	@DisplayName("neues Bedarf fuer ArtikelVariante anlegen koennen")
-	void neues_Bedarf_fuer_Artikel_Variante_anlegen_koennen() {
+        val bedarfId = beispielBedarfId();
 
-		val artikelVarianteId = beispielArtikelVarianteId();
-		val artikelVariante = beispielArtikelVariante();
-		val artikelVarianteEntity = beispielArtikelVarianteEntity();
+        BedarfEntity bedarfEntityMitId = BedarfEntity.builder() //
+                .id(bedarfId.getValue()) //
+                .artikel(artikelEntity) //
+                .anzahl(anzahl) //
+                .rest(anzahl) //
+                .institution(userInstitutionEntity) //
+                .standort(userStandortEntity) //
+                .steril(steril) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
 
-		val artikelId = artikelVariante.getArtikelId();
-		val artikel = beispielArtikel();
-		artikel.setId(artikelId);
-		val artikelEntity = beispielArtikelEntity();
-		artikelEntity.setId(artikelId.getValue());
-		
-		val anzahl = BigDecimal.valueOf(100);
-		val steril = true;
-		val medizinisch = true;
-		val kommentar = "Neues Bedarf";
+        val neuesBedarf = NeuerBedarf.builder() //
+                .artikelId(artikelId) //
+                .anzahl(anzahl) //
+                .standortId(userStandort.getId()) //
+                .steril(steril) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
 
-		val userInstitution = beispielUserContextInstitution();
-		val userInstitutionEntity = beispielUserContextInstitutionEntity();
-		val userStandort = beispielUserContextAnderesStandort();
-		val userStandortEntity = beispielUserContextAnderesStandortEntity();
+        val entfernung = BigDecimal.valueOf(123664);
 
-		BedarfEntity bedarfEntityOhneId = BedarfEntity.builder() //
-				.artikel(artikelEntity) //
-				.artikelVariante(artikelVarianteEntity) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.institution(userInstitutionEntity) //
-				.standort(userStandortEntity) //
-				.steril(steril) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+        given(userService.getContextInstitution()).willReturn(userInstitution);
+        given(geocodingService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
+        given(artikelSucheService.findArtikel(artikelId)).willReturn(Optional.of(artikel));
+        given(bedarfRepository.save(bedarfEntityOhneId)).willReturn(bedarfEntityMitId);
+        given(userService.getContextUser()).willReturn(Person.builder().aktuelleInstitution(PersonInstitution.builder().standort(InstitutionStandort.builder().id(userStandort.getId()).build()).build()).build());
 
-		val bedarfId = beispielBedarfId();
+        val expectedBedarf = Bedarf.builder() //
+                .id(bedarfId) //
+                .artikel(artikel) //
+                .anzahl(anzahl) //
+                .rest(anzahl) //
+                .institution(userInstitution) //
+                .standort(userStandort) //
+                .steril(steril) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .entfernung(entfernung) //
+                .build();
 
-		BedarfEntity bedarfEntityMitId = BedarfEntity.builder() //
-				.id(bedarfId.getValue()) //
-				.artikel(artikelEntity) //
-				.artikelVariante(artikelVarianteEntity) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.institution(userInstitutionEntity) //
-				.standort(userStandortEntity) //
-				.steril(steril) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+        assertEquals(expectedBedarf, bedarfAnlageService.neuenBedarfEinstellen(neuesBedarf));
 
-		val neueBedarf = NeuesBedarf.builder() //
-				.artikelVarianteId(artikelVarianteId) //
-				.anzahl(anzahl) //
-				.standortId(userStandort.getId()) //
-				.steril(steril) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.build();
+        then(bedarfRepository).should().save(bedarfEntityOhneId);
+        then(bedarfRepository).shouldHaveNoMoreInteractions();
+        then(userService).should().getContextInstitution();
+        then(userService).should().getContextUser();
+        then(userService).shouldHaveNoMoreInteractions();
+        then(artikelSucheService).should().findArtikel(artikelId);
+        then(artikelSucheService).shouldHaveNoMoreInteractions();
+        then(geocodingService).should().berechneUserDistanzInKilometer(userStandort);
+        then(geocodingService).shouldHaveNoMoreInteractions();
+    }
 
-		val entfernung = BigDecimal.valueOf(123664);
+    @Test
+    @DisplayName("neues Bedarf fuer ArtikelVariante anlegen koennen")
+    void neues_Bedarf_fuer_Artikel_Variante_anlegen_koennen() {
 
-		given(userService.getContextInstitution()).willReturn(userInstitution);
-		given(geocodingService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
-		given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
-		given(artikelSucheService.findArtikel(artikelId)).willReturn(Optional.of(artikel));
-		given(bedarfRepository.save(bedarfEntityOhneId)).willReturn(bedarfEntityMitId);
+        val artikelVarianteId = beispielArtikelVarianteId();
+        val artikelVariante = beispielArtikelVariante();
+        val artikelVarianteEntity = beispielArtikelVarianteEntity();
 
-		val expectedBedarf = Bedarf.builder() //
-				.id(bedarfId) //
-				.artikel(artikel) //
-				.artikelVariante(artikelVariante) //
-				.anzahl(anzahl) //
-				.rest(anzahl) //
-				.institution(userInstitution) //
-				.standort(userStandort) //
-				.steril(steril) //
-				.medizinisch(medizinisch) //
-				.kommentar(kommentar) //
-				.entfernung(entfernung) //
-				.build();
+        val artikelId = artikelVariante.getArtikelId();
+        val artikel = beispielArtikel();
+        artikel.setId(artikelId);
+        val artikelEntity = beispielArtikelEntity();
+        artikelEntity.setId(artikelId.getValue());
 
-		assertEquals(expectedBedarf, bedarfAnlageService.neuesBedarfEinstellen(neueBedarf));
+        val anzahl = BigDecimal.valueOf(100);
+        val steril = true;
+        val medizinisch = true;
+        val kommentar = "Neues Bedarf";
 
-		then(bedarfRepository).should().save(bedarfEntityOhneId);
-		then(bedarfRepository).shouldHaveNoMoreInteractions();
-		then(userService).should().getContextInstitution();
-		then(userService).shouldHaveNoMoreInteractions();
-		then(artikelSucheService).should().findArtikelVariante(artikelVarianteId);
-		then(artikelSucheService).should().findArtikel(artikelId);
-		then(artikelSucheService).shouldHaveNoMoreInteractions();
-		then(geocodingService).should().berechneUserDistanzInKilometer(userStandort);
-		then(geocodingService).shouldHaveNoMoreInteractions();
-	}
+        val userInstitution = beispielUserContextInstitution();
+        val userInstitutionEntity = beispielUserContextInstitutionEntity();
+        val userStandort = beispielUserContextAnderesStandort();
+        val userStandortEntity = beispielUserContextAnderesStandortEntity();
+
+        BedarfEntity bedarfEntityOhneId = BedarfEntity.builder() //
+                .artikel(artikelEntity) //
+                .artikelVariante(artikelVarianteEntity) //
+                .anzahl(anzahl) //
+                .rest(anzahl) //
+                .institution(userInstitutionEntity) //
+                .standort(userStandortEntity) //
+                .steril(steril) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
+
+        val bedarfId = beispielBedarfId();
+
+        BedarfEntity bedarfEntityMitId = BedarfEntity.builder() //
+                .id(bedarfId.getValue()) //
+                .artikel(artikelEntity) //
+                .artikelVariante(artikelVarianteEntity) //
+                .anzahl(anzahl) //
+                .rest(anzahl) //
+                .institution(userInstitutionEntity) //
+                .standort(userStandortEntity) //
+                .steril(steril) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
+
+        val neueBedarf = NeuerBedarf.builder() //
+                .artikelVarianteId(artikelVarianteId) //
+                .anzahl(anzahl) //
+                .standortId(userStandort.getId()) //
+                .steril(steril) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .build();
+
+        val entfernung = BigDecimal.valueOf(123664);
+
+        given(userService.getContextInstitution()).willReturn(userInstitution);
+        given(geocodingService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
+        given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
+        given(artikelSucheService.findArtikel(artikelId)).willReturn(Optional.of(artikel));
+        given(bedarfRepository.save(bedarfEntityOhneId)).willReturn(bedarfEntityMitId);
+        given(userService.getContextUser()).willReturn(Person.builder().aktuelleInstitution(PersonInstitution.builder().standort(InstitutionStandort.builder().id(userStandort.getId()).build()).build()).build());
+
+
+        val expectedBedarf = Bedarf.builder() //
+                .id(bedarfId) //
+                .artikel(artikel) //
+                .artikelVariante(artikelVariante) //
+                .anzahl(anzahl) //
+                .rest(anzahl) //
+                .institution(userInstitution) //
+                .standort(userStandort) //
+                .steril(steril) //
+                .medizinisch(medizinisch) //
+                .kommentar(kommentar) //
+                .entfernung(entfernung) //
+                .build();
+
+        assertEquals(expectedBedarf, bedarfAnlageService.neuenBedarfEinstellen(neueBedarf));
+
+        then(bedarfRepository).should().save(bedarfEntityOhneId);
+        then(bedarfRepository).shouldHaveNoMoreInteractions();
+        then(userService).should().getContextInstitution();
+        then(userService).should().getContextUser();
+        then(userService).shouldHaveNoMoreInteractions();
+        then(artikelSucheService).should().findArtikelVariante(artikelVarianteId);
+        then(artikelSucheService).should().findArtikel(artikelId);
+        then(artikelSucheService).shouldHaveNoMoreInteractions();
+        then(geocodingService).should().berechneUserDistanzInKilometer(userStandort);
+        then(geocodingService).shouldHaveNoMoreInteractions();
+    }
 }

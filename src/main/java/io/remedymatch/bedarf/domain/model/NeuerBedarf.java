@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class NeuesBedarf {
+public class NeuerBedarf {
 
     @NotNull
     @Positive
@@ -30,8 +30,6 @@ public class NeuesBedarf {
     @Valid
     private ArtikelVarianteId artikelVarianteId;
 
-    @NotNull
-    @Valid
     private InstitutionStandortId standortId;
 
     private boolean steril;

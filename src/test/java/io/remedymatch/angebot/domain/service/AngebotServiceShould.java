@@ -5,6 +5,7 @@ import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
+import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
@@ -33,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -212,6 +214,7 @@ class AngebotServiceShould {
         val angebotSteller = new PersonId(angebotEntity.getCreatedBy());
         val angebotId = angebot.getId();
         val angebotInstitutionId = angebot.getInstitution().getId();
+        val bedarfId = new BedarfId(UUID.randomUUID());
 
         AngebotAnfrageEntity neueAnfrageEntity = AngebotAnfrageEntity.builder()//
                 .angebot(angebotEntity) //
@@ -219,12 +222,13 @@ class AngebotServiceShould {
                 .standort(standortEntity) //
                 .anzahl(anzahl) //
                 .kommentar(kommentar) //
+                .bedarfId(bedarfId.getValue())
                 .status(AngebotAnfrageStatus.OFFEN) //
                 .build();
 
         given(angebotRepository.findById(angebotId.getValue())).willReturn(Optional.of(angebotEntity));
         given(userService.getContextInstitution()).willReturn(institution);
-        // given(anfrageProzessService.prozessStarten(angebotId, angebotSteller, anfrageId, angebotInstitutionId));
+        doNothing().when(angebotProzessService).anfrageErhalten(anfrageId, angebotId, bedarfId);
         given(anfrageRepository.save(neueAnfrageEntity)).willReturn(anfrageEntity);
         given(anfrageRepository.save(anfrageEntity)).willReturn(anfrageEntity);
 
@@ -232,7 +236,8 @@ class AngebotServiceShould {
                 angebotId, //
                 standortId, //
                 kommentar, //
-                anzahl));
+                anzahl, //
+                bedarfId));
 
         then(angebotRepository).should().findById(angebotId.getValue());
         then(angebotRepository).shouldHaveNoMoreInteractions();
@@ -240,7 +245,7 @@ class AngebotServiceShould {
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().getContextInstitution();
         then(userService).shouldHaveNoMoreInteractions();
-        then(angebotProzessService).should().anfrageErhalten(anfrageId, angebotId);
+        then(angebotProzessService).should().anfrageErhalten(anfrageId, angebotId, bedarfId);
         then(angebotProzessService).shouldHaveNoMoreInteractions();
     }
 

@@ -1,5 +1,6 @@
 package io.remedymatch.bedarf.domain.service;
 
+import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.infrastructure.BedarfAnfrageEntity;
@@ -60,7 +61,7 @@ class BedarfServiceShould {
     private UserContextService userService;
 
     @MockBean
-    private BedarfProzessService anfrageProzessService;
+    private BedarfProzessService bedarfProzessService;
 
     @Test
     @DisplayName("Fehler werfen bei Bearbeitung von nicht existierender Angebpt")
@@ -184,8 +185,8 @@ class BedarfServiceShould {
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().isUserContextInstitution(bedarfInstitutionId);
         then(userService).shouldHaveNoMoreInteractions();
-        then(anfrageProzessService).should().bedarfSchliessen(bedarfId);
-        then(anfrageProzessService).shouldHaveNoMoreInteractions();
+        then(bedarfProzessService).should().bedarfSchliessen(bedarfId);
+        then(bedarfProzessService).shouldHaveNoMoreInteractions();
     }
 
     @Test
@@ -213,19 +214,21 @@ class BedarfServiceShould {
         val bedarfSteller = new PersonId(bedarfEntity.getCreatedBy());
         val bedarfId = bedarf.getId();
         val bedarfInstitutionId = bedarf.getInstitution().getId();
+        val angebotId = new AngebotId(UUID.randomUUID());
 
         BedarfAnfrageEntity neueAnfrageEntity = BedarfAnfrageEntity.builder()//
                 .bedarf(bedarfEntity) //
                 .institution(institutionEntity) //
                 .standort(standortEntity) //
                 .anzahl(anzahl) //
+                .angebotId(angebotId.getValue()) //
                 .kommentar(kommentar) //
                 .status(BedarfAnfrageStatus.OFFEN) //
                 .build();
 
         given(bedarfRepository.findById(bedarfId.getValue())).willReturn(Optional.of(bedarfEntity));
         given(userService.getContextInstitution()).willReturn(institution);
-        doNothing().when(anfrageProzessService).anfrageErhalten(anfrageId, bedarfId);
+        doNothing().when(bedarfProzessService).anfrageErhalten(anfrageId, bedarfId, angebotId);
         given(anfrageRepository.save(neueAnfrageEntity)).willReturn(anfrageEntity);
         given(anfrageRepository.save(anfrageEntity)).willReturn(anfrageEntity);
 
@@ -233,7 +236,8 @@ class BedarfServiceShould {
                 bedarfId, //
                 standortId, //
                 kommentar, //
-                anzahl));
+                anzahl, //
+                angebotId));
 
         then(bedarfRepository).should().findById(bedarfId.getValue());
         then(bedarfRepository).shouldHaveNoMoreInteractions();
@@ -241,8 +245,8 @@ class BedarfServiceShould {
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().getContextInstitution();
         then(userService).shouldHaveNoMoreInteractions();
-        then(anfrageProzessService).should().anfrageErhalten(anfrageId, bedarfId);
-        then(anfrageProzessService).shouldHaveNoMoreInteractions();
+        then(bedarfProzessService).should().anfrageErhalten(anfrageId, bedarfId, angebotId);
+        then(bedarfProzessService).shouldHaveNoMoreInteractions();
     }
 
     @Test
@@ -268,8 +272,8 @@ class BedarfServiceShould {
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().isUserContextInstitution(anfrageInstitutionId);
         then(userService).shouldHaveNoMoreInteractions();
-        then(anfrageProzessService).should().anfrageStornieren(anfrageId, anfrageBedarfId);
-        then(anfrageProzessService).shouldHaveNoMoreInteractions();
+        then(bedarfProzessService).should().anfrageStornieren(anfrageId, anfrageBedarfId);
+        then(bedarfProzessService).shouldHaveNoMoreInteractions();
     }
 
     @Test
@@ -288,7 +292,7 @@ class BedarfServiceShould {
         then(anfrageRepository).should().save(anfrageEntityStorniert);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).shouldHaveNoInteractions();
-        then(anfrageProzessService).shouldHaveNoInteractions();
+        then(bedarfProzessService).shouldHaveNoInteractions();
     }
 
     @Test
@@ -338,7 +342,7 @@ class BedarfServiceShould {
         then(anfrageRepository).should().save(anfrageEntityAngenommen);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).shouldHaveNoInteractions();
-        then(anfrageProzessService).shouldHaveNoInteractions();
+        then(bedarfProzessService).shouldHaveNoInteractions();
     }
 
     @Test
@@ -371,6 +375,6 @@ class BedarfServiceShould {
         then(anfrageRepository).should().save(anfrageEntityAngenommen);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).shouldHaveNoInteractions();
-        then(anfrageProzessService).shouldHaveNoInteractions();
+        then(bedarfProzessService).shouldHaveNoInteractions();
     }
 }

@@ -42,11 +42,10 @@ class BedarfProzessServiceShould {
     void prozess_starten_koennen() {
 
         val bedarfId = BedarfTestFixtures.beispielBedarfId();
-        val anfrageId = BedarfAnfrageTestFixtures.beispielBedarfAnfrageId();
         val personId = PersonTestFixtures.beispielPersonId();
         val bedarfInstitutionId = InstitutionTestFixtures.beispielInstitutionId();
 
-        val businessKey = new BusinessKey(anfrageId.getValue());
+        val businessKey = new BusinessKey(bedarfId.getValue());
         val expectedProzessInstanzId = new ProzessInstanzId("egal");
 
         given(engineClient.prozessStarten(eq(BedarfProzessService.PROZESS_KEY), eq(businessKey), eq(personId), anyMap()))

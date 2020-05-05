@@ -5,6 +5,7 @@ import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
 import io.remedymatch.angebot.domain.service.AngebotAnlageService;
 import io.remedymatch.angebot.domain.service.AngebotService;
 import io.remedymatch.angebot.domain.service.AngebotSucheService;
+import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
@@ -81,7 +82,8 @@ public class AngebotController {
                 AngebotControllerMapper.mapToAngebotId(angebotId), //
                 new InstitutionStandortId(request.getStandortId()), //
                 request.getKommentar(), //
-                request.getAnzahl())));
+                request.getAnzahl(), //
+                new BedarfId(request.getBedarfId()))));
     }
 
     @PostMapping("/{angebotId}/anfrage/{anfrageId}/stornieren")

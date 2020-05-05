@@ -1,5 +1,6 @@
 package io.remedymatch.bedarf.domain.service;
 
+import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.engine.client.EngineClient;
@@ -34,6 +35,7 @@ class BedarfProzessService {
     final static String VAR_ANZAHL = "bedarf_anzahl";
     final static String VAR_BEDARF_GESCHLOSSEN = "bedarf_geschlossen";
     final static String VAR_BEDARF_ANGENOMMEN = "anfrage_angenommen";
+    final static String VAR_ANFRAGE_ANGEBOT_ID = "anfrage_angebot_id";
 
     private final EngineClient engineClient;
 
@@ -71,13 +73,17 @@ class BedarfProzessService {
                         .putValue(VAR_BEDARF_GESCHLOSSEN, true));
     }
 
-    void anfrageErhalten(final @NotNull @Valid BedarfAnfrageId angebotAnfrageId, final @NotNull @Valid BedarfId bedarfId) {
+    void anfrageErhalten(
+            final @NotNull @Valid BedarfAnfrageId angebotAnfrageId,
+            final @NotNull @Valid BedarfId bedarfId,
+            final @NotNull @Valid AngebotId angebotId) {
         engineClient.messageKorrelieren(//
                 PROZESS_KEY, //
                 new BusinessKey(bedarfId.getValue()), //
                 ANFRAGE_MESSAGE,
                 Variables.createVariables()
-                        .putValue(VAR_ANFRAGE_ID, angebotAnfrageId.getValue().toString()));
+                        .putValue(VAR_ANFRAGE_ID, angebotAnfrageId.getValue().toString())
+                        .putValue(VAR_ANFRAGE_ANGEBOT_ID, angebotId.getValue().toString()));
     }
 
     void anfrageStornieren(final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId, final @NotNull @Valid BedarfId bedarfId) {

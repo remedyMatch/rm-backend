@@ -1,5 +1,6 @@
 package io.remedymatch.bedarf.domain.service;
 
+import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
@@ -85,7 +86,8 @@ public class BedarfService {
             final @NotNull @Valid BedarfId bedarfId, //
             final @NotNull @Valid InstitutionStandortId standortId, //
             final @NotBlank String kommentar, //
-            final @NotNull BigDecimal anzahl) {
+            final @NotNull BigDecimal anzahl, //
+            final @NotNull AngebotId angebotId) {
 
         val bedarf = getNichtBedienteBedarf(bedarfId);
         val userInstitution = getUserInstitution();
@@ -96,10 +98,11 @@ public class BedarfService {
                 .standort(getUserInstitutionStandort(userInstitution, standortId)) //
                 .anzahl(anzahl) //
                 .kommentar(kommentar) //
+                .angebotId(angebotId.getValue()) //
                 .status(BedarfAnfrageStatus.OFFEN) //
                 .build());
 
-        bedarfProzessService.anfrageErhalten(new BedarfAnfrageId(anfrage.getId()), bedarfId);
+        bedarfProzessService.anfrageErhalten(new BedarfAnfrageId(anfrage.getId()), bedarfId, angebotId);
         return BedarfAnfrageEntityConverter.convertAnfrage(anfrage);
     }
 

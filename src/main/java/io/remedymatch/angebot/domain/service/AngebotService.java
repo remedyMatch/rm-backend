@@ -8,6 +8,7 @@ import io.remedymatch.angebot.infrastructure.AngebotAnfrageEntity;
 import io.remedymatch.angebot.infrastructure.AngebotAnfrageJpaRepository;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
+import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
@@ -82,7 +83,8 @@ public class AngebotService {
             final @NotNull @Valid AngebotId angebotId, //
             final @NotNull @Valid InstitutionStandortId standortId, //
             final @NotBlank String kommentar, //
-            final @NotNull BigDecimal anzahl) {
+            final @NotNull BigDecimal anzahl,
+            final @NotNull BedarfId bedarfId) {
 
         val angebot = getNichtBedienteAngebot(angebotId);
         val userInstitution = getUserInstitution();
@@ -92,11 +94,12 @@ public class AngebotService {
                 .institution(userInstitution) //
                 .standort(getUserInstitutionStandort(userInstitution, standortId)) //
                 .anzahl(anzahl) //
+                .bedarfId(bedarfId.getValue()) //
                 .kommentar(kommentar) //
                 .status(AngebotAnfrageStatus.OFFEN) //
                 .build());
 
-        angebotProzessService.anfrageErhalten(new AngebotAnfrageId(anfrage.getId()), angebotId);
+        angebotProzessService.anfrageErhalten(new AngebotAnfrageId(anfrage.getId()), angebotId, bedarfId);
 
         return AngebotAnfrageEntityConverter.convertAnfrage(anfrage);
     }

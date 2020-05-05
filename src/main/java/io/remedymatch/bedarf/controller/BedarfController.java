@@ -2,6 +2,7 @@ package io.remedymatch.bedarf.controller;
 
 import io.remedymatch.angebot.controller.AngebotAnfrageBeantwortenRequest;
 import io.remedymatch.angebot.controller.AngebotAnzahlAendernRequest;
+import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.service.BedarfAnfrageSucheService;
 import io.remedymatch.bedarf.domain.service.BedarfAnlageService;
@@ -63,14 +64,15 @@ class BedarfController {
     }
 
     @PostMapping("/{bedarfId}/anfrage")
-    public ResponseEntity<BedarfAnfrageRO> bedarfBedienen(//
-                                                          @PathVariable("bedarfId") @NotNull UUID bedarfId, //
-                                                          @RequestBody @Valid BedarfBedienenRequest request) {
+    public ResponseEntity<BedarfAnfrageRO> bedarfBedienen(
+            @PathVariable("bedarfId") @NotNull UUID bedarfId, //
+            @RequestBody @Valid BedarfBedienenRequest request) {
         return ResponseEntity.ok(mapToAnfrageRO(bedarfService.bedarfAnfrageErstellen(//
                 BedarfControllerMapper.mapToBedarfId(bedarfId), //
                 new InstitutionStandortId(request.getStandortId()), //
                 request.getKommentar(), //
-                request.getAnzahl())));
+                request.getAnzahl(), //
+                new AngebotId(request.getAngebotId()))));
     }
 
     @PostMapping("/{bedarfId}/anfrage/{anfrageId}/stornieren")

@@ -75,12 +75,11 @@ public class PersonEntity extends Auditable {
     }
 
     public void addNeueInstitution(final InstitutionEntity institution) {
-        val neueInstitution = PersonInstitutionEntity.builder() //
+        institutionen.add(PersonInstitutionEntity.builder() //
                 .person(this.id) //
                 .institution(institution) //
                 .standort(institution.getHauptstandort()) //
-                .build();
-        institutionen.add(neueInstitution);
+                .build());
     }
 
 }

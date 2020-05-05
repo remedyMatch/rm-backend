@@ -3,6 +3,7 @@ package io.remedymatch.angebot.controller;
 import io.remedymatch.angebot.domain.service.AngebotSucheService;
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
+import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.QueryParam;
 import java.util.List;
@@ -29,8 +31,9 @@ public class AngebotSucheController {
 
     @Transactional(readOnly = true)
     @GetMapping
-    public ResponseEntity<List<AngebotRO>> getAlleNichtBedienteAngebote() {
-        return ResponseEntity.ok(mapToAngeboteRO(angebotSucheService.findAlleNichtBedienteAngebote()));
+    public ResponseEntity<List<AngebotRO>> getAlleNichtBedienteAngebote(
+            @QueryParam("artikelVarianteId") @Valid ArtikelVarianteId artikelVarianteId) {
+        return ResponseEntity.ok(mapToAngeboteRO(angebotSucheService.findAlleNichtBedienteOeffentlicheAngebote(artikelVarianteId)));
     }
 
     @Transactional(readOnly = true)

@@ -28,8 +28,6 @@ public class NeuesAngebot {
     @Valid
     private ArtikelVarianteId artikelVarianteId;
 
-    @NotNull
-    @Valid
     private InstitutionStandortId standortId;
 
     @NotNull

@@ -9,8 +9,11 @@ import io.remedymatch.artikel.domain.service.ArtikelSucheService;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonInstitution;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -155,6 +158,8 @@ class AngebotAnlageServiceShould {
         given(geoCalcService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
         given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
         given(angebotRepository.save(angebotEntityOhneId)).willReturn(angebotEntityMitId);
+        given(userService.getContextUser()).willReturn(Person.builder().aktuelleInstitution(PersonInstitution.builder().standort(InstitutionStandort.builder().id(userStandort.getId()).build()).build()).build());
+
 
         val expectedAngebot = Angebot.builder() //
                 .id(angebotId) //
@@ -179,7 +184,7 @@ class AngebotAnlageServiceShould {
         then(angebotRepository).shouldHaveNoMoreInteractions();
         then(userService).should().getContextInstitution();
         then(userService).should().getContextUserId();
-        then(userService).shouldHaveNoMoreInteractions();
+        then(userService).should().getContextUser();
         then(artikelSucheService).should().findArtikelVariante(artikelVarianteId);
         then(artikelSucheService).should().findArtikel(artikelVariante.getArtikelId());
         then(artikelSucheService).shouldHaveNoMoreInteractions();

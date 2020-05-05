@@ -19,9 +19,6 @@ class NeuesAngebotRequest {
     private BigDecimal anzahl;
 
     @NotNull
-    private UUID standortId;
-
-    @NotNull
     private String kommentar;
 
     private LocalDateTime haltbarkeit;

@@ -133,7 +133,6 @@ class AngebotControllerMapperShould {
         return NeuesAngebot.builder() //
                 .anzahl(ANGEBOT_ANZAHL) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID) //
-                .standortId(ANGEBOT_STANDORT_ID) //
                 .haltbarkeit(HALTBARKEIT) //
                 .steril(STERIL) //
                 .originalverpackt(ORIGINALVERPACKT) //
@@ -146,7 +145,6 @@ class AngebotControllerMapperShould {
         return NeuesAngebotRequest.builder() //
                 .anzahl(ANGEBOT_ANZAHL) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID.getValue()) //
-                .standortId(ANGEBOT_STANDORT_ID.getValue()) //
                 .haltbarkeit(HALTBARKEIT) //
                 .steril(STERIL) //
                 .originalverpackt(ORIGINALVERPACKT) //

@@ -5,7 +5,6 @@ import io.remedymatch.artikel.controller.ArtikelControllerMapper;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.institution.controller.InstitutionMapper;
 import io.remedymatch.institution.controller.InstitutionStandortMapper;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
 
 import java.util.List;
 import java.util.UUID;
@@ -99,7 +98,6 @@ class AngebotControllerMapper {
         return NeuesAngebot.builder()//
                 .artikelVarianteId(new ArtikelVarianteId(neueAngebotRequest.getArtikelVarianteId())) //
                 .anzahl(neueAngebotRequest.getAnzahl()) //
-                .standortId(new InstitutionStandortId(neueAngebotRequest.getStandortId())) //
                 .haltbarkeit(neueAngebotRequest.getHaltbarkeit()) //
                 .steril(neueAngebotRequest.isSteril()) //
                 .originalverpackt(neueAngebotRequest.isOriginalverpackt()) //

@@ -136,12 +136,11 @@ class BedarfControllerMapperShould {
 
     /* help methods */
 
-    private NeuesBedarf neuesBedarf() {
-        return NeuesBedarf.builder() //
+    private NeuerBedarf neuesBedarf() {
+        return NeuerBedarf.builder() //
                 .anzahl(BEDARF_ANZAHL) //
                 .artikelId(BEDARF_ARTIKEL_ID) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID) //
-                .standortId(BEDARF_STANDORT_ID) //
                 .steril(STERIL) //
                 .oeffentlich(true) //
                 .medizinisch(MEDIZINISCH) //
@@ -149,12 +148,11 @@ class BedarfControllerMapperShould {
                 .build();
     }
 
-    private NeuesBedarfRequest neuesBedarfRequest() {
-        return NeuesBedarfRequest.builder() //
+    private NeuerBedarfRequest neuesBedarfRequest() {
+        return NeuerBedarfRequest.builder() //
                 .anzahl(BEDARF_ANZAHL) //
                 .artikelId(BEDARF_ARTIKEL_ID.getValue()) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID.getValue()) //
-                .standortId(BEDARF_STANDORT_ID.getValue()) //
                 .steril(STERIL) //
                 .medizinisch(MEDIZINISCH) //
                 .kommentar(BEDARF_KOMMENTAR) //

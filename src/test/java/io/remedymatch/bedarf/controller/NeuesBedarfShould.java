@@ -1,11 +1,10 @@
 package io.remedymatch.bedarf.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.math.BigDecimal;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.remedymatch.TestApplication;
+import io.remedymatch.WithMockJWT;
+import io.remedymatch.usercontext.TestUserContext;
+import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -25,69 +24,67 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
 
-import io.remedymatch.TestApplication;
-import io.remedymatch.WithMockJWT;
-import io.remedymatch.usercontext.TestUserContext;
-import lombok.val;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { "dbinit", "test", "disableexternaltasks" })
+@ActiveProfiles(profiles = {"dbinit", "test", "disableexternaltasks"})
 @DirtiesContext
 @Tag("InMemory")
 @Tag("SpringBoot")
 public class NeuesBedarfShould extends BedarfControllerTestBasis {
 
-	@Autowired
-	private WebApplicationContext webApplicationContext;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	@BeforeEach
-	void prepare() {
+    @BeforeEach
+    void prepare() {
 
-		prepareBedarfEntities();
-	}
+        prepareBedarfEntities();
+    }
 
-	@AfterEach
-	void clear() {
-		TestUserContext.clear();
-	}
+    @AfterEach
+    void clear() {
+        TestUserContext.clear();
+    }
 
-	@Test
-	@Transactional
-	@WithMockJWT(groupsClaim = { "testgroup" }, usernameClaim = SPENDER_USERNAME)
-	public void neue_Bedarf_anlegen() throws Exception {
+    @Test
+    @Transactional
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = SPENDER_USERNAME)
+    public void neue_Bedarf_anlegen() throws Exception {
 
-		TestUserContext.setContextUser(spender);
+        TestUserContext.setContextUser(spender);
 
-		val artikelVariante = artikelRepository.findAll().get(0).getVarianten().get(0);
+        val artikelVariante = artikelRepository.findAll().get(0).getVarianten().get(0);
 
-		val neuesBedarf = NeuesBedarfRequest.builder() //
-				.artikelVarianteId(artikelVariante.getId()) //
-				.anzahl(BigDecimal.valueOf(1000)) //
-				.standortId(spender.getAktuelleInstitution().getStandort().getId().getValue()) //
-				.kommentar("ITest Bedarf Kommentar") //
-				.steril(true) //
-				.build();
+        val neuerBedarf = NeuerBedarfRequest.builder() //
+                .artikelVarianteId(artikelVariante.getId()) //
+                .anzahl(BigDecimal.valueOf(1000)) //
+                .kommentar("ITest Bedarf Kommentar") //
+                .steril(true) //
+                .build();
 
-		MvcResult result = MockMvcBuilders.webAppContextSetup(webApplicationContext).build()
-				.perform(MockMvcRequestBuilders //
-						.post("/bedarf") //
-						.content(objectMapper.writeValueAsString(neuesBedarf)).contentType(MediaType.APPLICATION_JSON) //
-						.accept(MediaType.APPLICATION_JSON)) //
-				.andDo(print()) //
-				.andExpect(status().isOk()) //
-				.andExpect(MockMvcResultMatchers.jsonPath("$.anzahl").value(BigDecimal.valueOf(1000))) //
-				.andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty()) //
-				.andReturn();
+        MvcResult result = MockMvcBuilders.webAppContextSetup(webApplicationContext).build()
+                .perform(MockMvcRequestBuilders //
+                        .post("/bedarf") //
+                        .content(objectMapper.writeValueAsString(neuerBedarf)).contentType(MediaType.APPLICATION_JSON) //
+                        .accept(MediaType.APPLICATION_JSON)) //
+                .andDo(print()) //
+                .andExpect(status().isOk()) //
+                .andExpect(MockMvcResultMatchers.jsonPath("$.anzahl").value(BigDecimal.valueOf(1000))) //
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty()) //
+                .andReturn();
 
-		BedarfRO bedarf = objectMapper.readValue(result.getResponse().getContentAsString(), BedarfRO.class);
+        BedarfRO bedarf = objectMapper.readValue(result.getResponse().getContentAsString(), BedarfRO.class);
 
-		assertEquals("ITest Bedarf Kommentar", bedarf.getKommentar());
-	}
+        assertEquals("ITest Bedarf Kommentar", bedarf.getKommentar());
+    }
 }

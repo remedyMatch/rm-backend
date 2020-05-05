@@ -45,8 +45,8 @@ class BedarfController {
     }
 
     @PostMapping
-    public ResponseEntity<BedarfRO> neuesBedarfMelden(@RequestBody @Valid NeuesBedarfRequest neueBedarf) {
-        return ResponseEntity.ok(mapToBedarfRO(bedarfAnlageService.neuesBedarfEinstellen(mapToNeuesBedarf(neueBedarf))));
+    public ResponseEntity<BedarfRO> neuenBedarfMelden(@RequestBody @Valid NeuerBedarfRequest neueBedarf) {
+        return ResponseEntity.ok(mapToBedarfRO(bedarfAnlageService.neuenBedarfEinstellen(mapToNeuesBedarf(neueBedarf))));
     }
 
     @DeleteMapping("/{bedarfId}")

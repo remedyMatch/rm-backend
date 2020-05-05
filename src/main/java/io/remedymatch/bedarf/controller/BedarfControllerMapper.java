@@ -6,7 +6,6 @@ import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.bedarf.domain.model.*;
 import io.remedymatch.institution.controller.InstitutionMapper;
 import io.remedymatch.institution.controller.InstitutionStandortMapper;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
 
 import java.util.List;
 import java.util.UUID;
@@ -100,15 +99,14 @@ class BedarfControllerMapper {
                 .build();
     }
 
-    static NeuesBedarf mapToNeuesBedarf(final NeuesBedarfRequest neuesBedarfRequest) {
-        return NeuesBedarf.builder() //
+    static NeuerBedarf mapToNeuesBedarf(final NeuerBedarfRequest neuesBedarfRequest) {
+        return NeuerBedarf.builder() //
                 .artikelId(neuesBedarfRequest.getArtikelId() != null ? new ArtikelId(neuesBedarfRequest.getArtikelId())
                         : null) //
                 .artikelVarianteId(neuesBedarfRequest.getArtikelVarianteId() != null
                         ? new ArtikelVarianteId(neuesBedarfRequest.getArtikelVarianteId())
                         : null) //
                 .anzahl(neuesBedarfRequest.getAnzahl()) //
-                .standortId(new InstitutionStandortId(neuesBedarfRequest.getStandortId())) //
                 .steril(neuesBedarfRequest.isSteril()) //
                 .medizinisch(neuesBedarfRequest.isMedizinisch()) //
                 .kommentar(neuesBedarfRequest.getKommentar()) //

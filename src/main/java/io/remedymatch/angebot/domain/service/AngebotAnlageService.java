@@ -46,6 +46,10 @@ public class AngebotAnlageService {
 
     @Transactional
     public Angebot neueAngebotEinstellen(final @NotNull @Valid NeuesAngebot neuesAngebot) {
+
+        //standort ist der zugewiesene standort der Institution
+        neuesAngebot.setStandortId(userService.getContextUser().getAktuelleInstitution().getStandort().getId());
+
         val userInstitution = getUserInstitution();
         val artikelVariante = getArtikelVariante(neuesAngebot.getArtikelVarianteId());
         val artikel = artikelSucheService.findArtikel(new ArtikelId(artikelVariante.getArtikel()))

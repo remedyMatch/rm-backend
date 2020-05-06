@@ -65,6 +65,7 @@ public class AngebotAnlageService {
                 .haltbarkeit(neuesAngebot.getHaltbarkeit()) //
                 .steril(neuesAngebot.isSteril()) //
                 .originalverpackt(neuesAngebot.isOriginalverpackt()) //
+                .oeffentlich(neuesAngebot.isOeffentlich()) //
                 .medizinisch(neuesAngebot.isMedizinisch()) //
                 .kommentar(neuesAngebot.getKommentar()) //
                 .bedient(false) //

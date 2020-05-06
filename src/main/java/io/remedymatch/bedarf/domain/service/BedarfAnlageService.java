@@ -82,6 +82,7 @@ public class BedarfAnlageService {
                 .standort(getUserInstitutionStandort(userInstitution, neuerBedarf.getStandortId())) //
                 .steril(neuerBedarf.isSteril()) //
                 .medizinisch(neuerBedarf.isMedizinisch()) //
+                .oeffentlich(neuerBedarf.isOeffentlich()) //
                 .kommentar(neuerBedarf.getKommentar()) //
                 .bedient(false) //
                 .build()));

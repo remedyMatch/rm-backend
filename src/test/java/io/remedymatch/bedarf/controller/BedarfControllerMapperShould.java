@@ -180,9 +180,8 @@ class BedarfControllerMapperShould {
     private BedarfRO bedarfRO() {
         return BedarfRO.builder() //
                 .id(BEDARF_ID.getValue()) //
-                .anzahl(BEDARF_ANZAHL) //
+                .verfuegbareAnzahl(BEDARF_ANZAHL) //
                 .oeffentlich(true) //
-                .rest(BEDARF_REST) //
                 .artikel(BEDARF_ARTIKEL_RO) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID.getValue()) //
                 .institutionId(BEDARF_INSTITUTION_ID.getValue()) //

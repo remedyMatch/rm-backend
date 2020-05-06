@@ -53,8 +53,7 @@ class BedarfControllerMapper {
                 .artikel(ArtikelControllerMapper.mapArtikelToRO(bedarf.getArtikel())) //
                 .artikelVarianteId(
                         bedarf.getArtikelVariante() != null ? bedarf.getArtikelVariante().getId().getValue() : null) //
-                .anzahl(bedarf.getAnzahl()) //
-                .rest(bedarf.getRest()) //
+                .verfuegbareAnzahl(bedarf.getRest()) //
                 .oeffentlich(bedarf.isOeffentlich()) //
                 .institutionId(bedarf.getInstitution().getId().getValue()) //
                 .standort(InstitutionStandortMapper.mapToStandortRO(bedarf.getStandort())) //
@@ -65,7 +64,7 @@ class BedarfControllerMapper {
                 .build();
     }
 
-    static List<BedarfRO> mapToInstitutionBedarfeRO(final List<Bedarf> bedarfe) {
+    static List<InstitutionBedarfRO> mapToInstitutionBedarfeRO(final List<Bedarf> bedarfe) {
         return bedarfe.stream().map(BedarfControllerMapper::mapToInstitutionBedarfRO).collect(Collectors.toList());
     }
 
@@ -75,8 +74,7 @@ class BedarfControllerMapper {
                 .artikel(ArtikelControllerMapper.mapArtikelToRO(bedarf.getArtikel())) //
                 .artikelVarianteId(
                         bedarf.getArtikelVariante() != null ? bedarf.getArtikelVariante().getId().getValue() : null) //
-                .anzahl(bedarf.getAnzahl()) //
-                .rest(bedarf.getRest()) //
+                .verfuegbareAnzahl(bedarf.getRest()) //
                 .oeffentlich(bedarf.isOeffentlich()) //
                 .institutionId(bedarf.getInstitution().getId().getValue()) //
                 .anfragen(bedarf.getAnfragen().stream().map(BedarfControllerMapper::mapToAnfrageRO).collect(Collectors.toList()))

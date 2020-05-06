@@ -40,8 +40,8 @@ class BedarfController {
 
     @Transactional(readOnly = true)
     @GetMapping
-    public ResponseEntity<List<BedarfRO>> getInstituionBedarfe() {
-        return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.findAlleNichtBedienteBedarfeDerUserInstitution()));
+    public ResponseEntity<List<InstitutionBedarfRO>> getInstituionBedarfe() {
+        return ResponseEntity.ok(mapToInstitutionBedarfeRO((bedarfSucheService.findAlleNichtBedienteBedarfeDerUserInstitution())));
     }
 
     @PostMapping

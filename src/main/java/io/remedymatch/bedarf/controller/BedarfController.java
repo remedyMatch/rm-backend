@@ -10,7 +10,6 @@ import io.remedymatch.bedarf.domain.service.BedarfService;
 import io.remedymatch.bedarf.domain.service.BedarfSucheService;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +68,6 @@ class BedarfController {
             @RequestBody @Valid BedarfBedienenRequest request) {
         return ResponseEntity.ok(mapToAnfrageRO(bedarfService.bedarfAnfrageErstellen(//
                 BedarfControllerMapper.mapToBedarfId(bedarfId), //
-                new InstitutionStandortId(request.getStandortId()), //
                 request.getKommentar(), //
                 request.getAnzahl(), //
                 new AngebotId(request.getAngebotId()))));

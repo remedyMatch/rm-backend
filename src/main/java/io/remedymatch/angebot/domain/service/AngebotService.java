@@ -15,6 +15,7 @@ import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
+import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.usercontext.UserContextService;
@@ -81,7 +82,6 @@ public class AngebotService {
     @Transactional
     public AngebotAnfrage angebotAnfrageErstellen(
             final @NotNull @Valid AngebotId angebotId, //
-            final @NotNull @Valid InstitutionStandortId standortId, //
             final @NotBlank String kommentar, //
             final @NotNull BigDecimal anzahl,
             final @NotNull BedarfId bedarfId) {
@@ -92,7 +92,7 @@ public class AngebotService {
         var anfrage = anfrageRepository.save(AngebotAnfrageEntity.builder() //
                 .angebot(angebot) //
                 .institution(userInstitution) //
-                .standort(getUserInstitutionStandort(userInstitution, standortId)) //
+                .standort(InstitutionStandortEntityConverter.convertStandort(userService.getContextUser().getAktuelleInstitution().getStandort())) //
                 .anzahl(anzahl) //
                 .bedarfId(bedarfId.getValue()) //
                 .kommentar(kommentar) //

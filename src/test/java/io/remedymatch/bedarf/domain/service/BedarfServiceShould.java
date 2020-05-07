@@ -11,7 +11,9 @@ import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
+import io.remedymatch.person.domain.model.PersonInstitution;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -229,12 +231,12 @@ class BedarfServiceShould {
         given(bedarfRepository.findById(bedarfId.getValue())).willReturn(Optional.of(bedarfEntity));
         given(userService.getContextInstitution()).willReturn(institution);
         doNothing().when(bedarfProzessService).anfrageErhalten(anfrageId, bedarfId, angebotId);
+        given(userService.getContextUser()).willReturn(Person.builder().aktuelleInstitution(PersonInstitution.builder().standort(bedarf.getStandort()).build()).build());
         given(anfrageRepository.save(neueAnfrageEntity)).willReturn(anfrageEntity);
         given(anfrageRepository.save(anfrageEntity)).willReturn(anfrageEntity);
 
         assertEquals(anfrage, bedarfService.bedarfAnfrageErstellen(//
                 bedarfId, //
-                standortId, //
                 kommentar, //
                 anzahl, //
                 angebotId));
@@ -244,6 +246,7 @@ class BedarfServiceShould {
         then(anfrageRepository).should().save(neueAnfrageEntity);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should().getContextInstitution();
+        then(userService).should().getContextUser();
         then(userService).shouldHaveNoMoreInteractions();
         then(bedarfProzessService).should().anfrageErhalten(anfrageId, bedarfId, angebotId);
         then(bedarfProzessService).shouldHaveNoMoreInteractions();

@@ -1,7 +1,6 @@
 package io.remedymatch.bedarf.controller;
 
 import io.remedymatch.artikel.controller.ArtikelRO;
-import io.remedymatch.institution.controller.InstitutionStandortRO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -41,8 +40,7 @@ public class BedarfRO {
     private UUID institutionId;
 
     @NotNull
-    @Valid
-    private InstitutionStandortRO standort;
+    private String ort;
 
     private boolean steril;
 

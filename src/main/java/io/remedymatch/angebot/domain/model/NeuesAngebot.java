@@ -30,7 +30,6 @@ public class NeuesAngebot {
 
     private InstitutionStandortId standortId;
 
-    @NotNull
     private LocalDateTime haltbarkeit;
 
     private boolean steril;

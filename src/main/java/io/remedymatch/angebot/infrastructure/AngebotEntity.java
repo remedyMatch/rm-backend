@@ -55,7 +55,7 @@ public class AngebotEntity extends Auditable {
     @JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
     private InstitutionStandortEntity standort;
 
-    @Column(name = "HALTBARKEIT", nullable = false, updatable = false)
+    @Column(name = "HALTBARKEIT", nullable = true, updatable = false)
     private LocalDateTime haltbarkeit;
 
     @Column(name = "STERIL", nullable = false, updatable = false)

@@ -90,12 +90,11 @@ public class BedarfService {
             final @NotNull AngebotId angebotId) {
 
         val bedarf = getNichtBedienteBedarf(bedarfId);
-        val userInstitution = getUserInstitution();
 
         var anfrage = anfrageRepository.save(BedarfAnfrageEntity.builder() //
                 .bedarf(bedarf) //
-                .institution(userInstitution) //
-                .standort(InstitutionStandortEntityConverter.convertStandort(userService.getContextUser().getAktuelleInstitution().getStandort())) //
+				.institution(getUserInstitution()) //
+				.standort(getUserStandort()) //
                 .anzahl(anzahl) //
                 .kommentar(kommentar) //
                 .angebotId(angebotId.getValue()) //
@@ -187,10 +186,6 @@ public class BedarfService {
 
     /* help methods */
 
-    private BedarfAnfrage updateAnfrage(final @NotNull @Valid BedarfAnfrageEntity anfrageEntity) {
-        return BedarfAnfrageEntityConverter.convertAnfrage(anfrageRepository.save(anfrageEntity));
-    }
-
     BedarfEntity getNichtBedienteBedarfDerUserInstitution(final @NotNull @Valid BedarfId bedarfId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
 
@@ -265,8 +260,12 @@ public class BedarfService {
     }
 
     private InstitutionEntity getUserInstitution() {
-        return InstitutionEntityConverter.convertInstitution(userService.getContextInstitution());
+        return InstitutionEntityConverter.convertInstitution(userService.getContextStandort().getInstitution());
     }
+    
+    private InstitutionStandortEntity getUserStandort() {
+		return InstitutionStandortEntityConverter.convertStandort(userService.getContextStandort().getStandort());
+	}
 
     InstitutionStandortEntity getUserInstitutionStandort( //
                                                           final @NotNull InstitutionEntity userInstitution, //

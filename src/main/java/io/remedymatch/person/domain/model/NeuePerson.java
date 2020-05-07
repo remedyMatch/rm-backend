@@ -45,4 +45,6 @@ public class NeuePerson {
 	@Valid
 	@NotNull
 	private InstitutionStandortId standortId;
+	
+	private boolean standortOeffentlich;
 }

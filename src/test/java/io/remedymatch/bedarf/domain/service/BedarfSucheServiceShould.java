@@ -156,7 +156,7 @@ class BedarfSucheServiceShould {
         given(bedarfRepository
                 .findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue()))
                 .willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
-        given(userService.getContextInstitution()).willReturn(userContextInstitution);
+        given(userService.getContextInstitutionId()).willReturn(userContextInstitution.getId());
         given(geoCalcService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
         given(geoCalcService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
 
@@ -166,7 +166,7 @@ class BedarfSucheServiceShould {
         then(bedarfRepository).should()
                 .findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue());
         then(bedarfRepository).shouldHaveNoMoreInteractions();
-        then(userService).should().getContextInstitution();
+        then(userService).should().getContextInstitutionId();
         then(userService).shouldHaveNoMoreInteractions();
         // XXX 2 verschiedene Aufrufe pruefen...
         then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());

@@ -1,13 +1,12 @@
 package io.remedymatch.person.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import io.remedymatch.institution.controller.InstitutionRO;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -23,31 +22,18 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-class PersonRO {
+class PersonStandortRO {
 
 	@NotNull
 	private UUID id;
-
-	@NotBlank
-	private String username;
-
-	@NotBlank
-	private String vorname;
-
-	@NotBlank
-	private String nachname;
-
-	@NotBlank
-	private String email;
-
-	@NotBlank
-	private String telefon;
+	
+	@NotNull
+	@Valid
+	private InstitutionRO institution;
 
 	@NotNull
 	@Valid
-	private PersonStandortRO aktuellesStandort;
-
-	@NotNull
-	@Builder.Default
-	private List<PersonStandortRO> standorte = new ArrayList<>();
+	private InstitutionStandortRO standort;
+	
+	private boolean oefentlich;
 }

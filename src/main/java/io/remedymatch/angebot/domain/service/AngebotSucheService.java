@@ -65,9 +65,8 @@ public class AngebotSucheService {
 	@Transactional(readOnly = true)
 	public List<Angebot> findAlleNichtBedienteAngeboteDerUserInstitution() {
 
-		val userInstitution = userService.getContextInstitution();
-		val angebote = mitEntfernung(angebotRepository
-				.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userInstitution.getId().getValue()));
+		val angebote = mitEntfernung(angebotRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(
+				userService.getContextInstitutionId().getValue()));
 
 		// TODO geht das einfacher?
 		val angebotIds = angebote.stream().map(Angebot::getId).collect(Collectors.toList());

@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.usercontext.UserContext;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @AllArgsConstructor
 @Configuration
-@Slf4j
+@Log4j2
 public class MyAuditingEntityListener {
 
 	@PrePersist

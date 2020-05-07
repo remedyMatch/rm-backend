@@ -1,8 +1,7 @@
 package io.remedymatch.dbinit;
 
-import io.remedymatch.artikel.infrastructure.*;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -11,14 +10,21 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import io.remedymatch.artikel.infrastructure.ArtikelEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelJpaRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelKategorieJpaRepository;
+import io.remedymatch.artikel.infrastructure.ArtikelVarianteEntity;
+import io.remedymatch.artikel.infrastructure.ArtikelVarianteJpaRepository;
+import lombok.val;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * TODO Test-Code nicht für Produktion
  */
 @Component
 @Profile("dbinit")
-@Slf4j
+@Log4j2
 public class DatabaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired

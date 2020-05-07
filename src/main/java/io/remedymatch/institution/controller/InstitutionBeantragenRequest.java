@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class InstitutionBeantragenRequest {
+class InstitutionBeantragenRequest {
 
     @NotBlank
     private String name;

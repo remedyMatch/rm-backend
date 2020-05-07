@@ -1,12 +1,10 @@
-package io.remedymatch.person.controller;
-
-import java.util.UUID;
+package io.remedymatch.person.domain.model;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import io.remedymatch.institution.controller.InstitutionRO;
-import io.remedymatch.institution.controller.InstitutionStandortRO;
+import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,16 +20,15 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class PersonInstitutionRO {
-
-	@NotNull
-	private UUID id;
-	
-	@NotNull
-	@Valid
-	private InstitutionRO institution;
+public class NeuesPersonStandort {
 
 	@NotNull
 	@Valid
-	private InstitutionStandortRO standort;
+	private InstitutionId institutionId;
+
+	@NotNull
+	@Valid
+	private InstitutionStandortId standortId;
+
+	private boolean oeffentlich;
 }

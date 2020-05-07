@@ -5,6 +5,6 @@ import java.util.UUID;
 import lombok.Value;
 
 @Value
-public class PersonInstitutionId {
+public class PersonStandortId {
 	private UUID value;
 }

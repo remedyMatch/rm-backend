@@ -66,8 +66,8 @@ public abstract class BedarfControllerTestBasis {
                 .artikel(artikel) //
                 .anzahl(BigDecimal.valueOf(1000)) //
                 .rest(BigDecimal.valueOf(1000)) //
-                .institution(spenderEntity.getAktuelleInstitution().getInstitution()) //
-                .standort(spenderEntity.getAktuelleInstitution().getStandort()) //
+                .institution(spenderEntity.getAktuellesStandort().getInstitution()) //
+                .standort(spenderEntity.getAktuellesStandort().getStandort()) //
                 .kommentar("ITest Bedarf Kommentar") //
                 .steril(true) //
                 .build());
@@ -82,8 +82,8 @@ public abstract class BedarfControllerTestBasis {
                 .bedarf(bedarf) //
                 .angebotId(UUID.randomUUID()) //
                 .anzahl(BigDecimal.valueOf(200)) //
-                .institution(suchenderEntity.getAktuelleInstitution().getInstitution()) //
-                .standort(suchenderEntity.getAktuelleInstitution().getStandort()) //
+                .institution(suchenderEntity.getAktuellesStandort().getInstitution()) //
+                .standort(suchenderEntity.getAktuellesStandort().getStandort()) //
                 .kommentar("ITest Bedarf Anfrage Kommentar") //
                 .status(BedarfAnfrageStatus.OFFEN) //
                 .build());
@@ -129,7 +129,7 @@ public abstract class BedarfControllerTestBasis {
                 .email("itest_spender@remedymetch.local") //
                 .telefon("12345678") //
                 .build());
-        person.addNeueAktuelleInstitution(institution, standort);
+        person.addNeuesAktuellesStandort(institution, standort, true);
 
         return persist(person);
     }
@@ -167,7 +167,7 @@ public abstract class BedarfControllerTestBasis {
                 .email("itest_suchender@remedymetch.local") //
                 .telefon("2233445566") //
                 .build());
-        person.addNeueAktuelleInstitution(institution, standort);
+        person.addNeuesAktuellesStandort(institution, standort, false);
 
         return persist(person);
     }

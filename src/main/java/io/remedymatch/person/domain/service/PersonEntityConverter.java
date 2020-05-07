@@ -7,10 +7,10 @@ import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
-import io.remedymatch.person.domain.model.PersonInstitution;
-import io.remedymatch.person.domain.model.PersonInstitutionId;
+import io.remedymatch.person.domain.model.PersonStandort;
+import io.remedymatch.person.domain.model.PersonStandortId;
 import io.remedymatch.person.infrastructure.PersonEntity;
-import io.remedymatch.person.infrastructure.PersonInstitutionEntity;
+import io.remedymatch.person.infrastructure.PersonStandortEntity;
 
 class PersonEntityConverter {
 	private PersonEntityConverter() {
@@ -25,20 +25,21 @@ class PersonEntityConverter {
 				.nachname(entity.getNachname()) //
 				.email(entity.getEmail()) //
 				.telefon(entity.getTelefon()) //
-				.aktuelleInstitution(convertInstitution(entity.getAktuelleInstitution())) //
-				.institutionen(convertInstitutionen(entity.getInstitutionen())) //
+				.aktuellesStandort(convertStandort(entity.getAktuellesStandort())) //
+				.standorte(convertStandorte(entity.getStandorte())) //
 				.build();
 	}
 
-	private static List<PersonInstitution> convertInstitutionen(final List<PersonInstitutionEntity> entities) {
-		return entities.stream().map(PersonEntityConverter::convertInstitution).collect(Collectors.toList());
+	private static List<PersonStandort> convertStandorte(final List<PersonStandortEntity> entities) {
+		return entities.stream().map(PersonEntityConverter::convertStandort).collect(Collectors.toList());
 	}
 
-	private static PersonInstitution convertInstitution(final PersonInstitutionEntity entity) {
-		return PersonInstitution.builder()//
-				.id(new PersonInstitutionId(entity.getId())) //
+	private static PersonStandort convertStandort(final PersonStandortEntity entity) {
+		return PersonStandort.builder()//
+				.id(new PersonStandortId(entity.getId())) //
 				.institution(InstitutionEntityConverter.convertInstitution(entity.getInstitution())) //
 				.standort(InstitutionStandortEntityConverter.convertStandort(entity.getStandort())) //
+				.oeffentlich(entity.isOeffentlich()) //
 				.build();
 	}
 }

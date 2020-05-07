@@ -5,8 +5,13 @@ import java.util.stream.Collectors;
 
 import io.remedymatch.institution.controller.InstitutionMapper;
 import io.remedymatch.institution.controller.InstitutionStandortMapper;
+import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
+import io.remedymatch.person.domain.model.NeuesPersonStandort;
 import io.remedymatch.person.domain.model.Person;
-import io.remedymatch.person.domain.model.PersonInstitution;
+import io.remedymatch.person.domain.model.PersonStandort;
+import io.remedymatch.person.domain.model.PersonStandortId;
+import io.remedymatch.person.domain.model.PersonUpdate;
 
 class PersonControllerMapper {
 	private PersonControllerMapper() {
@@ -20,21 +25,35 @@ class PersonControllerMapper {
 				.nachname(person.getNachname()) //
 				.email(person.getEmail()) //
 				.telefon(person.getTelefon()) //
-				.aktuelleInstitution(mapInstitutionToRO(person.getAktuelleInstitution())) //
-				.institutionen(mapInstitutionenToRO(person.getInstitutionen())) //
+				.aktuellesStandort(mapStandortToRO(person.getAktuellesStandort())) //
+				.standorte(mapStandorteToRO(person.getStandorte())) //
 				.build();
 	}
 
-	private static List<PersonInstitutionRO> mapInstitutionenToRO(final List<PersonInstitution> personInstitutionen) {
-		return personInstitutionen.stream().map(PersonControllerMapper::mapInstitutionToRO)
-				.collect(Collectors.toList());
+	private static List<PersonStandortRO> mapStandorteToRO(final List<PersonStandort> personStandorte) {
+		return personStandorte.stream().map(PersonControllerMapper::mapStandortToRO).collect(Collectors.toList());
 	}
 
-	private static PersonInstitutionRO mapInstitutionToRO(final PersonInstitution personInstitution) {
-		return PersonInstitutionRO.builder()//
-				.id(personInstitution.getId().getValue()) //
-				.institution(InstitutionMapper.mapToInstitutionRO(personInstitution.getInstitution())) //
-				.standort(InstitutionStandortMapper.mapToStandortRO(personInstitution.getStandort())) //
+	private static PersonStandortRO mapStandortToRO(final PersonStandort personStandort) {
+		return PersonStandortRO.builder()//
+				.id(personStandort.getId().getValue()) //
+				.institution(InstitutionMapper.mapToInstitutionRO(personStandort.getInstitution())) //
+				.standort(InstitutionStandortMapper.mapToStandortRO(personStandort.getStandort())) //
+				.oefentlich(personStandort.isOeffentlich()) //
+				.build();
+	}
+
+	static PersonUpdate mapToUpdate(final PersonUpdateRequest personUpdateRequest) {
+		return PersonUpdate.builder()//
+				.aktuellesStandortId(new PersonStandortId(personUpdateRequest.getAktuellesStandortId())) //
+				.build();
+	}
+
+	static NeuesPersonStandort mapToNeuesStandort(final NeuesPersonStandortRequest neuesPersonStandortRequest) {
+		return NeuesPersonStandort.builder()//
+				.institutionId(new InstitutionId(neuesPersonStandortRequest.getInstitutionId())) //
+				.standortId(new InstitutionStandortId(neuesPersonStandortRequest.getStandortId())) //
+				.oeffentlich(neuesPersonStandortRequest.isOeffentlich()) //
 				.build();
 	}
 }

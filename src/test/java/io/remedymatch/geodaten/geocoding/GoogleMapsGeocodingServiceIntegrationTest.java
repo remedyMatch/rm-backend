@@ -149,7 +149,7 @@ public class GoogleMapsGeocodingServiceIntegrationTest {
                 .latitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LAT))
                 .longitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LON))
                 .build();
-        when(userService.getContextInstitution().getHauptstandort()).thenReturn(hauptstandort);
+        when(userService.getContextStandort().getStandort()).thenReturn(hauptstandort);
 
         BigDecimal distanz = geocodingService.berechneUserDistanzInKilometer(instiStandortDortmund);
 

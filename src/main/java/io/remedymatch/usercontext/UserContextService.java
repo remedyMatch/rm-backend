@@ -1,14 +1,12 @@
 package io.remedymatch.usercontext;
 
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
+import io.remedymatch.person.domain.model.PersonStandort;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -25,17 +23,17 @@ public class UserContextService {
 	}
 
 	@Transactional(readOnly = true)
-	public Institution getContextInstitution() {
-		return getContextUser().getAktuelleInstitution().getInstitution();
+	public PersonStandort getContextStandort() {
+		return getContextUser().getAktuellesStandort();
 	}
-
+	
 	@Transactional(readOnly = true)
 	public InstitutionId getContextInstitutionId() {
-		return getContextInstitution().getId();
+		return getContextStandort().getInstitution().getId();
 	}
-
+	
 	@Transactional(readOnly = true)
 	public boolean isUserContextInstitution(final InstitutionId institutionId) {
-		return getContextInstitution().getId().equals(institutionId);
+		return getContextInstitutionId().equals(institutionId);
 	}
 }

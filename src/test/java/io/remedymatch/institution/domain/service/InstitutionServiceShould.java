@@ -207,20 +207,20 @@ class InstitutionServiceShould {
     @DisplayName("Name der Institution aktualisieren")
     void name_der_Institution_aktualisieren() {
 
-        val userInstitution = UserContextTestFixtures.beispielUserContextInstitution();
+        val userStandort = UserContextTestFixtures.beispielUserContextPerson().getAktuellesStandort();
 
         val institutionMitNeuemName = UserContextTestFixtures.beispielUserContextInstitution();
         institutionMitNeuemName.setName("Neue Name");
         val institutionEntityMitNeuemName = UserContextTestFixtures.beispielUserContextInstitutionEntity();
         institutionEntityMitNeuemName.setName("Neue Name");
 
-        given(userService.getContextInstitution()).willReturn(userInstitution);
+        given(userService.getContextStandort()).willReturn(userStandort);
         given(institutionRepository.save(institutionEntityMitNeuemName)).willReturn(institutionEntityMitNeuemName);
 
         assertEquals(institutionMitNeuemName, institutionService
                 .userInstitutionAktualisieren(InstitutionUpdate.builder().neueName("Neue Name").build()));
 
-        then(userService).should().getContextInstitution();
+        then(userService).should().getContextStandort();
         then(userService).shouldHaveNoMoreInteractions();
         then(institutionRepository).should().save(institutionEntityMitNeuemName);
         then(institutionRepository).shouldHaveNoMoreInteractions();
@@ -232,20 +232,20 @@ class InstitutionServiceShould {
     @DisplayName("Typ der Institution aktualisieren")
     void typ_der_Institution_aktualisieren() {
 
-        val userInstitution = UserContextTestFixtures.beispielUserContextInstitution();
+        val userStandort = UserContextTestFixtures.beispielUserContextPerson().getAktuellesStandort();
 
         val institutionMitNeuemTyp = UserContextTestFixtures.beispielUserContextInstitution();
         institutionMitNeuemTyp.setTyp(InstitutionTyp.KRANKENHAUS);
         val institutionEntityMitNeuemTyp = UserContextTestFixtures.beispielUserContextInstitutionEntity();
         institutionEntityMitNeuemTyp.setTyp(InstitutionTyp.KRANKENHAUS);
 
-        given(userService.getContextInstitution()).willReturn(userInstitution);
+        given(userService.getContextStandort()).willReturn(userStandort);
         given(institutionRepository.save(institutionEntityMitNeuemTyp)).willReturn(institutionEntityMitNeuemTyp);
 
         assertEquals(institutionMitNeuemTyp, institutionService.userInstitutionAktualisieren(
                 InstitutionUpdate.builder().neuesTyp(InstitutionTyp.KRANKENHAUS).build()));
 
-        then(userService).should().getContextInstitution();
+        then(userService).should().getContextStandort();
         then(userService).shouldHaveNoMoreInteractions();
         then(institutionRepository).should().save(institutionEntityMitNeuemTyp);
         then(institutionRepository).shouldHaveNoMoreInteractions();
@@ -263,7 +263,8 @@ class InstitutionServiceShould {
         val anderesStandortEntity = InstitutionTestFixtures.beispielStandort2Entity();
         anderesStandortEntity.setId(anderesStandortId.getValue());
 
-        val userInstitution = UserContextTestFixtures.beispielUserContextInstitution();
+        val userStandort = UserContextTestFixtures.beispielUserContextPerson().getAktuellesStandort();
+        val userInstitution = userStandort.getInstitution();
         userInstitution.getStandorte().add(anderesStandort);
 
         val institutionMitNeuemHauptstandort = UserContextTestFixtures.beispielUserContextInstitution();
@@ -273,14 +274,14 @@ class InstitutionServiceShould {
         institutionEntityMitNeuemHauptstandort.setHauptstandort(anderesStandortEntity);
         institutionEntityMitNeuemHauptstandort.addStandort(anderesStandortEntity);
 
-        given(userService.getContextInstitution()).willReturn(userInstitution);
+        given(userService.getContextStandort()).willReturn(userStandort);
         given(institutionRepository.save(institutionEntityMitNeuemHauptstandort))
                 .willReturn(institutionEntityMitNeuemHauptstandort);
 
         assertEquals(institutionMitNeuemHauptstandort, institutionService.userInstitutionAktualisieren(
                 InstitutionUpdate.builder().neuesHauptstandortId(anderesStandortId).build()));
 
-        then(userService).should().getContextInstitution();
+        then(userService).should().getContextStandort();
         then(userService).shouldHaveNoMoreInteractions();
         then(institutionRepository).should().save(institutionEntityMitNeuemHauptstandort);
         then(institutionRepository).shouldHaveNoMoreInteractions();
@@ -301,7 +302,7 @@ class InstitutionServiceShould {
 
         val addresse = "Eine Strasse 10, 85050 Irgendwo in Bayern, Deutschland";
 
-        val userInstitution = UserContextTestFixtures.beispielUserContextInstitution();
+        val userStandort = UserContextTestFixtures.beispielUserContextPerson().getAktuellesStandort();
 
         val neuesStandort = NeuerInstitutionStandort.builder()//
                 .name(name) //
@@ -355,7 +356,7 @@ class InstitutionServiceShould {
         institutionEntityMitNeuemHauptstandort.setHauptstandort(neuesHauptstandortEntity);
         institutionEntityMitNeuemHauptstandort.addStandort(neuesHauptstandortEntity);
 
-        given(userService.getContextInstitution()).willReturn(userInstitution);
+        given(userService.getContextStandort()).willReturn(userStandort);
         given(institutionStandortRepository.save(neuesHauptstandortEntityOhneId)).willReturn(neuesHauptstandortEntity);
         given(institutionRepository.save(institutionEntityMitNeuemHauptstandort))
                 .willReturn(institutionEntityMitNeuemHauptstandort);
@@ -365,7 +366,7 @@ class InstitutionServiceShould {
         assertEquals(institutionMitNeuemHauptstandort,
                 institutionService.userInstitutionHauptstandortHinzufuegen(neuesStandort));
 
-        then(userService).should().getContextInstitution();
+        then(userService).should().getContextStandort();
         then(userService).shouldHaveNoMoreInteractions();
         then(institutionRepository).should().save(institutionEntityMitNeuemHauptstandort);
         then(institutionRepository).shouldHaveNoMoreInteractions();
@@ -388,7 +389,7 @@ class InstitutionServiceShould {
 
         val addresse = "Eine Strasse 10, 85050 Irgendwo in Bayern, Deutschland";
 
-        val userInstitution = UserContextTestFixtures.beispielUserContextInstitution();
+        val userStandort = UserContextTestFixtures.beispielUserContextPerson().getAktuellesStandort();
 
         val neuesStandort = NeuerInstitutionStandort.builder()//
                 .name(name) //
@@ -439,7 +440,7 @@ class InstitutionServiceShould {
         val institutionEntityMitNeuemStandort = UserContextTestFixtures.beispielUserContextInstitutionEntity();
         institutionEntityMitNeuemStandort.addStandort(neuesStandortEntity);
 
-        given(userService.getContextInstitution()).willReturn(userInstitution);
+        given(userService.getContextStandort()).willReturn(userStandort);
         given(institutionStandortRepository.save(neuesStandortEntityOhneId)).willReturn(neuesStandortEntity);
         given(institutionRepository.save(institutionEntityMitNeuemStandort))
                 .willReturn(institutionEntityMitNeuemStandort);
@@ -448,7 +449,7 @@ class InstitutionServiceShould {
 
         assertEquals(institutionMitNeuemStandort, institutionService.userInstitutionStandortHinzufuegen(neuesStandort));
 
-        then(userService).should().getContextInstitution();
+        then(userService).should().getContextStandort();
         then(userService).shouldHaveNoMoreInteractions();
         then(institutionRepository).should().save(institutionEntityMitNeuemStandort);
         then(institutionRepository).shouldHaveNoMoreInteractions();

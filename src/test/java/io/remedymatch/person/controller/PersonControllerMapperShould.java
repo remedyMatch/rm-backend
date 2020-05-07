@@ -21,12 +21,12 @@ import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.model.InstitutionTyp;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
-import io.remedymatch.person.domain.model.PersonInstitution;
-import io.remedymatch.person.domain.model.PersonInstitutionId;
+import io.remedymatch.person.domain.model.PersonStandort;
+import io.remedymatch.person.domain.model.PersonStandortId;
 
 @ExtendWith(SpringExtension.class)
-@DisplayName("PersonMapper soll")
-public class PersonMapperShould {
+@DisplayName("PersonControllerMapper soll")
+class PersonControllerMapperShould {
 	private static final PersonId PERSON_ID = new PersonId(UUID.randomUUID());
 	private static final String USERNAME = "username";
 	private static final String VORNAME = "Vorname";
@@ -34,7 +34,7 @@ public class PersonMapperShould {
 	private static final String EMAIL = "EMail";
 	private static final String TELEFON = "012345";
 
-	public static final PersonInstitutionId AKTUELLE_INSTITUTION_ID = new PersonInstitutionId(UUID.randomUUID());
+	public static final PersonStandortId AKTUELLE_INSTITUTION_ID = new PersonStandortId(UUID.randomUUID());
 
 	public static final InstitutionId INSTITUTION_ID = new InstitutionId(UUID.randomUUID());
 	public static final String INSTITUTION_NAME = "Institution Name";
@@ -65,8 +65,8 @@ public class PersonMapperShould {
 				.nachname(NACHNAME) //
 				.email(EMAIL) //
 				.telefon(TELEFON) //
-				.aktuelleInstitution(aktuelleInstitution()) //
-				.institutionen(new ArrayList<>(Arrays.asList(aktuelleInstitution())))
+				.aktuellesStandort(aktuellesStandort()) //
+				.standorte(new ArrayList<>(Arrays.asList(aktuellesStandort())))
 				.build();
 	}
 
@@ -78,24 +78,26 @@ public class PersonMapperShould {
 				.nachname(NACHNAME) //
 				.email(EMAIL) //
 				.telefon(TELEFON) //
-				.aktuelleInstitution(aktuelleInstitutionRO()) //
-				.institutionen(new ArrayList<>(Arrays.asList(aktuelleInstitutionRO())))
+				.aktuellesStandort(aktuellesStandortRO()) //
+				.standorte(new ArrayList<>(Arrays.asList(aktuellesStandortRO())))
 				.build();
 	}
 
-	private PersonInstitution aktuelleInstitution() {
-		return PersonInstitution.builder() //
+	private PersonStandort aktuellesStandort() {
+		return PersonStandort.builder() //
 				.id(AKTUELLE_INSTITUTION_ID) //
 				.institution(institution()) //
 				.standort(standort()) //
+				.oeffentlich(true) //
 				.build();
 	}
 	
-	private PersonInstitutionRO aktuelleInstitutionRO() {
-		return PersonInstitutionRO.builder() //
+	private PersonStandortRO aktuellesStandortRO() {
+		return PersonStandortRO.builder() //
 				.id(AKTUELLE_INSTITUTION_ID.getValue()) //
 				.institution(institutionRO()) //
 				.standort(standortRO()) //
+				.oefentlich(true) //
 				.build();
 	}
 

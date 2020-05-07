@@ -1,15 +1,21 @@
 package io.remedymatch.bedarf.domain.model;
 
-import io.remedymatch.artikel.domain.model.ArtikelId;
-import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
-import lombok.*;
+import java.math.BigDecimal;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.math.BigDecimal;
+
+import io.remedymatch.artikel.domain.model.ArtikelId;
+import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -20,24 +26,22 @@ import java.math.BigDecimal;
 @Builder
 public class NeuerBedarf {
 
-    @NotNull
-    @Positive
-    private BigDecimal anzahl;
+	@NotNull
+	@Positive
+	private BigDecimal anzahl;
 
-    @Valid
-    private ArtikelId artikelId;
+	@Valid
+	private ArtikelId artikelId;
 
-    @Valid
-    private ArtikelVarianteId artikelVarianteId;
+	@Valid
+	private ArtikelVarianteId artikelVarianteId;
 
-    private InstitutionStandortId standortId;
+	private boolean steril;
 
-    private boolean steril;
+	private boolean medizinisch;
 
-    private boolean medizinisch;
+	private boolean oeffentlich;
 
-    private boolean oeffentlich;
-
-    @NotBlank
-    private String kommentar;
+	@NotBlank
+	private String kommentar;
 }

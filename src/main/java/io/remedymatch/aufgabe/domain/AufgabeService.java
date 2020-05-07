@@ -30,7 +30,7 @@ public class AufgabeService {
 
     @Transactional
     public List<TaskDTO> aufgabenLaden(Person person) {
-        val aufgaben = engineClient.ladeAlleTask(person.getAktuelleInstitution().getInstitution().getId().getValue().toString());
+        val aufgaben = engineClient.ladeAlleTask(person.getAktuellesStandort().getInstitution().getId().getValue().toString());
 
         aufgaben.forEach(aufgabe -> {
                     if (beschreibungHandlerMap.containsKey(aufgabe.getTaskKey())) {
@@ -48,7 +48,7 @@ public class AufgabeService {
     @Transactional
     public void aufgabeAbschließen(String taskId, Map<String, Object> variables) {
         val person = userService.getContextUser();
-        val task = engineClient.ladeTask(taskId, person.getAktuelleInstitution().getInstitution().getId().getValue().toString());
+        val task = engineClient.ladeTask(taskId, person.getAktuellesStandort().getInstitution().getId().getValue().toString());
         if (taskCompleteHandlerMap.containsKey(task.getTaskKey())) {
             taskCompleteHandlerMap.get(task.getTaskKey()).taskPruefen(task, variables);
         }

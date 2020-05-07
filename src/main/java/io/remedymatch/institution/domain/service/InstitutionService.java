@@ -1,35 +1,49 @@
 package io.remedymatch.institution.domain.service;
 
-import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.engine.domain.BusinessKey;
-import io.remedymatch.geodaten.domain.GeocodingService;
-import io.remedymatch.institution.domain.model.*;
-import io.remedymatch.institution.infrastructure.*;
-import io.remedymatch.institution.process.InstitutionAntragProzessConstants;
-import io.remedymatch.usercontext.UserContextService;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import io.remedymatch.domain.ObjectNotFoundException;
+import io.remedymatch.domain.OperationNotAlloudException;
+import io.remedymatch.engine.client.EngineClient;
+import io.remedymatch.engine.domain.BusinessKey;
+import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionAntrag;
+import io.remedymatch.institution.domain.model.InstitutionAntragId;
+import io.remedymatch.institution.domain.model.InstitutionAntragStatus;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
+import io.remedymatch.institution.domain.model.InstitutionUpdate;
+import io.remedymatch.institution.domain.model.NeueInstitution;
+import io.remedymatch.institution.domain.model.NeuerInstitutionStandort;
+import io.remedymatch.institution.infrastructure.InstitutionAntragEntity;
+import io.remedymatch.institution.infrastructure.InstitutionAntragJpaRepository;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
+import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
+import io.remedymatch.institution.process.InstitutionAntragProzessConstants;
+import io.remedymatch.usercontext.UserContextService;
+import lombok.AllArgsConstructor;
+import lombok.val;
+import lombok.extern.log4j.Log4j2;
+
 @AllArgsConstructor
 @Validated
 @Service
 @Transactional
-@Slf4j
+@Log4j2
 public class InstitutionService {
 
     private static final String EXCEPTION_MSG_UPDATE_OHNE_DATEN = "Keine Aenderungen in InstitutionUpdate gefunden";
@@ -192,7 +206,7 @@ public class InstitutionService {
     }
 
     private InstitutionEntity getUserInstitution() {
-        return InstitutionEntityConverter.convertInstitution(userService.getContextInstitution());
+        return InstitutionEntityConverter.convertInstitution(userService.getContextStandort().getInstitution());
     }
 
     InstitutionStandortEntity getStandort(

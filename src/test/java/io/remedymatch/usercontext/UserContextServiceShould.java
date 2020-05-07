@@ -63,17 +63,17 @@ public class UserContextServiceShould {
 	}
 
 	@Test
-	@DisplayName("Context Institution zurueckliefern")
-	void context_Institution_zurueckliefern() {
+	@DisplayName("Context Standort zurueckliefern")
+	void context_Standort_zurueckliefern() {
 
-		assertEquals(userContextPerson, userContextService.getContextInstitution());
+		assertEquals(userContextPerson.getAktuellesStandort(), userContextService.getContextStandort());
 	}
 
 	@Test
 	@DisplayName("Context InstitutionId zurueckliefern")
 	void context_InstitutionId_zurueckliefern() {
 
-		assertEquals(userContextPerson.getAktuelleInstitution().getId(), userContextService.getContextInstitutionId());
+		assertEquals(userContextPerson.getAktuellesStandort().getInstitution().getId(), userContextService.getContextInstitutionId());
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class UserContextServiceShould {
 	void true_zurueckliefern_wenn_die_angefragte_Institution_UserContext_Institution_ist() {
 
 		assertTrue(userContextService
-				.isUserContextInstitution(userContextPerson.getAktuelleInstitution().getInstitution().getId()));
+				.isUserContextInstitution(userContextPerson.getAktuellesStandort().getInstitution().getId()));
 	}
 
 	@Test

@@ -71,7 +71,7 @@ public class MatchService {
     @Transactional
     public List<Match> beteiligteMatches() {
 
-        val userInstitutionId = userService.getContextInstitution().getId();
+        val userInstitutionId = userService.getContextInstitutionId();
 
         val matches = matchRepository.getMatchesFuerInstitutionAn(userInstitutionId);
         matches.addAll(matchRepository.getMatchesFuerInstitutionVon(userInstitutionId));

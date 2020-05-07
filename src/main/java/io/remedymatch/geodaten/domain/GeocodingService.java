@@ -77,7 +77,7 @@ public class GeocodingService {
      * @return Distanz zwischen Benutzer-Hauptstandort und Ziel-Standort
      */
     public BigDecimal berechneUserDistanzInKilometer(@NonNull final InstitutionStandort zielStandort) {
-        return berechneDistanzInKilometer(userService.getContextInstitution().getHauptstandort(), zielStandort);
+        return berechneDistanzInKilometer(userService.getContextStandort().getStandort(), zielStandort);
     }
 
     /**

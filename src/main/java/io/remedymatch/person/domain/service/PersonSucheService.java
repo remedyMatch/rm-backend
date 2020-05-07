@@ -21,12 +21,12 @@ import io.remedymatch.person.domain.model.PersonId;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @AllArgsConstructor
 @Validated
 @Service
-@Slf4j
+@Log4j2
 public class PersonSucheService {
 
 	private static final String EXCEPTION_MSG_PERSON_NICHT_GEFUNDEN = "Person mit diesem Id nicht gefunden. (Id: %s)";
@@ -70,7 +70,7 @@ public class PersonSucheService {
 		PersonEntity personEntity = supplier.get();
 		Person converted = convertPerson(personEntity);
 		entityManager.detach(personEntity);
-		
+
 		return converted;
 	}
 }

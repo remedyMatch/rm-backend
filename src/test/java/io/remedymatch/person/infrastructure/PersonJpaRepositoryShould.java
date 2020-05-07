@@ -50,7 +50,7 @@ public class PersonJpaRepositoryShould {
 		val meinStandort = persist(standort());
 		val meinKrankenhaus = persist(institution(meinStandort));
 		val ich = persist(person("ich"));
-		ich.addNeueAktuelleInstitution(meinKrankenhaus, meinStandort);
+		ich.addNeuesAktuellesStandort(meinKrankenhaus, meinStandort, true);
 		persist(ich);
 		entityManager.flush();
 
@@ -76,7 +76,7 @@ public class PersonJpaRepositoryShould {
 		val meinStandort = persist(standort());
 		val meinKrankenhaus = persist(institution(meinStandort));
 		val ich = persist(person("ich"));
-		ich.addNeueAktuelleInstitution(meinKrankenhaus, meinStandort);
+		ich.addNeuesAktuellesStandort(meinKrankenhaus, meinStandort, true);
 		persist(ich);
 		entityManager.flush();
 

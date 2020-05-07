@@ -17,7 +17,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class InstitutionAntragRO {
+class InstitutionAntragRO {
 
     @NotNull
     private UUID id;

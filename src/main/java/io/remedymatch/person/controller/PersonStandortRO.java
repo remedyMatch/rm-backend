@@ -1,19 +1,12 @@
 package io.remedymatch.person.controller;
 
-import java.util.UUID;
+import io.remedymatch.institution.controller.InstitutionRO;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import io.remedymatch.institution.controller.InstitutionRO;
-import io.remedymatch.institution.controller.InstitutionStandortRO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,16 +17,16 @@ import lombok.ToString;
 @Builder
 class PersonStandortRO {
 
-	@NotNull
-	private UUID id;
-	
-	@NotNull
-	@Valid
-	private InstitutionRO institution;
+    @NotNull
+    private UUID id;
 
-	@NotNull
-	@Valid
-	private InstitutionStandortRO standort;
-	
-	private boolean oefentlich;
+    @NotNull
+    @Valid
+    private InstitutionRO institution;
+
+    @NotNull
+    @Valid
+    private InstitutionStandortRO standort;
+
+    private boolean oeffentlich;
 }

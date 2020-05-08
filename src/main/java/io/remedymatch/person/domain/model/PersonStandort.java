@@ -20,11 +20,11 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class PersonInstitution {
+public class PersonStandort {
 
 	@Valid
 	@NotNull
-	private PersonInstitutionId id;
+	private PersonStandortId id;
 	
 	@Valid
 	@NotNull
@@ -33,4 +33,6 @@ public class PersonInstitution {
 	@Valid
 	@NotNull
 	private InstitutionStandort standort;
+	
+	private boolean oeffentlich;
 }

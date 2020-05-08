@@ -138,7 +138,8 @@ class AngebotSucheServiceShould {
 	@DisplayName("alle nicht bediente Angebote der UserContext Institution zurueckliefern")
 	void alle_nicht_bediente_Angebote_der_UserContext_Institution_zurueckliefern() {
 
-		val userContextInstitution = UserContextTestFixtures.beispielUserContextInstitution();
+		val userContextStandort = UserContextTestFixtures.beispielUserContextPerson().getAktuellesStandort();
+		val userContextInstitution = userContextStandort.getInstitution();
 
 		val angebot1Entfernung = BigDecimal.valueOf(100);
 		val angebot2Entfernung = BigDecimal.valueOf(500);
@@ -160,7 +161,7 @@ class AngebotSucheServiceShould {
 		given(angebotRepository
 				.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue()))
 						.willReturn(Arrays.asList(angebot1Entity, angebot2Entity));
-		given(userService.getContextInstitution()).willReturn(userContextInstitution);
+		given(userService.getContextInstitutionId()).willReturn(userContextInstitution.getId());
 		given(geoCalcService.berechneUserDistanzInKilometer(angebot1.getStandort())).willReturn(angebot1Entfernung);
 		given(geoCalcService.berechneUserDistanzInKilometer(angebot2.getStandort())).willReturn(angebot2Entfernung);
 
@@ -170,7 +171,7 @@ class AngebotSucheServiceShould {
 		then(angebotRepository).should()
 				.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(userContextInstitution.getId().getValue());
 		then(angebotRepository).shouldHaveNoMoreInteractions();
-		then(userService).should().getContextInstitution();
+		then(userService).should().getContextInstitutionId();
 		then(userService).shouldHaveNoMoreInteractions();
 		// XXX 2 verschiedene Aufrufe pruefen...
 		then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());

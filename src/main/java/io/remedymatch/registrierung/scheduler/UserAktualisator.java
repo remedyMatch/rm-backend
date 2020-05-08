@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import io.remedymatch.registrierung.keycloak.KeycloakService;
 import io.remedymatch.registrierung.keycloak.RegistrierterUser;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @AllArgsConstructor
 @Component
-@Slf4j
+@Log4j2
 class UserAktualisator {
 
 	private final KeycloakService keycloakClient;
@@ -31,7 +31,7 @@ class UserAktualisator {
 
 		// 2) Prozess starten
 		verifizierteUsers.forEach(user -> userUebernehmen(user));
-		
+
 		// sollte entfernt werden
 		// 1) Users mit bestätigtem Mail finden
 		List<RegistrierterUser> freigegebeneUsers = keycloakClient.findFreigegebeneUsers();
@@ -50,7 +50,7 @@ class UserAktualisator {
 			log.error("Übernahme des Users hat nicht geklappt: " + registrierterUser, e);
 		}
 	}
-	
+
 	@Transactional
 	private void userUebernehmen(final @NotNull @Valid RegistrierterUser registrierterUser) {
 		try {

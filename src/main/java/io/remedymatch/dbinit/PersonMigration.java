@@ -15,11 +15,11 @@ import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
 import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @Component
 @Profile("dbmigration")
-@Slf4j
+@Log4j2
 public class PersonMigration implements ApplicationListener<ContextRefreshedEvent> {
 
 	@Autowired
@@ -37,8 +37,8 @@ public class PersonMigration implements ApplicationListener<ContextRefreshedEven
 	public void migrierePersonInstitutionDaten() {
 		try {
 			for (PersonEntity person : getAllePersonen()) {
-				if (person.getAktuelleInstitution() == null) {
-					migriereAktuelleInstitution(person);
+				if (person.getAktuellesStandort() == null) {
+					migriereAktuellesStandort(person);
 				}
 			}
 		} catch (Exception ex) {
@@ -47,8 +47,8 @@ public class PersonMigration implements ApplicationListener<ContextRefreshedEven
 		}
 	}
 
-	private void migriereAktuelleInstitution(final PersonEntity person) {
-		log.info("Eine Person ohne aktuelleInstitution gefunden: " + person.getUsername());
+	private void migriereAktuellesStandort(final PersonEntity person) {
+		log.info("Eine Person ohne aktuellesStandort gefunden: " + person.getUsername());
 
 		if (person.getInstitutionId() == null) {
 			log.warn("Person hat auch keine alte InstitutionId");
@@ -60,26 +60,27 @@ public class PersonMigration implements ApplicationListener<ContextRefreshedEven
 			log.warn("Person Institution nicht gefunden: " + person.getInstitutionId());
 			return;
 		}
-		
+
 		InstitutionEntity institution = institutionOptional.get();
 		InstitutionStandortEntity standort = institution.getHauptstandort();
-		
+
 		if (person.getStandortId() == null) {
 			log.warn("Person hat auch kein altest StandortId - nutze Hauptstandort der Institution");
-			person.addNeueAktuelleInstitution(institution, standort);
+			person.addNeuesAktuellesStandort(institution, standort, false);
 			personRepository.save(person);
-			
+
 			return;
 		}
-		
+
 		val standortOptional = institution.findStandort(person.getStandortId());
 		if (standortOptional.isEmpty()) {
-			log.warn("Person Standort nicht in Institution gefunden: " + person.getInstitutionId() + ". Nutze Hauptstandort der Institution");
-			person.addNeueAktuelleInstitution(institution, standort);
+			log.warn("Person Standort nicht in Institution gefunden: " + person.getInstitutionId()
+					+ ". Nutze Hauptstandort der Institution");
+			person.addNeuesAktuellesStandort(institution, standort, false);
 			personRepository.save(person);
 		}
-		
-		person.addNeueAktuelleInstitution(institution, standortOptional.get());
+
+		person.addNeuesAktuellesStandort(institution, standortOptional.get(), false);
 		personRepository.save(person);
 	}
 

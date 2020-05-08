@@ -1,11 +1,11 @@
 package io.remedymatch.dbinit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,8 +26,8 @@ import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
 import io.remedymatch.person.infrastructure.PersonEntity;
-import io.remedymatch.person.infrastructure.PersonInstitutionEntity;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
+import io.remedymatch.person.infrastructure.PersonStandortEntity;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -37,9 +37,9 @@ import io.remedymatch.person.infrastructure.PersonJpaRepository;
 @Tag("SpringBoot")
 public class PersonMigrationShould {
 
-    @Autowired
-    private PersonMigration personMigration;
-	
+	@Autowired
+	private PersonMigration personMigration;
+
 	@Autowired
 	private PersonJpaRepository personRepository;
 
@@ -82,14 +82,14 @@ public class PersonMigrationShould {
 				.institutionId(institution.getId()) //
 				.standortId(standort.getId()) //
 				.build());
-		
+
 		personMigration.onApplicationEvent(Mockito.mock(ContextRefreshedEvent.class));
 
 		PersonEntity personNachMigration = personRepository.getOne(personVorMgration.getId());
-		
-		PersonInstitutionEntity aktuelleInstitution = personNachMigration.getAktuelleInstitution();
-		assertNotNull(aktuelleInstitution);
-		assertEquals(institution, aktuelleInstitution.getInstitution());
-		assertEquals(standort, aktuelleInstitution.getStandort());
+
+		PersonStandortEntity aktuellesStandort = personNachMigration.getAktuellesStandort();
+		assertNotNull(aktuellesStandort);
+		assertEquals(institution, aktuellesStandort.getInstitution());
+		assertEquals(standort, aktuellesStandort.getStandort());
 	}
 }

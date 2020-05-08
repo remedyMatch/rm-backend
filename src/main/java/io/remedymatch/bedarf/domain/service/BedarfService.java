@@ -15,6 +15,7 @@ import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
+import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.usercontext.UserContextService;
@@ -84,18 +85,16 @@ public class BedarfService {
     @Transactional
     public BedarfAnfrage bedarfAnfrageErstellen(
             final @NotNull @Valid BedarfId bedarfId, //
-            final @NotNull @Valid InstitutionStandortId standortId, //
             final @NotBlank String kommentar, //
             final @NotNull BigDecimal anzahl, //
             final @NotNull AngebotId angebotId) {
 
         val bedarf = getNichtBedienteBedarf(bedarfId);
-        val userInstitution = getUserInstitution();
 
         var anfrage = anfrageRepository.save(BedarfAnfrageEntity.builder() //
                 .bedarf(bedarf) //
-                .institution(userInstitution) //
-                .standort(getUserInstitutionStandort(userInstitution, standortId)) //
+				.institution(getUserInstitution()) //
+				.standort(getUserStandort()) //
                 .anzahl(anzahl) //
                 .kommentar(kommentar) //
                 .angebotId(angebotId.getValue()) //
@@ -187,10 +186,6 @@ public class BedarfService {
 
     /* help methods */
 
-    private BedarfAnfrage updateAnfrage(final @NotNull @Valid BedarfAnfrageEntity anfrageEntity) {
-        return BedarfAnfrageEntityConverter.convertAnfrage(anfrageRepository.save(anfrageEntity));
-    }
-
     BedarfEntity getNichtBedienteBedarfDerUserInstitution(final @NotNull @Valid BedarfId bedarfId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
 
@@ -265,8 +260,12 @@ public class BedarfService {
     }
 
     private InstitutionEntity getUserInstitution() {
-        return InstitutionEntityConverter.convertInstitution(userService.getContextInstitution());
+        return InstitutionEntityConverter.convertInstitution(userService.getContextStandort().getInstitution());
     }
+    
+    private InstitutionStandortEntity getUserStandort() {
+		return InstitutionStandortEntityConverter.convertStandort(userService.getContextStandort().getStandort());
+	}
 
     InstitutionStandortEntity getUserInstitutionStandort( //
                                                           final @NotNull InstitutionEntity userInstitution, //

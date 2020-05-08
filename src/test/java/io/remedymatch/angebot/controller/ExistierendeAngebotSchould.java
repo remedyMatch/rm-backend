@@ -89,7 +89,6 @@ public class ExistierendeAngebotSchould extends AngebotControllerTestBasis {
 
         val neueAngebotAnfrage = AngebotAnfragenRequest.builder() //
                 .anzahl(BigDecimal.valueOf(200)) //
-                .standortId(suchender.getAktuelleInstitution().getStandort().getId().getValue()) //
                 .kommentar("ITest Angebot Anfrage Kommentar") //
                 .bedarfId(UUID.randomUUID()) //
                 .build();

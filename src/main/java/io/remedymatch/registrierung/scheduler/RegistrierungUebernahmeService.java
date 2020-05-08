@@ -41,6 +41,8 @@ class RegistrierungUebernahmeService {
 				.telefon(registrierterUser.getTelefon()) //
 				.institutionId(institution.getId()) //
 				.standortId(institution.getHauptstandort().getId()) //
+				// XXX pruefen, ob man es nicht bei Registrierung anpassen koennte
+				.standortOeffentlich(Boolean.FALSE) //
 				.build());
 	}
 

@@ -8,7 +8,6 @@ import io.remedymatch.angebot.domain.service.AngebotSucheService;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +79,6 @@ public class AngebotController {
             @RequestBody @Valid AngebotAnfragenRequest request) {
         return ResponseEntity.ok(mapToAnfrageRO(angebotService.angebotAnfrageErstellen(//
                 AngebotControllerMapper.mapToAngebotId(angebotId), //
-                new InstitutionStandortId(request.getStandortId()), //
                 request.getKommentar(), //
                 request.getAnzahl(), //
                 new BedarfId(request.getBedarfId()))));

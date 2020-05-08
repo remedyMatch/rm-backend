@@ -31,9 +31,9 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-@Entity(name = "PersonInstitution")
-@Table(name = "RM_PERSON_INSTITUTION")
-public class PersonInstitutionEntity extends Auditable {
+@Entity(name = "PersonStandort")
+@Table(name = "RM_PERSON_STANDORT")
+public class PersonStandortEntity extends Auditable {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -55,4 +55,7 @@ public class PersonInstitutionEntity extends Auditable {
 	@Type(type = "uuid-char")
 	@JoinColumn(name = "STANDORT_UUID", referencedColumnName = "UUID", nullable = false, updatable = true)
 	private InstitutionStandortEntity standort;
+	
+    @Column(name = "OEFFENTLICH", nullable = false, updatable = true)
+    private boolean oeffentlich;
 }

@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import java.util.Optional;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,8 @@ import lombok.val;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = { //
 		InstitutionSucheService.class, //
-		InstitutionJpaRepository.class //
+		InstitutionJpaRepository.class, //
+		EntityManager.class //
 })
 @Tag("Spring")
 @DisplayName("InstitutionSucheService soll")
@@ -37,6 +40,17 @@ class InstitutionSucheServiceShould {
 	@MockBean
 	private InstitutionJpaRepository institutionRepository;
 
+	@MockBean
+	private EntityManager entityManager;
+
+	@MockBean
+	private EntityManagerFactory entityManagerFactory;
+
+	@BeforeEach
+	void setup() {
+		given(entityManagerFactory.createEntityManager()).willReturn(entityManager);
+	}
+
 	@Test
 	@DisplayName("gesuchte Institution fuer InstitutionId finden")
 	void gesuchte_Institution_fuer_InstitutionId_finden() {
@@ -44,14 +58,14 @@ class InstitutionSucheServiceShould {
 		val institutionEntity = beispielInstitutionEntity();
 		val institutionId = institutionEntity.getId();
 
-		given(institutionRepository.findById(institutionId)).willReturn(Optional.of(institutionEntity));
+		given(institutionRepository.getOne(institutionId)).willReturn(institutionEntity);
 
 		val expectedInstitution = beispielInstitution();
 
-		assertEquals(Optional.of(expectedInstitution),
-				institutionSucheService.findInstitution(expectedInstitution.getId()));
+		assertEquals(expectedInstitution, institutionSucheService.getByInstitutionId(expectedInstitution.getId()));
 
-		then(institutionRepository).should().findById(institutionId);
+		then(institutionRepository).should().getOne(institutionId);
 		then(institutionRepository).shouldHaveNoMoreInteractions();
+		then(entityManager).should().detach(institutionEntity);
 	}
 }

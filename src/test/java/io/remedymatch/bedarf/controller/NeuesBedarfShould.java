@@ -79,7 +79,7 @@ public class NeuesBedarfShould extends BedarfControllerTestBasis {
                         .accept(MediaType.APPLICATION_JSON)) //
                 .andDo(print()) //
                 .andExpect(status().isOk()) //
-                .andExpect(MockMvcResultMatchers.jsonPath("$.anzahl").value(BigDecimal.valueOf(1000))) //
+                .andExpect(MockMvcResultMatchers.jsonPath("$.verfuegbareAnzahl").value(BigDecimal.valueOf(1000))) //
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty()) //
                 .andReturn();
 

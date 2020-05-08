@@ -11,13 +11,11 @@ package io.remedymatch.usercontext;
 //import org.springframework.security.core.context.SecurityContextHolder;
 //
 //import lombok.AllArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
 
 //@AllArgsConstructor
 //@Configuration
 //@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 //@Profile("!testauditing")
-//@Slf4j
 class UserContextAuditingConfiguration {
 
 //	private final UserContextService userContextService;

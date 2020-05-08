@@ -45,10 +45,10 @@ public class Person {
 
 	@Valid
 	@NotNull
-	private PersonInstitution aktuelleInstitution;
+	private PersonStandort aktuellesStandort;
 
 	@Valid
 	@NotNull
 	@Builder.Default
-	private List<PersonInstitution> institutionen = new ArrayList<>();
+	private List<PersonStandort> standorte = new ArrayList<>();
 }

@@ -1,31 +1,29 @@
 package io.remedymatch.angebot.process;
 
-import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
-import io.remedymatch.angebot.domain.model.AngebotId;
-import io.remedymatch.angebot.domain.service.AngebotAnfrageSucheService;
-import io.remedymatch.angebot.domain.service.AngebotService;
-import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.properties.EngineProperties;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import java.util.UUID;
+
+import javax.annotation.PostConstruct;
+
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.UUID;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.model.AngebotId;
+import io.remedymatch.angebot.domain.service.AngebotService;
+import io.remedymatch.properties.EngineProperties;
+import lombok.AllArgsConstructor;
+import lombok.val;
+import lombok.extern.log4j.Log4j2;
 
 @AllArgsConstructor
 @Component
-@Slf4j
+@Log4j2
 @Profile("!disableexternaltasks")
 class AngebotExternalTaskClient {
     private final EngineProperties properties;
-    private final AngebotAnfrageSucheService anfrageSucheService;
     private final AngebotService angebotService;
-    private final EngineClient engineClient;
     final static String VAR_ANFRAGE_ID = "angebot_anfrage_id";
 
 

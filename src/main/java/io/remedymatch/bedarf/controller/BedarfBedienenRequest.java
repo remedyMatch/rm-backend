@@ -17,9 +17,6 @@ import java.util.UUID;
 class BedarfBedienenRequest {
 
     @NotNull
-    private UUID standortId;
-
-    @NotNull
     @Positive
     private BigDecimal anzahl;
 

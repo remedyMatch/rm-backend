@@ -36,7 +36,7 @@ public class AufgabeController {
 	public ResponseEntity<Void> aufgabeAbschliessen(@RequestBody AufgabeAbschliessenRequest request) {
 		val person = userService.getContextUser();
 
-		if (!aufgabeService.isBearbeiter(request.getTaskId(), person.getAktuelleInstitution().getInstitution().getId().getValue().toString())) {
+		if (!aufgabeService.isBearbeiter(request.getTaskId(), person.getAktuellesStandort().getInstitution().getId().getValue().toString())) {
 			return ResponseEntity.status(403).build();
 		}
 

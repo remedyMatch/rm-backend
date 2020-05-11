@@ -63,6 +63,7 @@ public class InstitutionAntragEntity extends Auditable {
     private InstitutionAntragStatus status;
 
     @Column(name = "PERSON_UUID", nullable = false, updatable = false, length = 64)
+    @Type(type = "uuid-char")
     private UUID antragsteller;
 
 }

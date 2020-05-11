@@ -42,5 +42,5 @@ class PersonRO {
 
     @NotNull
     @Builder.Default
-    private List<PersonStandortRO> standorte = new ArrayList<>();
+    private List<Institution2StandortRO> institutionen = new ArrayList<>();
 }

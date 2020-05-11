@@ -23,7 +23,7 @@ class PersonControllerMapper {
                 .email(person.getEmail()) //
                 .telefon(person.getTelefon()) //
                 .aktuellerStandort(mapStandortToRO(person.getAktuellesStandort())) //
-                .standorte(mapStandorteToRO(person.getStandorte())) //
+                .institutionen(mapToInstitution2StandortRO(person.getStandorte())) //
                 .build();
     }
 

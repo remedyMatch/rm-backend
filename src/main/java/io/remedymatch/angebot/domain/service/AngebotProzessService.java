@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 class AngebotProzessService {
 
     final static ProzessKey PROZESS_KEY = new ProzessKey("angebot_prozess");
-    final static MessageKey ANFRAGE_MESSAGE = new MessageKey("angebot_prozess_anfrage_erhalten");
+    final static MessageKey ANFRAGE_MESSAGE = new MessageKey("angebot_prozess_anfrage_erhalten_message");
     final static MessageKey ANFRAGE_STORNIEREN_MESSAGE = new MessageKey("angebot_prozess_anfrage_storniert_message");
     final static MessageKey REST_ANGEBOT_AENDERN_MESSAGE = new MessageKey("angebot_prozess_rest_geaendert_message");
     final static MessageKey ANGEBOT_UNGUELTIG_MESSAGE = new MessageKey("angebot_prozess_rest_geaendert_message");

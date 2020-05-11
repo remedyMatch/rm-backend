@@ -43,16 +43,6 @@ public class InstitutionController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/hauptstandort")
-    public ResponseEntity<InstitutionRO> updateHauptstandort(
-            @RequestBody @Valid NeuerInstitutionStandortRequest neuesStandort) {
-
-        // XXX sollte weg sein nachdem der RegistrierungFreigabe Prozess fertig ist...
-
-        return ResponseEntity.ok(mapToInstitutionRO(
-                institutionService.userInstitutionHauptstandortHinzufuegen(mapToNeuesStandort(neuesStandort))));
-    }
-
     @PostMapping("/standort")
     public ResponseEntity<InstitutionRO> standortHinzufuegen(
             @RequestBody @Valid NeuerInstitutionStandortRequest neuesStandort) {

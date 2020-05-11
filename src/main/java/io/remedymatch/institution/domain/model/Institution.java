@@ -1,19 +1,12 @@
 package io.remedymatch.institution.domain.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,24 +17,20 @@ import lombok.ToString;
 @Builder
 public class Institution {
 
-	@NotNull
-	@Valid
-	private InstitutionId id;
-	
-	@NotBlank
+    @NotNull
+    @Valid
+    private InstitutionId id;
+
+    @NotBlank
     private String name;
-	
-	@NotBlank
+
+    @NotBlank
     private String institutionKey;
-	
-	@NotNull
+
+    @NotNull
     private InstitutionTyp typ;
-	
-	@Valid
-	@NotNull
-    private InstitutionStandort  hauptstandort;	
-	
-	@Valid
+
+    @Valid
     @Builder.Default
     private List<InstitutionStandort> standorte = new ArrayList<>();
 }

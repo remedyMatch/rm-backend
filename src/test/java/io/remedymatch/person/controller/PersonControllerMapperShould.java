@@ -102,7 +102,6 @@ class PersonControllerMapperShould {
                 .name(INSTITUTION_NAME) //
                 .institutionKey(INSTITUTION_KEY) //
                 .typ(INSTITUTION_TYP) //
-                .hauptstandort(standort()) //
                 .standorte(new ArrayList<>(Arrays.asList(standort()))) //
                 .build();
     }
@@ -113,7 +112,6 @@ class PersonControllerMapperShould {
                 .name(INSTITUTION_NAME) //
                 .institutionKey(INSTITUTION_KEY) //
                 .typ(INSTITUTION_TYP) //
-                .hauptstandort(standortRO()) //
                 .standorte(new ArrayList<>(Arrays.asList(standortRO()))) //
                 .build();
     }

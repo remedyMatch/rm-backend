@@ -98,7 +98,7 @@ public class PersonService {
         val person = getPerson(personId);
         val institution = getInstitution(institutionId);
 
-        person.addNeuesStandort(institution, institution.getHauptstandort(), standortOeffentlich);
+        person.addNeuesStandort(institution, institution.getStandorte().get(0), standortOeffentlich);
         personRepository.save(person);
     }
 

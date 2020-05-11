@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 class BedarfProzessService {
 
     final static ProzessKey PROZESS_KEY = new ProzessKey("bedarf_prozess");
-    final static MessageKey ANFRAGE_MESSAGE = new MessageKey("bedarf_prozess_anfrage_erhalten");
+    final static MessageKey ANFRAGE_MESSAGE = new MessageKey("bedarf_prozess_anfrage_erhalten_message");
     final static MessageKey ANFRAGE_STORNIEREN_MESSAGE = new MessageKey("bedarf_prozess_anfrage_storniert_message");
     final static MessageKey REST_BEDARF_AENDERN_MESSAGE = new MessageKey("bedarf_prozess_rest_geaendert_message");
     final static MessageKey BEDARF_UNGUELTIG_MESSAGE = new MessageKey("bedarf_prozess_rest_geaendert_message");

@@ -121,7 +121,6 @@ public abstract class AngebotControllerTestBasis {
                 .name("ITest Spender Institution") //
                 .institutionKey("itest_spender_institution") //
                 .typ(InstitutionTyp.GEWERBE_UND_INDUSTRIE) //
-                .hauptstandort(standort) //
                 .standorte(Arrays.asList(standort)) //
                 .build());
 
@@ -159,7 +158,6 @@ public abstract class AngebotControllerTestBasis {
                 .name("ITest Suchender Institution") //
                 .institutionKey("itest_suchender_institution") //
                 .typ(InstitutionTyp.KRANKENHAUS) //
-                .hauptstandort(standort) //
                 .standorte(Arrays.asList(standort)) //
                 .build());
 

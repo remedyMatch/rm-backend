@@ -1,7 +1,6 @@
 package io.remedymatch.institution.domain.service;
 
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.domain.OperationNotAlloudException;
 import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.geodaten.domain.GeocodingService;
@@ -47,13 +46,12 @@ public class InstitutionService {
 
         log.debug("Lege neue Institution an: " + neueInstitution);
 
-        val hauptstandort = standortErstellen(neueInstitution.getHauptstandort());
+        val standort = standortErstellen(neueInstitution.getStandort());
         return updateInstitution(InstitutionEntity.builder() //
                 .name(neueInstitution.getName()) //
                 .institutionKey(neueInstitution.getInstitutionKey()) //
                 .typ(neueInstitution.getTyp()) //
-                .hauptstandort(hauptstandort) //
-                .standorte(Arrays.asList(hauptstandort)) //
+                .standorte(Arrays.asList(standort)) //
                 .build());
     }
 
@@ -61,34 +59,22 @@ public class InstitutionService {
 
         log.debug("Aktualisiere User Institution: " + update);
 
-        if (StringUtils.isBlank(update.getNeueName()) && update.getNeuesTyp() == null
-                && update.getNeuesHauptstandortId() == null) {
-            throw new OperationNotAlloudException(EXCEPTION_MSG_UPDATE_OHNE_DATEN);
-        }
-
         val userInstitution = getUserInstitution();
         if (StringUtils.isNotBlank(update.getNeueName())) {
             userInstitution.setName(update.getNeueName());
-        }
-        if (update.getNeuesTyp() != null) {
-            userInstitution.setTyp(update.getNeuesTyp());
-        }
-        if (update.getNeuesHauptstandortId() != null) {
-            userInstitution.setHauptstandort(getStandort(userInstitution, update.getNeuesHauptstandortId()));
         }
 
         return updateInstitution(userInstitution);
     }
 
     public Institution userInstitutionHauptstandortHinzufuegen(
-            final @NotNull @Valid NeuerInstitutionStandort neuesStandort) {
+            final @NotNull @Valid NeuerInstitutionStandort neuerStandort) {
 
-        log.debug("Setze neues Hauptstandort in User Institution: " + neuesStandort);
+        log.debug("Setze neues Hauptstandort in User Institution: " + neuerStandort);
 
         val userInstitution = getUserInstitution();
-        val standort = standortErstellen(neuesStandort);
+        val standort = standortErstellen(neuerStandort);
         userInstitution.addStandort(standort);
-        userInstitution.setHauptstandort(standort);
 
         return updateInstitution(userInstitution);
     }
@@ -162,7 +148,7 @@ public class InstitutionService {
                 //TODO key muss überarbeitet werden
                 .institutionKey(antrag.getWebseite())
                 .build();
-        val hauptstandort = NeuerInstitutionStandort.builder()
+        val standort = NeuerInstitutionStandort.builder()
                 .ort(antrag.getOrt())
                 .hausnummer(antrag.getHausnummer())
                 .land(antrag.getLand())
@@ -170,7 +156,7 @@ public class InstitutionService {
                 .plz(antrag.getPlz())
                 .strasse(antrag.getStrasse())
                 .build();
-        neueInstitution.setHauptstandort(hauptstandort);
+        neueInstitution.setStandort(standort);
         return neueInstitution;
     }
 

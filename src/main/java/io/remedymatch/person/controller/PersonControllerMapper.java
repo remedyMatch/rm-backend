@@ -5,6 +5,7 @@ import io.remedymatch.institution.controller.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.person.domain.model.*;
+import lombok.val;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ class PersonControllerMapper {
                 .build();
     }
 
+
     static PersonUpdate mapToUpdate(final PersonUpdateRequest personUpdateRequest) {
         return PersonUpdate.builder()//
                 .aktuellesStandortId(new PersonStandortId(personUpdateRequest.getAktuellesStandortId())) //
@@ -51,5 +53,22 @@ class PersonControllerMapper {
                 .standortId(new InstitutionStandortId(neuesPersonStandortRequest.getStandortId())) //
                 .oeffentlich(neuesPersonStandortRequest.isOeffentlich()) //
                 .build();
+    }
+
+    static List<Institution2StandortRO> mapToInstitution2StandortRO(List<PersonStandort> personStandorte) {
+        var institutionId2PersonStandortMap = personStandorte.stream()
+                .collect(Collectors.groupingBy(p -> p.getInstitution().getId().getValue()));
+
+        var institution2Standorte = institutionId2PersonStandortMap.keySet().stream().map(institutionId -> {
+            val institution = institutionId2PersonStandortMap.get(institutionId).get(0).getInstitution();
+            val standorte = institutionId2PersonStandortMap.get(institutionId).stream().map(PersonStandort::getStandort).collect(Collectors.toList());
+            var inst2Standort = Institution2StandortRO.builder()
+                    .institution(InstitutionMapper.mapToInstitutionRO(institution))
+                    .standorte(InstitutionStandortMapper.mapToStandorteRO(standorte))
+                    .build();
+            return inst2Standort;
+        }).collect(Collectors.toList());
+
+        return institution2Standorte;
     }
 }

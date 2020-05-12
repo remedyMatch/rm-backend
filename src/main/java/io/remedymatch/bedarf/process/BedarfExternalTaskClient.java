@@ -1,6 +1,5 @@
 package io.remedymatch.bedarf.process;
 
-import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.domain.service.BedarfService;
@@ -69,8 +68,8 @@ class BedarfExternalTaskClient {
         client.subscribe("angebot_schliessen_topic").lockDuration(2000) //
                 .handler((externalTask, externalTaskService) -> {
                     try {
-                        val angebotId = new AngebotId(UUID.fromString(externalTask.getBusinessKey()));
-                        bedarfService.bedarfAlsGeschlossenMarkieren(angebotId);
+                        val bedarfId = new BedarfId(UUID.fromString(externalTask.getBusinessKey()));
+                        bedarfService.bedarfAlsGeschlossenMarkieren(bedarfId);
 
                         //TODO Benachrichtigung senden?
                         externalTaskService.complete(externalTask);

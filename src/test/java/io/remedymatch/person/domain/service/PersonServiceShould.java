@@ -194,7 +194,7 @@ class PersonServiceShould {
     @DisplayName("ein Fehler werfen, wenn der Standort nicht in Person existiert")
     void eine_Fehler_werfen_wenn_der_Standort_nicht_in_Person_existiert() {
 
-        val unbekanntesStandortId = new PersonStandortId(UUID.randomUUID());
+        val unbekanntesStandortId = new InstitutionStandortId(UUID.randomUUID());
 
         val person = beispielPerson();
         val personEntity = beispielPersonEntity();
@@ -202,7 +202,7 @@ class PersonServiceShould {
         given(userService.getContextUserId()).willReturn(person.getId());
         given(personRepository.findById(person.getId().getValue())).willReturn(Optional.of(personEntity));
 
-        val personUpdate = PersonUpdate.builder().aktuellesStandortId(unbekanntesStandortId).build();
+        val personUpdate = PersonUpdate.builder().aktuelleStandortId(unbekanntesStandortId).build();
         assertThrows(ObjectNotFoundException.class, () -> personService.userAktualisieren(personUpdate));
 
         then(institutionSucheService).shouldHaveNoInteractions();
@@ -256,7 +256,7 @@ class PersonServiceShould {
                 .willReturn(Optional.of(personEntityVorAenderung));
         given(personRepository.save(personEntityNachAenderung)).willReturn(personEntityNachAenderung);
 
-        val personUpdate = PersonUpdate.builder().aktuellesStandortId(andereInstitutionStandortId).build();
+        val personUpdate = PersonUpdate.builder().aktuelleStandortId(andereInstitution.getStandorte().get(0).getId()).build();
         assertEquals(expectedPerson, personService.userAktualisieren(personUpdate));
 
         then(institutionSucheService).shouldHaveNoInteractions();

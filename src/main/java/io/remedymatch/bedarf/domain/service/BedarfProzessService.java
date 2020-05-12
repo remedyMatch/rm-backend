@@ -74,7 +74,7 @@ class BedarfProzessService {
     }
 
     void anfrageErhalten(
-            final @NotNull @Valid BedarfAnfrageId angebotAnfrageId,
+            final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId,
             final @NotNull @Valid BedarfId bedarfId,
             final @NotNull @Valid AngebotId angebotId) {
         engineClient.messageKorrelieren(//
@@ -82,7 +82,7 @@ class BedarfProzessService {
                 new BusinessKey(bedarfId.getValue()), //
                 ANFRAGE_MESSAGE,
                 Variables.createVariables()
-                        .putValue(VAR_ANFRAGE_ID, angebotAnfrageId.getValue().toString())
+                        .putValue(VAR_ANFRAGE_ID, bedarfAnfrageId.getValue().toString())
                         .putValue(VAR_ANFRAGE_ANGEBOT_ID, angebotId.getValue().toString()));
     }
 

@@ -4,7 +4,10 @@ import io.remedymatch.institution.controller.InstitutionMapper;
 import io.remedymatch.institution.controller.InstitutionStandortMapper;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
-import io.remedymatch.person.domain.model.*;
+import io.remedymatch.person.domain.model.NeuesPersonStandort;
+import io.remedymatch.person.domain.model.Person;
+import io.remedymatch.person.domain.model.PersonStandort;
+import io.remedymatch.person.domain.model.PersonUpdate;
 import lombok.val;
 
 import java.util.List;
@@ -43,7 +46,7 @@ class PersonControllerMapper {
 
     static PersonUpdate mapToUpdate(final PersonUpdateRequest personUpdateRequest) {
         return PersonUpdate.builder()//
-                .aktuellesStandortId(new PersonStandortId(personUpdateRequest.getAktuellesStandortId())) //
+                .aktuelleStandortId(new InstitutionStandortId(personUpdateRequest.getAktuelleStandortId())) //
                 .build();
     }
 

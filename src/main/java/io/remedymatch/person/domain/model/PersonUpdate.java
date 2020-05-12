@@ -1,14 +1,9 @@
 package io.remedymatch.person.domain.model;
 
-import javax.validation.Valid;
+import io.remedymatch.institution.domain.model.InstitutionStandortId;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.validation.Valid;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,6 +14,6 @@ import lombok.ToString;
 @Builder
 public class PersonUpdate {
 
-	@Valid
-	private PersonStandortId aktuellesStandortId;
+    @Valid
+    private InstitutionStandortId aktuelleStandortId;
 }

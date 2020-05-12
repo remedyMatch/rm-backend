@@ -72,6 +72,13 @@ public class BedarfService {
     }
 
     @Transactional
+    public void bedarfAlsGeschlossenMarkieren(final @NotNull @Valid BedarfId bedarfId) {
+        val bedarf = getBedarf(bedarfId);
+        bedarf.setDeleted(true);
+        bedarfRepository.save(bedarf);
+    }
+
+    @Transactional
     public void bedarfAnzahlAendern(final @NotNull @Valid BedarfId bedarfId, @NotNull BigDecimal anzahl) {
 
         // pruefe ob das Angebot existiert
@@ -93,8 +100,8 @@ public class BedarfService {
 
         var anfrage = anfrageRepository.save(BedarfAnfrageEntity.builder() //
                 .bedarf(bedarf) //
-				.institution(getUserInstitution()) //
-				.standort(getUserStandort()) //
+                .institution(getUserInstitution()) //
+                .standort(getUserStandort()) //
                 .anzahl(anzahl) //
                 .kommentar(kommentar) //
                 .angebotId(angebotId.getValue()) //
@@ -213,6 +220,16 @@ public class BedarfService {
         return bedarf;
     }
 
+    BedarfEntity getBedarf(final @NotNull @Valid BedarfId bedarfId) {
+        Assert.notNull(bedarfId, "BedarfId ist null.");
+
+        val bedarf = bedarfRepository.findById(bedarfId.getValue()) //
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        String.format(EXCEPTION_MSG_BEDARF_NICHT_GEFUNDEN, bedarfId.getValue())));
+
+        return bedarf;
+    }
+
     BedarfAnfrageEntity getOffeneAnfrageDerUserInstitution(//
                                                            final @NotNull @Valid BedarfId bedarfId, //
                                                            final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
@@ -262,10 +279,10 @@ public class BedarfService {
     private InstitutionEntity getUserInstitution() {
         return InstitutionEntityConverter.convertInstitution(userService.getContextStandort().getInstitution());
     }
-    
+
     private InstitutionStandortEntity getUserStandort() {
-		return InstitutionStandortEntityConverter.convertStandort(userService.getContextStandort().getStandort());
-	}
+        return InstitutionStandortEntityConverter.convertStandort(userService.getContextStandort().getStandort());
+    }
 
     InstitutionStandortEntity getUserInstitutionStandort( //
                                                           final @NotNull InstitutionEntity userInstitution, //

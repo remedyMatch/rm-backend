@@ -1,12 +1,9 @@
 package io.remedymatch.institution.domain.service;
 
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.engine.domain.BusinessKey;
 import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.model.*;
 import io.remedymatch.institution.infrastructure.*;
-import io.remedymatch.institution.process.InstitutionAntragProzessConstants;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,7 +17,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +33,7 @@ public class InstitutionService {
     private final InstitutionJpaRepository institutionRepository;
     private final InstitutionStandortJpaRepository institutionStandortRepository;
     private final InstitutionAntragJpaRepository institutionAntragJpaRepository;
-    private final EngineClient engineClient;
+    private final InstitutionProzessService prozessService;
 
     private final GeocodingService geocodingService;
     private final UserContextService userService;
@@ -100,7 +96,7 @@ public class InstitutionService {
         antrag.setStatus(InstitutionAntragStatus.OFFEN);
 
         val gespeicherterAntrag = updateAntrag(antrag);
-        institutionAntragProzessStarten(gespeicherterAntrag);
+        prozessService.antragProzessStarten(gespeicherterAntrag);
     }
 
 
@@ -158,15 +154,6 @@ public class InstitutionService {
                 .build();
         neueInstitution.setStandort(standort);
         return neueInstitution;
-    }
-
-    private void institutionAntragProzessStarten(@NotNull @Valid final InstitutionAntrag antrag) {
-
-        val variables = new HashMap<String, Object>();
-        engineClient.prozessStarten(
-                InstitutionAntragProzessConstants.PROZESS_KEY,
-                new BusinessKey(antrag.getId().getValue()),
-                userService.getContextUserId(), variables);
     }
 
     private InstitutionAntrag updateAntrag(InstitutionAntrag antrag) {

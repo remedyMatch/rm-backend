@@ -50,7 +50,7 @@ class PersonControllerMapper {
                 .build();
     }
 
-    static NeuesPersonStandort mapToNeuesStandort(final NeuesPersonStandortRequest neuesPersonStandortRequest) {
+    static NeuesPersonStandort mapToNeuesStandort(final NeuerPersonStandortRequest neuesPersonStandortRequest) {
         return NeuesPersonStandort.builder()//
                 .institutionId(new InstitutionId(neuesPersonStandortRequest.getInstitutionId())) //
                 .standortId(new InstitutionStandortId(neuesPersonStandortRequest.getStandortId())) //

@@ -90,7 +90,8 @@ class BedarfSucheServiceShould {
 
         then(bedarfRepository).should().findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue();
         then(bedarfRepository).shouldHaveNoMoreInteractions();
-        then(userService).shouldHaveNoInteractions();
+        then(userService).should().getContextInstitutionId();
+        then(userService).shouldHaveNoMoreInteractions();
         // XXX 2 verschiedene Aufrufe pruefen...
         then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());
         then(geoCalcService).shouldHaveNoMoreInteractions();
@@ -114,8 +115,8 @@ class BedarfSucheServiceShould {
         bedarf2.setId(bedarf2Id);
         bedarf2.setEntfernung(bedarf2Entfernung);
 
-		val artikelVarianteId = bedarf1.getArtikelVariante().getId();
-		
+        val artikelVarianteId = bedarf1.getArtikelVariante().getId();
+
         given(bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(artikelVarianteId.getValue()))
                 .willReturn(Arrays.asList(bedarf1Entity, bedarf2Entity));
         given(geoCalcService.berechneUserDistanzInKilometer(bedarf1.getStandort())).willReturn(bedarf1Entfernung);
@@ -127,12 +128,13 @@ class BedarfSucheServiceShould {
 
         then(bedarfRepository).should().findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(artikelVarianteId.getValue());
         then(bedarfRepository).shouldHaveNoMoreInteractions();
-        then(userService).shouldHaveNoInteractions();
+        then(userService).should().getContextInstitutionId();
+        then(userService).shouldHaveNoMoreInteractions();
         // XXX 2 verschiedene Aufrufe pruefen...
         then(geoCalcService).should(times(2)).berechneUserDistanzInKilometer(any());
         then(geoCalcService).shouldHaveNoMoreInteractions();
     }
-    
+
     @Test
     @DisplayName("alle nicht bediente Bedarfe der UserContext Institution zurueckliefern")
     void alle_nicht_bediente_Bedarfe_der_UserContext_Institution_zurueckliefern() {

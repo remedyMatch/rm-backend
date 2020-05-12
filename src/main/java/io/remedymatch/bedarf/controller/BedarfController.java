@@ -70,7 +70,7 @@ class BedarfController {
         try {
             return ResponseEntity.ok(mapToAnfrageRO(bedarfService.bedarfAnfrageErstellen(//
                     BedarfControllerMapper.mapToBedarfId(bedarfId), //
-                    request.getKommentar(), //
+                    request.getNachricht(), //
                     request.getAnzahl(), //
                     new AngebotId(request.getAngebotId()))));
         } catch (OperationNotAllowedException e) {

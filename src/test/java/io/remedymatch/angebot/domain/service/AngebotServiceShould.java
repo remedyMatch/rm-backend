@@ -204,11 +204,9 @@ class AngebotServiceShould {
         val anfrageId = beispielAngebotAnfrageId();
         val anfrage = beispielAngebotAnfrage();
         anfrage.setAnzahl(anzahl);
-        anfrage.setKommentar(kommentar);
 
         val anfrageEntity = beispielAngebotAnfrageEntity();
         anfrageEntity.setAnzahl(anzahl);
-        anfrageEntity.setKommentar(kommentar);
 
         val institution = anfrage.getInstitution();
         val institutionEntity = anfrageEntity.getInstitution();
@@ -224,7 +222,6 @@ class AngebotServiceShould {
                 .institution(institutionEntity) //
                 .standort(standortEntity) //
                 .anzahl(anzahl) //
-                .kommentar(kommentar) //
                 .bedarfId(bedarfId.getValue()).status(AngebotAnfrageStatus.OFFEN) //
                 .build();
 

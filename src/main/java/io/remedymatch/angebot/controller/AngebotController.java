@@ -85,7 +85,7 @@ public class AngebotController {
         try {
             return ResponseEntity.ok(mapToAnfrageRO(angebotService.angebotAnfrageErstellen(//
                     AngebotControllerMapper.mapToAngebotId(angebotId), //
-                    request.getKommentar(), //
+                    request.getNachricht(), //
                     request.getAnzahl(), //
                     new BedarfId(request.getBedarfId()))));
         } catch (OperationNotAllowedException e) {

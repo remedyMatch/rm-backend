@@ -92,7 +92,7 @@ public class BedarfService {
     @Transactional
     public BedarfAnfrage bedarfAnfrageErstellen(
             final @NotNull @Valid BedarfId bedarfId, //
-            final @NotBlank String kommentar, //
+            final @NotBlank String nachricht, //
             final @NotNull BigDecimal anzahl, //
             final @NotNull AngebotId angebotId) {
 
@@ -107,7 +107,6 @@ public class BedarfService {
                 .institution(getUserInstitution()) //
                 .standort(getUserStandort()) //
                 .anzahl(anzahl) //
-                .kommentar(kommentar) //
                 .angebotId(angebotId.getValue()) //
                 .status(BedarfAnfrageStatus.OFFEN) //
                 .build());

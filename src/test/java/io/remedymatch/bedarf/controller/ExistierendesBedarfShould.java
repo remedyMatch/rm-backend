@@ -89,8 +89,8 @@ public class ExistierendesBedarfShould extends BedarfControllerTestBasis {
 
         val bedarfBedienen = BedarfBedienenRequest.builder() //
                 .anzahl(BigDecimal.valueOf(200)) //
-                .kommentar("ITest Bedarf Anfrage Kommentar") //
                 .angebotId(UUID.randomUUID()) //
+                .nachricht("TEST NACHRICHT")
                 .build();
 
         MvcResult result = MockMvcBuilders.webAppContextSetup(webApplicationContext).build()
@@ -108,7 +108,7 @@ public class ExistierendesBedarfShould extends BedarfControllerTestBasis {
         BedarfAnfrageRO bedarfAnfrage = objectMapper.readValue(result.getResponse().getContentAsString(),
                 BedarfAnfrageRO.class);
 
-        assertEquals("ITest Bedarf Anfrage Kommentar", bedarfAnfrage.getKommentar());
+        assertEquals(BigDecimal.valueOf(200), bedarfAnfrage.getAnzahl());
 
         mockServer.verify();
     }

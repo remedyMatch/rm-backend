@@ -50,9 +50,6 @@ public class AngebotAnfrageEntity extends Auditable {
     @Column(name = "ANZAHL", nullable = false, updatable = false)
     private BigDecimal anzahl;
 
-    @Column(name = "KOMMENTAR", nullable = false, updatable = false, length = 256)
-    private String kommentar;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", nullable = false, updatable = true, length = 64)
     private AngebotAnfrageStatus status;

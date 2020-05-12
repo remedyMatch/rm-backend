@@ -23,5 +23,5 @@ class AngebotAnfragenRequest {
     @NotNull
     private UUID bedarfId;
 
-    private String kommentar;
+    private String nachricht;
 }

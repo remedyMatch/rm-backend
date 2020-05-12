@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.MappedSuperclass;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
@@ -38,9 +37,6 @@ class BedarfAnfrageRO {
     @NotNull
     @Positive
     private BigDecimal anzahl;
-
-    @NotBlank
-    private String kommentar;
 
     @NotNull
     private UUID angebotId;

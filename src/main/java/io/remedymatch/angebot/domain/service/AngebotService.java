@@ -94,7 +94,7 @@ public class AngebotService {
 
 
     public AngebotAnfrage angebotAnfrageErstellen(final @NotNull @Valid AngebotId angebotId, //
-                                                  final @NotBlank String kommentar, //
+                                                  final @NotBlank String nachricht, //
                                                   final @NotNull BigDecimal anzahl, final @NotNull BedarfId bedarfId) {
 
         val angebot = getNichtBedienteAngebot(angebotId);
@@ -109,13 +109,12 @@ public class AngebotService {
                 .standort(getUserStandort()) //
                 .anzahl(anzahl) //
                 .bedarfId(bedarfId.getValue()) //
-                .kommentar(kommentar) //
                 .status(AngebotAnfrageStatus.OFFEN) //
                 .build());
 
         angebotProzessService.anfrageErhalten(new AngebotAnfrageId(anfrage.getId()), angebotId, bedarfId);
 
-        this.nachrichtZuAnfrageSenden(new AngebotAnfrageId(anfrage.getId()), NeueNachricht.builder().nachricht(kommentar).build());
+        this.nachrichtZuAnfrageSenden(new AngebotAnfrageId(anfrage.getId()), NeueNachricht.builder().nachricht(nachricht).build());
 
         return AngebotAnfrageEntityConverter.convertAnfrage(anfrage);
     }

@@ -84,7 +84,6 @@ public abstract class BedarfControllerTestBasis {
                 .anzahl(BigDecimal.valueOf(200)) //
                 .institution(suchenderEntity.getAktuellesStandort().getInstitution()) //
                 .standort(suchenderEntity.getAktuellesStandort().getStandort()) //
-                .kommentar("ITest Bedarf Anfrage Kommentar") //
                 .status(BedarfAnfrageStatus.OFFEN) //
                 .build());
         TestUserContext.clear();

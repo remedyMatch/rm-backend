@@ -20,7 +20,7 @@ class BedarfBedienenRequest {
     @Positive
     private BigDecimal anzahl;
 
-    private String kommentar;
+    private String nachricht;
 
     @NotNull
     private UUID angebotId;

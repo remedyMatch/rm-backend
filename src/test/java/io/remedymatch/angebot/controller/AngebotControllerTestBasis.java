@@ -87,7 +87,6 @@ public abstract class AngebotControllerTestBasis {
                 .anzahl(BigDecimal.valueOf(200)) //
                 .institution(suchenderEntity.getAktuellesStandort().getInstitution()) //
                 .standort(suchenderEntity.getAktuellesStandort().getStandort()) //
-                .kommentar("ITest Angebot Anfrage Kommentar") //
                 .status(AngebotAnfrageStatus.OFFEN) //
                 .build());
         TestUserContext.clear();

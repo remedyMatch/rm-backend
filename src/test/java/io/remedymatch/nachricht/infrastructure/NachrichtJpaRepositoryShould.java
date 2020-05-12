@@ -1,7 +1,6 @@
 package io.remedymatch.nachricht.infrastructure;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
 import io.remedymatch.nachricht.domain.model.NachrichtReferenzTyp;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -54,10 +53,6 @@ public class NachrichtJpaRepositoryShould {
 
         assertEquals(3, nachrichtenFuerReferenzId.size());
 
-    }
-
-    private ArtikelKategorieId randomArtikelKategorieId() {
-        return new ArtikelKategorieId(UUID.randomUUID());
     }
 
     private NachrichtEntity nachricht(final String nachricht, UUID referenzId) {

@@ -34,24 +34,41 @@ public class AngebotSucheService {
     private final GeocodingService geocodingService;
 
     @Transactional(readOnly = true)
-    public List<AngebotFilterEntry> getArtikelKategorieFilter() {
-        return convertFilterEntries(angebotRepository.findAllKategorienMitUnbedientenAngebotenFilter(userService.getContextInstitutionId().getValue()));
+    public List<AngebotFilterEntry> getArtikelKategorieFilter(final Boolean ohneEigene) {
+
+        if (ohneEigene) {
+            return convertFilterEntries(angebotRepository.findAllKategorienMitUnbedientenAngebotenFilterOhneEigene(userService.getContextInstitutionId().getValue()));
+        }
+
+        return convertFilterEntries(angebotRepository.findAllKategorienMitUnbedientenAngebotenFilter());
     }
 
     @Transactional(readOnly = true)
-    public List<AngebotFilterEntry> getArtikelFilter(final @NotNull @Valid ArtikelKategorieId kategorieId) {
+    public List<AngebotFilterEntry> getArtikelFilter(final @NotNull @Valid ArtikelKategorieId kategorieId, final Boolean ohneEigene) {
+
+        if (ohneEigene) {
+            return convertFilterEntries(
+                    angebotRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilterOhneEigene(kategorieId.getValue(), userService.getContextInstitutionId().getValue()));
+        }
+
         return convertFilterEntries(
-                angebotRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilter(kategorieId.getValue(), userService.getContextInstitutionId().getValue()));
+                angebotRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilter(kategorieId.getValue()));
     }
 
     @Transactional(readOnly = true)
-    public List<AngebotFilterEntry> getArtikelVarianteFilter(final @NotNull @Valid ArtikelId artikelId) {
+    public List<AngebotFilterEntry> getArtikelVarianteFilter(final @NotNull @Valid ArtikelId artikelId, final Boolean ohneEigene) {
+
+        if (ohneEigene) {
+            return convertFilterEntries(
+                    angebotRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilterOhneEigene(artikelId.getValue(), userService.getContextInstitutionId().getValue()));
+        }
+
         return convertFilterEntries(
-                angebotRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilter(artikelId.getValue(), userService.getContextInstitutionId().getValue()));
+                angebotRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilter(artikelId.getValue()));
     }
 
     @Transactional(readOnly = true)
-    public List<Angebot> findAlleNichtBedienteOeffentlicheAngebote(final @Valid ArtikelVarianteId artikelVarianteId) {
+    public List<Angebot> findAlleNichtBedienteOeffentlicheAngebote(final @Valid ArtikelVarianteId artikelVarianteId, final Boolean ohneEigene) {
 
         List<Angebot> angebote;
 
@@ -63,10 +80,14 @@ public class AngebotSucheService {
             angebote = mitEntfernung(angebotRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue());
         }
 
-        val institutionId = userService.getContextInstitutionId();
-        return angebote.stream()
-                .filter(angebot -> !angebot.getInstitution().getId().equals(institutionId))
-                .collect(Collectors.toList());
+        if (ohneEigene) {
+            val institutionId = userService.getContextInstitutionId();
+            return angebote.stream()
+                    .filter(angebot -> !angebot.getInstitution().getId().equals(institutionId))
+                    .collect(Collectors.toList());
+        }
+
+        return angebote;
     }
 
     @Transactional(readOnly = true)

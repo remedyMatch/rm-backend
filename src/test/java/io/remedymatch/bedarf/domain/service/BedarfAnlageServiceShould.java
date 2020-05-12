@@ -6,7 +6,7 @@ import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.NeuerBedarf;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
-import io.remedymatch.domain.OperationNotAlloudException;
+import io.remedymatch.domain.OperationNotAllowedException;
 import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
@@ -68,7 +68,7 @@ class BedarfAnlageServiceShould {
     @Test
     @DisplayName("Fehler werfen wenn beide Artikel und ArtikelVariante leer sind")
     void fehler_werfen_wenn_beide_Artikel_und_Artikel_Variante_leer_sind() {
-        assertThrows(OperationNotAlloudException.class, //
+        assertThrows(OperationNotAllowedException.class, //
                 () -> bedarfAnlageService.neuenBedarfEinstellen(NeuerBedarf.builder().build()));
     }
 
@@ -101,7 +101,7 @@ class BedarfAnlageServiceShould {
         given(artikelSucheService.getArtikelVarianteOrElseThrow(artikelVarianteId)).willReturn(artikelVariante);
         given(userService.getContextUser()).willReturn(beispielUserContextPerson());
 
-        assertThrows(OperationNotAlloudException.class, //
+        assertThrows(OperationNotAllowedException.class, //
                 () -> bedarfAnlageService.neuenBedarfEinstellen(neuesBedarf));
     }
 

@@ -11,7 +11,7 @@ import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.domain.OperationNotAlloudException;
+import io.remedymatch.domain.OperationNotAllowedException;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
@@ -171,7 +171,7 @@ public class BedarfService {
         var restAnzahl = new BigDecimal(0);
         BigDecimal bedarfRest = bedarf.getRest();
         if (anfrageAnzahl.compareTo(bedarfRest) > 0) {
-            throw new OperationNotAlloudException("Nicht genügend Ware auf Lager");
+            throw new OperationNotAllowedException("Nicht genügend Ware auf Lager");
         }
 
         // Bedarf angenommen
@@ -214,7 +214,7 @@ public class BedarfService {
                         String.format(EXCEPTION_MSG_BEDARF_NICHT_GEFUNDEN, bedarfId.getValue())));
 
         if (bedarf.isBedient()) {
-            throw new OperationNotAlloudException(EXCEPTION_MSG_BEDARF_BEDIEN);
+            throw new OperationNotAllowedException(EXCEPTION_MSG_BEDARF_BEDIEN);
         }
 
         return bedarf;
@@ -255,12 +255,12 @@ public class BedarfService {
         val anfrage = getOffeneAnfrage(bedarfAnfrageId);
 
         if (!bedarfId.getValue().equals(anfrage.getBedarf().getId())) {
-            throw new OperationNotAlloudException(String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_IN_BEDARF,
+            throw new OperationNotAllowedException(String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_IN_BEDARF,
                     bedarfId.getValue(), bedarfAnfrageId.getValue()));
         }
 
         if (!BedarfAnfrageStatus.OFFEN.equals(anfrage.getStatus())) {
-            throw new OperationNotAlloudException(
+            throw new OperationNotAllowedException(
                     String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_GESCHLOSSEN, anfrage.getStatus()));
         }
 

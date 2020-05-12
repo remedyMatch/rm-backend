@@ -34,24 +34,41 @@ public class BedarfSucheService {
     private final GeocodingService geocodingService;
 
     @Transactional(readOnly = true)
-    public List<BedarfFilterEntry> getArtikelKategorieFilter() {
-        return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalse(userService.getContextInstitutionId().getValue()));
+    public List<BedarfFilterEntry> getArtikelKategorieFilter(final Boolean ohneEigene) {
+
+        if (ohneEigene) {
+            return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalse());
+        }
+
+        return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalseOhneEigene(userService.getContextInstitutionId().getValue()));
     }
 
     @Transactional(readOnly = true)
-    public List<BedarfFilterEntry> getArtikelFilter(final @NotNull @Valid ArtikelKategorieId kategorieId) {
+    public List<BedarfFilterEntry> getArtikelFilter(final @NotNull @Valid ArtikelKategorieId kategorieId, final Boolean ohneEigene) {
+
+        if (ohneEigene) {
+            return convertFilterEntries(bedarfRepository
+                    .countAllBedarfArtikelByDeletedFalseAndBedientFalseAndArtikel_ArtikelKategorieOhneEigene(kategorieId.getValue(), userService.getContextInstitutionId().getValue()));
+        }
+
         return convertFilterEntries(bedarfRepository
-                .countAllBedarfArtikelByDeletedFalseAndBedientFalseAndArtikel_ArtikelKategorie(kategorieId.getValue(), userService.getContextInstitutionId().getValue()));
+                .countAllBedarfArtikelByDeletedFalseAndBedientFalseAndArtikel_ArtikelKategorie(kategorieId.getValue()));
     }
 
     @Transactional(readOnly = true)
-    public List<BedarfFilterEntry> getArtikelVarianteFilter(final @NotNull @Valid ArtikelId artikelId) {
+    public List<BedarfFilterEntry> getArtikelVarianteFilter(final @NotNull @Valid ArtikelId artikelId, final Boolean ohneEigene) {
+
+        if (ohneEigene) {
+            return convertFilterEntries(bedarfRepository
+                    .countAllBedarfArtikelVariantenByDeletedFalseAndBedientFalseAndArtikel_IdOhneEigene(artikelId.getValue(), userService.getContextInstitutionId().getValue()));
+        }
+
         return convertFilterEntries(bedarfRepository
-                .countAllBedarfArtikelVariantenByDeletedFalseAndBedientFalseAndArtikel_Id(artikelId.getValue(), userService.getContextInstitutionId().getValue()));
+                .countAllBedarfArtikelVariantenByDeletedFalseAndBedientFalseAndArtikel_Id(artikelId.getValue()));
     }
 
     @Transactional(readOnly = true)
-    public List<Bedarf> findAlleNichtBedienteOeffentlicheBedarfe(final @Valid ArtikelVarianteId artikelVarianteId) {
+    public List<Bedarf> findAlleNichtBedienteOeffentlicheBedarfe(final @Valid ArtikelVarianteId artikelVarianteId, final Boolean ohneEigene) {
 
         List<Bedarf> bedarfe;
 
@@ -63,10 +80,14 @@ public class BedarfSucheService {
             bedarfe = mitEntfernung(bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue());
         }
 
-        val institutionId = userService.getContextInstitutionId();
-        return bedarfe.stream()
-                .filter(angebot -> !angebot.getInstitution().getId().equals(institutionId))
-                .collect(Collectors.toList());
+        if (ohneEigene) {
+            val institutionId = userService.getContextInstitutionId();
+            return bedarfe.stream()
+                    .filter(angebot -> !angebot.getInstitution().getId().equals(institutionId))
+                    .collect(Collectors.toList());
+        }
+
+        return bedarfe;
     }
 
     @Transactional(readOnly = true)

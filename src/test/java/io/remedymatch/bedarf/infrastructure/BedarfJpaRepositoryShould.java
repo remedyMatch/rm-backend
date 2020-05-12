@@ -101,7 +101,7 @@ public class BedarfJpaRepositoryShould {
         FilterEntry ersteKategorie = filterEntry(kategorie1.getId(), 2);
         FilterEntry zweiteKategorie = filterEntry(kategorie2.getId(), 1);
         assertThat(//
-                jpaRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalse(UUID.randomUUID()), //
+                jpaRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalseOhneEigene(UUID.randomUUID()), //
                 containsInAnyOrder(ersteKategorie, zweiteKategorie));
     }
 
@@ -144,7 +144,7 @@ public class BedarfJpaRepositoryShould {
         FilterEntry erstesArtikel = filterEntry(kategorie1Artikel1.getId(), 2);
         FilterEntry zweitesArtikel = filterEntry(kategorie1Artikel2.getId(), 1);
         assertThat(//
-                jpaRepository.countAllBedarfArtikelByDeletedFalseAndBedientFalseAndArtikel_ArtikelKategorie(
+                jpaRepository.countAllBedarfArtikelByDeletedFalseAndBedientFalseAndArtikel_ArtikelKategorieOhneEigene(
                         kategorie1.getId(), UUID.randomUUID()), //
                 containsInAnyOrder(erstesArtikel, zweitesArtikel));
     }
@@ -185,7 +185,7 @@ public class BedarfJpaRepositoryShould {
         FilterEntry ersteVariante = filterEntry(kategorie1Artikel1Variante1.getId(), 2);
         FilterEntry zweiteVariante = filterEntry(kategorie1Artikel1Variante2.getId(), 1);
         assertThat(//
-                jpaRepository.countAllBedarfArtikelVariantenByDeletedFalseAndBedientFalseAndArtikel_Id(
+                jpaRepository.countAllBedarfArtikelVariantenByDeletedFalseAndBedientFalseAndArtikel_IdOhneEigene(
                         kategorie1Artikel1.getId(), UUID.randomUUID()), //
                 containsInAnyOrder(ersteVariante, zweiteVariante));
     }

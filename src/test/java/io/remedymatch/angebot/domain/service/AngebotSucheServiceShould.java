@@ -84,7 +84,7 @@ class AngebotSucheServiceShould {
         given(geoCalcService.berechneUserDistanzInKilometer(angebot2.getStandort())).willReturn(angebot2Entfernung);
 
         assertThat(//
-                angebotSucheService.findAlleNichtBedienteOeffentlicheAngebote(null), //
+                angebotSucheService.findAlleNichtBedienteOeffentlicheAngebote(null, true), //
                 containsInAnyOrder(angebot1, angebot2));
 
         then(angebotRepository).should().findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue();
@@ -122,7 +122,7 @@ class AngebotSucheServiceShould {
         given(geoCalcService.berechneUserDistanzInKilometer(angebot2.getStandort())).willReturn(angebot2Entfernung);
 
         assertThat(//
-                angebotSucheService.findAlleNichtBedienteOeffentlicheAngebote(artikelVarianteId), //
+                angebotSucheService.findAlleNichtBedienteOeffentlicheAngebote(artikelVarianteId, true), //
                 containsInAnyOrder(angebot1, angebot2));
 
         then(angebotRepository).should().findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(

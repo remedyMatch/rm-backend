@@ -93,7 +93,11 @@ public class AngebotJpaRepositoryShould {
         FilterEntry zweiteKategorie = FilterEntry.builder().id(kategorie2.getId()).anzahl(1).build();
 
         assertThat(//
-                jpaRepository.findAllKategorienMitUnbedientenAngebotenFilter(UUID.randomUUID()), //
+                jpaRepository.findAllKategorienMitUnbedientenAngebotenFilterOhneEigene(UUID.randomUUID()), //
+                containsInAnyOrder(ersteKategorie, zweiteKategorie));
+
+        assertThat(//
+                jpaRepository.findAllKategorienMitUnbedientenAngebotenFilter(), //
                 containsInAnyOrder(ersteKategorie, zweiteKategorie));
     }
 
@@ -125,7 +129,11 @@ public class AngebotJpaRepositoryShould {
         FilterEntry zweitesArtikel = FilterEntry.builder().id(artikel2.getId()).anzahl(1).build();
 
         assertThat(//
-                jpaRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilter(beispielKategorieArtikel.getId(), UUID.randomUUID()), //
+                jpaRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilterOhneEigene(beispielKategorieArtikel.getId(), UUID.randomUUID()), //
+                containsInAnyOrder(erstesArtikel, zweitesArtikel));
+
+        assertThat(//
+                jpaRepository.findAllArtikelInKategorieMitUnbedientenAngebotenFilter(beispielKategorieArtikel.getId()), //
                 containsInAnyOrder(erstesArtikel, zweitesArtikel));
     }
 
@@ -163,7 +171,11 @@ public class AngebotJpaRepositoryShould {
         FilterEntry ersteVariante = filterEntry(kategorie1Artikel1Variante1.getId(), 2);
         FilterEntry zweiteVariante = filterEntry(kategorie1Artikel1Variante2.getId(), 1);
         assertThat(//
-                jpaRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilter(kategorie1Artikel1.getId(), UUID.randomUUID()), //
+                jpaRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilterOhneEigene(kategorie1Artikel1.getId(), UUID.randomUUID()), //
+                containsInAnyOrder(ersteVariante, zweiteVariante));
+
+        assertThat(//
+                jpaRepository.findAllArtikelVariantenInArtikelMitUnbedientenAngebotenFilter(kategorie1Artikel1.getId()), //
                 containsInAnyOrder(ersteVariante, zweiteVariante));
     }
 

@@ -9,7 +9,7 @@ import io.remedymatch.bedarf.domain.model.Bedarf;
 import io.remedymatch.bedarf.domain.model.NeuerBedarf;
 import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
-import io.remedymatch.domain.OperationNotAlloudException;
+import io.remedymatch.domain.OperationNotAllowedException;
 import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
@@ -48,7 +48,7 @@ public class BedarfAnlageService {
     public Bedarf neuenBedarfEinstellen(final @NotNull @Valid NeuerBedarf neuerBedarf) {
 
         if (neuerBedarf.getArtikelId() == null && neuerBedarf.getArtikelVarianteId() == null) {
-            throw new OperationNotAlloudException(EXCEPTION_MSG_ARTIKEL_UND_ARTIKEL_VARIANTE_LEER);
+            throw new OperationNotAllowedException(EXCEPTION_MSG_ARTIKEL_UND_ARTIKEL_VARIANTE_LEER);
         }
 
         ArtikelEntity artikelEntity = null;
@@ -57,7 +57,7 @@ public class BedarfAnlageService {
             artikelVariante = getArtikelVariante(neuerBedarf.getArtikelVarianteId());
             if (neuerBedarf.getArtikelId() != null
                     && !artikelVariante.getArtikel().equals(neuerBedarf.getArtikelId().getValue())) {
-                throw new OperationNotAlloudException(EXCEPTION_MSG_ARTIKEL_UND_ARTIKEL_VARIANTE_PASSEN_NICHT_ZUSAMMEN);
+                throw new OperationNotAllowedException(EXCEPTION_MSG_ARTIKEL_UND_ARTIKEL_VARIANTE_PASSEN_NICHT_ZUSAMMEN);
             }
 
             artikelEntity = getArtikel(new ArtikelId(artikelVariante.getArtikel()));

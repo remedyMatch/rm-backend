@@ -49,8 +49,8 @@ class BedarfController {
     }
 
     @DeleteMapping("/{bedarfId}")
-    public ResponseEntity<Void> bedarfLoeschen(//
-                                               @PathVariable("bedarfId") @NotNull UUID bedarfId) {
+    public ResponseEntity<Void> bedarfLoeschen(
+            @PathVariable("bedarfId") @NotNull UUID bedarfId) {
         try {
             bedarfService.bedarfDerUserInstitutionSchliessen(BedarfControllerMapper.mapToBedarfId(bedarfId));
         } catch (ObjectNotFoundException e) {

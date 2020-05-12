@@ -85,7 +85,7 @@ class BedarfSucheServiceShould {
         given(geoCalcService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
 
         assertThat(//
-                bedarfSucheService.findAlleNichtBedienteOeffentlicheBedarfe(null), //
+                bedarfSucheService.findAlleNichtBedienteOeffentlicheBedarfe(null, true), //
                 containsInAnyOrder(bedarf1, bedarf2));
 
         then(bedarfRepository).should().findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue();
@@ -123,7 +123,7 @@ class BedarfSucheServiceShould {
         given(geoCalcService.berechneUserDistanzInKilometer(bedarf2.getStandort())).willReturn(bedarf2Entfernung);
 
         assertThat(//
-                bedarfSucheService.findAlleNichtBedienteOeffentlicheBedarfe(artikelVarianteId), //
+                bedarfSucheService.findAlleNichtBedienteOeffentlicheBedarfe(artikelVarianteId, true), //
                 containsInAnyOrder(bedarf1, bedarf2));
 
         then(bedarfRepository).should().findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(artikelVarianteId.getValue());

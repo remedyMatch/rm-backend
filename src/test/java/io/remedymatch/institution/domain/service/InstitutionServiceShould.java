@@ -38,7 +38,7 @@ import static org.mockito.BDDMockito.then;
         InstitutionJpaRepository.class, //
         InstitutionStandortJpaRepository.class, //
         InstitutionAntragJpaRepository.class, //
-        EngineClient.class, //
+        InstitutionProzessService.class, //
         GeocodingService.class //
 })
 @Tag("Spring")

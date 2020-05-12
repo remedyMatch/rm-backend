@@ -11,7 +11,7 @@ import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.domain.OperationNotAlloudException;
+import io.remedymatch.domain.OperationNotAllowedException;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
@@ -91,6 +91,10 @@ public class AngebotService {
 
         val angebot = getNichtBedienteAngebot(angebotId);
 
+        if (angebot.getInstitution().getId().equals(userService.getContextInstitutionId())) {
+            throw new OperationNotAllowedException("Das eigene Angebot kann nicht angefragt werden");
+        }
+
         var anfrage = anfrageRepository.save(AngebotAnfrageEntity.builder() //
                 .angebot(angebot) //
                 .institution(getUserInstitution()) //
@@ -162,7 +166,7 @@ public class AngebotService {
         var restAnzahl = new BigDecimal(0);
         BigDecimal angebotRest = angebot.getRest();
         if (anfrageAnzahl.compareTo(angebotRest) > 0) {
-            throw new OperationNotAlloudException("Nicht genügend Ware auf Lager");
+            throw new OperationNotAllowedException("Nicht genügend Ware auf Lager");
         }
 
         // Angebot angenommen
@@ -204,7 +208,7 @@ public class AngebotService {
                         String.format(EXCEPTION_MSG_ANGEBOT_NICHT_GEFUNDEN, angebotId.getValue())));
 
         if (angebot.isBedient()) {
-            throw new OperationNotAlloudException(EXCEPTION_MSG_ANGEBOT_BEDIEN);
+            throw new OperationNotAllowedException(EXCEPTION_MSG_ANGEBOT_BEDIEN);
         }
 
         return angebot;
@@ -245,12 +249,12 @@ public class AngebotService {
         val anfrage = getOffeneAnfrage(angebotAnfrageId);
 
         if (!angebotId.getValue().equals(anfrage.getAngebot().getId())) {
-            throw new OperationNotAlloudException(String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_IN_ANGEBOT,
+            throw new OperationNotAllowedException(String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_IN_ANGEBOT,
                     angebotId.getValue(), angebotAnfrageId.getValue()));
         }
 
         if (!AngebotAnfrageStatus.OFFEN.equals(anfrage.getStatus())) {
-            throw new OperationNotAlloudException(
+            throw new OperationNotAllowedException(
                     String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_GESCHLOSSEN, anfrage.getStatus()));
         }
 

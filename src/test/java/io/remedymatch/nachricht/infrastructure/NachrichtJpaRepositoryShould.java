@@ -52,7 +52,6 @@ public class NachrichtJpaRepositoryShould {
         List<NachrichtEntity> nachrichtenFuerReferenzId = jpaRepository.findAllByReferenzId(referenzId);
 
         assertEquals(3, nachrichtenFuerReferenzId.size());
-
     }
 
     private NachrichtEntity nachricht(final String nachricht, UUID referenzId) {
@@ -61,6 +60,5 @@ public class NachrichtJpaRepositoryShould {
                 .nachricht(nachricht)
                 .referenzTyp(NachrichtReferenzTyp.ANGEBOT_ANFRAGE)
                 .build();
-
     }
 }

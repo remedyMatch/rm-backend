@@ -33,13 +33,13 @@ class BedarfSucheController {
     @GetMapping
     public ResponseEntity<List<BedarfRO>> getAlleNichtBedienteOeffentlicheBedarfe(
             @QueryParam("artikelVarianteId") @Valid ArtikelVarianteId artikelVarianteId,
-            @QueryParam("ohneEigene") Boolean ohneEigene) {
+            @QueryParam("ohneEigene") boolean ohneEigene) {
         return ResponseEntity.ok(mapToBedarfeRO(bedarfSucheService.findAlleNichtBedienteOeffentlicheBedarfe(artikelVarianteId, ohneEigene)));
     }
 
     @Transactional(readOnly = true)
     @GetMapping("/filter/artikelkategorie")
-    public ResponseEntity<List<BedarfFilterEntryRO>> getArtikelKategorieFilter(@QueryParam("ohneEigene") Boolean ohneEigene) {
+    public ResponseEntity<List<BedarfFilterEntryRO>> getArtikelKategorieFilter(@QueryParam("ohneEigene") boolean ohneEigene) {
         return ResponseEntity.ok(mapToFilterEntriesRO(bedarfSucheService.getArtikelKategorieFilter(ohneEigene)));
     }
 
@@ -47,7 +47,7 @@ class BedarfSucheController {
     @GetMapping("/filter/artikel")
     public ResponseEntity<List<BedarfFilterEntryRO>> getArtikelFilter(
             @QueryParam("artikelKategorieId") @NotNull ArtikelKategorieId artikelKategorieId,
-            @QueryParam("ohneEigene") Boolean ohneEigene) {
+            @QueryParam("ohneEigene") boolean ohneEigene) {
         return ResponseEntity.ok(mapToFilterEntriesRO(bedarfSucheService.getArtikelFilter(artikelKategorieId, ohneEigene)));
     }
 
@@ -55,7 +55,7 @@ class BedarfSucheController {
     @GetMapping("/filter/artikelvariante")
     public ResponseEntity<List<BedarfFilterEntryRO>> getArtikelVarianteFilter(
             @QueryParam("artikelId") @NotNull ArtikelId artikelId,
-            @QueryParam("ohneEigene") Boolean ohneEigene) {
+            @QueryParam("ohneEigene") boolean ohneEigene) {
         return ResponseEntity.ok(mapToFilterEntriesRO(bedarfSucheService.getArtikelVarianteFilter(artikelId, ohneEigene)));
     }
 }

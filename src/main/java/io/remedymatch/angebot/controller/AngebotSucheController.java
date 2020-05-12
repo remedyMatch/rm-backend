@@ -33,13 +33,13 @@ public class AngebotSucheController {
     @GetMapping
     public ResponseEntity<List<AngebotRO>> getAlleNichtBedienteOeffentlicheAngebote(
             @QueryParam("artikelVarianteId") @Valid ArtikelVarianteId artikelVarianteId,
-            @QueryParam("ohneEigene") Boolean ohneEigene) {
+            @QueryParam("ohneEigene") boolean ohneEigene) {
         return ResponseEntity.ok(mapToAngeboteRO(angebotSucheService.findAlleNichtBedienteOeffentlicheAngebote(artikelVarianteId, ohneEigene)));
     }
 
     @Transactional(readOnly = true)
     @GetMapping("/filter/artikelkategorie")
-    public ResponseEntity<List<AngebotFilterEntryRO>> getArtikelKategorieFilter(@QueryParam("ohneEigene") @Valid Boolean ohneEigene) {
+    public ResponseEntity<List<AngebotFilterEntryRO>> getArtikelKategorieFilter(@QueryParam("ohneEigene") @Valid boolean ohneEigene) {
         return ResponseEntity.ok(mapToFilterEntriesRO(angebotSucheService.getArtikelKategorieFilter(ohneEigene)));
     }
 
@@ -47,7 +47,7 @@ public class AngebotSucheController {
     @GetMapping("/filter/artikel")
     public ResponseEntity<List<AngebotFilterEntryRO>> getArtikelFilter(
             @QueryParam("artikelKategorieId") @NotNull ArtikelKategorieId artikelKategorieId,
-            @QueryParam("ohneEigene") Boolean ohneEigene) {
+            @QueryParam("ohneEigene") boolean ohneEigene) {
         return ResponseEntity.ok(mapToFilterEntriesRO(angebotSucheService.getArtikelFilter(artikelKategorieId, ohneEigene)));
     }
 
@@ -55,7 +55,7 @@ public class AngebotSucheController {
     @GetMapping("/filter/artikelvariante")
     public ResponseEntity<List<AngebotFilterEntryRO>> getArtikelVarianteFilter(
             @QueryParam("artikelId") @NotNull ArtikelId artikelId,
-            @QueryParam("ohneEigene") Boolean ohneEigene) {
+            @QueryParam("ohneEigene") boolean ohneEigene) {
         return ResponseEntity.ok(mapToFilterEntriesRO(angebotSucheService.getArtikelVarianteFilter(artikelId, ohneEigene)));
     }
 }

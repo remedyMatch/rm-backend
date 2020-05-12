@@ -37,10 +37,10 @@ public class BedarfSucheService {
     public List<BedarfFilterEntry> getArtikelKategorieFilter(final Boolean ohneEigene) {
 
         if (ohneEigene) {
-            return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalse());
+            return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalseOhneEigene(userService.getContextInstitutionId().getValue()));
         }
 
-        return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalseOhneEigene(userService.getContextInstitutionId().getValue()));
+        return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalse());
     }
 
     @Transactional(readOnly = true)

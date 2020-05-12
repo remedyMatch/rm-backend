@@ -115,6 +115,8 @@ public class AngebotService {
 
         angebotProzessService.anfrageErhalten(new AngebotAnfrageId(anfrage.getId()), angebotId, bedarfId);
 
+        this.nachrichtZuAnfrageSenden(new AngebotAnfrageId(anfrage.getId()), NeueNachricht.builder().nachricht(kommentar).build());
+
         return AngebotAnfrageEntityConverter.convertAnfrage(anfrage);
     }
 

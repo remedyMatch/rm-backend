@@ -18,6 +18,11 @@ import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.nachricht.domain.model.Nachricht;
+import io.remedymatch.nachricht.domain.model.NachrichtReferenz;
+import io.remedymatch.nachricht.domain.model.NachrichtReferenzTyp;
+import io.remedymatch.nachricht.domain.model.NeueNachricht;
+import io.remedymatch.nachricht.domain.service.NachrichtService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -30,6 +35,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @Validated
@@ -54,6 +60,8 @@ public class AngebotService {
 
     private final UserContextService userService;
     private final AngebotProzessService angebotProzessService;
+
+    private final NachrichtService nachrichtService;
 
     @Transactional
     public void angebotDerUserInstitutionSchliessen(final @NotNull @Valid AngebotId angebotId) {
@@ -84,7 +92,7 @@ public class AngebotService {
         angebotRepository.save(angebot);
     }
 
-    @Transactional
+
     public AngebotAnfrage angebotAnfrageErstellen(final @NotNull @Valid AngebotId angebotId, //
                                                   final @NotBlank String kommentar, //
                                                   final @NotNull BigDecimal anzahl, final @NotNull BedarfId bedarfId) {
@@ -110,7 +118,6 @@ public class AngebotService {
         return AngebotAnfrageEntityConverter.convertAnfrage(anfrage);
     }
 
-    @Transactional
     public void angebotAnfrageDerUserInstitutionStornieren(final @NotNull @Valid AngebotId angebotId, //
                                                            final @NotNull @Valid AngebotAnfrageId anfrageId) {
         val anfrage = getOffeneAnfrageDerUserInstitution(angebotId, anfrageId);
@@ -122,7 +129,6 @@ public class AngebotService {
         anfrageRepository.save(anfrage);
     }
 
-    @Transactional
     public void angebotAnfrageSchliessen(final @NotNull @Valid AngebotId angebotId, //
                                          final @NotNull @Valid AngebotAnfrageId anfrageId) {
         val anfrage = getOffeneAnfrage(angebotId, anfrageId);
@@ -130,7 +136,6 @@ public class AngebotService {
         anfrageRepository.save(anfrage);
     }
 
-    @Transactional
     public void angebotAnfrageBeantworten(final @NotNull @Valid AngebotId angebotId, //
                                           final @NotNull @Valid AngebotAnfrageId anfrageId, //
                                           final @NotNull Boolean entscheidung) {
@@ -148,13 +153,11 @@ public class AngebotService {
         anfrageRepository.save(anfrage);
     }
 
-    @Transactional
     public void anfrageAbgelehnt(final @NotNull AngebotAnfrageEntity anfrage) {
         anfrage.setStatus(AngebotAnfrageStatus.ABGELEHNT);
         anfrageRepository.save(anfrage);
     }
 
-    @Transactional
     public BigDecimal anfrageAngenommen(final @NotNull AngebotAnfrageEntity anfrage) {
 
         // Angebot als bedient markieren
@@ -184,6 +187,18 @@ public class AngebotService {
         angebotRepository.save(angebot);
         return restAnzahl;
     }
+
+
+    public void nachrichtZuAnfrageSenden(final @NotNull AngebotAnfrageId anfrageId, final @Valid NeueNachricht nachricht) {
+        nachricht.setReferenzId(new NachrichtReferenz(anfrageId.getValue()));
+        nachricht.setReferenzTyp(NachrichtReferenzTyp.ANGEBOT_ANFRAGE);
+        nachrichtService.nachrichtSenden(nachricht);
+    }
+
+    public List<Nachricht> nachrichtenZuAnfrageLaden(final @NotNull AngebotAnfrageId anfrageId) {
+        return nachrichtService.nachrichtenZuReferenzLaden(new NachrichtReferenz(anfrageId.getValue()));
+    }
+
 
     /* help methods */
 

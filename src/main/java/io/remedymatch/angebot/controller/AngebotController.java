@@ -9,6 +9,9 @@ import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAllowedException;
+import io.remedymatch.nachricht.api.NachrichtMapper;
+import io.remedymatch.nachricht.api.NachrichtRO;
+import io.remedymatch.nachricht.api.NeueNachrichtRO;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -129,5 +132,20 @@ public class AngebotController {
     public ResponseEntity<List<GestellteAngebotAnfrageRO>> getGestellteAnfragen() {
         val offeneGestellteAnfragen = angebotAnfrageSucheService.findAlleOffeneAnfragenDerUserInstitution();
         return ResponseEntity.ok(offeneGestellteAnfragen.stream().map(AngebotControllerMapper::mapToGestellteAngebotAnfrageRO).collect(Collectors.toList()));
+    }
+
+    //NACHRICHTEN
+    @PostMapping("/anfrage/{id}/nachricht")
+    public ResponseEntity<Void> nachrichtZuAnfrageSenden(
+            @PathVariable("id") @NotNull UUID anfrageId,
+            @RequestBody @Valid NeueNachrichtRO nachricht) {
+        angebotService.nachrichtZuAnfrageSenden(new AngebotAnfrageId(anfrageId), NachrichtMapper.map(nachricht));
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/anfrage/{id}/nachricht")
+    public ResponseEntity<List<NachrichtRO>> nachrichtenZuAnfrageLaden(@PathVariable("id") @NotNull UUID anfrageId) {
+        val nachrichten = angebotService.nachrichtenZuAnfrageLaden(new AngebotAnfrageId(anfrageId));
+        return ResponseEntity.ok(NachrichtMapper.map(nachrichten));
     }
 }

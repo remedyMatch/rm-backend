@@ -98,6 +98,10 @@ public class BedarfService {
 
         val bedarf = getNichtBedienteBedarf(bedarfId);
 
+        if (bedarf.getInstitution().getId().equals(userService.getContextInstitutionId())) {
+            throw new OperationNotAllowedException("Der eigene Bedarf kann nicht bedient werden");
+        }
+
         var anfrage = anfrageRepository.save(BedarfAnfrageEntity.builder() //
                 .bedarf(bedarf) //
                 .institution(getUserInstitution()) //

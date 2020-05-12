@@ -242,6 +242,7 @@ class BedarfServiceShould {
         then(anfrageRepository).should().save(neueAnfrageEntity);
         then(anfrageRepository).shouldHaveNoMoreInteractions();
         then(userService).should(times(2)).getContextStandort();
+        then(userService).should().getContextInstitutionId();
         then(userService).shouldHaveNoMoreInteractions();
         then(bedarfProzessService).should().anfrageErhalten(anfrageId, bedarfId, angebotId);
         then(bedarfProzessService).shouldHaveNoMoreInteractions();

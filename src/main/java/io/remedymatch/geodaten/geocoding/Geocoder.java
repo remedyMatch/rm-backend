@@ -3,7 +3,6 @@ package io.remedymatch.geodaten.geocoding;
 import io.remedymatch.geodaten.geocoding.domain.Adresse;
 import io.remedymatch.geodaten.geocoding.domain.Point;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
-import io.remedymatch.match.domain.MatchStandort;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,5 +23,4 @@ public interface Geocoder {
 
     double kilometerBerechnen(InstitutionStandort von, InstitutionStandort nach);
 
-    double kilometerBerechnen(MatchStandort von, MatchStandort nach);
 }

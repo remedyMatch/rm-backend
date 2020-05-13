@@ -4,7 +4,6 @@ public enum NachrichtReferenzTyp {
 
     ANGEBOT_ANFRAGE,
     BEDARF_ANFRAGE,
-    MATCH,
     LIEFERAUFTRAG
 
 

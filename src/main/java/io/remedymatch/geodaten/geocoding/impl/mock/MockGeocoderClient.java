@@ -4,7 +4,6 @@ import io.remedymatch.geodaten.geocoding.Geocoder;
 import io.remedymatch.geodaten.geocoding.domain.Adresse;
 import io.remedymatch.geodaten.geocoding.domain.Point;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
-import io.remedymatch.match.domain.MatchStandort;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -67,8 +66,4 @@ public class MockGeocoderClient implements Geocoder {
         return 0;
     }
 
-    @Override
-    public double kilometerBerechnen(MatchStandort von, MatchStandort nach) {
-        return 0;
-    }
 }

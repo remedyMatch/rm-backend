@@ -1,7 +1,7 @@
-package io.remedymatch.match.api;
+package io.remedymatch.match.controller;
 
 import io.remedymatch.institution.controller.InstitutionRO;
-import io.remedymatch.match.domain.MatchStatus;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,17 +16,15 @@ public class MatchRO {
 
     private InstitutionRO institutionVon;
 
-    private MatchStandortRO standortVon;
+    private InstitutionStandortRO standortVon;
 
-    private MatchStandortRO standortAn;
+    private InstitutionStandortRO standortAn;
 
     private InstitutionRO institutionAn;
 
     private UUID anfrageId;
 
     private UUID inseratId;
-
-    private MatchStatus status;
 
     private BigDecimal entfernung;
 

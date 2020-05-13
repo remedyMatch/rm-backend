@@ -1,7 +1,6 @@
 package io.remedymatch.nachricht.api;
 
 import io.remedymatch.nachricht.domain.model.NachrichtId;
-import io.remedymatch.nachricht.domain.model.NachrichtReferenzTyp;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -32,12 +31,6 @@ public class NachrichtRO {
 
     @NotNull
     private String erstellerName;
-
-    @NotNull
-    private UUID referenzId;
-
-    @NotNull
-    private NachrichtReferenzTyp referenzTyp;
 
     @NotNull
     private LocalDateTime erstelltAm;

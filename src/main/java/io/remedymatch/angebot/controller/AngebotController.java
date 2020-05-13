@@ -130,4 +130,11 @@ public class AngebotController {
         val offeneGestellteAnfragen = angebotAnfrageSucheService.findAlleOffeneAnfragenDerUserInstitution();
         return ResponseEntity.ok(offeneGestellteAnfragen.stream().map(AngebotControllerMapper::mapToGestellteAngebotAnfrageRO).collect(Collectors.toList()));
     }
+
+    @Transactional(readOnly = true)
+    @PostMapping("/anfrage/suche")
+    public ResponseEntity<List<GestellteAngebotAnfrageRO>> getAngebotAnfragen(@RequestBody @Valid AngebotAnfragenIdSucheRequest request) {
+        val angebotAnfragen = angebotAnfrageSucheService.findeAlleAnfragenFuerIds(request.getAnfrageIds().stream().map(AngebotAnfrageId::new).collect(Collectors.toList()));
+        return ResponseEntity.ok(angebotAnfragen.stream().map(AngebotControllerMapper::mapToGestellteAngebotAnfrageRO).collect(Collectors.toList()));
+    }
 }

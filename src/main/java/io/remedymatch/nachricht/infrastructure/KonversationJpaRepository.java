@@ -12,12 +12,12 @@ public interface KonversationJpaRepository extends JpaRepository<KonversationEnt
 
     @Query("SELECT k FROM Konversation k " //
             + "LEFT JOIN k.beteiligte b " //
-            + "WHERE b.institution <> :institutionId ")
+            + "WHERE b.institution.id = :institutionId ")
     List<KonversationEntity> findAllByInstitutionId(@Param("institutionId") UUID institutionId);
 
 
     @Query("SELECT k FROM Konversation k " //
             + "LEFT JOIN k.beteiligte b " //
-            + "WHERE b.institution <> :institutionId AND k.id = :konversationId")
+            + "WHERE b.institution.id = :institutionId AND k.id = :konversationId")
     Optional<KonversationEntity> findByIdAndInstitutionId(@Param("konversationId") UUID konversationId, @Param("institutionId") UUID institutionId);
 }

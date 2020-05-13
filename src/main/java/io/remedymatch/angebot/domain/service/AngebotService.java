@@ -18,10 +18,8 @@ import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
-import io.remedymatch.nachricht.domain.model.Nachricht;
 import io.remedymatch.nachricht.domain.model.NachrichtReferenz;
 import io.remedymatch.nachricht.domain.model.NachrichtReferenzTyp;
-import io.remedymatch.nachricht.domain.model.NeueNachricht;
 import io.remedymatch.nachricht.domain.service.NachrichtService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
@@ -35,7 +33,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Arrays;
 
 @AllArgsConstructor
 @Validated
@@ -114,7 +112,7 @@ public class AngebotService {
 
         angebotProzessService.anfrageErhalten(new AngebotAnfrageId(anfrage.getId()), angebotId, bedarfId);
 
-        this.nachrichtZuAnfrageSenden(new AngebotAnfrageId(anfrage.getId()), NeueNachricht.builder().nachricht(nachricht).build());
+        this.konversationStarten(anfrage, nachricht);
 
         return AngebotAnfrageEntityConverter.convertAnfrage(anfrage);
     }
@@ -189,17 +187,11 @@ public class AngebotService {
         return restAnzahl;
     }
 
+    public void konversationStarten(final @NotNull AngebotAnfrageEntity anfrage, final @Valid String nachricht) {
 
-    public void nachrichtZuAnfrageSenden(final @NotNull AngebotAnfrageId anfrageId, final @Valid NeueNachricht nachricht) {
-        nachricht.setReferenzId(new NachrichtReferenz(anfrageId.getValue()));
-        nachricht.setReferenzTyp(NachrichtReferenzTyp.ANGEBOT_ANFRAGE);
-        nachrichtService.nachrichtSenden(nachricht);
+        val beteiligteInstitutionen = Arrays.asList(anfrage.getInstitution(), anfrage.getAngebot().getInstitution());
+        nachrichtService.konversationStarten(new NachrichtReferenz(anfrage.getId()), NachrichtReferenzTyp.ANGEBOT_ANFRAGE, nachricht, beteiligteInstitutionen);
     }
-
-    public List<Nachricht> nachrichtenZuAnfrageLaden(final @NotNull AngebotAnfrageId anfrageId) {
-        return nachrichtService.nachrichtenZuReferenzLaden(new NachrichtReferenz(anfrageId.getValue()));
-    }
-
 
     /* help methods */
 

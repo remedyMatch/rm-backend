@@ -1,10 +1,11 @@
 package io.remedymatch.nachricht.domain.service;
 
-import io.remedymatch.nachricht.domain.model.Nachricht;
-import io.remedymatch.nachricht.domain.model.NachrichtReferenz;
-import io.remedymatch.nachricht.domain.model.NeueNachricht;
-import io.remedymatch.nachricht.infrastructure.NachrichtEntity;
-import io.remedymatch.nachricht.infrastructure.NachrichtJpaRepository;
+import io.remedymatch.domain.ObjectNotFoundException;
+import io.remedymatch.institution.domain.model.InstitutionId;
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
+import io.remedymatch.nachricht.domain.model.*;
+import io.remedymatch.nachricht.infrastructure.*;
+import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-
-import static io.remedymatch.nachricht.domain.service.NachrichtEntityConverter.convert;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -24,13 +25,17 @@ import static io.remedymatch.nachricht.domain.service.NachrichtEntityConverter.c
 public class NachrichtService {
 
     private final NachrichtJpaRepository nachrichtRepository;
+    private final KonversationJpaRepository konversationJpaRepository;
+    private final UserContextService userContextService;
 
-    public void nachrichtSenden(final @Valid NeueNachricht neueNachricht) {
+    public void nachrichtSenden(final @NotNull KonversationId konversationId, final @Valid NeueNachricht neueNachricht) {
+
+        val konversation = konversationJpaRepository.findByIdAndInstitutionId(konversationId.getValue(), userContextService.getContextInstitutionId().getValue())
+                .orElseThrow(() -> new ObjectNotFoundException("Die Konversation zu der eine Nachricht gesendet werden soll existiert nicht."));
 
         val nachricht = NachrichtEntity.builder()
                 .nachricht(neueNachricht.getNachricht())
-                .referenzTyp(neueNachricht.getReferenzTyp())
-                .referenzId(neueNachricht.getReferenzId().getValue())
+                .konversation(konversation.getId())
                 .build();
 
         nachrichtRepository.save(nachricht);
@@ -38,9 +43,40 @@ public class NachrichtService {
         //TODO Benachrichtigung senden
     }
 
-    public List<Nachricht> nachrichtenZuReferenzLaden(final @NotNull NachrichtReferenz referenz) {
-        val nachrichten = nachrichtRepository.findAllByReferenzId(referenz.getValue());
-        return convert(nachrichten);
+    public Konversation konversationLaden(final @NotNull KonversationId konversationId) {
+        val konversation = konversationJpaRepository.findByIdAndInstitutionId(konversationId.getValue(), userContextService.getContextInstitutionId().getValue())
+                .orElseThrow(() -> new ObjectNotFoundException("Die angegebene Konversation konnte nicht gefunden werden"));
+        return KonversationEntityConverter.convert(konversation);
+    }
+
+    public List<Konversation> konversationenZuInstitutionLaden(final @NotNull InstitutionId institutionId) {
+        val konversationen = konversationJpaRepository.findAllByInstitutionId(institutionId.getValue());
+        return KonversationEntityConverter.convert(konversationen);
+    }
+
+    public List<Konversation> beteiligteKonversationenLaden() {
+        val konversationen = konversationJpaRepository.findAllByInstitutionId(userContextService.getContextInstitutionId().getValue());
+        return KonversationEntityConverter.convert(konversationen);
+    }
+
+    public void konversationStarten(final @NotNull NachrichtReferenz referenz, @NotNull NachrichtReferenzTyp referenzTyp, @NotNull String nachricht, List<InstitutionEntity> beteiligte) {
+
+        val konversation = konversationJpaRepository.save(KonversationEntity.builder()
+                .referenzId(referenz.getValue())
+                .referenzTyp(referenzTyp)
+                .build());
+
+        konversation.getBeteiligte().addAll(beteiligte.stream().map(b -> this.mapBeteiligter(b, konversation.getId())).collect(Collectors.toList()));
+        konversationJpaRepository.save(konversation);
+
+        this.nachrichtSenden(new KonversationId(konversation.getId()), NeueNachricht.builder().nachricht(nachricht).build());
+    }
+
+    private Konversation2InstitutionEntity mapBeteiligter(final InstitutionEntity beteiligter, final UUID konversation) {
+        return Konversation2InstitutionEntity.builder()
+                .institution(beteiligter)
+                .konversation(konversation)
+                .build();
     }
 
 }

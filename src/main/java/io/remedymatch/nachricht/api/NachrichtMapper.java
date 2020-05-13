@@ -18,10 +18,10 @@ public class NachrichtMapper {
         return NachrichtRO.builder()
                 .id(nachricht.getId())
                 .erstelltAm(nachricht.getErstelltAm())
+                .erstellerInstitution(nachricht.getErstellerInstitution().getValue())
+                .ersteller(nachricht.getErsteller().getValue())
+                .erstellerName(nachricht.getErstellerName())
                 .nachricht(nachricht.getNachricht())
-                .referenzId(nachricht.getReferenzId().getValue())
-                .referenzTyp(nachricht.getReferenzTyp())
-                .von(nachricht.getVon().getValue())
                 .build();
     }
 

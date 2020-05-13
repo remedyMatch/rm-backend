@@ -1,5 +1,6 @@
 package io.remedymatch.nachricht.infrastructure;
 
+import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.shared.infrastructure.Auditable;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -16,9 +17,9 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-@Entity(name = "Nachricht")
-@Table(name = "RM_NACHRICHT")
-public class NachrichtEntity extends Auditable {
+@Entity(name = "Konversation2Institution")
+@Table(name = "RM_KONVERSATION_2_INSTITUTION")
+public class Konversation2InstitutionEntity extends Auditable {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -27,13 +28,12 @@ public class NachrichtEntity extends Auditable {
     @Column(name = "UUID", unique = true, nullable = false, updatable = false, length = 36)
     private UUID id;
 
-    @Column(name = "NACHRICHT", nullable = false, updatable = true, length = 1024)
-    private String nachricht;
-
+    @Type(type = "uuid-char")
     @Column(name = "KONVERSATION_UUID", nullable = false, updatable = false, length = 36)
     private UUID konversation;
 
-    @Column(name = "INSTITUTION_UUID", nullable = false, updatable = false, length = 36)
-    private UUID erstellerInstitution;
+    @ManyToOne
+    @JoinColumn(name = "INSTITUTION_UUID", referencedColumnName = "UUID", nullable = false, updatable = false)
+    private InstitutionEntity institution;
 
 }

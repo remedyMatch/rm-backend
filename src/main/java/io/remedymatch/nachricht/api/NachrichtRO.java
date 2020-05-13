@@ -25,7 +25,13 @@ public class NachrichtRO {
     private String nachricht;
 
     @NotNull
-    private UUID von;
+    private UUID ersteller;
+
+    @NotNull
+    private UUID erstellerInstitution;
+
+    @NotNull
+    private String erstellerName;
 
     @NotNull
     private UUID referenzId;

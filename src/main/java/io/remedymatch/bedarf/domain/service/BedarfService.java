@@ -18,6 +18,9 @@ import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.nachricht.domain.model.NachrichtReferenz;
+import io.remedymatch.nachricht.domain.model.NachrichtReferenzTyp;
+import io.remedymatch.nachricht.domain.service.NachrichtService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -30,6 +33,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 @AllArgsConstructor
 @Validated
@@ -54,6 +58,7 @@ public class BedarfService {
 
     private final UserContextService userService;
     private final BedarfProzessService bedarfProzessService;
+    private final NachrichtService nachrichtService;
 
     @Transactional
     public void bedarfDerUserInstitutionSchliessen(final @NotNull @Valid BedarfId bedarfId) {
@@ -112,19 +117,19 @@ public class BedarfService {
                 .build());
 
         bedarfProzessService.anfrageErhalten(new BedarfAnfrageId(anfrage.getId()), bedarfId, angebotId);
+        konversationStarten(anfrage, nachricht);
         return BedarfAnfrageEntityConverter.convertAnfrage(anfrage);
     }
 
     @Transactional
-    public void bedarfAnfrageDerUserInstitutionStornieren(//
-                                                          final @NotNull @Valid BedarfId bedarfId, //
-                                                          final @NotNull @Valid BedarfAnfrageId anfrageId) {
+    public void bedarfAnfrageDerUserInstitutionStornieren(
+            final @NotNull @Valid BedarfId bedarfId, //
+            final @NotNull @Valid BedarfAnfrageId anfrageId) {
         val anfrage = getOffeneAnfrageDerUserInstitution(bedarfId, anfrageId);
         anfrage.setStatus(BedarfAnfrageStatus.STORNIERT);
 
         // Anfrage stornieren
         bedarfProzessService.anfrageStornieren(anfrageId, bedarfId);
-
         anfrageRepository.save(anfrage);
     }
 
@@ -194,13 +199,18 @@ public class BedarfService {
         return restAnzahl;
     }
 
+    public void konversationStarten(final @NotNull BedarfAnfrageEntity anfrage, final @Valid String nachricht) {
+
+        val beteiligteInstitutionen = Arrays.asList(anfrage.getInstitution(), anfrage.getBedarf().getInstitution());
+        nachrichtService.konversationStarten(new NachrichtReferenz(anfrage.getId()), NachrichtReferenzTyp.ANGEBOT_ANFRAGE, nachricht, beteiligteInstitutionen);
+    }
+
     /* help methods */
 
     BedarfEntity getNichtBedienteBedarfDerUserInstitution(final @NotNull @Valid BedarfId bedarfId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
 
         val bedarf = getNichtBedienteBedarf(bedarfId);
-
         if (!userService.isUserContextInstitution(new InstitutionId(bedarf.getInstitution().getId()))) {
             throw new NotUserInstitutionObjectException(
                     String.format(EXCEPTION_MSG_BEDARF_NICHT_VON_USER_INSTITUTION, bedarfId.getValue()));
@@ -212,9 +222,8 @@ public class BedarfService {
     BedarfEntity getNichtBedienteBedarf(final @NotNull @Valid BedarfId bedarfId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
 
-        val bedarf = bedarfRepository.findById(bedarfId.getValue()) //
-                .orElseThrow(() -> new ObjectNotFoundException(
-                        String.format(EXCEPTION_MSG_BEDARF_NICHT_GEFUNDEN, bedarfId.getValue())));
+        val bedarf = bedarfRepository.findById(bedarfId.getValue())
+                .orElseThrow(() -> new ObjectNotFoundException(String.format(EXCEPTION_MSG_BEDARF_NICHT_GEFUNDEN, bedarfId.getValue())));
 
         if (bedarf.isBedient()) {
             throw new OperationNotAllowedException(EXCEPTION_MSG_BEDARF_BEDIEN);
@@ -233,9 +242,9 @@ public class BedarfService {
         return bedarf;
     }
 
-    BedarfAnfrageEntity getOffeneAnfrageDerUserInstitution(//
-                                                           final @NotNull @Valid BedarfId bedarfId, //
-                                                           final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
+    BedarfAnfrageEntity getOffeneAnfrageDerUserInstitution(
+            final @NotNull @Valid BedarfId bedarfId, //
+            final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
         Assert.notNull(bedarfAnfrageId, "BedarfAnfrageId ist null.");
 
@@ -249,9 +258,9 @@ public class BedarfService {
         return anfrage;
     }
 
-    BedarfAnfrageEntity getOffeneAnfrage(//
-                                         final @NotNull @Valid BedarfId bedarfId, //
-                                         final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
+    BedarfAnfrageEntity getOffeneAnfrage(
+            final @NotNull @Valid BedarfId bedarfId, //
+            final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
         Assert.notNull(bedarfAnfrageId, "BedarfAnfrageId ist null.");
 
@@ -287,9 +296,9 @@ public class BedarfService {
         return InstitutionStandortEntityConverter.convertStandort(userService.getContextStandort().getStandort());
     }
 
-    InstitutionStandortEntity getUserInstitutionStandort( //
-                                                          final @NotNull InstitutionEntity userInstitution, //
-                                                          final @NotNull @Valid InstitutionStandortId institutionStandortId) {
+    InstitutionStandortEntity getUserInstitutionStandort(
+            final @NotNull InstitutionEntity userInstitution, //
+            final @NotNull @Valid InstitutionStandortId institutionStandortId) {
         Assert.notNull(userInstitution, "InstitutionEntity ist null.");
         Assert.notNull(institutionStandortId, "InstitutionStandortId ist null.");
 

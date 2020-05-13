@@ -1,5 +1,6 @@
 package io.remedymatch.nachricht.domain.model;
 
+import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.person.domain.model.PersonId;
 import lombok.*;
 
@@ -25,13 +26,13 @@ public class Nachricht {
     private String nachricht;
 
     @NotNull
-    private PersonId von;
+    private InstitutionId erstellerInstitution;
 
     @NotNull
-    private NachrichtReferenz referenzId;
+    private PersonId ersteller;
 
     @NotNull
-    private NachrichtReferenzTyp referenzTyp;
+    private String erstellerName;
 
     @NotNull
     private LocalDateTime erstelltAm;

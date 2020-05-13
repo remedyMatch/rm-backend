@@ -9,6 +9,7 @@ import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -45,7 +46,7 @@ public class BedarfAnfrageSucheService {
 
     @Transactional(readOnly = true)
     public List<BedarfAnfrage> findAlleOffeneAnfragenDerInstitution(final @NotNull @Valid InstitutionId institutionId) {
-        return BedarfAnfrageEntityConverter.convertAnfragen(anfrageRepository.findAllByStatusOffenAndInstitution_Id(institutionId.getValue()));
+        return BedarfAnfrageEntityConverter.convertAnfragen(anfrageRepository.findAllByStatusOffenAndBedarfInstitution_Id(institutionId.getValue()));
     }
 
     @Transactional(readOnly = true)
@@ -56,6 +57,29 @@ public class BedarfAnfrageSucheService {
     @Transactional(readOnly = true)
     public List<BedarfAnfrage> findeAlleOffenenAnfragenFuerBedarfIds(final @NotNull @Valid List<BedarfId> bedarfIds) {
         return mitEntfernung(BedarfAnfrageEntityConverter.convertAnfragen(anfrageRepository.findAllByAngebot_IdIn(bedarfIds.stream().map(BedarfId::getValue).collect(Collectors.toList()))));
+    }
+
+    @Transactional
+    public List<BedarfAnfrage> findeAlleMachedAnfragenDerInstitution() {
+        val institutionId = userContextService.getContextInstitutionId();
+        return mitEntfernung(BedarfAnfrageEntityConverter.convertAnfragen(anfrageRepository.findAllByStatusMatchedAndInstitution_Id(institutionId.getValue())));
+    }
+
+    @Transactional(readOnly = true)
+    public List<BedarfAnfrage> findeAlleAnfragenFuerIds(final @NotNull @Valid List<BedarfAnfrageId> bedarfAnfrageIds) {
+
+        var anfragen = BedarfAnfrageEntityConverter.convertAnfragen(
+                anfrageRepository.findAllById(bedarfAnfrageIds.stream()
+                        .map(BedarfAnfrageId::getValue)
+                        .collect(Collectors.toList())));
+
+        //Nur die beteiligten anfragen zurückgeben
+        val institutionId = userContextService.getContextInstitutionId();
+        anfragen = anfragen.stream()
+                .filter(a -> a.getInstitution().getId().equals(institutionId) || a.getBedarf().getInstitution().getId().equals(institutionId))
+                .collect(Collectors.toList());
+
+        return mitEntfernung(anfragen);
     }
 
     /**

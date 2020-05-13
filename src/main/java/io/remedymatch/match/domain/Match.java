@@ -19,6 +19,8 @@ public class Match {
 
     private UUID anfrageId;
 
+    private UUID inseratId;
+
     private Artikel artikel;
 
     private UUID artikelVarianteId;

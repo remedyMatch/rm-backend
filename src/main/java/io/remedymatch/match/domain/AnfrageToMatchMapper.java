@@ -3,6 +3,9 @@ package io.remedymatch.match.domain;
 import io.remedymatch.angebot.domain.model.AngebotAnfrage;
 import io.remedymatch.bedarf.domain.model.BedarfAnfrage;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class AnfrageToMatchMapper {
 
     static Match map(AngebotAnfrage anfrage) {
@@ -16,7 +19,13 @@ public class AnfrageToMatchMapper {
                 .institutionVon(anfrage.getAngebot().getInstitution())
                 .standortAn(anfrage.getStandort())
                 .standortVon(anfrage.getAngebot().getStandort())
+                .entfernung(anfrage.getEntfernung())
+                .inseratId(anfrage.getAngebot().getId().getValue())
                 .build();
+    }
+
+    static List<Match> mapAngebotAnfragen(List<AngebotAnfrage> anfragen) {
+        return anfragen.stream().map(AnfrageToMatchMapper::map).collect(Collectors.toList());
     }
 
     static Match map(BedarfAnfrage anfrage) {
@@ -30,7 +39,13 @@ public class AnfrageToMatchMapper {
                 .institutionVon(anfrage.getInstitution())
                 .standortAn(anfrage.getBedarf().getStandort())
                 .standortVon(anfrage.getStandort())
+                .entfernung(anfrage.getEntfernung())
+                .inseratId(anfrage.getBedarf().getId().getValue())
                 .build();
+    }
+
+    static List<Match> mapBedarfAnfragen(List<BedarfAnfrage> anfragen) {
+        return anfragen.stream().map(AnfrageToMatchMapper::map).collect(Collectors.toList());
     }
 
 }

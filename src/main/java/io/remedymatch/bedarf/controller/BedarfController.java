@@ -145,4 +145,11 @@ class BedarfController {
         val offeneGestellteAnfragen = bedarfAnfrageSucheService.findAlleOffeneAnfragenDerUserInstitution();
         return ResponseEntity.ok(offeneGestellteAnfragen.stream().map(BedarfControllerMapper::mapToGestellteBedarfAnfrageRO).collect(Collectors.toList()));
     }
+
+    @Transactional(readOnly = true)
+    @PostMapping("/anfrage/suche")
+    public ResponseEntity<List<GestellteBedarfAnfrageRO>> getAngebotAnfragen(@RequestBody @Valid BedarfAnfragenIdSucheRequest request) {
+        val angebotAnfragen = bedarfAnfrageSucheService.findeAlleAnfragenFuerIds(request.getIds().stream().map(BedarfAnfrageId::new).collect(Collectors.toList()));
+        return ResponseEntity.ok(angebotAnfragen.stream().map(BedarfControllerMapper::mapToGestellteBedarfAnfrageRO).collect(Collectors.toList()));
+    }
 }

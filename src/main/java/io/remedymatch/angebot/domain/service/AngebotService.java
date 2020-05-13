@@ -91,9 +91,10 @@ public class AngebotService {
     }
 
 
-    public AngebotAnfrage angebotAnfrageErstellen(final @NotNull @Valid AngebotId angebotId, //
-                                                  final @NotBlank String nachricht, //
-                                                  final @NotNull BigDecimal anzahl, final @NotNull BedarfId bedarfId) {
+    public AngebotAnfrage angebotAnfrageErstellen(
+            final @NotNull @Valid AngebotId angebotId, //
+            final @NotBlank String nachricht, //
+            final @NotNull BigDecimal anzahl, final @NotNull BedarfId bedarfId) {
 
         val angebot = getNichtBedienteAngebot(angebotId);
 

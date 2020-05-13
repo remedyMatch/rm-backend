@@ -40,7 +40,7 @@ public class AngebotAnfrageSucheService {
 
     @Transactional(readOnly = true)
     public List<AngebotAnfrage> findAlleOffeneAnfragenDerInstitution(final @NotNull @Valid InstitutionId institutionId) {
-        return convertAnfragen(anfrageRepository.findAllByStatusOffenAndInstitution_Id(institutionId.getValue()));
+        return convertAnfragen(anfrageRepository.findAllByStatusOffenAndAngebotInstitution_Id(institutionId.getValue()));
     }
 
     @Transactional(readOnly = true)
@@ -74,10 +74,9 @@ public class AngebotAnfrageSucheService {
     }
 
     @Transactional
-    public List<AngebotAnfrage> findAlleMachedAnfragenDerInstitution() {
+    public List<AngebotAnfrage> findeAlleMachedAnfragenDerInstitution() {
         val institutionId = userContextService.getContextInstitutionId();
-
-        return null;
+        return mitEntfernung(convertAnfragen(anfrageRepository.findAllByStatusMatchedAndInstitution_Id(institutionId.getValue())));
     }
 
     /**

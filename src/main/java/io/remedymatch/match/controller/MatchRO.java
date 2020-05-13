@@ -1,5 +1,6 @@
 package io.remedymatch.match.controller;
 
+import io.remedymatch.artikel.controller.ArtikelRO;
 import io.remedymatch.institution.controller.InstitutionRO;
 import io.remedymatch.institution.controller.InstitutionStandortRO;
 import lombok.Builder;
@@ -11,8 +12,6 @@ import java.util.UUID;
 @Data
 @Builder
 public class MatchRO {
-
-    private UUID id;
 
     private InstitutionRO institutionVon;
 
@@ -28,11 +27,9 @@ public class MatchRO {
 
     private BigDecimal entfernung;
 
-    private UUID artikelId;
+    private ArtikelRO artikel;
 
     private UUID artikelVarianteId;
-
-    private UUID artikelKategorieId;
 
     private BigDecimal anzahl;
 

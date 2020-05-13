@@ -1,4 +1,4 @@
-package io.remedymatch.angebot.controller;
+package io.remedymatch.bedarf.controller;
 
 
 import lombok.*;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class AngebotAnfragenIdSucheRequest {
+public class BedarfAnfragenIdSucheRequest {
 
     @NotNull
     @Builder.Default

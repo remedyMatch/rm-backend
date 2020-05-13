@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,8 +23,12 @@ public class MatchService {
     private final BedarfAnfrageSucheService bedarfAnfrageSucheService;
 
     public List<Match> ladeBeteiligteMatches() {
-        val angebotAnfragen = angebotAnfrageSucheService.findAlleMachedAnfragenDerInstitution();
-        return null;
+        val angebotAnfragen = angebotAnfrageSucheService.findeAlleMachedAnfragenDerInstitution();
+        val bedarfAnfragen = bedarfAnfrageSucheService.findeAlleMachedAnfragenDerInstitution();
 
+        val matches = new ArrayList<Match>();
+        matches.addAll(AnfrageToMatchMapper.mapAngebotAnfragen(angebotAnfragen));
+        matches.addAll(AnfrageToMatchMapper.mapBedarfAnfragen(bedarfAnfragen));
+        return matches;
     }
 }

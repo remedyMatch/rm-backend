@@ -1,7 +1,6 @@
 package io.remedymatch.nachricht.infrastructure;
 
 import io.remedymatch.TestApplication;
-import io.remedymatch.nachricht.domain.model.NachrichtReferenzTyp;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -49,16 +48,16 @@ public class NachrichtJpaRepositoryShould {
         val expectedNachricht3 = nachricht("Meine 3te Nachricht", referenzId);
         expectedNachricht3.setId(nachricht3Id);
 
-        List<NachrichtEntity> nachrichtenFuerReferenzId = jpaRepository.findAllByReferenzId(referenzId);
+        List<NachrichtEntity> nachrichtenFuerReferenzId = jpaRepository.findAll();
 
         assertEquals(3, nachrichtenFuerReferenzId.size());
     }
 
     private NachrichtEntity nachricht(final String nachricht, UUID referenzId) {
         return NachrichtEntity.builder()
-                .referenzId(referenzId)
                 .nachricht(nachricht)
-                .referenzTyp(NachrichtReferenzTyp.ANGEBOT_ANFRAGE)
+                .erstellerInstitution(referenzId)
+                .konversation(referenzId)
                 .build();
     }
 }

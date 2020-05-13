@@ -36,6 +36,7 @@ public class NachrichtService {
         val nachricht = NachrichtEntity.builder()
                 .nachricht(neueNachricht.getNachricht())
                 .konversation(konversation.getId())
+                .erstellerInstitution(userContextService.getContextInstitutionId().getValue())
                 .build();
 
         nachrichtRepository.save(nachricht);

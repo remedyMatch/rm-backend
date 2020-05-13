@@ -60,8 +60,6 @@ public class MatchMapperShould {
                 .standortVon(STANDORT_VON_DTO) //
                 .institutionAn(INSTITUTION_AN_DTO) //
                 .standortAn(STANDORT_AN_DTO) //
-                .kommentar(KOMMENTAR) //
-                .prozessInstanzId(PROZESSINSTANZ_ID) //
                 .status(STATUS) //
                 .build();
     }

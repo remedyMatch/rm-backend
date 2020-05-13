@@ -11,6 +11,7 @@ import io.remedymatch.domain.ObjectNotFoundException;
 import io.remedymatch.domain.OperationNotAllowedException;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.nachricht.domain.service.NachrichtService;
 import io.remedymatch.person.domain.model.PersonStandort;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
@@ -44,7 +45,8 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
         BedarfJpaRepository.class, //
         BedarfAnfrageJpaRepository.class, //
         UserContextService.class, //
-        BedarfProzessService.class //
+        BedarfProzessService.class, //
+        NachrichtService.class //
 })
 @Tag("Spring")
 @DisplayName("BedarfService soll")
@@ -63,6 +65,9 @@ class BedarfServiceShould {
 
     @MockBean
     private BedarfProzessService bedarfProzessService;
+
+    @MockBean
+    private NachrichtService nachrichtService;
 
     @Test
     @DisplayName("Fehler werfen bei Bearbeitung von nicht existierender Angebpt")

@@ -3,6 +3,7 @@ package io.remedymatch.match.controller;
 import io.remedymatch.artikel.controller.ArtikelRO;
 import io.remedymatch.institution.controller.InstitutionRO;
 import io.remedymatch.institution.controller.InstitutionStandortRO;
+import io.remedymatch.match.domain.InseratTyp;
 import lombok.Builder;
 import lombok.Data;
 
@@ -33,5 +34,5 @@ public class MatchRO {
 
     private BigDecimal anzahl;
 
-    private String anfrageTyp;
+    private InseratTyp inseratTyp;
 }

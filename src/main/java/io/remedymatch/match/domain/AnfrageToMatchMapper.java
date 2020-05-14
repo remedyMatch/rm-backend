@@ -11,7 +11,7 @@ public class AnfrageToMatchMapper {
     static Match map(AngebotAnfrage anfrage) {
         return Match.builder()
                 .anzahl(anfrage.getAnzahl())
-                .anfrageTyp("ANGEBOT")
+                .inseratTyp(InseratTyp.ANGEBOT)
                 .anfrageId(anfrage.getId().getValue())
                 .artikel(anfrage.getAngebot().getArtikel())
                 .artikelVarianteId(anfrage.getAngebot().getArtikelVariante().getId().getValue())
@@ -31,7 +31,7 @@ public class AnfrageToMatchMapper {
     static Match map(BedarfAnfrage anfrage) {
         return Match.builder()
                 .anzahl(anfrage.getAnzahl())
-                .anfrageTyp("BEDARF")
+                .inseratTyp(InseratTyp.BEDARF)
                 .anfrageId(anfrage.getId().getValue())
                 .artikel(anfrage.getBedarf().getArtikel())
                 .artikelVarianteId(anfrage.getBedarf().getArtikelVariante() != null ? anfrage.getBedarf().getArtikelVariante().getId().getValue() : null)

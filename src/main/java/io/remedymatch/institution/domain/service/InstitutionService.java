@@ -1,43 +1,24 @@
 package io.remedymatch.institution.domain.service;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
+import io.remedymatch.domain.ObjectNotFoundException;
+import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.institution.domain.model.*;
+import io.remedymatch.institution.infrastructure.*;
+import io.remedymatch.usercontext.UserContextService;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.engine.domain.BusinessKey;
-import io.remedymatch.geodaten.domain.GeocodingService;
-import io.remedymatch.institution.domain.model.Institution;
-import io.remedymatch.institution.domain.model.InstitutionAntrag;
-import io.remedymatch.institution.domain.model.InstitutionAntragId;
-import io.remedymatch.institution.domain.model.InstitutionAntragStatus;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
-import io.remedymatch.institution.domain.model.InstitutionUpdate;
-import io.remedymatch.institution.domain.model.NeueInstitution;
-import io.remedymatch.institution.domain.model.NeuerInstitutionStandort;
-import io.remedymatch.institution.infrastructure.InstitutionAntragEntity;
-import io.remedymatch.institution.infrastructure.InstitutionAntragJpaRepository;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
-import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
-import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
-import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
-import io.remedymatch.institution.process.InstitutionAntragProzessConstants;
-import io.remedymatch.usercontext.UserContextService;
-import lombok.AllArgsConstructor;
-import lombok.val;
-import lombok.extern.log4j.Log4j2;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Validated
@@ -52,7 +33,7 @@ public class InstitutionService {
     private final InstitutionJpaRepository institutionRepository;
     private final InstitutionStandortJpaRepository institutionStandortRepository;
     private final InstitutionAntragJpaRepository institutionAntragJpaRepository;
-    private final EngineClient engineClient;
+    private final InstitutionProzessService prozessService;
 
     private final GeocodingService geocodingService;
     private final UserContextService userService;
@@ -61,13 +42,12 @@ public class InstitutionService {
 
         log.debug("Lege neue Institution an: " + neueInstitution);
 
-        val hauptstandort = standortErstellen(neueInstitution.getHauptstandort());
+        val standort = standortErstellen(neueInstitution.getStandort());
         return updateInstitution(InstitutionEntity.builder() //
                 .name(neueInstitution.getName()) //
                 .institutionKey(neueInstitution.getInstitutionKey()) //
                 .typ(neueInstitution.getTyp()) //
-                .hauptstandort(hauptstandort) //
-                .standorte(Arrays.asList(hauptstandort)) //
+                .standorte(Arrays.asList(standort)) //
                 .build());
     }
 
@@ -75,34 +55,22 @@ public class InstitutionService {
 
         log.debug("Aktualisiere User Institution: " + update);
 
-        if (StringUtils.isBlank(update.getNeueName()) && update.getNeuesTyp() == null
-                && update.getNeuesHauptstandortId() == null) {
-            throw new OperationNotAlloudException(EXCEPTION_MSG_UPDATE_OHNE_DATEN);
-        }
-
         val userInstitution = getUserInstitution();
         if (StringUtils.isNotBlank(update.getNeueName())) {
             userInstitution.setName(update.getNeueName());
-        }
-        if (update.getNeuesTyp() != null) {
-            userInstitution.setTyp(update.getNeuesTyp());
-        }
-        if (update.getNeuesHauptstandortId() != null) {
-            userInstitution.setHauptstandort(getStandort(userInstitution, update.getNeuesHauptstandortId()));
         }
 
         return updateInstitution(userInstitution);
     }
 
     public Institution userInstitutionHauptstandortHinzufuegen(
-            final @NotNull @Valid NeuerInstitutionStandort neuesStandort) {
+            final @NotNull @Valid NeuerInstitutionStandort neuerStandort) {
 
-        log.debug("Setze neues Hauptstandort in User Institution: " + neuesStandort);
+        log.debug("Setze neues Hauptstandort in User Institution: " + neuerStandort);
 
         val userInstitution = getUserInstitution();
-        val standort = standortErstellen(neuesStandort);
+        val standort = standortErstellen(neuerStandort);
         userInstitution.addStandort(standort);
-        userInstitution.setHauptstandort(standort);
 
         return updateInstitution(userInstitution);
     }
@@ -119,7 +87,7 @@ public class InstitutionService {
     }
 
 
-    public void institutionBeantragen(@NotNull @Valid final InstitutionAntrag antrag) {
+    public void institutionBeantragen(@NotNull final InstitutionAntrag antrag) {
         log.debug("Institution beantragen gestartet: " + antrag);
 
         //weitere Daten füllen
@@ -128,7 +96,7 @@ public class InstitutionService {
         antrag.setStatus(InstitutionAntragStatus.OFFEN);
 
         val gespeicherterAntrag = updateAntrag(antrag);
-        institutionAntragProzessStarten(gespeicherterAntrag);
+        prozessService.antragProzessStarten(gespeicherterAntrag);
     }
 
 
@@ -176,7 +144,7 @@ public class InstitutionService {
                 //TODO key muss überarbeitet werden
                 .institutionKey(antrag.getWebseite())
                 .build();
-        val hauptstandort = NeuerInstitutionStandort.builder()
+        val standort = NeuerInstitutionStandort.builder()
                 .ort(antrag.getOrt())
                 .hausnummer(antrag.getHausnummer())
                 .land(antrag.getLand())
@@ -184,17 +152,8 @@ public class InstitutionService {
                 .plz(antrag.getPlz())
                 .strasse(antrag.getStrasse())
                 .build();
-        neueInstitution.setHauptstandort(hauptstandort);
+        neueInstitution.setStandort(standort);
         return neueInstitution;
-    }
-
-    private void institutionAntragProzessStarten(@NotNull @Valid final InstitutionAntrag antrag) {
-
-        val variables = new HashMap<String, Object>();
-        engineClient.prozessStarten(
-                InstitutionAntragProzessConstants.PROZESS_KEY,
-                new BusinessKey(antrag.getId().getValue()),
-                userService.getContextUserId(), variables);
     }
 
     private InstitutionAntrag updateAntrag(InstitutionAntrag antrag) {

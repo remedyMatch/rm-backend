@@ -27,7 +27,6 @@ final class AngebotAnfrageEntityConverter {
                 .institution(InstitutionEntityConverter.convertInstitution(entity.getInstitution())) //
                 .standort(InstitutionStandortEntityConverter.convertStandort(entity.getStandort())) //
                 .anzahl(entity.getAnzahl()) //
-                .kommentar(entity.getKommentar()) //
                 .bedarfId(new BedarfId(entity.getBedarfId())) //
                 .status(entity.getStatus())//
                 .build();

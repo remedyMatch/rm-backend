@@ -5,6 +5,6 @@ public enum AngebotAnfrageStatus {
     ANGENOMMEN, //
     ABGELEHNT, //
     STORNIERT, //
-    BEANTWORTET, //
-    OFFEN
+    OFFEN,
+    MATCHED
 }

@@ -32,27 +32,30 @@ public class AngebotSucheController {
     @Transactional(readOnly = true)
     @GetMapping
     public ResponseEntity<List<AngebotRO>> getAlleNichtBedienteOeffentlicheAngebote(
-            @QueryParam("artikelVarianteId") @Valid ArtikelVarianteId artikelVarianteId) {
-        return ResponseEntity.ok(mapToAngeboteRO(angebotSucheService.findAlleNichtBedienteOeffentlicheAngebote(artikelVarianteId)));
+            @QueryParam("artikelVarianteId") @Valid ArtikelVarianteId artikelVarianteId,
+            @QueryParam("ohneEigene") boolean ohneEigene) {
+        return ResponseEntity.ok(mapToAngeboteRO(angebotSucheService.findAlleNichtBedienteOeffentlicheAngebote(artikelVarianteId, ohneEigene)));
     }
 
     @Transactional(readOnly = true)
     @GetMapping("/filter/artikelkategorie")
-    public ResponseEntity<List<AngebotFilterEntryRO>> getArtikelKategorieFilter() {
-        return ResponseEntity.ok(mapToFilterEntriesRO(angebotSucheService.getArtikelKategorieFilter()));
+    public ResponseEntity<List<AngebotFilterEntryRO>> getArtikelKategorieFilter(@QueryParam("ohneEigene") @Valid boolean ohneEigene) {
+        return ResponseEntity.ok(mapToFilterEntriesRO(angebotSucheService.getArtikelKategorieFilter(ohneEigene)));
     }
 
     @Transactional(readOnly = true)
     @GetMapping("/filter/artikel")
     public ResponseEntity<List<AngebotFilterEntryRO>> getArtikelFilter(
-            @QueryParam("artikelKategorieId") @NotNull ArtikelKategorieId artikelKategorieId) {
-        return ResponseEntity.ok(mapToFilterEntriesRO(angebotSucheService.getArtikelFilter(artikelKategorieId)));
+            @QueryParam("artikelKategorieId") @NotNull ArtikelKategorieId artikelKategorieId,
+            @QueryParam("ohneEigene") boolean ohneEigene) {
+        return ResponseEntity.ok(mapToFilterEntriesRO(angebotSucheService.getArtikelFilter(artikelKategorieId, ohneEigene)));
     }
 
     @Transactional(readOnly = true)
     @GetMapping("/filter/artikelvariante")
     public ResponseEntity<List<AngebotFilterEntryRO>> getArtikelVarianteFilter(
-            @QueryParam("artikelId") @NotNull ArtikelId artikelId) {
-        return ResponseEntity.ok(mapToFilterEntriesRO(angebotSucheService.getArtikelVarianteFilter(artikelId)));
+            @QueryParam("artikelId") @NotNull ArtikelId artikelId,
+            @QueryParam("ohneEigene") boolean ohneEigene) {
+        return ResponseEntity.ok(mapToFilterEntriesRO(angebotSucheService.getArtikelVarianteFilter(artikelId, ohneEigene)));
     }
 }

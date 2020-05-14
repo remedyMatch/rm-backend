@@ -3,6 +3,7 @@ package io.remedymatch.bedarf.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.remedymatch.TestApplication;
 import io.remedymatch.WithMockJWT;
+import io.remedymatch.engine.client.EngineClient;
 import io.remedymatch.usercontext.TestUserContext;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -44,6 +46,9 @@ public class NeuesBedarfShould extends BedarfControllerTestBasis {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private EngineClient engineClient;
 
     @BeforeEach
     void prepare() {

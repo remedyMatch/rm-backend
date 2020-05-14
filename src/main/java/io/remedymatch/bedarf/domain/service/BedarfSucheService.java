@@ -1,17 +1,5 @@
 package io.remedymatch.bedarf.domain.service;
 
-import static io.remedymatch.bedarf.domain.service.BedarfFilterConverter.convertFilterEntries;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
 import io.remedymatch.artikel.domain.model.ArtikelId;
 import io.remedymatch.artikel.domain.model.ArtikelKategorieId;
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
@@ -23,71 +11,111 @@ import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static io.remedymatch.bedarf.domain.service.BedarfFilterConverter.convertFilterEntries;
 
 @AllArgsConstructor
 @Validated
 @Service
 public class BedarfSucheService {
 
-	private final BedarfJpaRepository bedarfRepository;
-	private final BedarfAnfrageSucheService bedarfAnfrageSucheService;
+    private final BedarfJpaRepository bedarfRepository;
+    private final BedarfAnfrageSucheService bedarfAnfrageSucheService;
 
-	private final UserContextService userService;
-	private final GeocodingService geocodingService;
+    private final UserContextService userService;
+    private final GeocodingService geocodingService;
 
-	@Transactional(readOnly = true)
-	public List<BedarfFilterEntry> getArtikelKategorieFilter() {
-		return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalse());
-	}
+    @Transactional(readOnly = true)
+    public List<BedarfFilterEntry> getArtikelKategorieFilter(final Boolean ohneEigene) {
 
-	@Transactional(readOnly = true)
-	public List<BedarfFilterEntry> getArtikelFilter(final @NotNull @Valid ArtikelKategorieId kategorieId) {
-		return convertFilterEntries(bedarfRepository
-				.countAllBedarfArtikelByDeletedFalseAndBedientFalseAndArtikel_ArtikelKategorie(kategorieId.getValue()));
-	}
+        if (ohneEigene) {
+            return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalseOhneEigene(userService.getContextInstitutionId().getValue()));
+        }
 
-	@Transactional(readOnly = true)
-	public List<BedarfFilterEntry> getArtikelVarianteFilter(final @NotNull @Valid ArtikelId artikelId) {
-		return convertFilterEntries(bedarfRepository
-				.countAllBedarfArtikelVariantenByDeletedFalseAndBedientFalseAndArtikel_Id(artikelId.getValue()));
-	}
+        return convertFilterEntries(bedarfRepository.countAllBedarfKategorienByDeletedFalseAndBedientFalse());
+    }
 
-	@Transactional(readOnly = true)
-	public List<Bedarf> findAlleNichtBedienteOeffentlicheBedarfe(final @Valid ArtikelVarianteId artikelVarianteId) {
-		if (artikelVarianteId != null) {
-			return mitEntfernung(
-					bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(
-							artikelVarianteId.getValue()));
-		}
-		return mitEntfernung(bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue());
-	}
+    @Transactional(readOnly = true)
+    public List<BedarfFilterEntry> getArtikelFilter(final @NotNull @Valid ArtikelKategorieId kategorieId, final Boolean ohneEigene) {
 
-	@Transactional(readOnly = true)
-	public List<Bedarf> findAlleNichtBedienteBedarfeDerUserInstitution() {
+        if (ohneEigene) {
+            return convertFilterEntries(bedarfRepository
+                    .countAllBedarfArtikelByDeletedFalseAndBedientFalseAndArtikel_ArtikelKategorieOhneEigene(kategorieId.getValue(), userService.getContextInstitutionId().getValue()));
+        }
 
-		val bedarfe = mitEntfernung(bedarfRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(
-				userService.getContextInstitutionId().getValue()));
+        return convertFilterEntries(bedarfRepository
+                .countAllBedarfArtikelByDeletedFalseAndBedientFalseAndArtikel_ArtikelKategorie(kategorieId.getValue()));
+    }
 
-		// TODO geht das einfacher?
-		val bedarfIds = bedarfe.stream().map(Bedarf::getId).collect(Collectors.toList());
-		val anfragen = bedarfAnfrageSucheService.findeAlleOffenenAnfragenFuerBedarfIds(bedarfIds);
-		val anfrageMap = anfragen.stream()
-				.collect(Collectors.groupingBy(anfrage -> anfrage.getBedarf().getId().getValue()));
-		bedarfe.forEach(b -> {
-			if (anfrageMap.containsKey(b.getId().getValue())) {
-				b.setAnfragen(anfrageMap.get(b.getId().getValue()));
-			}
-		});
-		return bedarfe;
-	}
+    @Transactional(readOnly = true)
+    public List<BedarfFilterEntry> getArtikelVarianteFilter(final @NotNull @Valid ArtikelId artikelId, final Boolean ohneEigene) {
 
-	private List<Bedarf> mitEntfernung(final List<BedarfEntity> bedarfe) {
-		return bedarfe.stream().map(this::mitEntfernung).collect(Collectors.toList());
-	}
+        if (ohneEigene) {
+            return convertFilterEntries(bedarfRepository
+                    .countAllBedarfArtikelVariantenByDeletedFalseAndBedientFalseAndArtikel_IdOhneEigene(artikelId.getValue(), userService.getContextInstitutionId().getValue()));
+        }
 
-	private Bedarf mitEntfernung(final BedarfEntity bedarf) {
-		val convertedBedarf = BedarfEntityConverter.convertBedarf(bedarf);
-		convertedBedarf.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedBedarf.getStandort()));
-		return convertedBedarf;
-	}
+        return convertFilterEntries(bedarfRepository
+                .countAllBedarfArtikelVariantenByDeletedFalseAndBedientFalseAndArtikel_Id(artikelId.getValue()));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Bedarf> findAlleNichtBedienteOeffentlicheBedarfe(final @Valid ArtikelVarianteId artikelVarianteId, final Boolean ohneEigene) {
+
+        List<Bedarf> bedarfe;
+
+        if (artikelVarianteId != null) {
+            bedarfe = mitEntfernung(
+                    bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(
+                            artikelVarianteId.getValue()));
+        } else {
+            bedarfe = mitEntfernung(bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrue());
+        }
+
+        if (ohneEigene) {
+            val institutionId = userService.getContextInstitutionId();
+            return bedarfe.stream()
+                    .filter(angebot -> !angebot.getInstitution().getId().equals(institutionId))
+                    .collect(Collectors.toList());
+        }
+
+        return bedarfe;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Bedarf> findAlleNichtBedienteBedarfeDerUserInstitution() {
+
+        val bedarfe = mitEntfernung(bedarfRepository.findAllByDeletedFalseAndBedientFalseAndInstitution_Id(
+                userService.getContextInstitutionId().getValue()));
+
+        // TODO geht das einfacher?
+        val bedarfIds = bedarfe.stream().map(Bedarf::getId).collect(Collectors.toList());
+        val anfragen = bedarfAnfrageSucheService.findeAlleOffenenAnfragenFuerBedarfIds(bedarfIds);
+        val anfrageMap = anfragen.stream()
+                .collect(Collectors.groupingBy(anfrage -> anfrage.getBedarf().getId().getValue()));
+        bedarfe.forEach(b -> {
+            if (anfrageMap.containsKey(b.getId().getValue())) {
+                b.setAnfragen(anfrageMap.get(b.getId().getValue()));
+            }
+        });
+        return bedarfe;
+    }
+
+    private List<Bedarf> mitEntfernung(final List<BedarfEntity> bedarfe) {
+        return bedarfe.stream().map(this::mitEntfernung).collect(Collectors.toList());
+    }
+
+    private Bedarf mitEntfernung(final BedarfEntity bedarf) {
+        val convertedBedarf = BedarfEntityConverter.convertBedarf(bedarf);
+        convertedBedarf.setEntfernung(geocodingService.berechneUserDistanzInKilometer(convertedBedarf.getStandort()));
+        return convertedBedarf;
+    }
 }

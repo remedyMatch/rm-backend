@@ -6,7 +6,6 @@ import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.geodaten.geocoding.domain.Adresse;
 import io.remedymatch.geodaten.geocoding.domain.Point;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
-import io.remedymatch.match.domain.MatchStandort;
 import io.remedymatch.usercontext.UserContextService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -97,25 +96,6 @@ public class GoogleMapsGeocodingServiceIntegrationTest {
         assertThat(adressString).isNotEmpty();
         assertThat(adressString).contains("Am Marksbach");
         assertThat(adressString).contains("44269");
-    }
-
-    @Test
-    @DisplayName("Kilometer via Match-Standorten berechnen")
-    void sollteKmViaMatchStandortenBerechnen() {
-
-        MatchStandort matchStandortDortmund = MatchStandort.builder()
-                .latitude(BigDecimal.valueOf(HUETTENHOSPITAL_DORTMUND_LAT))
-                .longitude(BigDecimal.valueOf(HUETTENHOSPITAL_DORTMUND_LON))
-                .build();
-        MatchStandort matchStandortMenden = MatchStandort.builder()
-                .latitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LAT))
-                .longitude(BigDecimal.valueOf(BERUFSKOLLEG_MENDEN_LON))
-                .build();
-
-        BigDecimal distanz = geocodingService.berechneDistanzInKilometer(matchStandortDortmund, matchStandortMenden);
-
-        assertThat(distanz).isGreaterThan(BigDecimal.valueOf(28.0d)); // shortest driving track: 28.2 km
-        assertThat(distanz).isLessThan(BigDecimal.valueOf(36.0d));// longest driving track: 35.8 km
     }
 
     @Test

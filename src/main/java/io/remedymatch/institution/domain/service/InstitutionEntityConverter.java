@@ -5,29 +5,27 @@ import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 
 public final class InstitutionEntityConverter {
-	private InstitutionEntityConverter() {
+    private InstitutionEntityConverter() {
 
-	}
+    }
 
-	public static Institution convertInstitution(final InstitutionEntity entity) {
-		return Institution.builder() //
-				.id(new InstitutionId(entity.getId())) //
-				.name(entity.getName()) //
-				.institutionKey(entity.getInstitutionKey()) //
-				.typ(entity.getTyp()) //
-				.hauptstandort(InstitutionStandortEntityConverter.convertStandort(entity.getHauptstandort())) //
-				.standorte(InstitutionStandortEntityConverter.convertStandortEntities(entity.getStandorte())) //
-				.build();
-	}
+    public static Institution convertInstitution(final InstitutionEntity entity) {
+        return Institution.builder() //
+                .id(new InstitutionId(entity.getId())) //
+                .name(entity.getName()) //
+                .institutionKey(entity.getInstitutionKey()) //
+                .typ(entity.getTyp()) //
+                .standorte(InstitutionStandortEntityConverter.convertStandortEntities(entity.getStandorte())) //
+                .build();
+    }
 
-	public static InstitutionEntity convertInstitution(Institution institution) {
-		return InstitutionEntity.builder() //
-				.id(institution.getId().getValue()) //
-				.name(institution.getName()) //
-				.institutionKey(institution.getInstitutionKey()) //
-				.typ(institution.getTyp()) //
-				.hauptstandort(InstitutionStandortEntityConverter.convertStandort(institution.getHauptstandort())) //
-				.standorte(InstitutionStandortEntityConverter.convertStandorte(institution.getStandorte())) //
-				.build();
-	}
+    public static InstitutionEntity convertInstitution(Institution institution) {
+        return InstitutionEntity.builder() //
+                .id(institution.getId().getValue()) //
+                .name(institution.getName()) //
+                .institutionKey(institution.getInstitutionKey()) //
+                .typ(institution.getTyp()) //
+                .standorte(InstitutionStandortEntityConverter.convertStandorte(institution.getStandorte())) //
+                .build();
+    }
 }

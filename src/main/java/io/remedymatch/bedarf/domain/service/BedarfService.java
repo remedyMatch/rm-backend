@@ -11,13 +11,16 @@ import io.remedymatch.bedarf.infrastructure.BedarfEntity;
 import io.remedymatch.bedarf.infrastructure.BedarfJpaRepository;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.domain.OperationNotAlloudException;
+import io.remedymatch.domain.OperationNotAllowedException;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import io.remedymatch.institution.domain.service.InstitutionEntityConverter;
 import io.remedymatch.institution.domain.service.InstitutionStandortEntityConverter;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
+import io.remedymatch.nachricht.domain.model.NachrichtReferenz;
+import io.remedymatch.nachricht.domain.model.NachrichtReferenzTyp;
+import io.remedymatch.nachricht.domain.service.NachrichtService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -30,6 +33,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 @AllArgsConstructor
 @Validated
@@ -46,7 +50,6 @@ public class BedarfService {
     private static final String EXCEPTION_MSG_BEDARF_ANFRAGE_GESCHLOSSEN = "BedarfAnfrage ist bereits erledigt. (Status: %s)";
 
     private static final String EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION = "Standort gehoert nicht der Institution des angemeldetes Benutzers. (Id: %s)";
-
     private static final String EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_VON_USER_INSTITUTION = "BedarfAnfrage gehoert nicht der Institution des angemeldetes Benutzers.";
 
     private final BedarfJpaRepository bedarfRepository;
@@ -54,6 +57,7 @@ public class BedarfService {
 
     private final UserContextService userService;
     private final BedarfProzessService bedarfProzessService;
+    private final NachrichtService nachrichtService;
 
     @Transactional
     public void bedarfDerUserInstitutionSchliessen(final @NotNull @Valid BedarfId bedarfId) {
@@ -72,6 +76,13 @@ public class BedarfService {
     }
 
     @Transactional
+    public void bedarfAlsGeschlossenMarkieren(final @NotNull @Valid BedarfId bedarfId) {
+        val bedarf = getBedarf(bedarfId);
+        bedarf.setDeleted(true);
+        bedarfRepository.save(bedarf);
+    }
+
+    @Transactional
     public void bedarfAnzahlAendern(final @NotNull @Valid BedarfId bedarfId, @NotNull BigDecimal anzahl) {
 
         // pruefe ob das Angebot existiert
@@ -85,36 +96,39 @@ public class BedarfService {
     @Transactional
     public BedarfAnfrage bedarfAnfrageErstellen(
             final @NotNull @Valid BedarfId bedarfId, //
-            final @NotBlank String kommentar, //
+            final @NotBlank String nachricht, //
             final @NotNull BigDecimal anzahl, //
             final @NotNull AngebotId angebotId) {
 
         val bedarf = getNichtBedienteBedarf(bedarfId);
 
+        if (bedarf.getInstitution().getId().equals(userService.getContextInstitutionId())) {
+            throw new OperationNotAllowedException("Der eigene Bedarf kann nicht bedient werden");
+        }
+
         var anfrage = anfrageRepository.save(BedarfAnfrageEntity.builder() //
                 .bedarf(bedarf) //
-				.institution(getUserInstitution()) //
-				.standort(getUserStandort()) //
+                .institution(getUserInstitution()) //
+                .standort(getUserStandort()) //
                 .anzahl(anzahl) //
-                .kommentar(kommentar) //
                 .angebotId(angebotId.getValue()) //
                 .status(BedarfAnfrageStatus.OFFEN) //
                 .build());
 
         bedarfProzessService.anfrageErhalten(new BedarfAnfrageId(anfrage.getId()), bedarfId, angebotId);
+        konversationStarten(anfrage, nachricht);
         return BedarfAnfrageEntityConverter.convertAnfrage(anfrage);
     }
 
     @Transactional
-    public void bedarfAnfrageDerUserInstitutionStornieren(//
-                                                          final @NotNull @Valid BedarfId bedarfId, //
-                                                          final @NotNull @Valid BedarfAnfrageId anfrageId) {
+    public void bedarfAnfrageDerUserInstitutionStornieren(
+            final @NotNull @Valid BedarfId bedarfId, //
+            final @NotNull @Valid BedarfAnfrageId anfrageId) {
         val anfrage = getOffeneAnfrageDerUserInstitution(bedarfId, anfrageId);
         anfrage.setStatus(BedarfAnfrageStatus.STORNIERT);
 
         // Anfrage stornieren
         bedarfProzessService.anfrageStornieren(anfrageId, bedarfId);
-
         anfrageRepository.save(anfrage);
     }
 
@@ -164,7 +178,7 @@ public class BedarfService {
         var restAnzahl = new BigDecimal(0);
         BigDecimal bedarfRest = bedarf.getRest();
         if (anfrageAnzahl.compareTo(bedarfRest) > 0) {
-            throw new OperationNotAlloudException("Nicht genügend Ware auf Lager");
+            throw new OperationNotAllowedException("Nicht genügend Ware auf Lager");
         }
 
         // Bedarf angenommen
@@ -184,13 +198,24 @@ public class BedarfService {
         return restAnzahl;
     }
 
+    public void konversationStarten(final @NotNull BedarfAnfrageEntity anfrage, final @Valid String nachricht) {
+
+        val beteiligteInstitutionen = Arrays.asList(anfrage.getInstitution(), anfrage.getBedarf().getInstitution());
+        nachrichtService.konversationStarten(new NachrichtReferenz(anfrage.getId()), NachrichtReferenzTyp.BEDARF_ANFRAGE, nachricht, beteiligteInstitutionen);
+    }
+
+    public void bedarfAnfrageStatusSetzen(BedarfAnfrageId anfrageId, BedarfId bedarfId, BedarfAnfrageStatus status) {
+        val anfrage = getOffeneAnfrage(bedarfId, anfrageId);
+        anfrage.setStatus(status);
+        anfrageRepository.save(anfrage);
+    }
+
     /* help methods */
 
     BedarfEntity getNichtBedienteBedarfDerUserInstitution(final @NotNull @Valid BedarfId bedarfId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
 
         val bedarf = getNichtBedienteBedarf(bedarfId);
-
         if (!userService.isUserContextInstitution(new InstitutionId(bedarf.getInstitution().getId()))) {
             throw new NotUserInstitutionObjectException(
                     String.format(EXCEPTION_MSG_BEDARF_NICHT_VON_USER_INSTITUTION, bedarfId.getValue()));
@@ -202,20 +227,29 @@ public class BedarfService {
     BedarfEntity getNichtBedienteBedarf(final @NotNull @Valid BedarfId bedarfId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
 
-        val bedarf = bedarfRepository.findById(bedarfId.getValue()) //
-                .orElseThrow(() -> new ObjectNotFoundException(
-                        String.format(EXCEPTION_MSG_BEDARF_NICHT_GEFUNDEN, bedarfId.getValue())));
+        val bedarf = bedarfRepository.findById(bedarfId.getValue())
+                .orElseThrow(() -> new ObjectNotFoundException(String.format(EXCEPTION_MSG_BEDARF_NICHT_GEFUNDEN, bedarfId.getValue())));
 
         if (bedarf.isBedient()) {
-            throw new OperationNotAlloudException(EXCEPTION_MSG_BEDARF_BEDIEN);
+            throw new OperationNotAllowedException(EXCEPTION_MSG_BEDARF_BEDIEN);
         }
 
         return bedarf;
     }
 
-    BedarfAnfrageEntity getOffeneAnfrageDerUserInstitution(//
-                                                           final @NotNull @Valid BedarfId bedarfId, //
-                                                           final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
+    BedarfEntity getBedarf(final @NotNull @Valid BedarfId bedarfId) {
+        Assert.notNull(bedarfId, "BedarfId ist null.");
+
+        val bedarf = bedarfRepository.findById(bedarfId.getValue()) //
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        String.format(EXCEPTION_MSG_BEDARF_NICHT_GEFUNDEN, bedarfId.getValue())));
+
+        return bedarf;
+    }
+
+    BedarfAnfrageEntity getOffeneAnfrageDerUserInstitution(
+            final @NotNull @Valid BedarfId bedarfId, //
+            final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
         Assert.notNull(bedarfAnfrageId, "BedarfAnfrageId ist null.");
 
@@ -229,31 +263,30 @@ public class BedarfService {
         return anfrage;
     }
 
-    BedarfAnfrageEntity getOffeneAnfrage(//
-                                         final @NotNull @Valid BedarfId bedarfId, //
-                                         final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
+    BedarfAnfrageEntity getOffeneAnfrage(
+            final @NotNull @Valid BedarfId bedarfId, //
+            final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
         Assert.notNull(bedarfId, "BedarfId ist null.");
         Assert.notNull(bedarfAnfrageId, "BedarfAnfrageId ist null.");
 
         val anfrage = getOffeneAnfrage(bedarfAnfrageId);
 
         if (!bedarfId.getValue().equals(anfrage.getBedarf().getId())) {
-            throw new OperationNotAlloudException(String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_IN_BEDARF,
+            throw new OperationNotAllowedException(String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_IN_BEDARF,
                     bedarfId.getValue(), bedarfAnfrageId.getValue()));
         }
 
         if (!BedarfAnfrageStatus.OFFEN.equals(anfrage.getStatus())) {
-            throw new OperationNotAlloudException(
+            throw new OperationNotAllowedException(
                     String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_GESCHLOSSEN, anfrage.getStatus()));
         }
 
         return anfrage;
     }
 
-    BedarfAnfrageEntity getOffeneAnfrage(//
-                                         final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
+    BedarfAnfrageEntity getOffeneAnfrage(
+            final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
         Assert.notNull(bedarfAnfrageId, "BedarfAnfrageId ist null.");
-
         return anfrageRepository.findById(bedarfAnfrageId.getValue())//
                 .orElseThrow(() -> new ObjectNotFoundException(
                         String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_GEFUNDEN, bedarfAnfrageId.getValue())));
@@ -262,14 +295,14 @@ public class BedarfService {
     private InstitutionEntity getUserInstitution() {
         return InstitutionEntityConverter.convertInstitution(userService.getContextStandort().getInstitution());
     }
-    
-    private InstitutionStandortEntity getUserStandort() {
-		return InstitutionStandortEntityConverter.convertStandort(userService.getContextStandort().getStandort());
-	}
 
-    InstitutionStandortEntity getUserInstitutionStandort( //
-                                                          final @NotNull InstitutionEntity userInstitution, //
-                                                          final @NotNull @Valid InstitutionStandortId institutionStandortId) {
+    private InstitutionStandortEntity getUserStandort() {
+        return InstitutionStandortEntityConverter.convertStandort(userService.getContextStandort().getStandort());
+    }
+
+    InstitutionStandortEntity getUserInstitutionStandort(
+            final @NotNull InstitutionEntity userInstitution, //
+            final @NotNull @Valid InstitutionStandortId institutionStandortId) {
         Assert.notNull(userInstitution, "InstitutionEntity ist null.");
         Assert.notNull(institutionStandortId, "InstitutionStandortId ist null.");
 
@@ -277,4 +310,6 @@ public class BedarfService {
                 .orElseThrow(() -> new NotUserInstitutionObjectException(String
                         .format(EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION, institutionStandortId.getValue())));
     }
+
+
 }

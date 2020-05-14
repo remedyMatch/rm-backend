@@ -8,6 +8,7 @@ import io.remedymatch.angebot.domain.service.AngebotSucheService;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
+import io.remedymatch.domain.OperationNotAllowedException;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,8 @@ public class AngebotController {
 
     @PostMapping("/{angebotId}/anzahl")
     public ResponseEntity<Void> angebotAnzahlAendern(
-            @PathVariable("angebotId") @NotNull UUID angebotId, @Valid @NotNull AngebotAnzahlAendernRequest request) {
+            @PathVariable("angebotId") @NotNull UUID angebotId,
+            @Valid @NotNull AngebotAnzahlAendernRequest request) {
         try {
             angebotService.angebotAnzahlAendern(AngebotControllerMapper.mapToAngebotId(angebotId), request.getAnzahl());
         } catch (ObjectNotFoundException e) {
@@ -77,11 +79,15 @@ public class AngebotController {
     public ResponseEntity<AngebotAnfrageRO> angebotAnfragen(
             @PathVariable("angebotId") @NotNull UUID angebotId, //
             @RequestBody @Valid AngebotAnfragenRequest request) {
-        return ResponseEntity.ok(mapToAnfrageRO(angebotService.angebotAnfrageErstellen(//
-                AngebotControllerMapper.mapToAngebotId(angebotId), //
-                request.getKommentar(), //
-                request.getAnzahl(), //
-                new BedarfId(request.getBedarfId()))));
+        try {
+            return ResponseEntity.ok(mapToAnfrageRO(angebotService.angebotAnfrageErstellen(//
+                    AngebotControllerMapper.mapToAngebotId(angebotId), //
+                    request.getNachricht(), //
+                    request.getAnzahl(), //
+                    new BedarfId(request.getBedarfId()))));
+        } catch (OperationNotAllowedException e) {
+            return ResponseEntity.status(403).build();
+        }
     }
 
     @PostMapping("/{angebotId}/anfrage/{anfrageId}/stornieren")
@@ -123,5 +129,12 @@ public class AngebotController {
     public ResponseEntity<List<GestellteAngebotAnfrageRO>> getGestellteAnfragen() {
         val offeneGestellteAnfragen = angebotAnfrageSucheService.findAlleOffeneAnfragenDerUserInstitution();
         return ResponseEntity.ok(offeneGestellteAnfragen.stream().map(AngebotControllerMapper::mapToGestellteAngebotAnfrageRO).collect(Collectors.toList()));
+    }
+
+    @Transactional(readOnly = true)
+    @PostMapping("/anfrage/suche")
+    public ResponseEntity<List<GestellteAngebotAnfrageRO>> getAngebotAnfragen(@RequestBody @Valid AngebotAnfragenIdSucheRequest request) {
+        val angebotAnfragen = angebotAnfrageSucheService.findeAlleAnfragenFuerIds(request.getIds().stream().map(AngebotAnfrageId::new).collect(Collectors.toList()));
+        return ResponseEntity.ok(angebotAnfragen.stream().map(AngebotControllerMapper::mapToGestellteAngebotAnfrageRO).collect(Collectors.toList()));
     }
 }

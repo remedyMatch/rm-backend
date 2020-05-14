@@ -31,7 +31,6 @@ public final class BedarfAnfrageTestFixtures {
                 .standort(InstitutionTestFixtures.beispielHaupstandort()) //
                 .angebotId(ANGEBOT_ID) //
                 .anzahl(BEDARF_ANFRAGE_ANZAHL) //
-                .kommentar(BEDARF_ANFRAGE_KOMMENTAR) //
                 .status(BEDARF_ANFRAGE_STATUS) //
                 .build();
     }
@@ -44,7 +43,6 @@ public final class BedarfAnfrageTestFixtures {
                 .standort(InstitutionTestFixtures.beispielHaupstandortEntity()) //
                 .angebotId(ANGEBOT_ID.getValue()) //
                 .anzahl(BEDARF_ANFRAGE_ANZAHL) //
-                .kommentar(BEDARF_ANFRAGE_KOMMENTAR) //
                 .status(BEDARF_ANFRAGE_STATUS) //
                 .build();
     }

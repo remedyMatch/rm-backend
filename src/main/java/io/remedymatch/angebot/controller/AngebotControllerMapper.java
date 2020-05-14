@@ -22,7 +22,6 @@ class AngebotControllerMapper {
                 .institution(InstitutionMapper.mapToInstitutionRO(angebotAnfrage.getInstitution())) //
                 .standort(InstitutionStandortMapper.mapToStandortRO(angebotAnfrage.getStandort())) //
                 .anzahl(angebotAnfrage.getAnzahl()) //
-                .kommentar(angebotAnfrage.getKommentar()) //
                 .entfernung(angebotAnfrage.getEntfernung())
                 .status(angebotAnfrage.getStatus()) //
                 .bedarfId(angebotAnfrage.getBedarfId().getValue()) //
@@ -35,7 +34,6 @@ class AngebotControllerMapper {
                 .institution(InstitutionMapper.mapToInstitutionRO(angebotAnfrage.getInstitution())) //
                 .standort(InstitutionStandortMapper.mapToStandortRO(angebotAnfrage.getStandort())) //
                 .anzahl(angebotAnfrage.getAnzahl()) //
-                .kommentar(angebotAnfrage.getKommentar()) //
                 .entfernung(angebotAnfrage.getEntfernung())
                 .status(angebotAnfrage.getStatus()) //
                 .bedarfId(angebotAnfrage.getBedarfId().getValue()) //

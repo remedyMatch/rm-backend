@@ -4,7 +4,6 @@ import io.remedymatch.geodaten.geocoding.Geocoder;
 import io.remedymatch.geodaten.geocoding.domain.Adresse;
 import io.remedymatch.geodaten.geocoding.domain.Point;
 import io.remedymatch.institution.domain.model.InstitutionStandort;
-import io.remedymatch.match.domain.MatchStandort;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -52,6 +51,7 @@ public class GeocodingService {
 
     /**
      * Liefert die Adresse (in Form eines Strings) anhand eines gegebenen Koordinaten-Paars.
+     *
      * @param point Koordinate, zu der die entsprechende Adresse gefunden werden soll.
      * @return Zur gegebenen Koordinate gehörende Adresse (als Adress-String).
      */
@@ -62,6 +62,7 @@ public class GeocodingService {
     /**
      * Liefert Adress-Vorschlaege anhand eines (unvollstaendigen) Adress-Strings. Kann fuer Auto-Vervollstaendigung
      * verwendet werden.
+     *
      * @param adressString unvollstaendiger Adress-String
      * @return Liste von vollstaendigen Adress-Strings, die basierend auf dem gegebenen adressString gefunden wurden.
      */
@@ -73,6 +74,7 @@ public class GeocodingService {
      * Berechnet die Distanz (in km) vom Hauptstandort des Benutzers zu dem gegebenen Ziel-Standort. Je nach verwendeter
      * Geocoder-Implementierung ist dies eine Strassendistanz (GoogleMaps) oder die statisch berechnete Luftlinie
      * (LocationIQ).
+     *
      * @param zielStandort Das Ziel, zu welchem die Distanz berechnet werden soll (vom Benutzer-Hauptstandort aus)
      * @return Distanz zwischen Benutzer-Hauptstandort und Ziel-Standort
      */
@@ -84,6 +86,7 @@ public class GeocodingService {
      * Berechnet die Distanz (in km) zwischen zwei gegebenen Institutions-Standorten. Je nach verwendeter
      * Geocoder-Implementierung ist dies eine Strassendistanz (GoogleMaps) oder die statisch berechnete
      * Luftlinie (LocationIQ).
+     *
      * @param zielStandort Der Start, von welchem aus die Distanz zum Ziel berechnet werden soll.
      * @param zielStandort Das Ziel, zu welchem die Distanz berechnet werden soll.
      * @return Distanz zwischen Benutzer-Hauptstandort und Ziel-Standort.
@@ -93,19 +96,5 @@ public class GeocodingService {
         return BigDecimal.valueOf(geocoder.kilometerBerechnen(startStandort, zielStandort));
     }
 
-    /**
-     * Berechnet die Distanz (in km) zwischen zwei gegebenen Match-Standorten. Je nach verwendeter
-     * Geocoder-Implementierung ist dies eine Strassendistanz (GoogleMaps) oder die statisch berechnete
-     * Luftlinie (LocationIQ).
-     * @param startStandort Der Start, von welchem aus die Distanz zum Ziel berechnet werden soll.
-     * @param zielStandort Das Ziel, zu welchem die Distanz berechnet werden soll.
-     * @return Distanz zwischen Benutzer-Hauptstandort und Ziel-Standort.
-     */
-    public BigDecimal berechneDistanzInKilometer(@NonNull final MatchStandort startStandort,
-                                                 @NonNull final MatchStandort zielStandort) {
-
-        // Fixme - Standort als Interface umdefinieren
-        return BigDecimal.valueOf(geocoder.kilometerBerechnen(startStandort, zielStandort));
-    }
 
 }

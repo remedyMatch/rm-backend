@@ -24,7 +24,6 @@ class BedarfControllerMapper {
                 .standort(InstitutionStandortMapper.mapToStandortRO(bedarfAnfrage.getStandort())) //
                 .anzahl(bedarfAnfrage.getAnzahl()) //
                 .angebotId(bedarfAnfrage.getAngebotId().getValue()) //
-                .kommentar(bedarfAnfrage.getKommentar()) //
                 .entfernung(bedarfAnfrage.getEntfernung()) //
                 .status(bedarfAnfrage.getStatus()) //
                 .build();
@@ -37,7 +36,6 @@ class BedarfControllerMapper {
                 .standort(InstitutionStandortMapper.mapToStandortRO(bedarfAnfrage.getStandort())) //
                 .anzahl(bedarfAnfrage.getAnzahl()) //
                 .angebotId(bedarfAnfrage.getAngebotId().getValue()) //
-                .kommentar(bedarfAnfrage.getKommentar()) //
                 .entfernung(bedarfAnfrage.getEntfernung()) //
                 .status(bedarfAnfrage.getStatus()) //
                 .build();

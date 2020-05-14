@@ -14,12 +14,18 @@ public interface AngebotAnfrageJpaRepository extends JpaRepository<AngebotAnfrag
 
     List<AngebotAnfrageEntity> findAllByAngebot_Institution_Id(final UUID institutionId);
 
-    @Query("SELECT a FROM AngebotAnfrage a WHERE a.angebot.institution.id = :institutionId AND a.status='OFFEN'")
-    List<AngebotAnfrageEntity> findAllByStatusOffenAndInstitution_Id(@Param("institutionId") final UUID institutionId);
-
     List<AngebotAnfrageEntity> findAllByInstitution_Id(final UUID institutionId);
 
+    @Query("SELECT a FROM AngebotAnfrage a WHERE a.angebot.institution.id = :institutionId AND a.status='OFFEN'")
+    List<AngebotAnfrageEntity> findAllByStatusOffenAndAngebotInstitution_Id(@Param("institutionId") final UUID institutionId);
+
+    @Query("SELECT a FROM AngebotAnfrage a WHERE (a.angebot.institution.id = :institutionId or a.institution.id = :institutionId) AND a.status='MATCHED'")
+    List<AngebotAnfrageEntity> findAllByStatusMatchedAndInstitution_Id(@Param("institutionId") final UUID institutionId);
+
     @Query("SELECT a FROM AngebotAnfrage a WHERE a.angebot.id IN (:angebotIds) AND a.status='OFFEN'")
+    List<AngebotAnfrageEntity> findAllByAngebot_IdInAndOffen(@Param("angebotIds") final List<UUID> angebotIds);
+
+    @Query("SELECT a FROM AngebotAnfrage a WHERE a.angebot.id IN (:angebotIds)")
     List<AngebotAnfrageEntity> findAllByAngebot_IdIn(@Param("angebotIds") final List<UUID> angebotIds);
 
     default Optional<AngebotAnfrageEntity> findByAngebotIdAndAnfrageIdAndStatusOffen(
@@ -35,8 +41,8 @@ public interface AngebotAnfrageJpaRepository extends JpaRepository<AngebotAnfrag
 
     @Modifying
     @Query("UPDATE AngebotAnfrage a SET a.status=:statusNeu WHERE a.angebot.id = :angebotId AND a.status=:statusAlt")
-    void updateStatus(//
-                      @Param("angebotId") UUID angebotId, //
-                      @Param("statusAlt") AngebotAnfrageStatus statusAlt, //
-                      @Param("statusNeu") AngebotAnfrageStatus statusNeu);
+    void updateStatus(
+            @Param("angebotId") UUID angebotId, //
+            @Param("statusAlt") AngebotAnfrageStatus statusAlt, //
+            @Param("statusNeu") AngebotAnfrageStatus statusNeu);
 }

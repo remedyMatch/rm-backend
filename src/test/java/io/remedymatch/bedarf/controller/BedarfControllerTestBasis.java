@@ -84,7 +84,6 @@ public abstract class BedarfControllerTestBasis {
                 .anzahl(BigDecimal.valueOf(200)) //
                 .institution(suchenderEntity.getAktuellesStandort().getInstitution()) //
                 .standort(suchenderEntity.getAktuellesStandort().getStandort()) //
-                .kommentar("ITest Bedarf Anfrage Kommentar") //
                 .status(BedarfAnfrageStatus.OFFEN) //
                 .build());
         TestUserContext.clear();
@@ -118,7 +117,6 @@ public abstract class BedarfControllerTestBasis {
                 .name("ITest Spender Institution") //
                 .institutionKey("itest_spender_institution") //
                 .typ(InstitutionTyp.GEWERBE_UND_INDUSTRIE) //
-                .hauptstandort(standort) //
                 .standorte(Arrays.asList(standort)) //
                 .build());
 
@@ -156,7 +154,6 @@ public abstract class BedarfControllerTestBasis {
                 .name("ITest Suchender Institution") //
                 .institutionKey("itest_suchender_institution") //
                 .typ(InstitutionTyp.KRANKENHAUS) //
-                .hauptstandort(standort) //
                 .standorte(Arrays.asList(standort)) //
                 .build());
 

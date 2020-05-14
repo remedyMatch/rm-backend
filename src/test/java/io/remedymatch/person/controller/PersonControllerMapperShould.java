@@ -74,7 +74,7 @@ class PersonControllerMapperShould {
                 .email(EMAIL) //
                 .telefon(TELEFON) //
                 .aktuellerStandort(aktuellesStandortRO()) //
-                .standorte(new ArrayList<>(Arrays.asList(aktuellesStandortRO())))
+                .institutionen(Arrays.asList(aktuelleInstitution2Standort()))
                 .build();
     }
 
@@ -84,6 +84,13 @@ class PersonControllerMapperShould {
                 .institution(institution()) //
                 .standort(standort()) //
                 .oeffentlich(true) //
+                .build();
+    }
+
+    private Institution2StandortRO aktuelleInstitution2Standort() {
+        return Institution2StandortRO.builder()
+                .institution(aktuellesStandortRO().getInstitution())
+                .standorte(Arrays.asList(aktuellesStandortRO().getStandort()))
                 .build();
     }
 
@@ -102,7 +109,6 @@ class PersonControllerMapperShould {
                 .name(INSTITUTION_NAME) //
                 .institutionKey(INSTITUTION_KEY) //
                 .typ(INSTITUTION_TYP) //
-                .hauptstandort(standort()) //
                 .standorte(new ArrayList<>(Arrays.asList(standort()))) //
                 .build();
     }
@@ -113,7 +119,6 @@ class PersonControllerMapperShould {
                 .name(INSTITUTION_NAME) //
                 .institutionKey(INSTITUTION_KEY) //
                 .typ(INSTITUTION_TYP) //
-                .hauptstandort(standortRO()) //
                 .standorte(new ArrayList<>(Arrays.asList(standortRO()))) //
                 .build();
     }

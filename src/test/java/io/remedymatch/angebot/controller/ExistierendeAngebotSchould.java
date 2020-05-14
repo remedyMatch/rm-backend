@@ -89,8 +89,8 @@ public class ExistierendeAngebotSchould extends AngebotControllerTestBasis {
 
         val neueAngebotAnfrage = AngebotAnfragenRequest.builder() //
                 .anzahl(BigDecimal.valueOf(200)) //
-                .kommentar("ITest Angebot Anfrage Kommentar") //
                 .bedarfId(UUID.randomUUID()) //
+                .nachricht("TEST NACHRICHT")
                 .build();
 
         MvcResult result = MockMvcBuilders.webAppContextSetup(webApplicationContext).build()
@@ -108,7 +108,7 @@ public class ExistierendeAngebotSchould extends AngebotControllerTestBasis {
         AngebotAnfrageRO angebotAnfrage = objectMapper.readValue(result.getResponse().getContentAsString(),
                 AngebotAnfrageRO.class);
 
-        assertEquals("ITest Angebot Anfrage Kommentar", angebotAnfrage.getKommentar());
+        assertEquals(BigDecimal.valueOf(200), angebotAnfrage.getAnzahl());
 
         mockServer.verify();
     }

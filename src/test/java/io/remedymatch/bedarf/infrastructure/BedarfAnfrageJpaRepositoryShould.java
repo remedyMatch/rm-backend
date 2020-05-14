@@ -210,7 +210,6 @@ public class BedarfAnfrageJpaRepositoryShould {
                 .standort(meinStandort) //
                 .angebotId(UUID.randomUUID()) //
                 .anzahl(BigDecimal.valueOf(50)) //
-                .kommentar("Bla bla") //
                 .status(status) //
                 .build();
     }
@@ -224,7 +223,6 @@ public class BedarfAnfrageJpaRepositoryShould {
                 .standort(meinStandort) //
                 .angebotId(UUID.randomUUID()) //
                 .anzahl(anzahl) //
-                .kommentar("Bla bla") //
                 .status(BedarfAnfrageStatus.OFFEN) //
                 .build();
     }
@@ -238,7 +236,6 @@ public class BedarfAnfrageJpaRepositoryShould {
                 .angebotId(UUID.randomUUID()) //
                 .standort(meinStandort) //
                 .anzahl(anzahl) //
-                .kommentar("Bla bla") //
                 .status(BedarfAnfrageStatus.OFFEN) //
                 .build();
     }

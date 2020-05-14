@@ -59,16 +59,15 @@ public class PersonService {
     public Person userAktualisieren(final @NotNull @Valid PersonUpdate personUpdate) {
         val person = getPerson(userService.getContextUserId());
 
-        if (personUpdate.getAktuellesStandortId() != null) {
+        if (personUpdate.getAktuelleStandortId() != null) {
             val standort = person.getStandorte().stream()//
-                    .filter(st -> st.getId().equals(personUpdate.getAktuellesStandortId().getValue())) //
+                    .filter(st -> st.getStandort().getId().equals(personUpdate.getAktuelleStandortId().getValue())) //
                     .findAny()
                     .orElseThrow(() -> new ObjectNotFoundException(
                             String.format(EXCEPTION_MSG_PERSON_STANDORT_NICHT_GEFUNDEN, person.getId(),
-                                    personUpdate.getAktuellesStandortId().getValue())));
+                                    personUpdate.getAktuelleStandortId().getValue())));
             person.setAktuellesStandort(standort);
-
-            log.info("Aktuelles Person Standort geändert auf: " + personUpdate.getAktuellesStandortId().getValue());
+            log.info("Aktuelles Person Standort geändert auf: " + personUpdate.getAktuelleStandortId().getValue());
         }
 
         return convertPerson(personRepository.save(person));
@@ -98,7 +97,7 @@ public class PersonService {
         val person = getPerson(personId);
         val institution = getInstitution(institutionId);
 
-        person.addNeuesStandort(institution, institution.getHauptstandort(), standortOeffentlich);
+        person.addNeuesStandort(institution, institution.getStandorte().get(0), standortOeffentlich);
         personRepository.save(person);
     }
 

@@ -1,16 +1,10 @@
 package io.remedymatch.institution.domain.model;
 
+import lombok.*;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
@@ -21,16 +15,16 @@ import lombok.ToString;
 @Builder
 public class NeueInstitution {
 
-	@NotBlank
-	private String name;
+    @NotBlank
+    private String name;
 
-	@NotBlank
-	private String institutionKey;
+    @NotBlank
+    private String institutionKey;
 
-	@NotNull
-	private InstitutionTyp typ;
+    @NotNull
+    private InstitutionTyp typ;
 
-	@Valid
-	@NotNull
-	private NeuerInstitutionStandort hauptstandort;
+    @Valid
+    @NotNull
+    private NeuerInstitutionStandort standort;
 }

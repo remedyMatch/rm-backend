@@ -10,6 +10,7 @@ import io.remedymatch.bedarf.domain.service.BedarfService;
 import io.remedymatch.bedarf.domain.service.BedarfSucheService;
 import io.remedymatch.domain.NotUserInstitutionObjectException;
 import io.remedymatch.domain.ObjectNotFoundException;
+import io.remedymatch.domain.OperationNotAllowedException;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +50,8 @@ class BedarfController {
     }
 
     @DeleteMapping("/{bedarfId}")
-    public ResponseEntity<Void> bedarfLoeschen(//
-                                               @PathVariable("bedarfId") @NotNull UUID bedarfId) {
+    public ResponseEntity<Void> bedarfLoeschen(
+            @PathVariable("bedarfId") @NotNull UUID bedarfId) {
         try {
             bedarfService.bedarfDerUserInstitutionSchliessen(BedarfControllerMapper.mapToBedarfId(bedarfId));
         } catch (ObjectNotFoundException e) {
@@ -66,11 +67,15 @@ class BedarfController {
     public ResponseEntity<BedarfAnfrageRO> bedarfBedienen(
             @PathVariable("bedarfId") @NotNull UUID bedarfId, //
             @RequestBody @Valid BedarfBedienenRequest request) {
-        return ResponseEntity.ok(mapToAnfrageRO(bedarfService.bedarfAnfrageErstellen(//
-                BedarfControllerMapper.mapToBedarfId(bedarfId), //
-                request.getKommentar(), //
-                request.getAnzahl(), //
-                new AngebotId(request.getAngebotId()))));
+        try {
+            return ResponseEntity.ok(mapToAnfrageRO(bedarfService.bedarfAnfrageErstellen(//
+                    BedarfControllerMapper.mapToBedarfId(bedarfId), //
+                    request.getNachricht(), //
+                    request.getAnzahl(), //
+                    new AngebotId(request.getAngebotId()))));
+        } catch (OperationNotAllowedException e) {
+            return ResponseEntity.status(403).build();
+        }
     }
 
     @PostMapping("/{bedarfId}/anfrage/{anfrageId}/stornieren")
@@ -139,5 +144,12 @@ class BedarfController {
     public ResponseEntity<List<GestellteBedarfAnfrageRO>> getGestellteAnfragen() {
         val offeneGestellteAnfragen = bedarfAnfrageSucheService.findAlleOffeneAnfragenDerUserInstitution();
         return ResponseEntity.ok(offeneGestellteAnfragen.stream().map(BedarfControllerMapper::mapToGestellteBedarfAnfrageRO).collect(Collectors.toList()));
+    }
+
+    @Transactional(readOnly = true)
+    @PostMapping("/anfrage/suche")
+    public ResponseEntity<List<GestellteBedarfAnfrageRO>> getAngebotAnfragen(@RequestBody @Valid BedarfAnfragenIdSucheRequest request) {
+        val angebotAnfragen = bedarfAnfrageSucheService.findeAlleAnfragenFuerIds(request.getIds().stream().map(BedarfAnfrageId::new).collect(Collectors.toList()));
+        return ResponseEntity.ok(angebotAnfragen.stream().map(BedarfControllerMapper::mapToGestellteBedarfAnfrageRO).collect(Collectors.toList()));
     }
 }

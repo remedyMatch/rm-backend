@@ -1,14 +1,8 @@
 package io.remedymatch.person.controller;
 
-import java.util.UUID;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,9 +13,9 @@ import lombok.ToString;
 @Builder
 class PersonUpdateRequest {
 
-	private UUID aktuellesStandortId;
-	
-	boolean hasAenderungen() {
-		return aktuellesStandortId != null;
-	}
+    private UUID aktuelleStandortId;
+
+    boolean hasAenderungen() {
+        return aktuelleStandortId != null;
+    }
 }

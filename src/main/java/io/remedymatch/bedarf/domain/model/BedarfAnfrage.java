@@ -6,7 +6,6 @@ import io.remedymatch.institution.domain.model.InstitutionStandort;
 import lombok.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
@@ -42,9 +41,6 @@ public class BedarfAnfrage {
     @NotNull
     @Positive
     private BigDecimal anzahl;
-
-    @NotBlank
-    private String kommentar;
 
     @NotNull
     private BedarfAnfrageStatus status;

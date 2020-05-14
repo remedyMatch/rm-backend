@@ -17,7 +17,10 @@ public interface BedarfAnfrageJpaRepository extends JpaRepository<BedarfAnfrageE
     List<BedarfAnfrageEntity> findAllByInstitution_Id(final UUID id);
 
     @Query("SELECT a FROM BedarfAnfrage a WHERE a.bedarf.institution.id = :institutionId AND a.status='OFFEN'")
-    List<BedarfAnfrageEntity> findAllByStatusOffenAndInstitution_Id(@Param("institutionId") final UUID institutionId);
+    List<BedarfAnfrageEntity> findAllByStatusOffenAndBedarfInstitution_Id(@Param("institutionId") final UUID institutionId);
+
+    @Query("SELECT a FROM BedarfAnfrage a WHERE (a.bedarf.institution.id = :institutionId or a.institution.id = :institutionId) AND a.status='MATCHED'")
+    List<BedarfAnfrageEntity> findAllByStatusMatchedAndInstitution_Id(@Param("institutionId") final UUID institutionId);
 
     @Query("SELECT a FROM BedarfAnfrage a WHERE a.bedarf.id IN (:bedarfIds) AND a.status='OFFEN'")
     List<BedarfAnfrageEntity> findAllByAngebot_IdIn(@Param("bedarfIds") final List<UUID> bedarfIds);
@@ -35,8 +38,8 @@ public interface BedarfAnfrageJpaRepository extends JpaRepository<BedarfAnfrageE
 
     @Modifying
     @Query("UPDATE BedarfAnfrage a SET a.status=:statusNeu WHERE a.bedarf.id = :bedarfId AND a.status=:statusAlt")
-    void updateStatus(//
-                      @Param("bedarfId") UUID bedarfId, //
-                      @Param("statusAlt") BedarfAnfrageStatus statusAlt, //
-                      @Param("statusNeu") BedarfAnfrageStatus statusNeu);
+    void updateStatus(
+            @Param("bedarfId") UUID bedarfId, //
+            @Param("statusAlt") BedarfAnfrageStatus statusAlt, //
+            @Param("statusNeu") BedarfAnfrageStatus statusNeu);
 }

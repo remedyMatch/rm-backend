@@ -200,7 +200,6 @@ class BedarfControllerMapperShould {
                 .institution(ANFRAGE_INSTITUTION) //
                 .standort(ANFRAGE_STANDORT) //
                 .anzahl(ANFRAGE_ANZAHL) //
-                .kommentar(ANFRAGE_KOMMENTAR) //
                 .status(ANFRAGE_STATUS) //
                 .build();
     }
@@ -212,7 +211,6 @@ class BedarfControllerMapperShould {
                 .angebotId(ANGEBOT_ID.getValue())
                 .standort(ANFRAGE_STANDORT_DTO) //
                 .anzahl(ANFRAGE_ANZAHL) //
-                .kommentar(ANFRAGE_KOMMENTAR) //
                 .status(ANFRAGE_STATUS) //
                 .build();
     }

@@ -33,13 +33,16 @@ public class NachrichtService {
         val konversation = konversationJpaRepository.findByIdAndInstitutionId(konversationId.getValue(), userContextService.getContextInstitutionId().getValue())
                 .orElseThrow(() -> new ObjectNotFoundException("Die Konversation zu der eine Nachricht gesendet werden soll existiert nicht."));
 
-        val nachricht = NachrichtEntity.builder()
+        var nachricht = NachrichtEntity.builder()
                 .nachricht(neueNachricht.getNachricht())
                 .konversation(konversation.getId())
                 .erstellerInstitution(userContextService.getContextInstitutionId().getValue())
                 .build();
 
-        nachrichtRepository.save(nachricht);
+        nachricht = nachrichtRepository.save(nachricht);
+
+        konversation.getNachrichten().add(nachricht);
+        konversationJpaRepository.save(konversation);
 
         //TODO Benachrichtigung senden
     }

@@ -50,7 +50,6 @@ public class BedarfService {
     private static final String EXCEPTION_MSG_BEDARF_ANFRAGE_GESCHLOSSEN = "BedarfAnfrage ist bereits erledigt. (Status: %s)";
 
     private static final String EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION = "Standort gehoert nicht der Institution des angemeldetes Benutzers. (Id: %s)";
-
     private static final String EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_VON_USER_INSTITUTION = "BedarfAnfrage gehoert nicht der Institution des angemeldetes Benutzers.";
 
     private final BedarfJpaRepository bedarfRepository;
@@ -202,7 +201,7 @@ public class BedarfService {
     public void konversationStarten(final @NotNull BedarfAnfrageEntity anfrage, final @Valid String nachricht) {
 
         val beteiligteInstitutionen = Arrays.asList(anfrage.getInstitution(), anfrage.getBedarf().getInstitution());
-        nachrichtService.konversationStarten(new NachrichtReferenz(anfrage.getId()), NachrichtReferenzTyp.ANGEBOT_ANFRAGE, nachricht, beteiligteInstitutionen);
+        nachrichtService.konversationStarten(new NachrichtReferenz(anfrage.getId()), NachrichtReferenzTyp.BEDARF_ANFRAGE, nachricht, beteiligteInstitutionen);
     }
 
     /* help methods */
@@ -279,10 +278,9 @@ public class BedarfService {
         return anfrage;
     }
 
-    BedarfAnfrageEntity getOffeneAnfrage(//
-                                         final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
+    BedarfAnfrageEntity getOffeneAnfrage(
+            final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
         Assert.notNull(bedarfAnfrageId, "BedarfAnfrageId ist null.");
-
         return anfrageRepository.findById(bedarfAnfrageId.getValue())//
                 .orElseThrow(() -> new ObjectNotFoundException(
                         String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_GEFUNDEN, bedarfAnfrageId.getValue())));

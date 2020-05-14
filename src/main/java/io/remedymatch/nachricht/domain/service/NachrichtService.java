@@ -1,7 +1,6 @@
 package io.remedymatch.nachricht.domain.service;
 
 import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.nachricht.domain.model.*;
 import io.remedymatch.nachricht.infrastructure.*;
@@ -51,11 +50,6 @@ public class NachrichtService {
         val konversation = konversationJpaRepository.findByIdAndInstitutionId(konversationId.getValue(), userContextService.getContextInstitutionId().getValue())
                 .orElseThrow(() -> new ObjectNotFoundException("Die angegebene Konversation konnte nicht gefunden werden"));
         return KonversationEntityConverter.convert(konversation);
-    }
-
-    public List<Konversation> konversationenZuInstitutionLaden(final @NotNull InstitutionId institutionId) {
-        val konversationen = konversationJpaRepository.findAllByInstitutionId(institutionId.getValue());
-        return KonversationEntityConverter.convert(konversationen);
     }
 
     public List<Konversation> beteiligteKonversationenLaden() {

@@ -30,9 +30,11 @@ public class NachrichtEntity extends Auditable {
     @Column(name = "NACHRICHT", nullable = false, updatable = true, length = 1024)
     private String nachricht;
 
+    @Type(type = "uuid-char")
     @Column(name = "KONVERSATION_UUID", nullable = false, updatable = false, length = 36)
     private UUID konversation;
 
+    @Type(type = "uuid-char")
     @Column(name = "INSTITUTION_UUID", nullable = false, updatable = false, length = 36)
     private UUID erstellerInstitution;
 

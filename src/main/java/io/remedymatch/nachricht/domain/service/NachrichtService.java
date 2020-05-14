@@ -65,7 +65,7 @@ public class NachrichtService {
 
     public void konversationStarten(final @NotNull NachrichtReferenz referenz, @NotNull NachrichtReferenzTyp referenzTyp, @NotNull String nachricht, List<InstitutionEntity> beteiligte) {
 
-        val konversation = konversationJpaRepository.save(KonversationEntity.builder()
+        var konversation = konversationJpaRepository.save(KonversationEntity.builder()
                 .referenzId(referenz.getValue())
                 .referenzTyp(referenzTyp)
                 .build());

@@ -1,6 +1,7 @@
 package io.remedymatch.bedarf.process;
 
 import io.remedymatch.bedarf.domain.model.BedarfAnfrageId;
+import io.remedymatch.bedarf.domain.model.BedarfAnfrageStatus;
 import io.remedymatch.bedarf.domain.model.BedarfId;
 import io.remedymatch.bedarf.domain.service.BedarfService;
 import io.remedymatch.properties.EngineProperties;
@@ -58,6 +59,21 @@ class BedarfExternalTaskClient {
                         val angebotId = new BedarfId(UUID.fromString(externalTask.getBusinessKey()));
                         bedarfService.bedarfAnfrageSchliessen(angebotId, anfrageId);
                         // TODO Benachrichtigung senden?
+                        externalTaskService.complete(externalTask);
+                    } catch (Exception e) {
+                        log.error("Der External Task konnte nicht abgeschlossen werden.", e);
+                        externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);
+                    }
+                }).open();
+
+
+        client.subscribe("bedarf_anfrage_match_anlegen_topic").lockDuration(2000) //
+                .handler((externalTask, externalTaskService) -> {
+                    try {
+                        val anfrageId = new BedarfAnfrageId(UUID.fromString(externalTask.getVariable(VAR_ANFRAGE_ID).toString()));
+                        val bedarfId = new BedarfId(UUID.fromString(externalTask.getBusinessKey()));
+                        bedarfService.bedarfAnfrageStatusSetzen(anfrageId, bedarfId, BedarfAnfrageStatus.MATCHED);
+                        //TODO Benachrichtigung senden?
                         externalTaskService.complete(externalTask);
                     } catch (Exception e) {
                         log.error("Der External Task konnte nicht abgeschlossen werden.", e);

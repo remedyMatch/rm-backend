@@ -204,6 +204,12 @@ public class BedarfService {
         nachrichtService.konversationStarten(new NachrichtReferenz(anfrage.getId()), NachrichtReferenzTyp.BEDARF_ANFRAGE, nachricht, beteiligteInstitutionen);
     }
 
+    public void bedarfAnfrageStatusSetzen(BedarfAnfrageId anfrageId, BedarfId bedarfId, BedarfAnfrageStatus status) {
+        val anfrage = getOffeneAnfrage(bedarfId, anfrageId);
+        anfrage.setStatus(status);
+        anfrageRepository.save(anfrage);
+    }
+
     /* help methods */
 
     BedarfEntity getNichtBedienteBedarfDerUserInstitution(final @NotNull @Valid BedarfId bedarfId) {
@@ -304,4 +310,6 @@ public class BedarfService {
                 .orElseThrow(() -> new NotUserInstitutionObjectException(String
                         .format(EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION, institutionStandortId.getValue())));
     }
+
+
 }

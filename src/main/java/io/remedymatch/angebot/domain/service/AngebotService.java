@@ -194,6 +194,12 @@ public class AngebotService {
         nachrichtService.konversationStarten(new NachrichtReferenz(anfrage.getId()), NachrichtReferenzTyp.ANGEBOT_ANFRAGE, nachricht, beteiligteInstitutionen);
     }
 
+    public void angebotAnfrageStatusSetzen(final AngebotAnfrageId anfrageId, AngebotId angebotId, final AngebotAnfrageStatus status) {
+        val anfrage = getOffeneAnfrage(angebotId, anfrageId);
+        anfrage.setStatus(status);
+        anfrageRepository.save(anfrage);
+    }
+
     /* help methods */
 
     AngebotEntity getNichtBedienteAngebotDerUserInstitution(final @NotNull @Valid AngebotId angebotId) {
@@ -297,4 +303,6 @@ public class AngebotService {
                 .orElseThrow(() -> new NotUserInstitutionObjectException(String
                         .format(EXCEPTION_MSG_STANDORT_NICHT_VON_USER_INSTITUTION, institutionStandortId.getValue())));
     }
+
+
 }

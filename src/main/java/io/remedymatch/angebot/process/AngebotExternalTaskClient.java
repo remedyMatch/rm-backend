@@ -1,6 +1,7 @@
 package io.remedymatch.angebot.process;
 
 import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
 import io.remedymatch.angebot.domain.model.AngebotId;
 import io.remedymatch.angebot.domain.service.AngebotService;
 import io.remedymatch.properties.EngineProperties;
@@ -57,6 +58,21 @@ class AngebotExternalTaskClient {
                         val anfrageId = new AngebotAnfrageId(UUID.fromString(externalTask.getVariable(VAR_ANFRAGE_ID).toString()));
                         val angebotId = new AngebotId(UUID.fromString(externalTask.getBusinessKey()));
                         angebotService.angebotAnfrageSchliessen(angebotId, anfrageId);
+                        //TODO Benachrichtigung senden?
+                        externalTaskService.complete(externalTask);
+                    } catch (Exception e) {
+                        log.error("Der External Task konnte nicht abgeschlossen werden.", e);
+                        externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);
+                    }
+                }).open();
+
+
+        client.subscribe("angebot_anfrage_match_anlegen_topic").lockDuration(2000) //
+                .handler((externalTask, externalTaskService) -> {
+                    try {
+                        val anfrageId = new AngebotAnfrageId(UUID.fromString(externalTask.getVariable(VAR_ANFRAGE_ID).toString()));
+                        val angebotId = new AngebotId(UUID.fromString(externalTask.getBusinessKey()));
+                        angebotService.angebotAnfrageStatusSetzen(anfrageId, angebotId, AngebotAnfrageStatus.MATCHED);
                         //TODO Benachrichtigung senden?
                         externalTaskService.complete(externalTask);
                     } catch (Exception e) {

@@ -27,6 +27,7 @@ class BedarfProzessService {
 
     final static ProzessKey PROZESS_KEY = new ProzessKey("bedarf_prozess");
     final static MessageKey ANFRAGE_MESSAGE = new MessageKey("bedarf_prozess_anfrage_erhalten_message");
+    final static MessageKey ANFRAGE_BEARBEITET_MESSAGE = new MessageKey("bedarf_prozess_anfrage_bearbeitet_message");
     final static MessageKey ANFRAGE_STORNIEREN_MESSAGE = new MessageKey("bedarf_prozess_anfrage_storniert_message");
     final static MessageKey REST_BEDARF_AENDERN_MESSAGE = new MessageKey("bedarf_prozess_rest_geaendert_message");
     final static MessageKey BEDARF_UNGUELTIG_MESSAGE = new MessageKey("bedarf_prozess_rest_geaendert_message");
@@ -92,7 +93,8 @@ class BedarfProzessService {
                 new BusinessKey(bedarfId.getValue()), //
                 Variables.createVariables()
                         .putValue(VAR_ANFRAGE_ID, bedarfAnfrageId.getValue().toString()),
-                ANFRAGE_STORNIEREN_MESSAGE);
+                ANFRAGE_STORNIEREN_MESSAGE,
+                Variables.createVariables());
     }
 
     void anfrageBeantworten(
@@ -105,6 +107,9 @@ class BedarfProzessService {
                 new BusinessKey(bedarfId.getValue()), //
                 Variables.createVariables()
                         .putValue(VAR_ANFRAGE_ID, bedarfAnfrageId.getValue().toString()),
-                ANFRAGE_MESSAGE);
+                ANFRAGE_BEARBEITET_MESSAGE,
+                Variables.createVariables()
+                        .putValue(VAR_BEDARF_ANGENOMMEN, entscheidung)
+                        .putValue(VAR_ANZAHL, restAnzahl));
     }
 }

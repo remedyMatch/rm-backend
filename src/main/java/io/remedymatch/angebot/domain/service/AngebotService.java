@@ -139,7 +139,7 @@ public class AngebotService {
     public void angebotAnfrageBeantworten(final @NotNull @Valid AngebotId angebotId, //
                                           final @NotNull @Valid AngebotAnfrageId anfrageId, //
                                           final @NotNull Boolean entscheidung) {
-        val anfrage = getOffeneAnfrageDerUserInstitution(angebotId, anfrageId);
+        val anfrage = getOffeneAnfrage(angebotId, anfrageId);
         val angebot = getNichtBedienteAngebot(angebotId);
         var restAnzahl = angebot.getRest();
         if (entscheidung) {

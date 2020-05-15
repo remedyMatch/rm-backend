@@ -92,7 +92,8 @@ class AngebotProzessService {
                 new BusinessKey(angebotId.getValue()), //
                 Variables.createVariables()
                         .putValue(VAR_ANFRAGE_ID, angebotAnfrageId.getValue().toString()),
-                ANFRAGE_STORNIEREN_MESSAGE);
+                ANFRAGE_STORNIEREN_MESSAGE,
+                Variables.createVariables());
     }
 
     void anfrageBeantworten(
@@ -105,6 +106,10 @@ class AngebotProzessService {
                 new BusinessKey(angebotId.getValue()), //
                 Variables.createVariables()
                         .putValue(VAR_ANFRAGE_ID, angebotAnfrageId.getValue().toString()),
-                ANFRAGE_MESSAGE);
+                ANFRAGE_MESSAGE,
+                Variables.createVariables()
+                        .putValue(VAR_ANFRAGE_ANGENOMMEN, entscheidung)
+                        .putValue(VAR_ANZAHL, restAnzahl)
+        );
     }
 }

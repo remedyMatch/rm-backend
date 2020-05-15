@@ -138,7 +138,7 @@ public class BedarfService {
             final @NotNull @Valid BedarfId bedarfId, //
             final @NotNull @Valid BedarfAnfrageId anfrageId, //
             final @NotNull Boolean entscheidung) {
-        val anfrage = getOffeneAnfrageDerUserInstitution(bedarfId, anfrageId);
+        val anfrage = getOffeneAnfrage(bedarfId, anfrageId);
         val bedarf = getNichtBedienteBedarf(bedarfId);
         var restAnzahl = bedarf.getRest();
         if (entscheidung) {

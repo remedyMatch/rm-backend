@@ -118,16 +118,18 @@ public class EngineClient {
     }
 
     //Message
-
     public void messageKorrelieren(
             final @NotNull @Valid ProzessKey prozessKey, //
             final @NotNull @Valid BusinessKey businessKey, //
             final @NotNull @Valid Map<String, Object> variablesEqual, //
-            final @NotNull @Valid MessageKey messageKey) {
+            final @NotNull @Valid MessageKey messageKey, //
+            final @NotNull @Valid Map<String, Object> variables) {
 
         messageKorrelieren(MessageKorrelierenRequest.builder() //
                 .prozessKey(prozessKey.getValue()) //
                 .messageKey(messageKey.getValue()) //
+                .businesskey(businessKey.getValue().toString())
+                .variables(variables) //
                 .localVariablesEqual(variablesEqual) //
                 .build());
     }

@@ -205,7 +205,7 @@ public class BedarfService {
     }
 
     public void bedarfAnfrageStatusSetzen(BedarfAnfrageId anfrageId, BedarfId bedarfId, BedarfAnfrageStatus status) {
-        val anfrage = getOffeneAnfrage(bedarfId, anfrageId);
+        val anfrage = getAnfrage(anfrageId);
         anfrage.setStatus(status);
         anfrageRepository.save(anfrage);
     }
@@ -269,7 +269,7 @@ public class BedarfService {
         Assert.notNull(bedarfId, "BedarfId ist null.");
         Assert.notNull(bedarfAnfrageId, "BedarfAnfrageId ist null.");
 
-        val anfrage = getOffeneAnfrage(bedarfAnfrageId);
+        val anfrage = getAnfrage(bedarfAnfrageId);
 
         if (!bedarfId.getValue().equals(anfrage.getBedarf().getId())) {
             throw new OperationNotAllowedException(String.format(EXCEPTION_MSG_BEDARF_ANFRAGE_NICHT_IN_BEDARF,
@@ -284,7 +284,7 @@ public class BedarfService {
         return anfrage;
     }
 
-    BedarfAnfrageEntity getOffeneAnfrage(
+    BedarfAnfrageEntity getAnfrage(
             final @NotNull @Valid BedarfAnfrageId bedarfAnfrageId) {
         Assert.notNull(bedarfAnfrageId, "BedarfAnfrageId ist null.");
         return anfrageRepository.findById(bedarfAnfrageId.getValue())//

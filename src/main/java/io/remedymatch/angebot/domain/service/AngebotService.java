@@ -195,7 +195,7 @@ public class AngebotService {
     }
 
     public void angebotAnfrageStatusSetzen(final AngebotAnfrageId anfrageId, AngebotId angebotId, final AngebotAnfrageStatus status) {
-        val anfrage = getOffeneAnfrage(angebotId, anfrageId);
+        val anfrage = getAnfrage(anfrageId);
         anfrage.setStatus(status);
         anfrageRepository.save(anfrage);
     }
@@ -261,7 +261,7 @@ public class AngebotService {
         Assert.notNull(angebotId, "AngebotId ist null.");
         Assert.notNull(angebotAnfrageId, "AngebotAnfrageId ist null.");
 
-        val anfrage = getOffeneAnfrage(angebotAnfrageId);
+        val anfrage = getAnfrage(angebotAnfrageId);
 
         if (!angebotId.getValue().equals(anfrage.getAngebot().getId())) {
             throw new OperationNotAllowedException(String.format(EXCEPTION_MSG_ANGEBOT_ANFRAGE_NICHT_IN_ANGEBOT,
@@ -276,8 +276,8 @@ public class AngebotService {
         return anfrage;
     }
 
-    AngebotAnfrageEntity getOffeneAnfrage(//
-                                          final @NotNull @Valid AngebotAnfrageId angebotAnfrageId) {
+    AngebotAnfrageEntity getAnfrage(//
+                                    final @NotNull @Valid AngebotAnfrageId angebotAnfrageId) {
         Assert.notNull(angebotAnfrageId, "AngebotAnfrageId ist null.");
 
         return anfrageRepository.findById(angebotAnfrageId.getValue())//

@@ -65,9 +65,9 @@ class RegistrierungUebernahmeService {
                 .build();
     }
 
-    private String createInstitutionName( //
-                                          final RegistrierterUser registrierterUser, //
-                                          final InstitutionTyp institutionTyp) {
+    private String createInstitutionName(
+            final RegistrierterUser registrierterUser, //
+            final InstitutionTyp institutionTyp) {
         if (InstitutionTyp.PRIVAT.equals(institutionTyp)) {
             return String.format("%s %s", //
                     trimToEmpty(registrierterUser.getVorname()), //
@@ -77,9 +77,9 @@ class RegistrierungUebernahmeService {
         return trimToEmpty(registrierterUser.getInstitutionName());
     }
 
-    private String createInstitutionKey( //
-                                         final RegistrierterUser registrierterUser, //
-                                         final InstitutionTyp institutionTyp) {
+    private String createInstitutionKey(
+            final RegistrierterUser registrierterUser, //
+            final InstitutionTyp institutionTyp) {
         if (InstitutionTyp.PRIVAT.equals(institutionTyp)) {
             return String.format("%s__%s", //
                     lowerCase(institutionTyp.name()), //

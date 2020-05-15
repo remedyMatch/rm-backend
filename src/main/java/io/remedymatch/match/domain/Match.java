@@ -27,7 +27,7 @@ public class Match {
 
     private BigDecimal anzahl;
 
-    private String anfrageTyp;
+    private InseratTyp inseratTyp;
 
     private Institution institutionVon;
 

@@ -50,6 +50,9 @@ public class InstitutionAntragEntity extends Auditable {
     @Column(name = "WEBSEITE", nullable = true, updatable = true, length = 128)
     private String webseite;
 
+    @Column(name = "STANDORT_OEFFENTLICH", nullable = false, updatable = true)
+    private boolean oeffentlich;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "INSTITUTIONTYP", nullable = false, length = 64)
     private InstitutionTyp institutionTyp;

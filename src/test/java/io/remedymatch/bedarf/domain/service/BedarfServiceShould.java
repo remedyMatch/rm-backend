@@ -111,7 +111,7 @@ class BedarfServiceShould {
         val unbekannteAnfrageId = beispielBedarfAnfrageId();
 
         assertThrows(ObjectNotFoundException.class, //
-                () -> bedarfService.getOffeneAnfrage(unbekannteAnfrageId));
+                () -> bedarfService.getAnfrage(unbekannteAnfrageId));
     }
 
     @Test

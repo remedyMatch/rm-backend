@@ -21,7 +21,7 @@ class MatchMapper {
                 .institutionVon(InstitutionMapper.mapToInstitutionRO(match.getInstitutionVon()))
                 .institutionAn(InstitutionMapper.mapToInstitutionRO(match.getInstitutionAn()))
                 .entfernung(match.getEntfernung())
-                .anfrageTyp(match.getAnfrageTyp())
+                .inseratTyp(match.getInseratTyp())
                 .artikel(ArtikelControllerMapper.mapArtikelToRO(match.getArtikel()))
                 .artikelVarianteId(match.getArtikelVarianteId())
                 .anzahl(match.getAnzahl())

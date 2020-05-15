@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,7 @@ class AngebotExternalTaskClient {
     private final EngineProperties properties;
     private final AngebotService angebotService;
     final static String VAR_ANFRAGE_ID = "anfrage_id";
+    final static String VAR_ANGEBOT_SCHLIESSEN = "angebot_geschlossen";
 
 
     @PostConstruct
@@ -59,7 +61,7 @@ class AngebotExternalTaskClient {
                         val angebotId = new AngebotId(UUID.fromString(externalTask.getBusinessKey()));
                         angebotService.angebotAnfrageSchliessen(angebotId, anfrageId);
                         //TODO Benachrichtigung senden?
-                        externalTaskService.complete(externalTask);
+                        externalTaskService.complete(externalTask, Variables.createVariables().putValue(VAR_ANGEBOT_SCHLIESSEN, true));
                     } catch (Exception e) {
                         log.error("Der External Task konnte nicht abgeschlossen werden.", e);
                         externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -148,8 +149,8 @@ class BedarfController {
 
     @Transactional(readOnly = true)
     @PostMapping("/anfrage/suche")
-    public ResponseEntity<List<GestellteBedarfAnfrageRO>> getAngebotAnfragen(@RequestBody @Valid BedarfAnfragenIdSucheRequest request) {
+    public ResponseEntity<Map<String, GestellteBedarfAnfrageRO>> getAngebotAnfragen(@RequestBody @Valid BedarfAnfragenIdSucheRequest request) {
         val angebotAnfragen = bedarfAnfrageSucheService.findeAlleAnfragenFuerIds(request.getIds().stream().map(BedarfAnfrageId::new).collect(Collectors.toList()));
-        return ResponseEntity.ok(angebotAnfragen.stream().map(BedarfControllerMapper::mapToGestellteBedarfAnfrageRO).collect(Collectors.toList()));
+        return ResponseEntity.ok(angebotAnfragen.stream().map(BedarfControllerMapper::mapToGestellteBedarfAnfrageRO).collect(Collectors.toMap(o -> o.getId().toString(), o -> o)));
     }
 }

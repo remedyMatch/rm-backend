@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static io.remedymatch.angebot.controller.AngebotControllerMapper.*;
@@ -133,8 +135,8 @@ public class AngebotController {
 
     @Transactional(readOnly = true)
     @PostMapping("/anfrage/suche")
-    public ResponseEntity<List<GestellteAngebotAnfrageRO>> getAngebotAnfragen(@RequestBody @Valid AngebotAnfragenIdSucheRequest request) {
+    public ResponseEntity<Map<String, GestellteAngebotAnfrageRO>> getAngebotAnfragen(@RequestBody @Valid AngebotAnfragenIdSucheRequest request) {
         val angebotAnfragen = angebotAnfrageSucheService.findeAlleAnfragenFuerIds(request.getIds().stream().map(AngebotAnfrageId::new).collect(Collectors.toList()));
-        return ResponseEntity.ok(angebotAnfragen.stream().map(AngebotControllerMapper::mapToGestellteAngebotAnfrageRO).collect(Collectors.toList()));
+        return ResponseEntity.ok(angebotAnfragen.stream().map(AngebotControllerMapper::mapToGestellteAngebotAnfrageRO).collect(Collectors.toMap(g -> g.getId().toString(), o -> o)));
     }
 }

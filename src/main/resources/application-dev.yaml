@@ -13,8 +13,8 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-#      ddl-auto: create-drop
-#      ddl-auto: create
+      #      ddl-auto: create-drop
+      #      ddl-auto: create
       ddl-auto: update
       generate-ddl: true
     properties:
@@ -30,16 +30,16 @@ logging:
     io.remedymatch: DEBUG
     org.springframework: DEBUG
     org.apache.coyote: DEBUG
-    #org.hibernate: DEBUG
-        
+      #org.hibernate: DEBUG
+
 remedy:
   security:
     disabled:
-      true
+      false
 
 io:
   remedymatch:
-    engine: 
+    engine:
       remedyRestApiUrl: http://localhost:8008/engine/remedy
       externalTaskUrl: http://localhost:8008/engine/rest
     keycloak:

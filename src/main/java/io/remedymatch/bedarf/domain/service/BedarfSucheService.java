@@ -72,7 +72,7 @@ public class BedarfSucheService {
 
         List<Bedarf> bedarfe;
 
-        if (artikelVarianteId != null) {
+        if (artikelVarianteId != null && artikelVarianteId.getValue() != null) {
             bedarfe = mitEntfernung(
                     bedarfRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(
                             artikelVarianteId.getValue()));

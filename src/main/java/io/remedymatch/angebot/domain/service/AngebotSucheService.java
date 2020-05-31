@@ -72,7 +72,7 @@ public class AngebotSucheService {
 
         List<Angebot> angebote;
 
-        if (artikelVarianteId != null) {
+        if (artikelVarianteId != null && artikelVarianteId.getValue() != null) {
             angebote = mitEntfernung(
                     angebotRepository.findAllByDeletedFalseAndBedientFalseAndOeffentlichTrueAndArtikelVariante_Id(
                             artikelVarianteId.getValue()));

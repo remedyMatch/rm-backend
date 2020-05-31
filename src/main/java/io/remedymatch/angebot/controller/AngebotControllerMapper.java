@@ -50,7 +50,7 @@ class AngebotControllerMapper {
                 .artikel(ArtikelControllerMapper.mapArtikelToRO(angebot.getArtikel())) //
                 .artikelVarianteId(angebot.getArtikelVariante().getId().getValue()) //
                 .verfuegbareAnzahl(angebot.getRest()) //
-                .ort(angebot.getStandort().getOrt())
+                .standort(InstitutionStandortMapper.mapToStandortRO(angebot.getStandort()))
                 .haltbarkeit(angebot.getHaltbarkeit()).medizinisch(angebot.isMedizinisch()).steril(angebot.isSteril()) //
                 .originalverpackt(angebot.isOriginalverpackt()) //
                 .medizinisch(angebot.isMedizinisch()) //
@@ -71,7 +71,7 @@ class AngebotControllerMapper {
                 .artikelVarianteId(angebot.getArtikelVariante().getId().getValue()) //
                 .verfuegbareAnzahl(angebot.getAnzahl()) //
                 .anfragen(angebot.getAnfragen().stream().map(AngebotControllerMapper::mapToAnfrageRO).collect(Collectors.toList()))
-                .ort(angebot.getStandort().getOrt())
+                .standort(InstitutionStandortMapper.mapToStandortRO(angebot.getStandort()))
                 .haltbarkeit(angebot.getHaltbarkeit()).medizinisch(angebot.isMedizinisch()).steril(angebot.isSteril()) //
                 .originalverpackt(angebot.isOriginalverpackt()) //
                 .medizinisch(angebot.isMedizinisch()) //

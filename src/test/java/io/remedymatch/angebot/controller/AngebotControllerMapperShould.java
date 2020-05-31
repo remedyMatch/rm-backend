@@ -177,7 +177,7 @@ class AngebotControllerMapperShould {
                 .verfuegbareAnzahl(ANGEBOT_ANZAHL) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID.getValue()) //
                 .artikel(ARTIKELRO)
-                .ort(ANGEBOT_STANDORT_DTO.getOrt()) //
+                .standort(ANGEBOT_STANDORT_DTO) //
                 .haltbarkeit(HALTBARKEIT) //
                 .steril(STERIL) //
                 .originalverpackt(ORIGINALVERPACKT) //

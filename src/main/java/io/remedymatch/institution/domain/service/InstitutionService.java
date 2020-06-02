@@ -1,158 +1,213 @@
 package io.remedymatch.institution.domain.service;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
+import io.remedymatch.domain.ObjectNotFoundException;
+import io.remedymatch.geodaten.domain.GeocodingService;
+import io.remedymatch.institution.domain.model.*;
+import io.remedymatch.institution.infrastructure.*;
+import io.remedymatch.usercontext.UserContextService;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.domain.OperationNotAlloudException;
-import io.remedymatch.geodaten.domain.StandortService;
-import io.remedymatch.institution.domain.model.Institution;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
-import io.remedymatch.institution.domain.model.InstitutionUpdate;
-import io.remedymatch.institution.domain.model.NeueInstitution;
-import io.remedymatch.institution.domain.model.NeuesInstitutionStandort;
-import io.remedymatch.institution.infrastructure.InstitutionEntity;
-import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
-import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
-import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
-import io.remedymatch.usercontext.UserContextService;
-import lombok.AllArgsConstructor;
-import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Validated
 @Service
 @Transactional
-@Slf4j
+@Log4j2
 public class InstitutionService {
 
-	private static final String EXCEPTION_MSG_UPDATE_OHNE_DATEN = "Keine Aenderungen in InstitutionUpdate gefunden";
-	private static final String EXCEPTION_MSG_STANDORT_NICHT_IN_USER_INSTITUTION = "Standort nicht in UserInstitution gedfunden. (StandortId: $s)";
+    private static final String EXCEPTION_MSG_UPDATE_OHNE_DATEN = "Keine Aenderungen in InstitutionUpdate gefunden";
+    private static final String EXCEPTION_MSG_STANDORT_NICHT_IN_USER_INSTITUTION = "Standort nicht in UserInstitution gedfunden. (StandortId: $s)";
 
-	private final InstitutionJpaRepository institutionRepository;
-	private final InstitutionStandortJpaRepository institutionStandortRepository;
-	private final StandortService standortService;
-	private final UserContextService userService;
+    private final InstitutionJpaRepository institutionRepository;
+    private final InstitutionStandortJpaRepository institutionStandortRepository;
+    private final InstitutionAntragJpaRepository institutionAntragJpaRepository;
+    private final InstitutionProzessService prozessService;
 
-	public Institution institutionAnlegen(final @NotNull @Valid NeueInstitution neueInstitution) {
-		
-		log.debug("Lege neue Institution an: " + neueInstitution);
-		
-		val hauptstandort = standortErstellen(neueInstitution.getHauptstandort());
-		return updateInstitution(InstitutionEntity.builder() //
-				.name(neueInstitution.getName()) //
-				.institutionKey(neueInstitution.getInstitutionKey()) //
-				.typ(neueInstitution.getTyp()) //
-				.hauptstandort(hauptstandort) //
-				.standorte(Arrays.asList(hauptstandort)) //
-				.build());
-	}
+    private final GeocodingService geocodingService;
+    private final UserContextService userService;
 
-	public Institution userInstitutionAktualisieren(final @NotNull @Valid InstitutionUpdate update) {
-		
-		log.debug("Aktualisiere User Institution: " + update);
-		
-		if (StringUtils.isBlank(update.getNeueName()) && update.getNeuesTyp() == null
-				&& update.getNeuesHauptstandortId() == null) {
-			throw new OperationNotAlloudException(EXCEPTION_MSG_UPDATE_OHNE_DATEN);
-		}
+    public Institution institutionAnlegen(final @NotNull @Valid NeueInstitution neueInstitution) {
 
-		val userInstitution = getUserInstitution();
-		if (StringUtils.isNotBlank(update.getNeueName())) {
-			userInstitution.setName(update.getNeueName());
-		}
-		if (update.getNeuesTyp() != null) {
-			userInstitution.setTyp(update.getNeuesTyp());
-		}
-		if (update.getNeuesHauptstandortId() != null) {
-			userInstitution.setHauptstandort(getStandort(userInstitution, update.getNeuesHauptstandortId()));
-		}
+        log.debug("Lege neue Institution an: " + neueInstitution);
 
-		return updateInstitution(userInstitution);
-	}
+        val standort = standortErstellen(neueInstitution.getStandort());
+        return updateInstitution(InstitutionEntity.builder() //
+                .name(neueInstitution.getName()) //
+                .institutionKey(neueInstitution.getInstitutionKey()) //
+                .typ(neueInstitution.getTyp()) //
+                .standorte(Arrays.asList(standort)) //
+                .build());
+    }
 
-	public Institution userInstitutionHauptstandortHinzufuegen(
-			final @NotNull @Valid NeuesInstitutionStandort neuesStandort) {
-		
-		log.debug("Setze neues Hauptstandort in User Institution: " + neuesStandort);
-		
-		val userInstitution = getUserInstitution();
-		val standort = standortErstellen(neuesStandort);
-		userInstitution.addStandort(standort);
-		userInstitution.setHauptstandort(standort);
+    public Institution userInstitutionAktualisieren(final @NotNull @Valid InstitutionUpdate update) {
 
-		return updateInstitution(userInstitution);
-	}
+        log.debug("Aktualisiere User Institution: " + update);
 
-	public Institution userInstitutionStandortHinzufuegen(
-			final @NotNull @Valid NeuesInstitutionStandort neuesStandort) {
+        val userInstitution = getUserInstitution();
+        if (StringUtils.isNotBlank(update.getNeueName())) {
+            userInstitution.setName(update.getNeueName());
+        }
 
-		log.debug("Setze neues Standort in User Institution: " + neuesStandort);
-		
-		val userInstitution = getUserInstitution();
-		userInstitution.getStandorte().add(standortErstellen(neuesStandort));
+        return updateInstitution(userInstitution);
+    }
 
-		return updateInstitution(userInstitution);
-	}
+    public Institution userInstitutionHauptstandortHinzufuegen(
+            final @NotNull @Valid NeuerInstitutionStandort neuerStandort) {
 
-	/* help methods */
+        log.debug("Setze neues Hauptstandort in User Institution: " + neuerStandort);
 
-	private Institution updateInstitution(final @NotNull @Valid InstitutionEntity institutionEntity) {
-		return InstitutionEntityConverter.convertInstitution(institutionRepository.save(institutionEntity));
-	}
+        val userInstitution = getUserInstitution();
+        val standort = standortErstellen(neuerStandort);
+        userInstitution.addStandort(standort);
 
-	private InstitutionEntity getUserInstitution() {
-		return InstitutionEntityConverter.convertInstitution(userService.getContextInstitution());
-	}
+        return updateInstitution(userInstitution);
+    }
 
-	InstitutionStandortEntity getStandort(//
-			final @NotNull @Valid InstitutionEntity institution, //
-			@NotNull @Valid final InstitutionStandortId standortId) {
-		return institution.findStandort(standortId.getValue()).orElseThrow(() -> new ObjectNotFoundException(String
-				.format(EXCEPTION_MSG_STANDORT_NICHT_IN_USER_INSTITUTION, institution.getId(), standortId.getValue())));
-	}
+    public Institution userInstitutionStandortHinzufuegen(
+            final @NotNull @Valid NeuerInstitutionStandort neuesStandort) {
 
-	private InstitutionStandortEntity standortErstellen(final @NotNull @Valid NeuesInstitutionStandort neuesStandort) {
-		return institutionStandortRepository.save(mitGeodatenErweitern(InstitutionStandortEntity.builder() //
-				.name(neuesStandort.getName()) //
-				.strasse(neuesStandort.getStrasse()) //
-				.hausnummer(neuesStandort.getHausnummer()) //
-				.plz(neuesStandort.getPlz()) //
-				.ort(neuesStandort.getOrt()) //
-				.land(neuesStandort.getLand()) //
-				.build()));
-	}
+        log.debug("Setze neues Standort in User Institution: " + neuesStandort);
 
-	InstitutionStandortEntity mitGeodatenErweitern(final InstitutionStandortEntity standort) {
-		val addresseFuerGeocoding = formatAdresse(standort);
-		log.info("Suche Geodaten für: " + addresseFuerGeocoding);
-		var longlatList = standortService.findePointsByAdressString(addresseFuerGeocoding);
+        val userInstitution = getUserInstitution();
+        userInstitution.getStandorte().add(standortErstellen(neuesStandort));
 
-		if (longlatList == null || longlatList.size() == 0) {
-			throw new ObjectNotFoundException("Die Adresse konnte nicht aufgelöst werden");
-		}
+        return updateInstitution(userInstitution);
+    }
 
-		standort.setLatitude(BigDecimal.valueOf(longlatList.get(0).getLatitude()));
-		standort.setLongitude(BigDecimal.valueOf(longlatList.get(0).getLongitude()));
 
-		return standort;
-	}
+    public void institutionBeantragen(@NotNull final InstitutionAntrag antrag) {
+        log.debug("Institution beantragen gestartet: " + antrag);
 
-	private String formatAdresse(final InstitutionStandortEntity standort) {
-		return String.format("%s %s, %s %s, %s", //
-				standort.getStrasse(), //
-				standort.getHausnummer(), //
-				standort.getPlz(), //
-				standort.getOrt(), //
-				standort.getLand());
-	}
+        //weitere Daten füllen
+        val antragsteller = userService.getContextUser().getId().getValue();
+        antrag.setAntragsteller(antragsteller);
+        antrag.setStatus(InstitutionAntragStatus.OFFEN);
+
+        val gespeicherterAntrag = updateAntrag(antrag);
+        prozessService.antragProzessStarten(gespeicherterAntrag);
+    }
+
+
+    public List<InstitutionAntrag> ladeErstellteAntraege() {
+        return institutionAntragJpaRepository.findAllByAntragsteller(userService.getContextUserId().getValue())
+                .stream().map(InstitutionAntragEntityConverter::convertAntrag).collect(Collectors.toList());
+    }
+
+    public void antragAblehnen(final @NotNull InstitutionAntragId antragId) {
+        val antrag = institutionAntragJpaRepository.findById(antragId.getValue())
+                .orElseThrow(() -> new ObjectNotFoundException("Antrag ist nicht vorhanden"));
+        antrag.setStatus(InstitutionAntragStatus.ABGELEHNT);
+        institutionAntragJpaRepository.save(antrag);
+    }
+
+    public void antragGenehmigen(final @NotNull InstitutionAntragId antragId) {
+        val antrag = institutionAntragJpaRepository.findById(antragId.getValue())
+                .orElseThrow(() -> new ObjectNotFoundException("Antrag ist nicht vorhanden"));
+
+        //antrag als genehmigt markieren
+        antrag.setStatus(InstitutionAntragStatus.GENEHMIGT);
+        institutionAntragJpaRepository.save(antrag);
+
+        //institution aus antrag erstellen
+        val institution = institutionAusAntragErstellen(antrag);
+        this.institutionAnlegen(institution);
+
+        //institution dem user zuweisen
+    }
+
+    public Institution institutionAusAntragAnlegen(final @NotNull InstitutionAntragId antragId) {
+        val antrag = institutionAntragJpaRepository.findById(antragId.getValue())
+                .orElseThrow(() -> new ObjectNotFoundException("Antrag ist nicht vorhanden"));
+
+        val neueInstitution = institutionAusAntragErstellen(antrag);
+        return this.institutionAnlegen(neueInstitution);
+    }
+
+    /* help methods */
+
+    private NeueInstitution institutionAusAntragErstellen(InstitutionAntragEntity antrag) {
+        val neueInstitution = NeueInstitution.builder()
+                .name(antrag.getName())
+                .typ(antrag.getInstitutionTyp())
+                //TODO key muss überarbeitet werden
+                .institutionKey(antrag.getWebseite())
+                .build();
+        val standort = NeuerInstitutionStandort.builder()
+                .ort(antrag.getOrt())
+                .hausnummer(antrag.getHausnummer())
+                .land(antrag.getLand())
+                .name(antrag.getName())
+                .plz(antrag.getPlz())
+                .strasse(antrag.getStrasse())
+                .build();
+        neueInstitution.setStandort(standort);
+        return neueInstitution;
+    }
+
+    private InstitutionAntrag updateAntrag(InstitutionAntrag antrag) {
+        return InstitutionAntragEntityConverter.convertAntrag(institutionAntragJpaRepository.save(InstitutionAntragEntityConverter.convertAntrag(antrag)));
+    }
+
+    private Institution updateInstitution(final @NotNull @Valid InstitutionEntity institutionEntity) {
+        return InstitutionEntityConverter.convertInstitution(institutionRepository.save(institutionEntity));
+    }
+
+    private InstitutionEntity getUserInstitution() {
+        return InstitutionEntityConverter.convertInstitution(userService.getContextStandort().getInstitution());
+    }
+
+    InstitutionStandortEntity getStandort(
+            final @NotNull @Valid InstitutionEntity institution, //
+            @NotNull @Valid final InstitutionStandortId standortId) {
+        return institution.findStandort(standortId.getValue()).orElseThrow(() -> new ObjectNotFoundException(String
+                .format(EXCEPTION_MSG_STANDORT_NICHT_IN_USER_INSTITUTION, institution.getId(), standortId.getValue())));
+    }
+
+    private InstitutionStandortEntity standortErstellen(final @NotNull @Valid NeuerInstitutionStandort neuesStandort) {
+        return institutionStandortRepository.save(mitGeodatenErweitern(InstitutionStandortEntity.builder() //
+                .name(neuesStandort.getName()) //
+                .strasse(neuesStandort.getStrasse()) //
+                .hausnummer(neuesStandort.getHausnummer()) //
+                .plz(neuesStandort.getPlz()) //
+                .ort(neuesStandort.getOrt()) //
+                .land(neuesStandort.getLand()) //
+                .build()));
+    }
+
+    InstitutionStandortEntity mitGeodatenErweitern(final InstitutionStandortEntity standort) {
+        val addresseFuerGeocoding = formatAdresse(standort);
+        log.info("Suche Geodaten für: " + addresseFuerGeocoding);
+        var longlatList = geocodingService.findePointsByAdressString(addresseFuerGeocoding);
+
+        if (longlatList == null || longlatList.size() == 0) {
+            throw new ObjectNotFoundException("Die Adresse konnte nicht aufgelöst werden");
+        }
+
+        standort.setLatitude(BigDecimal.valueOf(longlatList.get(0).getLatitude()));
+        standort.setLongitude(BigDecimal.valueOf(longlatList.get(0).getLongitude()));
+
+        return standort;
+    }
+
+    private String formatAdresse(final InstitutionStandortEntity standort) {
+        return String.format("%s %s, %s %s, %s", //
+                standort.getStrasse(), //
+                standort.getHausnummer(), //
+                standort.getPlz(), //
+                standort.getOrt(), //
+                standort.getLand());
+    }
+
 }

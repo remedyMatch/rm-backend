@@ -1,14 +1,12 @@
 package io.remedymatch.usercontext;
 
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.remedymatch.institution.domain.model.Institution;
 import io.remedymatch.institution.domain.model.InstitutionId;
 import io.remedymatch.person.domain.model.Person;
 import io.remedymatch.person.domain.model.PersonId;
+import io.remedymatch.person.domain.model.PersonStandort;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -24,39 +22,18 @@ public class UserContextService {
 		return getContextUser().getId();
 	}
 
-	/**
-	 * Liefert die Institution des Context Users.
-	 * @param excludeHauptStandortFromStandorte Hauptstandort ist nicht in Standorte-Liste enthalten falls true,
-	 *                                          ansonsten (falls false) ist er enthalten.
-	 * @return Institution des ContextUsers.
-	 */
 	@Transactional(readOnly = true)
-	public Institution getContextInstitution(boolean excludeHauptStandortFromStandorte) {
-		Institution institution = getContextUser().getInstitution();
-		if (excludeHauptStandortFromStandorte) {
-			institution.setStandorte(institution.getStandorte().stream()
-					.filter(standort -> !(standort.getId().equals(institution.getHauptstandort().getId())))
-					.collect(Collectors.toList()));
-		}
-		return institution;
+	public PersonStandort getContextStandort() {
+		return getContextUser().getAktuellesStandort();
 	}
-
-	/**
-	 * Ruft {@link UserContextService#getContextInstitution(boolean)} mit
-	 * {@code false} auf.
-	 */
-	@Transactional(readOnly = true)
-	public Institution getContextInstitution() {
-		return getContextInstitution(false);
-	}
-
+	
 	@Transactional(readOnly = true)
 	public InstitutionId getContextInstitutionId() {
-		return getContextInstitution().getId();
+		return getContextStandort().getInstitution().getId();
 	}
-
+	
 	@Transactional(readOnly = true)
 	public boolean isUserContextInstitution(final InstitutionId institutionId) {
-		return getContextInstitution().getId().equals(institutionId);
+		return getContextInstitutionId().equals(institutionId);
 	}
 }

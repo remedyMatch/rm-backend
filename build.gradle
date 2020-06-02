@@ -26,6 +26,8 @@ dependencies {
 	implementation 'org.keycloak:keycloak-admin-client:9.0.2'
 	implementation 'org.apache.commons:commons-lang3'
 
+    compile 'com.google.maps:google-maps-services:0.13.0'
+
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     runtimeOnly 'mysql:mysql-connector-java:8.0.18'

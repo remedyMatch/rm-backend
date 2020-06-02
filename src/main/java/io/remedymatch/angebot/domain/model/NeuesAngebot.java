@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -35,16 +34,15 @@ public class NeuesAngebot {
 	@Valid
 	private ArtikelVarianteId artikelVarianteId;
 
-	@NotNull
-	@Valid
-	private InstitutionStandortId standortId;
-
-	@NotNull
 	private LocalDateTime haltbarkeit;
 
 	private boolean steril;
+
 	private boolean originalverpackt;
+
 	private boolean medizinisch;
+
+	private boolean oeffentlich;
 
 	@NotBlank
 	private String kommentar;

@@ -1,24 +1,20 @@
 package io.remedymatch.angebot.domain.model;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import io.remedymatch.artikel.domain.model.Artikel;
+import io.remedymatch.artikel.domain.model.ArtikelVariante;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-
-import io.remedymatch.artikel.domain.model.ArtikelVariante;
-import io.remedymatch.institution.domain.model.Institution;
-import io.remedymatch.institution.domain.model.InstitutionStandort;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,42 +25,54 @@ import lombok.ToString;
 @Builder
 public class Angebot {
 
-	@NotNull
-	@Valid
-	private AngebotId id;
+    @NotNull
+    @Valid
+    private AngebotId id;
 
-	@NotNull
-	@Valid
-	private ArtikelVariante artikelVariante;
+    @NotNull
+    @Valid
+    private ArtikelVariante artikelVariante;
 
-	@NotNull
-	@Positive
-	private BigDecimal anzahl;
+    @NotNull
+    @Valid
+    private Artikel artikel;
 
-	@NotNull
-	@PositiveOrZero
-	private BigDecimal rest;
+    @NotNull
+    @Positive
+    private BigDecimal anzahl;
 
-	@NotNull
-	@Valid
-	private Institution institution;
+    @NotNull
+    @PositiveOrZero
+    private BigDecimal rest;
 
-	@NotNull
-	@Valid
-	private InstitutionStandort standort;
+    @NotNull
+    @Valid
+    private Institution institution;
 
-	@NotNull
-	private LocalDateTime haltbarkeit;
+    @NotNull
+    @Valid
+    private InstitutionStandort standort;
 
-	private boolean steril;
-	private boolean originalverpackt;
-	private boolean medizinisch;
+    @NotNull
+    private LocalDateTime haltbarkeit;
 
-	@NotBlank
-	private String kommentar;
+    private boolean steril;
 
-	private boolean bedient;
+    private boolean originalverpackt;
 
-	@Positive
-	private transient BigDecimal entfernung;
+    private boolean medizinisch;
+
+    @NotBlank
+    private String kommentar;
+
+    private boolean bedient;
+
+    private boolean oeffentlich;
+
+    @Positive
+    private transient BigDecimal entfernung;
+
+    @Builder.Default
+    private List<AngebotAnfrage> anfragen = new ArrayList();
+
 }

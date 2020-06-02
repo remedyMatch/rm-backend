@@ -16,10 +16,6 @@ import io.remedymatch.institution.infrastructure.InstitutionEntity;
 import io.remedymatch.institution.infrastructure.InstitutionJpaRepository;
 import io.remedymatch.institution.infrastructure.InstitutionStandortEntity;
 import io.remedymatch.institution.infrastructure.InstitutionStandortJpaRepository;
-import io.remedymatch.match.infrastructure.MatchEntity;
-import io.remedymatch.match.infrastructure.MatchJpaRepository;
-import io.remedymatch.match.infrastructure.MatchStandortEntity;
-import io.remedymatch.match.infrastructure.MatchStandortJpaRepository;
 import io.remedymatch.person.infrastructure.PersonEntity;
 import io.remedymatch.person.infrastructure.PersonJpaRepository;
 import org.junit.jupiter.api.Tag;
@@ -68,10 +64,7 @@ public class DatabaseInitializerIntegrationTest {
     private AngebotJpaRepository angebotRepository;
     @Autowired
     private PersonJpaRepository personRepository;
-    @Autowired
-    private MatchJpaRepository matchRepository;
-    @Autowired
-    private MatchStandortJpaRepository matchStandortRepository;
+
 
     private List<ArtikelEntity> artikel;
     private List<ArtikelKategorieEntity> kategorien;
@@ -83,8 +76,6 @@ public class DatabaseInitializerIntegrationTest {
     private List<AngebotEntity> angebote;
     private List<AngebotAnfrageEntity> angebotAnfragen;
     private List<PersonEntity> personen;
-    private List<MatchStandortEntity> matchStandorte;
-    private List<MatchEntity> matches;
 
     @Test
     @Transactional
@@ -103,8 +94,6 @@ public class DatabaseInitializerIntegrationTest {
         assertThat(angebote.isEmpty());
         assertThat(angebotAnfragen.isEmpty());
         assertThat(personen.isEmpty());
-        assertThat(matchStandorte.isEmpty());
-        assertThat(matches.isEmpty());
 
         databaseInitializer.onApplicationEvent(Mockito.mock(ContextRefreshedEvent.class));
 
@@ -120,8 +109,6 @@ public class DatabaseInitializerIntegrationTest {
         assertThat(!(angebote.isEmpty()));
         assertThat(!(angebotAnfragen.isEmpty()));
         assertThat(!(personen.isEmpty()));
-        assertThat(!(matchStandorte.isEmpty()));
-        assertThat(!(matches.isEmpty()));
     }
 
     @Test
@@ -141,8 +128,6 @@ public class DatabaseInitializerIntegrationTest {
         assertThat(angebote.isEmpty());
         assertThat(angebotAnfragen.isEmpty());
         assertThat(personen.isEmpty());
-        assertThat(matchStandorte.isEmpty());
-        assertThat(matches.isEmpty());
 
         // first run
         databaseInitializer.onApplicationEvent(Mockito.mock(ContextRefreshedEvent.class));
@@ -158,8 +143,7 @@ public class DatabaseInitializerIntegrationTest {
         int personCountNachErstemDbInit = personen.size();
         int bedarfCountNachErstemDbInit = bedarfe.size();
         int bedarfAnfragenCountNachErstemDbInit = bedarfAnfragen.size();
-        int matchCountNachErstemDbInit = matches.size();
-        int matchStandorteCountNachErstemDbInit = matchStandorte.size();
+
 
         // second run
         databaseInitializer.onApplicationEvent(Mockito.mock(ContextRefreshedEvent.class));
@@ -176,8 +160,7 @@ public class DatabaseInitializerIntegrationTest {
         assertThat(personen).hasSize(personCountNachErstemDbInit);
         assertThat(bedarfe).hasSize(bedarfCountNachErstemDbInit);
         assertThat(bedarfAnfragen).hasSize(bedarfAnfragenCountNachErstemDbInit);
-        assertThat(matches).hasSize(matchCountNachErstemDbInit);
-        assertThat(matchStandorte).hasSize(matchStandorteCountNachErstemDbInit);
+
     }
 
     @Test
@@ -218,7 +201,5 @@ public class DatabaseInitializerIntegrationTest {
         angebote = angebotRepository.findAll();
         angebotAnfragen = angebotAnfrageRepository.findAll();
         personen = personRepository.findAll();
-        matchStandorte = matchStandortRepository.findAll();
-        matches = matchRepository.findAll();
     }
 }

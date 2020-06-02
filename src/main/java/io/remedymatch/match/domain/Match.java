@@ -1,11 +1,12 @@
 package io.remedymatch.match.domain;
 
+import io.remedymatch.artikel.domain.model.Artikel;
+import io.remedymatch.institution.domain.model.Institution;
+import io.remedymatch.institution.domain.model.InstitutionStandort;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
-
-import io.remedymatch.institution.domain.model.Institution;
 
 @Getter
 @Setter
@@ -15,18 +16,26 @@ import io.remedymatch.institution.domain.model.Institution;
 @EqualsAndHashCode
 @Builder
 public class Match {
-    private MatchId id;
+
     private UUID anfrageId;
-    private UUID artikelId;
+
+    private UUID inseratId;
+
+    private Artikel artikel;
+
     private UUID artikelVarianteId;
+
     private BigDecimal anzahl;
-    private String anfrageTyp;
+
+    private InseratTyp inseratTyp;
+
     private Institution institutionVon;
-    private MatchStandort standortVon;
+
+    private InstitutionStandort standortVon;
+
     private Institution institutionAn;
-    private MatchStandort standortAn;
-    private String kommentar;
-    private String prozessInstanzId;
-    private MatchStatus status;
+
+    private InstitutionStandort standortAn;
+
     private BigDecimal entfernung;
 }

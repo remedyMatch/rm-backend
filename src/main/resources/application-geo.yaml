@@ -1,5 +1,4 @@
 io:
   remedymatch:
     geodaten:
-      geocoderServicebaseUrl: https://eu1.locationiq.com/v1/
       geocoderServiceApiKey: einsetzen

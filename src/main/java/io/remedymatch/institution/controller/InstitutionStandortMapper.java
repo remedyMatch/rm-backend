@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import io.remedymatch.institution.domain.model.InstitutionStandort;
 import io.remedymatch.institution.domain.model.InstitutionStandortId;
-import io.remedymatch.institution.domain.model.NeuesInstitutionStandort;
+import io.remedymatch.institution.domain.model.NeuerInstitutionStandort;
 
 public final class InstitutionStandortMapper {
 
@@ -36,8 +36,8 @@ public final class InstitutionStandortMapper {
 				.build();
 	}
 
-	static NeuesInstitutionStandort mapToNeuesStandort(final NeuesInstitutionStandortRequest neuesStandortRequest) {
-		return NeuesInstitutionStandort.builder()//
+	static NeuerInstitutionStandort mapToNeuesStandort(final NeuerInstitutionStandortRequest neuesStandortRequest) {
+		return NeuerInstitutionStandort.builder()//
 				.name(neuesStandortRequest.getName()) //
 				.strasse(neuesStandortRequest.getStrasse()) //
 				.hausnummer(neuesStandortRequest.getHausnummer()) //

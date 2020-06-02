@@ -1,11 +1,12 @@
 package io.remedymatch.person.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import io.remedymatch.institution.domain.model.Institution;
-import io.remedymatch.institution.domain.model.InstitutionStandort;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,7 +23,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 public class Person {
-	
+
 	@Valid
 	@NotNull
 	private PersonId id;
@@ -44,9 +45,10 @@ public class Person {
 
 	@Valid
 	@NotNull
-	private Institution institution;
+	private PersonStandort aktuellesStandort;
 
 	@Valid
 	@NotNull
-	private InstitutionStandort standort;
+	@Builder.Default
+	private List<PersonStandort> standorte = new ArrayList<>();
 }

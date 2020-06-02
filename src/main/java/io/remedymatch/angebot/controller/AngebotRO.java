@@ -1,62 +1,63 @@
 package io.remedymatch.angebot.controller;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import io.remedymatch.artikel.controller.ArtikelRO;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import javax.persistence.MappedSuperclass;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
-import io.remedymatch.institution.controller.InstitutionStandortRO;
-import lombok.Builder;
-import lombok.Data;
-
-@Data
-@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@SuperBuilder
+@MappedSuperclass
 public class AngebotRO {
 
-	@NotNull
-	private UUID id;
+    @NotNull
+    private UUID id;
 
-	@NotNull
-	@Valid
-	private UUID artikelId;
-	
-	@NotNull
-	@Valid
-	private UUID artikelVarianteId;
+    @NotNull
+    @Valid
+    private ArtikelRO artikel;
 
-	@NotNull
-	@Positive
-	private BigDecimal anzahl;
+    @NotNull
+    @Valid
+    private UUID artikelVarianteId;
 
-	@NotNull
-	@PositiveOrZero
-	private BigDecimal rest;
+    @NotNull
+    @PositiveOrZero
+    private BigDecimal verfuegbareAnzahl;
 
-	@NotNull
-	private UUID institutionId;
+    @NotNull
+    private String ort;
 
-	@NotNull
-	@Valid
-	private InstitutionStandortRO standort;
+    @NotNull
+    private LocalDateTime haltbarkeit;
 
-	@NotNull
-	private LocalDateTime haltbarkeit;
+    private boolean steril;
 
-	private boolean steril;
+    private boolean originalverpackt;
 
-	private boolean originalverpackt;
+    private boolean medizinisch;
 
-	private boolean medizinisch;
+    private boolean oeffentlich;
 
-	@NotBlank
-	private String kommentar;
+    @NotBlank
+    private String kommentar;
 
-	@NotNull
-	@Positive
-	private BigDecimal entfernung;
+    @NotNull
+    @Positive
+    private BigDecimal entfernung;
+
 }

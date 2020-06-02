@@ -1,72 +1,100 @@
 package io.remedymatch.angebot.process;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-import javax.annotation.PostConstruct;
-
+import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
+import io.remedymatch.angebot.domain.model.AngebotAnfrageStatus;
+import io.remedymatch.angebot.domain.model.AngebotId;
+import io.remedymatch.angebot.domain.service.AngebotService;
+import io.remedymatch.properties.EngineProperties;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import lombok.val;
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
+import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import io.remedymatch.angebot.domain.model.AngebotAnfrageId;
-import io.remedymatch.angebot.domain.service.AngebotService;
-import io.remedymatch.engine.client.EngineClient;
-import io.remedymatch.engine.domain.BusinessKey;
-import io.remedymatch.match.api.MatchProzessConstants;
-import io.remedymatch.properties.EngineProperties;
-import lombok.AllArgsConstructor;
-import lombok.val;
+import javax.annotation.PostConstruct;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Component
+@Log4j2
 @Profile("!disableexternaltasks")
 class AngebotExternalTaskClient {
-	private final EngineProperties properties;
-	private final AngebotService angebotService;
-	private final EngineClient engineClient;
+    private final EngineProperties properties;
+    private final AngebotService angebotService;
+    final static String VAR_ANFRAGE_ID = "anfrage_id";
+    final static String VAR_ANGEBOT_SCHLIESSEN = "angebot_geschlossen";
 
-	@PostConstruct
-	public void doSubscribe() {
 
-		ExternalTaskClient client = ExternalTaskClient.create().baseUrl(properties.getExternalTaskUrl())
-				.backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000)).build();
+    @PostConstruct
+    public void doSubscribe() {
 
-		client.subscribe("angebot_anfrage_ablehnen_topic").lockDuration(2000) //
-				.handler((externalTask, externalTaskService) -> {
+        ExternalTaskClient client = ExternalTaskClient.create().baseUrl(properties.getExternalTaskUrl())
+                .backoffStrategy(new ExponentialBackoffStrategy(3000, 2, 3000)).build();
 
-					val anfrageId = externalTask.getVariable("anfrageId").toString();
-					angebotService.anfrageAbgelehnt(new AngebotAnfrageId(UUID.fromString(anfrageId)));
+        client.subscribe("angebot_anfrage_ablehnen_topic").lockDuration(2000) //
+                .handler((externalTask, externalTaskService) -> {
+                    try {
+                        //TODO Benachrichtigung einstellen?
 
-					externalTaskService.complete(externalTask);
-				}).open();
+                        externalTaskService.complete(externalTask);
+                    } catch (Exception e) {
+                        log.error("Der External Task konnte nicht abgeschlossen werden.", e);
+                        externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);
+                    }
+                }).open();
 
-		client.subscribe("angebot_anfrage_stornieren_topic").lockDuration(2000) //
-				.handler((externalTask, externalTaskService) -> {
+        client.subscribe("angebot_anfrage_stornieren_topic").lockDuration(2000) //
+                .handler((externalTask, externalTaskService) -> {
 
-					// Vorerst nichts - wurde bereits ueber Service storniert - vielleicht mal
-					// umbauen
+                    //TODO Benachrichtigung einstellen, Bedarf anlegen?
 
-					externalTaskService.complete(externalTask);
-				}).open();
+                    externalTaskService.complete(externalTask);
+                }).open();
 
-		client.subscribe("angebot_anfrage_match_prozess_starten_topic").lockDuration(2000) //
-				.handler((externalTask, externalTaskService) -> {
+        client.subscribe("angebot_anfrage_schliessen_topic").lockDuration(2000) //
+                .handler((externalTask, externalTaskService) -> {
+                    try {
+                        val anfrageId = new AngebotAnfrageId(UUID.fromString(externalTask.getVariable(VAR_ANFRAGE_ID).toString()));
+                        val angebotId = new AngebotId(UUID.fromString(externalTask.getBusinessKey()));
+                        angebotService.angebotAnfrageSchliessen(angebotId, anfrageId);
+                        //TODO Benachrichtigung senden?
+                        externalTaskService.complete(externalTask, Variables.createVariables().putValue(VAR_ANGEBOT_SCHLIESSEN, true));
+                    } catch (Exception e) {
+                        log.error("Der External Task konnte nicht abgeschlossen werden.", e);
+                        externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);
+                    }
+                }).open();
 
-					val anfrageId = externalTask.getVariable("anfrageId").toString();
 
-					val variables = new HashMap<String, Object>();
-					variables.put("anfrageTyp", MatchProzessConstants.ANFRAGE_TYP_ANGEBOT);
-					variables.put("anfrageId", anfrageId);
+        client.subscribe("angebot_anfrage_match_anlegen_topic").lockDuration(2000) //
+                .handler((externalTask, externalTaskService) -> {
+                    try {
+                        val anfrageId = new AngebotAnfrageId(UUID.fromString(externalTask.getVariable(VAR_ANFRAGE_ID).toString()));
+                        val angebotId = new AngebotId(UUID.fromString(externalTask.getBusinessKey()));
+                        angebotService.angebotAnfrageStatusSetzen(anfrageId, angebotId, AngebotAnfrageStatus.MATCHED);
+                        //TODO Benachrichtigung senden?
+                        externalTaskService.complete(externalTask);
+                    } catch (Exception e) {
+                        log.error("Der External Task konnte nicht abgeschlossen werden.", e);
+                        externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);
+                    }
+                }).open();
 
-					engineClient.prozessStarten( //
-							MatchProzessConstants.PROZESS_KEY, //
-							new BusinessKey(UUID.fromString(anfrageId)), //
-							variables);
+        client.subscribe("angebot_schliessen_topic").lockDuration(2000) //
+                .handler((externalTask, externalTaskService) -> {
+                    try {
+                        val angebotId = new AngebotId(UUID.fromString(externalTask.getBusinessKey()));
+                        angebotService.angebotAlsGeschlossenMarkieren(angebotId);
 
-					externalTaskService.complete(externalTask, variables);
-
-				}).open();
-	}
+                        //TODO Benachrichtigung senden?
+                        externalTaskService.complete(externalTask);
+                    } catch (Exception e) {
+                        log.error("Der External Task konnte nicht abgeschlossen werden.", e);
+                        externalTaskService.handleFailure(externalTask, e.getMessage(), null, 0, 10000);
+                    }
+                }).open();
+    }
 }

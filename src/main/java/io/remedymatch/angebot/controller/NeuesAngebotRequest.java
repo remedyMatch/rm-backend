@@ -19,9 +19,6 @@ class NeuesAngebotRequest {
     private BigDecimal anzahl;
 
     @NotNull
-    private UUID standortId;
-
-    @NotNull
     private String kommentar;
 
     private LocalDateTime haltbarkeit;
@@ -31,4 +28,6 @@ class NeuesAngebotRequest {
     private boolean originalverpackt;
 
     private boolean medizinisch;
+
+    private boolean oeffentlich;
 }

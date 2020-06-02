@@ -1,10 +1,10 @@
 package io.remedymatch.angebot.domain.model;
 
-import java.util.UUID;
-
 import lombok.Value;
+
+import java.util.UUID;
 
 @Value
 public class AngebotId {
-	private UUID value;
+    private UUID value;
 }

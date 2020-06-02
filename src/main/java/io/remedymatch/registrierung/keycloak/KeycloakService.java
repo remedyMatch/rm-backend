@@ -1,6 +1,7 @@
 package io.remedymatch.registrierung.keycloak;
 
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_GRUPPE_FREIGEGEBEN;
+import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_GRUPPE_NEU;
 import static io.remedymatch.registrierung.keycloak.KeycloakAttribute.KEYCLOAK_GRUPPE_USER;
 
 import java.net.URI;
@@ -33,19 +34,67 @@ import com.sun.istack.NotNull;
 import io.remedymatch.properties.KeycloakProperties;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @AllArgsConstructor
 @Validated
 @Service
-@Slf4j
+@Log4j2
 public class KeycloakService {
 
 	private final KeycloakProperties properties;
 
+	/*
+	 * sollte geloescht werden - ab hier ...
+	 */
+
+	@Deprecated // sollte weg gehen. Nun reicht, wenn die Users in neu und emailVerifiziert
+				// haben
 	public List<RegistrierterUser> findFreigegebeneUsers() {
 
 		return keycloakGruppeUsers(KEYCLOAK_GRUPPE_FREIGEGEBEN).stream() //
+				.map(KeycloakUserConverter::convert) //
+				.collect(Collectors.toList());
+	}
+
+	@Deprecated // sollte weg gehen. Nun reicht, wenn die Users in neu und emailVerifiziert
+				// haben
+	public void freigegebenenUserAufAktiviertSetzen(//
+			final @NotNull @Valid KeycloakUserId userId) {
+		UserResource userResource = keycloakUsers().get(userId.getValue());
+		UserRepresentation user = userResource.toRepresentation();
+
+		user.setEnabled(true);
+
+		userResource.update(user);
+
+		try {
+			userGruppeVonRegistriertAufUserSetzen(userId);
+		} catch (Exception e) {
+			log.error("Es war nicht möglich die Gruppe von 'fregegeben' auf 'user' zu setzen.", e);
+		}
+	}
+
+	@Deprecated // sollte weg gehen. Nun reicht, wenn die Users in neu und emailVerifiziert
+				// haben
+	private void userGruppeVonRegistriertAufUserSetzen(final @NotNull @Valid KeycloakUserId userId) {
+		List<GroupRepresentation> alleGruppen = keycloakGroups().groups();
+
+		val freigegebenGruppeId = getKeycloakGruppeId(alleGruppen, KEYCLOAK_GRUPPE_FREIGEGEBEN);
+		val userGruppeId = getKeycloakGruppeId(alleGruppen, KEYCLOAK_GRUPPE_USER);
+
+		removeGruppeFromUser(userId.getValue(), freigegebenGruppeId);
+		addGruppeToUser(userId.getValue(), userGruppeId);
+	}
+
+	/*
+	 * bis hier
+	 */
+
+	public List<RegistrierterUser> findVerifizierteUsers() {
+
+		return keycloakGruppeUsers(KEYCLOAK_GRUPPE_NEU).stream() //
+				.filter(user -> Boolean.TRUE.equals(user.isEmailVerified())) //
 				.map(KeycloakUserConverter::convert) //
 				.collect(Collectors.toList());
 	}
@@ -62,7 +111,7 @@ public class KeycloakService {
 		try {
 			userGruppeAufUserSetzen(userId);
 		} catch (Exception e) {
-			log.error("Es war nicht möglich die Gruppe von 'fregegeben' auf 'user' zu setzen.", e);
+			log.error("Es war nicht möglich die Gruppe von 'neu' auf 'user' zu setzen.", e);
 		}
 	}
 
@@ -86,7 +135,7 @@ public class KeycloakService {
 	private void userGruppeAufUserSetzen(final @NotNull @Valid KeycloakUserId userId) {
 		List<GroupRepresentation> alleGruppen = keycloakGroups().groups();
 
-		val freigegebenGruppeId = getKeycloakGruppeId(alleGruppen, KEYCLOAK_GRUPPE_FREIGEGEBEN);
+		val freigegebenGruppeId = getKeycloakGruppeId(alleGruppen, KEYCLOAK_GRUPPE_NEU);
 		val userGruppeId = getKeycloakGruppeId(alleGruppen, KEYCLOAK_GRUPPE_USER);
 
 		removeGruppeFromUser(userId.getValue(), freigegebenGruppeId);

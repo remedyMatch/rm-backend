@@ -1,22 +1,20 @@
 package io.remedymatch.angebot.domain.service;
 
 import static io.remedymatch.angebot.domain.service.AngebotTestFixtures.beispielAngebotId;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikel;
+import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelEntity;
 import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVariante;
 import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVarianteEntity;
 import static io.remedymatch.artikel.domain.service.ArtikelTestFixtures.beispielArtikelVarianteId;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextAnderesStandort;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextAnderesStandortEntity;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextInstitution;
-import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextInstitutionEntity;
+import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextPerson;
+import static io.remedymatch.usercontext.UserContextTestFixtures.beispielUserContextPersonEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -32,13 +30,8 @@ import io.remedymatch.angebot.domain.model.Angebot;
 import io.remedymatch.angebot.domain.model.NeuesAngebot;
 import io.remedymatch.angebot.infrastructure.AngebotEntity;
 import io.remedymatch.angebot.infrastructure.AngebotJpaRepository;
-import io.remedymatch.artikel.domain.model.ArtikelVarianteId;
 import io.remedymatch.artikel.domain.service.ArtikelSucheService;
-import io.remedymatch.domain.NotUserInstitutionObjectException;
-import io.remedymatch.domain.ObjectNotFoundException;
-import io.remedymatch.geodaten.geocoding.domain.GeoCalcService;
-import io.remedymatch.institution.domain.model.InstitutionStandortId;
-import io.remedymatch.institution.domain.service.InstitutionTestFixtures;
+import io.remedymatch.geodaten.domain.GeocodingService;
 import io.remedymatch.usercontext.UserContextService;
 import lombok.val;
 
@@ -49,7 +42,8 @@ import lombok.val;
 		AngebotJpaRepository.class, //
 		UserContextService.class, //
 		ArtikelSucheService.class, //
-		GeoCalcService.class, //
+		AngebotProzessService.class, //
+		GeocodingService.class, //
 })
 @Tag("Spring")
 @DisplayName("AngebotAnlageService soll")
@@ -68,24 +62,11 @@ class AngebotAnlageServiceShould {
 	private ArtikelSucheService artikelSucheService;
 
 	@MockBean
-	private GeoCalcService geoCalcService;
+	private GeocodingService geoCalcService;
 
-	@Test
-	@DisplayName("Fehler werfen bei nicht existierende ArtikelVariante")
-	void fehler_werfen_bei_Bearbeitung_von_nicht_existierende_ArtikelVariante() {
-		assertThrows(ObjectNotFoundException.class, //
-				() -> angebotAnlageService.getArtikelVariante(new ArtikelVarianteId(UUID.randomUUID())));
-	}
-	
-	@Test
-	@DisplayName("Fehler werfen wenn der Standort nicht in UserContext Institution gefunden wird")
-	void fehler_werfen_wenn_der_Standort_nicht_in_UserContext_Institution_gefunden_wird() {
+	@MockBean
+	private AngebotProzessService angebotProzessService;
 
-		assertThrows(NotUserInstitutionObjectException.class, //
-				() -> angebotAnlageService.getUserInstitutionStandort(InstitutionTestFixtures.beispielInstitutionEntity(),
-						new InstitutionStandortId(UUID.randomUUID())));
-	}
-	
 	@Test
 	@DisplayName("Angebot anlegen koennen")
 	void angebot_anlegen_koennen() {
@@ -93,6 +74,8 @@ class AngebotAnlageServiceShould {
 		val artikelVarianteId = beispielArtikelVarianteId();
 		val artikelVariante = beispielArtikelVariante();
 		val artikelVarianteEntity = beispielArtikelVarianteEntity();
+		val beispielArtikel = beispielArtikel();
+		val beispielArtikelEntity = beispielArtikelEntity();
 
 		val anzahl = BigDecimal.valueOf(100);
 		val haltbarkeit = LocalDateTime.of(2100, 6, 6, 12, 00);
@@ -101,17 +84,21 @@ class AngebotAnlageServiceShould {
 		val medizinisch = true;
 		val kommentar = "Neues Angebot";
 
-		val userInstitution = beispielUserContextInstitution();
-		val userInstitutionEntity = beispielUserContextInstitutionEntity();
-		val userStandort = beispielUserContextAnderesStandort();
-		val userStandortEntity = beispielUserContextAnderesStandortEntity();
+		val userStandort = beispielUserContextPerson().getAktuellesStandort();
+		val userStandortEntity = beispielUserContextPersonEntity().getAktuellesStandort();
+
+		val institution = userStandort.getInstitution();
+		val institutionEntity = userStandortEntity.getInstitution();
+		val standort = userStandort.getStandort();
+		val standortEntity = userStandortEntity.getStandort();
 
 		AngebotEntity angebotEntityOhneId = AngebotEntity.builder() //
 				.artikelVariante(artikelVarianteEntity) //
 				.anzahl(anzahl) //
+				.artikel(beispielArtikelEntity) //
 				.rest(anzahl) //
-				.institution(userInstitutionEntity) //
-				.standort(userStandortEntity) //
+				.institution(institutionEntity) //
+				.standort(standortEntity) //
 				.haltbarkeit(haltbarkeit) //
 				.steril(steril) //
 				.originalverpackt(originalverpackt) //
@@ -125,9 +112,10 @@ class AngebotAnlageServiceShould {
 				.id(angebotId.getValue()) //
 				.artikelVariante(artikelVarianteEntity) //
 				.anzahl(anzahl) //
+				.artikel(beispielArtikelEntity) //
 				.rest(anzahl) //
-				.institution(userInstitutionEntity) //
-				.standort(userStandortEntity) //
+				.institution(institutionEntity) //
+				.standort(standortEntity) //
 				.haltbarkeit(haltbarkeit) //
 				.steril(steril) //
 				.originalverpackt(originalverpackt) //
@@ -138,7 +126,6 @@ class AngebotAnlageServiceShould {
 		val neueAngebot = NeuesAngebot.builder() //
 				.artikelVarianteId(artikelVarianteId) //
 				.anzahl(anzahl) //
-				.standortId(userStandort.getId()) //
 				.haltbarkeit(haltbarkeit) //
 				.steril(steril) //
 				.originalverpackt(originalverpackt) //
@@ -148,18 +135,21 @@ class AngebotAnlageServiceShould {
 
 		val entfernung = BigDecimal.valueOf(123664);
 
-		given(userService.getContextInstitution()).willReturn(userInstitution);
-		given(geoCalcService.berechneUserDistanzInKilometer(userStandort)).willReturn(entfernung);
-		given(artikelSucheService.findArtikelVariante(artikelVarianteId)).willReturn(Optional.of(artikelVariante));
+		given(artikelSucheService.getArtikelOrElseThrow(artikelVariante.getArtikelId())).willReturn(beispielArtikel);
+		given(userService.getContextStandort()).willReturn(userStandort);
+		given(geoCalcService.berechneUserDistanzInKilometer(standort)).willReturn(entfernung);
+		given(artikelSucheService.getArtikelVarianteOrElseThrow(artikelVarianteId)).willReturn(artikelVariante);
 		given(angebotRepository.save(angebotEntityOhneId)).willReturn(angebotEntityMitId);
+		given(userService.getContextUser()).willReturn(beispielUserContextPerson());
 
 		val expectedAngebot = Angebot.builder() //
 				.id(angebotId) //
 				.artikelVariante(artikelVariante) //
+				.artikel(beispielArtikel) //
 				.anzahl(anzahl) //
 				.rest(anzahl) //
-				.institution(userInstitution) //
-				.standort(userStandort) //
+				.institution(institution) //
+				.standort(standort) //
 				.haltbarkeit(haltbarkeit) //
 				.steril(steril) //
 				.originalverpackt(originalverpackt) //
@@ -172,11 +162,12 @@ class AngebotAnlageServiceShould {
 
 		then(angebotRepository).should().save(angebotEntityOhneId);
 		then(angebotRepository).shouldHaveNoMoreInteractions();
-		then(userService).should().getContextInstitution();
-		then(userService).shouldHaveNoMoreInteractions();
-		then(artikelSucheService).should().findArtikelVariante(artikelVarianteId);
+		then(userService).should(times(2)).getContextStandort();
+		then(userService).should().getContextUserId();
+		then(artikelSucheService).should().getArtikelVarianteOrElseThrow(artikelVarianteId);
+		then(artikelSucheService).should().getArtikelOrElseThrow(artikelVariante.getArtikelId());
 		then(artikelSucheService).shouldHaveNoMoreInteractions();
-		then(geoCalcService).should().berechneUserDistanzInKilometer(userStandort);
+		then(geoCalcService).should().berechneUserDistanzInKilometer(standort);
 		then(geoCalcService).shouldHaveNoMoreInteractions();
 	}
 }

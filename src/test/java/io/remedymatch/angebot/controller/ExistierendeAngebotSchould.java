@@ -1,15 +1,10 @@
 package io.remedymatch.angebot.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.math.BigDecimal;
-import java.net.URI;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.remedymatch.TestApplication;
+import io.remedymatch.WithMockJWT;
+import io.remedymatch.usercontext.TestUserContext;
+import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -34,83 +29,87 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.util.UUID;
 
-import io.remedymatch.TestApplication;
-import io.remedymatch.WithMockJWT;
-import io.remedymatch.usercontext.TestUserContext;
-import lombok.val;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { "dbinit", "test", "disableexternaltasks" })
+@ActiveProfiles(profiles = {"dbinit", "test", "disableexternaltasks"})
 @DirtiesContext
 @Tag("InMemory")
 @Tag("SpringBoot")
 public class ExistierendeAngebotSchould extends AngebotControllerTestBasis {
 
-	@Autowired
-	private WebApplicationContext webApplicationContext;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
-	@Autowired
-	private RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	private MockRestServiceServer mockServer;
+    private MockRestServiceServer mockServer;
 
-	@BeforeEach
-	void prepare() {
+    @BeforeEach
+    void prepare() {
 
-		prepareAngebotEntities();
+        prepareAngebotEntities();
 
-		mockServer = MockRestServiceServer.createServer(restTemplate);
-	}
+        mockServer = MockRestServiceServer.createServer(restTemplate);
+    }
 
-	@AfterEach
-	void clear() {
-		TestUserContext.clear();
-	}
+    @AfterEach
+    void clear() {
+        TestUserContext.clear();
+    }
 
-	@Test
-	@Transactional
-	@WithMockJWT(groupsClaim = { "testgroup" }, usernameClaim = SUCHENDER_USERNAME)
-	public void angebot_anfragen_koennen() throws Exception {
+    @Test
+    @Transactional
+    @WithMockJWT(groupsClaim = {"testgroup"}, usernameClaim = SUCHENDER_USERNAME)
+    public void angebot_anfragen_koennen() throws Exception {
 
-		TestUserContext.setContextUser(suchender);
+        TestUserContext.setContextUser(suchender);
 
-		mockServer.expect(ExpectedCount.once(), //
-				requestTo(new URI("http://localhost:8008/engine/remedy/prozess/start"))) //
-				.andExpect(method(HttpMethod.POST)) //
-				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON) //
+        mockServer.expect(ExpectedCount.once(), //
+                requestTo(new URI("http://localhost:8008/engine/remedy/message/korrelieren"))) //
+                .andExpect(method(HttpMethod.POST)) //
+                .andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON) //
 //		          .body("rest")
-				);
+                );
 
-		val neueAngebotAnfrage = AngebotAnfragenRequest.builder() //
-				.anzahl(BigDecimal.valueOf(200)) //
-				.standortId(suchender.getStandort().getId().getValue()) //
-				.kommentar("ITest Angebot Anfrage Kommentar") //
-				.build();
+        val neueAngebotAnfrage = AngebotAnfragenRequest.builder() //
+                .anzahl(BigDecimal.valueOf(200)) //
+                .bedarfId(UUID.randomUUID()) //
+                .nachricht("TEST NACHRICHT")
+                .build();
 
-		MvcResult result = MockMvcBuilders.webAppContextSetup(webApplicationContext).build()
-				.perform(MockMvcRequestBuilders //
-						.post("/angebot/" + angebotId.getValue() + "/anfrage") //
-						.content(objectMapper.writeValueAsString(neueAngebotAnfrage))//
-						.contentType(MediaType.APPLICATION_JSON) //
-						.accept(MediaType.APPLICATION_JSON)) //
-				.andDo(print()) //
-				.andExpect(status().isOk()) //
-				.andExpect(MockMvcResultMatchers.jsonPath("$.anzahl").value(BigDecimal.valueOf(200))) //
-				.andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty()) //
-				.andReturn();
+        MvcResult result = MockMvcBuilders.webAppContextSetup(webApplicationContext).build()
+                .perform(MockMvcRequestBuilders //
+                        .post("/angebot/" + angebotId.getValue() + "/anfrage") //
+                        .content(objectMapper.writeValueAsString(neueAngebotAnfrage))//
+                        .contentType(MediaType.APPLICATION_JSON) //
+                        .accept(MediaType.APPLICATION_JSON)) //
+                .andDo(print()) //
+                .andExpect(status().isOk()) //
+                .andExpect(MockMvcResultMatchers.jsonPath("$.anzahl").value(BigDecimal.valueOf(200))) //
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty()) //
+                .andReturn();
 
-		AngebotAnfrageRO angebotAnfrage = objectMapper.readValue(result.getResponse().getContentAsString(),
-				AngebotAnfrageRO.class);
+        AngebotAnfrageRO angebotAnfrage = objectMapper.readValue(result.getResponse().getContentAsString(),
+                AngebotAnfrageRO.class);
 
-		assertEquals("ITest Angebot Anfrage Kommentar", angebotAnfrage.getKommentar());
+        assertEquals(BigDecimal.valueOf(200), angebotAnfrage.getAnzahl());
 
-		mockServer.verify();
-	}
+        mockServer.verify();
+    }
 }

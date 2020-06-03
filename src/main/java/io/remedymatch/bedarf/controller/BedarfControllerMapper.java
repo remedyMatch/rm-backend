@@ -54,7 +54,7 @@ class BedarfControllerMapper {
                 .verfuegbareAnzahl(bedarf.getRest()) //
                 .oeffentlich(bedarf.isOeffentlich()) //
                 .institutionId(bedarf.getInstitution().getId().getValue()) //
-                .ort(bedarf.getStandort().getOrt()) //
+                .standort(InstitutionStandortMapper.mapToStandortRO(bedarf.getStandort())) //
                 .steril(bedarf.isSteril()) //
                 .medizinisch(bedarf.isMedizinisch()) //
                 .kommentar(bedarf.getKommentar()) //
@@ -76,7 +76,7 @@ class BedarfControllerMapper {
                 .oeffentlich(bedarf.isOeffentlich()) //
                 .institutionId(bedarf.getInstitution().getId().getValue()) //
                 .anfragen(bedarf.getAnfragen().stream().map(BedarfControllerMapper::mapToAnfrageRO).collect(Collectors.toList()))
-                .ort(bedarf.getStandort().getOrt()) //
+                .standort(InstitutionStandortMapper.mapToStandortRO(bedarf.getStandort())) //
                 .steril(bedarf.isSteril()) //
                 .medizinisch(bedarf.isMedizinisch()) //
                 .kommentar(bedarf.getKommentar()) //

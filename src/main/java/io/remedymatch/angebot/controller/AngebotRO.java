@@ -1,6 +1,7 @@
 package io.remedymatch.angebot.controller;
 
 import io.remedymatch.artikel.controller.ArtikelRO;
+import io.remedymatch.institution.controller.InstitutionStandortRO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -40,7 +41,7 @@ public class AngebotRO {
     private BigDecimal verfuegbareAnzahl;
 
     @NotNull
-    private String ort;
+    private InstitutionStandortRO standort;
 
     @NotNull
     private LocalDateTime haltbarkeit;

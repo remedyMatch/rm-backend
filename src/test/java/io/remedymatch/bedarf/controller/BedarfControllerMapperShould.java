@@ -185,7 +185,7 @@ class BedarfControllerMapperShould {
                 .artikel(BEDARF_ARTIKEL_RO) //
                 .artikelVarianteId(ARTIKEL_VARIANTE_ID.getValue()) //
                 .institutionId(BEDARF_INSTITUTION_ID.getValue()) //
-                .ort(BEDARF_STANDORT_DTO.getOrt()) //
+                .standort(BEDARF_STANDORT_DTO) //
                 .steril(STERIL) //
                 .medizinisch(MEDIZINISCH) //
                 .kommentar(BEDARF_KOMMENTAR) //

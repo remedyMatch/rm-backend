@@ -128,7 +128,7 @@ public class EngineClient {
         messageKorrelieren(MessageKorrelierenRequest.builder() //
                 .prozessKey(prozessKey.getValue()) //
                 .messageKey(messageKey.getValue()) //
-                .businesskey(businessKey.getValue().toString())
+                .businessKey(businessKey.getValue().toString())
                 .variables(variables) //
                 .localVariablesEqual(variablesEqual) //
                 .build());
@@ -142,7 +142,7 @@ public class EngineClient {
         messageKorrelieren(MessageKorrelierenRequest.builder() //
                 .prozessKey(prozessKey.getValue()) //
                 .messageKey(messageKey.getValue()) //
-                .businesskey(businessKey.getValue().toString()) //
+                .businessKey(businessKey.getValue().toString()) //
                 .build());
     }
 
@@ -155,7 +155,7 @@ public class EngineClient {
         messageKorrelieren(MessageKorrelierenRequest.builder() //
                 .prozessKey(prozessKey.getValue()) //
                 .messageKey(messageKey.getValue()) //
-                .businesskey(businessKey.getValue().toString()) //
+                .businessKey(businessKey.getValue().toString()) //
                 .variables(variables) //
                 .build());
     }

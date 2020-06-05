@@ -17,7 +17,7 @@ public class MessageKorrelierenRequest {
     @NotBlank
     private String prozessKey;
 
-    private String businesskey;
+    private String businessKey;
 
     @NotBlank
     private String messageKey;
